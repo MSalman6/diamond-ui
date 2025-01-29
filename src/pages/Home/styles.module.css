@@ -510,3 +510,112 @@ details > ul > * {
 .heading3 {
   margin: 40px 0px;
 }
+
+/* Reworked profile view */
+.boxContainer {
+  gap: 20px;
+  display: grid;
+  margin-top: 30px;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  grid-template-rows: repeat(3, auto);
+}
+
+.block {
+  gap: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(1, 69, 178, 0.2); /* Primary color light shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+}
+
+.block > .boxHeading {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.25em;
+}
+
+.block > .boxDescription {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.block > .boxDescriptionBig {
+  font-size: 38px;
+  font-weight: 500;
+}
+
+.block > .boxDescriptionSmall {
+  gap: 0.5rem;
+  display: flex;
+  font-size: 14px;
+}
+
+.block > .boxDescriptionSmall > .arrowGreen {
+  color: green;
+}
+
+.block > .boxDescriptionSmall > .arrowRed {
+  color: red;
+}
+
+.block > .boxDescriptionSmallBold {
+  font-weight: bold;
+  text-align: center;
+}
+
+.block > .boxBtns {
+  gap: 1rem;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+}
+
+.block > .boxBtns > div {
+  gap: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.block > .boxBtns > div > * {
+  width: 100%;
+}
+
+.block:hover {
+  /* transform: perspective(1000px) rotateY(5deg) rotateX(5deg); */
+  box-shadow: 0 8px 16px rgba(1, 69, 178, 0.4); 
+}
+
+.block h2 {
+  margin-top: 0;
+}
+
+.block p {
+  margin: 5px 0;
+}
+
+.block .value {
+  font-weight: bold;
+}
+
+.blockLarge {
+  grid-row: span 2;
+}
+
+@media (max-width: 768px) {
+  .container {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+  }
+
+  .blockLarge {
+      grid-row: span 1;
+  }
+}

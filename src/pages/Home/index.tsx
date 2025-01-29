@@ -23,6 +23,9 @@ import UpdatePoolOperatorModal from "../../components/Modals/UpdatePoolOperator"
 import { useDaoContext } from "../../contexts/DaoContext";
 import copy from "copy-to-clipboard";
 import { toast } from "react-toastify";
+import Tooltip from "../../components/Tooltip";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowDownLong, faArrowUpLong } from "@fortawesome/free-solid-svg-icons";
 
 interface HomeProps {}
 
@@ -82,209 +85,316 @@ const Home: React.FC<HomeProps> = ({}) => {
             userWallet.myAddr ? (
                 <section className={styles.heroSection + " hero-section"}>
                     <div className="hero-container">
-                        <div className={styles.heroWrapper + " hero-wrapper"}>
-                            <div className={styles.heroSplit + " hero-split" }>
-                                <div className={styles.infoContainer}>
-                                    {
-                                        userWallet.myAddr ? <Jazzicon diameter={60} seed={jsNumberForAddress(userWallet.myAddr)} />
-                                        : <Jazzicon diameter={60} seed={Math.round(Math.random() * 10000000)} />
-                                    }
+
+                        <div className={styles.infoContainer}>
+                            {
+                                userWallet.myAddr ? <Jazzicon diameter={60} seed={jsNumberForAddress(userWallet.myAddr)} />
+                                : <Jazzicon diameter={60} seed={Math.round(Math.random() * 10000000)} />
+                            }
+                            <div>
+                                <p>User</p>
+                                <p onClick={() => copyData(userWallet.myAddr)}>{truncateAddress(userWallet.myAddr)}</p>
+                            </div>
+                            {
+                                myPool && (
+                                    <p className={myPool?.isActive || (myPool?.isToBeElected || myPool?.isPendingValidator) ? styles.poolActive : styles.poolBanned}>
+                                        {myPool?.isActive ? "Active" : (myPool?.isToBeElected || myPool?.isPendingValidator) ? "Valid" : "Invalid"}
+                                    </p>
+                                )
+                            }
+                        </div>
+
+                        <div className={styles.boxContainer}>
+                            <div className={`${styles.block} ${styles.blockLarge}`}>
+                                <p className={styles.boxHeading}>Pool Stake <Tooltip text="" /></p>
+                                <p className={styles.boxDescriptionBig}>1000 DMD</p>
+                                <p className={styles.boxDescriptionSmall}>
+                                    <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
+                                    5 DMD since 01.01.24
+                                </p>
+                                <div className={styles.boxBtns}>
                                     <div>
-                                        <p>User</p>
-                                        <p onClick={() => copyData(userWallet.myAddr)}>{truncateAddress(userWallet.myAddr)}</p>
+                                        <button className="primaryBtn">Stake</button>
+                                        <button className="primaryBtn">Unstake</button>
                                     </div>
-                                    {
-                                        myPool && (
-                                            <p className={myPool?.isActive || (myPool?.isToBeElected || myPool?.isPendingValidator) ? styles.poolActive : styles.poolBanned}>
-                                                {myPool?.isActive ? "Active" : (myPool?.isToBeElected || myPool?.isPendingValidator) ? "Valid" : "Invalid"}
-                                            </p>
-                                        )
-                                    }
-                                </div>
-                                <div className={styles.statsContainer}>
-                                    <table className={styles.styledTableFirst}>
-                                        <thead>
-                                        </thead>
-                                        <tbody>
-                                            {myPool && (
-                                                <>
-                                                    <tr>
-                                                        <td>My stake</td>
-                                                        <td>{myTotalStake.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Node stake <span>Voting power {myPool ? myPool.votingPower.toString() : 0}%</span></td>
-                                                        <td>{BigNumber(myPool.totalStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
-                                                        <td>
-                                                            <div className={styles.loggedInBtns}>
-                                                                {
-                                                                    myPool && (
-                                                                        <>
-                                                                            <StakeModal buttonText="Stake" pool={myPool} />
-                                                                            <UnstakeModal buttonText="Unstake" pool={myPool} />
-                                                                            {
-                                                                                myPool && BigNumber(myPool.orderedWithdrawAmount).isGreaterThan(0) && BigNumber(myPool.orderedWithdrawUnlockEpoch).isLessThanOrEqualTo(stakingEpoch) && userWallet.myAddr && (
-                                                                                    <button className="primaryBtn" onClick={() => claimOrderedUnstake(myPool)}>Claim</button> )
-                                                                            }
-                                                                            {
-                                                                                myPool && !myPool.isActive && <RemoveValidatorModal buttonText="Remove pool" pool={myPool} />
-                                                                            }
-                                                                        </>
-                                                                    )
-                                                                }
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Node Operator shared rewards</td>
-                                                        <td>{myPool.poolOperatorShare && BigNumber(myPool.poolOperatorShare).dividedBy(100).toString()} %</td>
-                                                        <td>
-                                                            <div className={styles.loggedInBtns}>
-                                                            <UpdatePoolOperatorModal buttonText="Update" pool={myPool} />
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </>
-                                            )}
-                                                <tr>
-                                                    <td>Staked on other candidate</td>
-                                                    <td>{myCandidateStake.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
-                                                    <td>
-                                                        <div className={styles.loggedInBtns}>
-                                                            {
-                                                                !myPool && (
-                                                                    <div className={styles.noPoolButtons}>
-                                                                        <CreateValidatorModal buttonText="Create a pool"/>
-                                                                    </div>
-                                                                )
-                                                            }
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            {myPool && (
-                                                <tr>
-                                                    <td>Score</td>
-                                                    <td>{myPool.score}</td>
-                                                </tr>
-                                            )}
-                                        </tbody>
-                                    </table>
+                                    <button className="primaryBtn">History</button>
+                                    <button className="primaryBtn">Remove pool</button>
                                 </div>
                             </div>
+                            <div className={styles.block}>
+                                <p className={styles.boxHeading}>Score <Tooltip text="" /></p>
+                                <p className={styles.boxDescriptionBig}>921</p>
+                                <p className={styles.boxDescriptionSmall}>
+                                    <FontAwesomeIcon className={styles.arrowRed} icon={faArrowDownLong} />
+                                    10 since 01.01.24
+                                </p>
+                                <div className={styles.boxBtns}>
+                                    <button className="primaryBtn">History</button>
+                                </div>
+                            </div>
+                            <div className={styles.block}>
+                            <p className={styles.boxHeading}>Voting Power</p>
+                                <p className={styles.boxDescriptionBig}>12%</p>
+                                <p className={styles.boxDescriptionSmall}>
+                                    <FontAwesomeIcon className={styles.arrowRed} icon={faArrowDownLong} />
+                                    0.01% since 01.01.24
+                                </p>
+                                <p className={styles.boxDescriptionSmallBold}>
+                                    Proposals created in the current Dao Phase: 10
+                                </p>
+                            </div>
+                            <div className={styles.block}>
+                                <p className={styles.boxHeading}>Monthly rewards <Tooltip text="" /></p>
+                                <p className={styles.boxDescriptionBig}>100 DMD</p>
+                                <p className={styles.boxDescriptionSmall}>
+                                    Earned per 1000 DMD = 5.88 DMD
+                                </p>
+                                <div className={styles.boxBtns}>
+                                    <button className="primaryBtn">History</button>
+                                </div>
+                            </div>
+                            <div className={styles.block}>
+                                <p className={styles.boxHeading}>Node operator shared reward</p>
+                                <p className={styles.boxDescriptionBig}>9%</p>
+                                <p className={styles.boxDescriptionSmall}>
+                                    0x9515...62F94
+                                </p>
+                                <div className={styles.boxBtns}>
+                                    <button className="primaryBtn">Edit</button>
+                                </div>
+                            </div>
+                            <div className={styles.block}>
+                                <p className={styles.boxHeading}>My Total Stake</p>
+                                <p className={styles.boxDescriptionBig}>17000 DMD</p>
+                                <p className={styles.boxDescriptionSmall}>
+                                    <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
+                                    5 DMD since 01.01.24
+                                </p>
+                            </div>
+                            <div className={styles.block}>
+                                <p className={styles.boxHeading}>Stake on other pools</p>
+                                <p className={styles.boxDescriptionBig}>7000 DMD</p>
+                                <p className={styles.boxDescriptionSmall}>
+                                    <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
+                                    5 DMD since 01.01.24
+                                </p>
+                            </div>
+                            <div className={styles.block}>
+                                <p className={styles.boxHeading}>Delegated stake</p>
+                                <p className={styles.boxDescriptionBig}>100 DMD</p>
+                                <p className={styles.boxDescriptionSmall}>
+                                    <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
+                                    5 DMD since 01.01.24
+                                </p>
+                            </div>    
                         </div>
-                    </div>
-
-                    <div className={styles.heroContainer + " hero-container"}>
-                        {myPool && (
-                            <>
-                                <div className="comparison-row-main">
-                                    <h2 className="heading-3">Delegates</h2>
-                                </div>
-                                <table className={styles.styledTable}>
-                                    {
-                                    (() => {
-                                            return (
-                                                myPool && myPool.delegators.length ? (
-                                                    <>
-                                                        <thead>
-                                                            <tr>
-                                                                <td></td>
-                                                                <td>Wallet</td>
-                                                                <td>Delegated Stake</td>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        {
-                                                            myPool && myPool.delegators.length ? myPool.delegators.map((delegator, i) => (
-                                                            <tr key={i} className={styles.tableBodyRow}>
-                                                                <td>
-                                                                    <Jazzicon diameter={40} seed={jsNumberForAddress(delegator.address)} />
-                                                                </td>
-                                                                <td>{delegator.address}</td>
-                                                                <td>{BigNumber(delegator.amount).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
-                                                            </tr>
-                                                            )) : myPool && (
-                                                                <tr>
-                                                                </tr>
-                                                            )
-                                                        }
-                                                        </tbody>
-                                                    </>
-                                                ) : (
-                                                    <thead>
-                                                        <tr>
-                                                            <th>No Delegations</th>
-                                                        </tr>
-                                                    </thead>
-                                                )
-                                            )
-                                        })()
-                                    }
-                                </table>
-                            </>
-                        ) }
-                    </div>
-
-                    <div className={styles.heroContainer + " hero-container"}>
-                        <div className={styles.topValidatorsContainer}>
-                            <div className="comparison-row-main">
-                                <h3 className="heading-3">Validators I've Staked On</h3>
-                            </div>
-                            <div className={styles.tableContainer}>
-                                <table className={styles.styledTable}>
-                                    {
-                                        (() => {
-                                            const hasStakedOnValidators = pools.filter((p) => BigNumber(p.myStake).isGreaterThan(0)).slice(0, 5);
-                                            return hasStakedOnValidators.length ? (
-                                                <>
-                                                    <thead>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th>Wallet</th>
-                                                            <th>Total Stake</th>
-                                                            <th>My Stake</th>
-                                                            <th>Voting Power</th>
-                                                            <th>Score</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {
-                                                            pools
-                                                                .filter((p) => BigNumber(p.myStake).isGreaterThan(0))  // Sort pools by totalStake in descending order
-                                                                .slice(0, 5)  // Get the top 5 pools
-                                                                .map((pool, i) => (
-                                                                    <tr key={i} onClick={() => navigate(`/staking/details/${pool.stakingAddress}`)} className={styles.tableBodyRow}>
-                                                                        <td>
-                                                                            <Jazzicon diameter={40} seed={jsNumberForAddress(pool.stakingAddress)} />
-                                                                        </td>
-                                                                        <td>{pool.stakingAddress}</td>
-                                                                        <td>{BigNumber(pool.totalStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
-                                                                        <td>{userWallet.myAddr && BigNumber(pool.myStake) ? BigNumber(pool.myStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : (<div className={styles.loader}></div>) } DMD</td>
-                                                                        <td>{pool.votingPower.toString()}%</td>
-                                                                        <td>{pool.score}</td>
-                                                                    </tr>
-                                                                ))
-                                                        }
-                                                    </tbody>
-                                                </>
-                                            ) : (
-                                                <thead>
-                                                    <tr>
-                                                        <th>No stakes</th>
-                                                    </tr>
-                                                </thead>
-                                            );
-                                        })()
-                                    }
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={styles.heroContainer + " hero-container"}>
-                        <DaoPhaseBanner showDaoStats={true} />
                     </div>
                 </section>
+                // <section className={styles.heroSection + " hero-section"}>
+                //     <div className="hero-container">
+                //         <div className={styles.heroWrapper + " hero-wrapper"}>
+                //             <div className={styles.heroSplit + " hero-split" }>
+                //                 <div className={styles.infoContainer}>
+                //                     {
+                //                         userWallet.myAddr ? <Jazzicon diameter={60} seed={jsNumberForAddress(userWallet.myAddr)} />
+                //                         : <Jazzicon diameter={60} seed={Math.round(Math.random() * 10000000)} />
+                //                     }
+                //                     <div>
+                //                         <p>User</p>
+                //                         <p onClick={() => copyData(userWallet.myAddr)}>{truncateAddress(userWallet.myAddr)}</p>
+                //                     </div>
+                //                     {
+                //                         myPool && (
+                //                             <p className={myPool?.isActive || (myPool?.isToBeElected || myPool?.isPendingValidator) ? styles.poolActive : styles.poolBanned}>
+                //                                 {myPool?.isActive ? "Active" : (myPool?.isToBeElected || myPool?.isPendingValidator) ? "Valid" : "Invalid"}
+                //                             </p>
+                //                         )
+                //                     }
+                //                 </div>
+                //                 <div className={styles.statsContainer}>
+                //                     <table className={styles.styledTableFirst}>
+                //                         <thead>
+                //                         </thead>
+                //                         <tbody>
+                //                             {myPool && (
+                //                                 <>
+                //                                     <tr>
+                //                                         <td>My stake</td>
+                //                                         <td>{myTotalStake.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
+                //                                     </tr>
+                //                                     <tr>
+                //                                         <td>Node stake <span>Voting power {myPool ? myPool.votingPower.toString() : 0}%</span></td>
+                //                                         <td>{BigNumber(myPool.totalStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
+                //                                         <td>
+                //                                             <div className={styles.loggedInBtns}>
+                //                                                 {
+                //                                                     myPool && (
+                //                                                         <>
+                //                                                             <StakeModal buttonText="Stake" pool={myPool} />
+                //                                                             <UnstakeModal buttonText="Unstake" pool={myPool} />
+                //                                                             {
+                //                                                                 myPool && BigNumber(myPool.orderedWithdrawAmount).isGreaterThan(0) && BigNumber(myPool.orderedWithdrawUnlockEpoch).isLessThanOrEqualTo(stakingEpoch) && userWallet.myAddr && (
+                //                                                                     <button className="primaryBtn" onClick={() => claimOrderedUnstake(myPool)}>Claim</button> )
+                //                                                             }
+                //                                                             {
+                //                                                                 myPool && !myPool.isActive && <RemoveValidatorModal buttonText="Remove pool" pool={myPool} />
+                //                                                             }
+                //                                                         </>
+                //                                                     )
+                //                                                 }
+                //                                             </div>
+                //                                         </td>
+                //                                     </tr>
+                //                                     <tr>
+                //                                         <td>Node Operator shared rewards</td>
+                //                                         <td>{myPool.poolOperatorShare && BigNumber(myPool.poolOperatorShare).dividedBy(100).toString()} %</td>
+                //                                         <td>
+                //                                             <div className={styles.loggedInBtns}>
+                //                                             <UpdatePoolOperatorModal buttonText="Update" pool={myPool} />
+                //                                             </div>
+                //                                         </td>
+                //                                     </tr>
+                //                                 </>
+                //                             )}
+                //                                 <tr>
+                //                                     <td>Staked on other candidate</td>
+                //                                     <td>{myCandidateStake.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
+                //                                     <td>
+                //                                         <div className={styles.loggedInBtns}>
+                //                                             {
+                //                                                 !myPool && (
+                //                                                     <div className={styles.noPoolButtons}>
+                //                                                         <CreateValidatorModal buttonText="Create a pool"/>
+                //                                                     </div>
+                //                                                 )
+                //                                             }
+                //                                         </div>
+                //                                     </td>
+                //                                 </tr>
+                //                             {myPool && (
+                //                                 <tr>
+                //                                     <td>Score</td>
+                //                                     <td>{myPool.score}</td>
+                //                                 </tr>
+                //                             )}
+                //                         </tbody>
+                //                     </table>
+                //                 </div>
+                //             </div>
+                //         </div>
+                //     </div>
+
+                //     <div className={styles.heroContainer + " hero-container"}>
+                //         {myPool && (
+                //             <>
+                //                 <div className="comparison-row-main">
+                //                     <h2 className="heading-3">Delegates</h2>
+                //                 </div>
+                //                 <table className={styles.styledTable}>
+                //                     {
+                //                     (() => {
+                //                             return (
+                //                                 myPool && myPool.delegators.length ? (
+                //                                     <>
+                //                                         <thead>
+                //                                             <tr>
+                //                                                 <td></td>
+                //                                                 <td>Wallet</td>
+                //                                                 <td>Delegated Stake</td>
+                //                                             </tr>
+                //                                         </thead>
+                //                                         <tbody>
+                //                                         {
+                //                                             myPool && myPool.delegators.length ? myPool.delegators.map((delegator, i) => (
+                //                                             <tr key={i} className={styles.tableBodyRow}>
+                //                                                 <td>
+                //                                                     <Jazzicon diameter={40} seed={jsNumberForAddress(delegator.address)} />
+                //                                                 </td>
+                //                                                 <td>{delegator.address}</td>
+                //                                                 <td>{BigNumber(delegator.amount).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
+                //                                             </tr>
+                //                                             )) : myPool && (
+                //                                                 <tr>
+                //                                                 </tr>
+                //                                             )
+                //                                         }
+                //                                         </tbody>
+                //                                     </>
+                //                                 ) : (
+                //                                     <thead>
+                //                                         <tr>
+                //                                             <th>No Delegations</th>
+                //                                         </tr>
+                //                                     </thead>
+                //                                 )
+                //                             )
+                //                         })()
+                //                     }
+                //                 </table>
+                //             </>
+                //         ) }
+                //     </div>
+
+                //     <div className={styles.heroContainer + " hero-container"}>
+                //         <div className={styles.topValidatorsContainer}>
+                //             <div className="comparison-row-main">
+                //                 <h3 className="heading-3">Validators I've Staked On</h3>
+                //             </div>
+                //             <div className={styles.tableContainer}>
+                //                 <table className={styles.styledTable}>
+                //                     {
+                //                         (() => {
+                //                             const hasStakedOnValidators = pools.filter((p) => BigNumber(p.myStake).isGreaterThan(0)).slice(0, 5);
+                //                             return hasStakedOnValidators.length ? (
+                //                                 <>
+                //                                     <thead>
+                //                                         <tr>
+                //                                             <th></th>
+                //                                             <th>Wallet</th>
+                //                                             <th>Total Stake</th>
+                //                                             <th>My Stake</th>
+                //                                             <th>Voting Power</th>
+                //                                             <th>Score</th>
+                //                                         </tr>
+                //                                     </thead>
+                //                                     <tbody>
+                //                                         {
+                //                                             pools
+                //                                                 .filter((p) => BigNumber(p.myStake).isGreaterThan(0))  // Sort pools by totalStake in descending order
+                //                                                 .slice(0, 5)  // Get the top 5 pools
+                //                                                 .map((pool, i) => (
+                //                                                     <tr key={i} onClick={() => navigate(`/staking/details/${pool.stakingAddress}`)} className={styles.tableBodyRow}>
+                //                                                         <td>
+                //                                                             <Jazzicon diameter={40} seed={jsNumberForAddress(pool.stakingAddress)} />
+                //                                                         </td>
+                //                                                         <td>{pool.stakingAddress}</td>
+                //                                                         <td>{BigNumber(pool.totalStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
+                //                                                         <td>{userWallet.myAddr && BigNumber(pool.myStake) ? BigNumber(pool.myStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : (<div className={styles.loader}></div>) } DMD</td>
+                //                                                         <td>{pool.votingPower.toString()}%</td>
+                //                                                         <td>{pool.score}</td>
+                //                                                     </tr>
+                //                                                 ))
+                //                                         }
+                //                                     </tbody>
+                //                                 </>
+                //                             ) : (
+                //                                 <thead>
+                //                                     <tr>
+                //                                         <th>No stakes</th>
+                //                                     </tr>
+                //                                 </thead>
+                //                             );
+                //                         })()
+                //                     }
+                //                 </table>
+                //             </div>
+                //         </div>
+                //     </div>
+
+                //     <div className={styles.heroContainer + " hero-container"}>
+                //         <DaoPhaseBanner showDaoStats={true} />
+                //     </div>
+                // </section>
             ) : (
                 <section className="hero-section">
                     <div className="hero-container">
