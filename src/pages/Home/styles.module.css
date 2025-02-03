@@ -365,6 +365,7 @@ h1 {
   align-items: stretch;
   grid-column-gap: 40px;
   justify-items: stretch;
+  margin-top: 40px;
   grid-template-columns: repeat(4, 1fr);
 }
 

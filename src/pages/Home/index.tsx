@@ -561,7 +561,9 @@ const Home: React.FC<HomeProps> = ({}) => {
             <>
                 <section className="logos-title-large">
                     <div className="container-8">
-                        <h2 className="heading-3 heading-left">DMD Ecosystem Partners</h2>
+                        <div className="comparison-row-main">
+                            <h3 className="heading-3">DMD Ecosystem Partners</h3>
+                        </div>
                         <div className={styles.clientsWrapper + " clients-wrapper"}>
 
                             <img src={p2bLogo} height="39" loading="lazy" alt="p2b logo" className="clients-image" />
@@ -573,9 +575,11 @@ const Home: React.FC<HomeProps> = ({}) => {
                 </section>
 
                 <section className={styles.featuresSection + " features-section"}>
-                    <h2 className={styles.heading3 + " heading-3"}>Become DMD Chain Participant</h2>
-
                     <div className="w-layout-blockcontainer container w-container">
+                        <div className="comparison-row-main">
+                            <h3 className="heading-3">Become DMD Chain Participant</h3>
+                        </div>
+
                         <div className={styles.gridContainer2 + " w-layout-grid grid"}>
                             <div id="w-node-_82c72029-306b-2137-d6f7-1cef7db8fe67-55493c02"
                                 data-w-id="82c72029-306b-2137-d6f7-1cef7db8fe67"
@@ -608,7 +612,9 @@ const Home: React.FC<HomeProps> = ({}) => {
                 <section className="logos-title-large">
                     <div className="container-8">
                         <div className="hero-wrapper-two">
-                            <h2 className="heading-3 heading-left">Frequently Asked Questions</h2>
+                            <div className="comparison-row-main">
+                                <h3 className="heading-3">Frequently Asked Questions</h3>
+                            </div>
 
                             <details>
                                 <summary>1. What Is Staking?</summary>
