@@ -82,320 +82,7 @@ const Home: React.FC<HomeProps> = ({}) => {
     <>
 
         {
-            userWallet.myAddr ? (
-                <section className={styles.heroSection + " hero-section"}>
-                    <div className="hero-container">
-
-                        <div className={styles.infoContainer}>
-                            {
-                                userWallet.myAddr ? <Jazzicon diameter={60} seed={jsNumberForAddress(userWallet.myAddr)} />
-                                : <Jazzicon diameter={60} seed={Math.round(Math.random() * 10000000)} />
-                            }
-                            <div>
-                                <p>User</p>
-                                <p onClick={() => copyData(userWallet.myAddr)}>{truncateAddress(userWallet.myAddr)}</p>
-                            </div>
-                            {
-                                myPool && (
-                                    <p className={myPool?.isActive || (myPool?.isToBeElected || myPool?.isPendingValidator) ? styles.poolActive : styles.poolBanned}>
-                                        {myPool?.isActive ? "Active" : (myPool?.isToBeElected || myPool?.isPendingValidator) ? "Valid" : "Invalid"}
-                                    </p>
-                                )
-                            }
-                        </div>
-
-                        <div className={styles.boxContainer}>
-                            <div className={`${styles.block} ${styles.blockLarge}`}>
-                                <p className={styles.boxHeading}>Pool Stake <Tooltip text="" /></p>
-                                <p className={styles.boxDescriptionBig}>1000 DMD</p>
-                                <p className={styles.boxDescriptionSmall}>
-                                    <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
-                                    5 DMD since 01.01.24
-                                </p>
-                                <div className={styles.boxBtns}>
-                                    <div>
-                                        <button className="primaryBtn">Stake</button>
-                                        <button className="primaryBtn">Unstake</button>
-                                    </div>
-                                    <button className="primaryBtn">History</button>
-                                    <button className="primaryBtn">Remove pool</button>
-                                </div>
-                            </div>
-                            <div className={styles.block}>
-                                <p className={styles.boxHeading}>Score <Tooltip text="" /></p>
-                                <p className={styles.boxDescriptionBig}>921</p>
-                                <p className={styles.boxDescriptionSmall}>
-                                    <FontAwesomeIcon className={styles.arrowRed} icon={faArrowDownLong} />
-                                    10 since 01.01.24
-                                </p>
-                                <div className={styles.boxBtns}>
-                                    <button className="primaryBtn">History</button>
-                                </div>
-                            </div>
-                            <div className={styles.block}>
-                            <p className={styles.boxHeading}>Voting Power</p>
-                                <p className={styles.boxDescriptionBig}>12%</p>
-                                <p className={styles.boxDescriptionSmall}>
-                                    <FontAwesomeIcon className={styles.arrowRed} icon={faArrowDownLong} />
-                                    0.01% since 01.01.24
-                                </p>
-                                <p className={styles.boxDescriptionSmallBold}>
-                                    Proposals created in the current Dao Phase: 10
-                                </p>
-                            </div>
-                            <div className={styles.block}>
-                                <p className={styles.boxHeading}>Monthly rewards <Tooltip text="" /></p>
-                                <p className={styles.boxDescriptionBig}>100 DMD</p>
-                                <p className={styles.boxDescriptionSmall}>
-                                    Earned per 1000 DMD = 5.88 DMD
-                                </p>
-                                <div className={styles.boxBtns}>
-                                    <button className="primaryBtn">History</button>
-                                </div>
-                            </div>
-                            <div className={styles.block}>
-                                <p className={styles.boxHeading}>Node operator shared reward</p>
-                                <p className={styles.boxDescriptionBig}>9%</p>
-                                <p className={styles.boxDescriptionSmall}>
-                                    0x9515...62F94
-                                </p>
-                                <div className={styles.boxBtns}>
-                                    <button className="primaryBtn">Edit</button>
-                                </div>
-                            </div>
-                            <div className={styles.block}>
-                                <p className={styles.boxHeading}>My Total Stake</p>
-                                <p className={styles.boxDescriptionBig}>17000 DMD</p>
-                                <p className={styles.boxDescriptionSmall}>
-                                    <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
-                                    5 DMD since 01.01.24
-                                </p>
-                            </div>
-                            <div className={styles.block}>
-                                <p className={styles.boxHeading}>Stake on other pools</p>
-                                <p className={styles.boxDescriptionBig}>7000 DMD</p>
-                                <p className={styles.boxDescriptionSmall}>
-                                    <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
-                                    5 DMD since 01.01.24
-                                </p>
-                            </div>
-                            <div className={styles.block}>
-                                <p className={styles.boxHeading}>Delegated stake</p>
-                                <p className={styles.boxDescriptionBig}>100 DMD</p>
-                                <p className={styles.boxDescriptionSmall}>
-                                    <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
-                                    5 DMD since 01.01.24
-                                </p>
-                            </div>    
-                        </div>
-                    </div>
-                </section>
-                // <section className={styles.heroSection + " hero-section"}>
-                //     <div className="hero-container">
-                //         <div className={styles.heroWrapper + " hero-wrapper"}>
-                //             <div className={styles.heroSplit + " hero-split" }>
-                //                 <div className={styles.infoContainer}>
-                //                     {
-                //                         userWallet.myAddr ? <Jazzicon diameter={60} seed={jsNumberForAddress(userWallet.myAddr)} />
-                //                         : <Jazzicon diameter={60} seed={Math.round(Math.random() * 10000000)} />
-                //                     }
-                //                     <div>
-                //                         <p>User</p>
-                //                         <p onClick={() => copyData(userWallet.myAddr)}>{truncateAddress(userWallet.myAddr)}</p>
-                //                     </div>
-                //                     {
-                //                         myPool && (
-                //                             <p className={myPool?.isActive || (myPool?.isToBeElected || myPool?.isPendingValidator) ? styles.poolActive : styles.poolBanned}>
-                //                                 {myPool?.isActive ? "Active" : (myPool?.isToBeElected || myPool?.isPendingValidator) ? "Valid" : "Invalid"}
-                //                             </p>
-                //                         )
-                //                     }
-                //                 </div>
-                //                 <div className={styles.statsContainer}>
-                //                     <table className={styles.styledTableFirst}>
-                //                         <thead>
-                //                         </thead>
-                //                         <tbody>
-                //                             {myPool && (
-                //                                 <>
-                //                                     <tr>
-                //                                         <td>My stake</td>
-                //                                         <td>{myTotalStake.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
-                //                                     </tr>
-                //                                     <tr>
-                //                                         <td>Node stake <span>Voting power {myPool ? myPool.votingPower.toString() : 0}%</span></td>
-                //                                         <td>{BigNumber(myPool.totalStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
-                //                                         <td>
-                //                                             <div className={styles.loggedInBtns}>
-                //                                                 {
-                //                                                     myPool && (
-                //                                                         <>
-                //                                                             <StakeModal buttonText="Stake" pool={myPool} />
-                //                                                             <UnstakeModal buttonText="Unstake" pool={myPool} />
-                //                                                             {
-                //                                                                 myPool && BigNumber(myPool.orderedWithdrawAmount).isGreaterThan(0) && BigNumber(myPool.orderedWithdrawUnlockEpoch).isLessThanOrEqualTo(stakingEpoch) && userWallet.myAddr && (
-                //                                                                     <button className="primaryBtn" onClick={() => claimOrderedUnstake(myPool)}>Claim</button> )
-                //                                                             }
-                //                                                             {
-                //                                                                 myPool && !myPool.isActive && <RemoveValidatorModal buttonText="Remove pool" pool={myPool} />
-                //                                                             }
-                //                                                         </>
-                //                                                     )
-                //                                                 }
-                //                                             </div>
-                //                                         </td>
-                //                                     </tr>
-                //                                     <tr>
-                //                                         <td>Node Operator shared rewards</td>
-                //                                         <td>{myPool.poolOperatorShare && BigNumber(myPool.poolOperatorShare).dividedBy(100).toString()} %</td>
-                //                                         <td>
-                //                                             <div className={styles.loggedInBtns}>
-                //                                             <UpdatePoolOperatorModal buttonText="Update" pool={myPool} />
-                //                                             </div>
-                //                                         </td>
-                //                                     </tr>
-                //                                 </>
-                //                             )}
-                //                                 <tr>
-                //                                     <td>Staked on other candidate</td>
-                //                                     <td>{myCandidateStake.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
-                //                                     <td>
-                //                                         <div className={styles.loggedInBtns}>
-                //                                             {
-                //                                                 !myPool && (
-                //                                                     <div className={styles.noPoolButtons}>
-                //                                                         <CreateValidatorModal buttonText="Create a pool"/>
-                //                                                     </div>
-                //                                                 )
-                //                                             }
-                //                                         </div>
-                //                                     </td>
-                //                                 </tr>
-                //                             {myPool && (
-                //                                 <tr>
-                //                                     <td>Score</td>
-                //                                     <td>{myPool.score}</td>
-                //                                 </tr>
-                //                             )}
-                //                         </tbody>
-                //                     </table>
-                //                 </div>
-                //             </div>
-                //         </div>
-                //     </div>
-
-                //     <div className={styles.heroContainer + " hero-container"}>
-                //         {myPool && (
-                //             <>
-                //                 <div className="comparison-row-main">
-                //                     <h2 className="heading-3">Delegates</h2>
-                //                 </div>
-                //                 <table className={styles.styledTable}>
-                //                     {
-                //                     (() => {
-                //                             return (
-                //                                 myPool && myPool.delegators.length ? (
-                //                                     <>
-                //                                         <thead>
-                //                                             <tr>
-                //                                                 <td></td>
-                //                                                 <td>Wallet</td>
-                //                                                 <td>Delegated Stake</td>
-                //                                             </tr>
-                //                                         </thead>
-                //                                         <tbody>
-                //                                         {
-                //                                             myPool && myPool.delegators.length ? myPool.delegators.map((delegator, i) => (
-                //                                             <tr key={i} className={styles.tableBodyRow}>
-                //                                                 <td>
-                //                                                     <Jazzicon diameter={40} seed={jsNumberForAddress(delegator.address)} />
-                //                                                 </td>
-                //                                                 <td>{delegator.address}</td>
-                //                                                 <td>{BigNumber(delegator.amount).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
-                //                                             </tr>
-                //                                             )) : myPool && (
-                //                                                 <tr>
-                //                                                 </tr>
-                //                                             )
-                //                                         }
-                //                                         </tbody>
-                //                                     </>
-                //                                 ) : (
-                //                                     <thead>
-                //                                         <tr>
-                //                                             <th>No Delegations</th>
-                //                                         </tr>
-                //                                     </thead>
-                //                                 )
-                //                             )
-                //                         })()
-                //                     }
-                //                 </table>
-                //             </>
-                //         ) }
-                //     </div>
-
-                //     <div className={styles.heroContainer + " hero-container"}>
-                //         <div className={styles.topValidatorsContainer}>
-                //             <div className="comparison-row-main">
-                //                 <h3 className="heading-3">Validators I've Staked On</h3>
-                //             </div>
-                //             <div className={styles.tableContainer}>
-                //                 <table className={styles.styledTable}>
-                //                     {
-                //                         (() => {
-                //                             const hasStakedOnValidators = pools.filter((p) => BigNumber(p.myStake).isGreaterThan(0)).slice(0, 5);
-                //                             return hasStakedOnValidators.length ? (
-                //                                 <>
-                //                                     <thead>
-                //                                         <tr>
-                //                                             <th></th>
-                //                                             <th>Wallet</th>
-                //                                             <th>Total Stake</th>
-                //                                             <th>My Stake</th>
-                //                                             <th>Voting Power</th>
-                //                                             <th>Score</th>
-                //                                         </tr>
-                //                                     </thead>
-                //                                     <tbody>
-                //                                         {
-                //                                             pools
-                //                                                 .filter((p) => BigNumber(p.myStake).isGreaterThan(0))  // Sort pools by totalStake in descending order
-                //                                                 .slice(0, 5)  // Get the top 5 pools
-                //                                                 .map((pool, i) => (
-                //                                                     <tr key={i} onClick={() => navigate(`/staking/details/${pool.stakingAddress}`)} className={styles.tableBodyRow}>
-                //                                                         <td>
-                //                                                             <Jazzicon diameter={40} seed={jsNumberForAddress(pool.stakingAddress)} />
-                //                                                         </td>
-                //                                                         <td>{pool.stakingAddress}</td>
-                //                                                         <td>{BigNumber(pool.totalStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
-                //                                                         <td>{userWallet.myAddr && BigNumber(pool.myStake) ? BigNumber(pool.myStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : (<div className={styles.loader}></div>) } DMD</td>
-                //                                                         <td>{pool.votingPower.toString()}%</td>
-                //                                                         <td>{pool.score}</td>
-                //                                                     </tr>
-                //                                                 ))
-                //                                         }
-                //                                     </tbody>
-                //                                 </>
-                //                             ) : (
-                //                                 <thead>
-                //                                     <tr>
-                //                                         <th>No stakes</th>
-                //                                     </tr>
-                //                                 </thead>
-                //                             );
-                //                         })()
-                //                     }
-                //                 </table>
-                //             </div>
-                //         </div>
-                //     </div>
-
-                //     <div className={styles.heroContainer + " hero-container"}>
-                //         <DaoPhaseBanner showDaoStats={true} />
-                //     </div>
-                // </section>
-            ) : (
+            !userWallet.myAddr && (
                 <section className="hero-section">
                     <div className="hero-container">
                         <div className="hero-wrapper">
@@ -461,7 +148,7 @@ const Home: React.FC<HomeProps> = ({}) => {
 
       <section className="statistics-table">
           <div className="container-5">
-              <div className="comparison-table">
+              <div className={styles.mt0 + " comparison-table"}>
                   <div className="comparison-row-main">
                       <h3 className="heading-3">Network Statistics</h3>
                   </div>
@@ -552,34 +239,37 @@ const Home: React.FC<HomeProps> = ({}) => {
                         <a className="primaryBtn" onClick={() => {startTransition(() => {navigate('staking')})}}>See the list</a>
                     </div>
                 </div>
+
+                <div className={styles.heroContainer + " hero-container"}>
+                    <DaoPhaseBanner showDaoStats={true} />
+                </div>
             </section>
         )
       }
 
-      {
-        !userWallet.myAddr && (
-            <>
-                <section className="logos-title-large">
-                    <div className="container-8">
-                        <div className="comparison-row-main">
-                            <h3 className="heading-3">DMD Ecosystem Partners</h3>
-                        </div>
-                        <div className={styles.clientsWrapper + " clients-wrapper"}>
+        <section className="logos-title-large">
+            <div className="container-8">
+                <div className="comparison-row-main">
+                    <h3 className="heading-3">DMD Ecosystem Partners</h3>
+                </div>
+                <div className={styles.clientsWrapper + " clients-wrapper"}>
 
-                            <img src={p2bLogo} height="39" loading="lazy" alt="p2b logo" className="clients-image" />
-                            <img src={bitmartLogo} height="39" loading="lazy" alt="bitmart logo" className="clients-image" />
-                            <img src={xeggexLogo} height="39" loading="lazy" alt="blockserve logo" className="clients-image" />
-                            <img src={blockserveLogo} height="39" loading="lazy" alt="blockserve logo" className="clients-image" />
-                        </div>
-                    </div>
-                </section>
+                    <img src={p2bLogo} height="39" loading="lazy" alt="p2b logo" className="clients-image" />
+                    <img src={bitmartLogo} height="39" loading="lazy" alt="bitmart logo" className="clients-image" />
+                    <img src={xeggexLogo} height="39" loading="lazy" alt="blockserve logo" className="clients-image" />
+                    <img src={blockserveLogo} height="39" loading="lazy" alt="blockserve logo" className="clients-image" />
+                </div>
+            </div>
+        </section>
 
+        {
+            !userWallet.myAddr && (
                 <section className={styles.featuresSection + " features-section"}>
                     <div className="w-layout-blockcontainer container w-container">
                         <div className="comparison-row-main">
                             <h3 className="heading-3">Become DMD Chain Participant</h3>
                         </div>
-
+        
                         <div className={styles.gridContainer2 + " w-layout-grid grid"}>
                             <div id="w-node-_82c72029-306b-2137-d6f7-1cef7db8fe67-55493c02"
                                 data-w-id="82c72029-306b-2137-d6f7-1cef7db8fe67"
@@ -608,103 +298,102 @@ const Home: React.FC<HomeProps> = ({}) => {
                         </div>
                     </div>
                 </section>
+            )
+        }
 
-                <section className="logos-title-large">
-                    <div className="container-8">
-                        <div className="hero-wrapper-two">
-                            <div className="comparison-row-main">
-                                <h3 className="heading-3">Frequently Asked Questions</h3>
-                            </div>
-
-                            <details>
-                                <summary>1. What Is Staking?</summary>
-                                <p>
-                                    Staking in the DMD ecosystem is a way for holders to grow their holdings while contributing to the security and governance of the network. You can either become a validator (actively participate in the network's operations) or delegate your DMD to a validator and by doing so increase his chance to become selected as an active validator. Validators perform tasks like creating new blocks and validating transactions, while delegators support a validator by staking their DMD with them and sharing in the rewards.
-                                </p>
-                            </details>
-
-                            <details>
-                                <summary>2. Who Is A Validator?</summary>
-                                <p>
-                                    Blockchain validators or validator candidates are responsible for verifying and adding transactions to the blockchain. Users delegate their coins, or stake, to a validator. Validators receive 20% rewards from each Epoch they participate in as active validators, as a Validator operator reward. The rest of the Validator rewards (80%) are distributed proportionally based on the staked coins on that validator.
-                                </p>
-                                <p><strong>Validator candidates require:</strong></p>
-                                <ul style={{ listStyleType: 'disc' }}>
-                                    <li>Full node installation of the DMDv4 chain on a Linux server with the DMD version of Open Ethereum, which includes the DMDv4 extensions (HBBFT/POSDAO) and proper configuration.</li>
-                                    <li>Internet with a Static IP address and reliable 24/7 uptime.</li>
-                                    <li>Minimum collateral of 10,000 DMD (from validator candidate owner), with a maximum of 50,000 DMD staked on one validator candidate (combined from the owner and others who stake on top of the node).</li>
-                                    <li>Link to the address of the node that performs the work.</li>
-                                    <li>Validator candidate registration and collateral locking through the POSDAO dApp.</li>
-                                </ul>
-                                <p>
-                                    Explore more about validators <a target="_blank" href="https://github.com/DMDcoin/whitepaper/wiki/D.-The-DMD-Diamond-Blockchain's-Solutions#d62-validators">here</a>.
-                                </p>
-                            </details>
-
-                            <details>
-                                <summary>3. How do I participate in Staking?</summary>
-                                <div style={{ textAlign: 'left' }}>
-                                    <p></p>
-                                    <ol>
-                                        <li><strong>Acquire DMD Tokens:</strong><br />
-                                            You can buy DMD tokens from supported cryptocurrency exchanges.
-                                        </li>
-                                        <br />
-                                        <li><strong>Choose a Staking Method:</strong><br />
-                                            You can choose from multiple staking options:
-                                            <ul style={{ listStyleType: 'disc' }}>
-                                                <li><strong>Stake as a Validator:</strong> This requires running a full node and actively participating in network operations. It’s more technical and requires at least 10,000 DMD. As a node operator, you also earn 20% of the validator rewards in addition to rewards proportional to your coin holdings.</li>
-                                                <li><strong>Delegate to a Validator:</strong> If running a full node is not feasible, you can delegate your DMD to an existing validator. This is easier and still earns you rewards proportional to your coin holdings.</li>
-                                            </ul>
-                                        </li>
-                                        <br />
-                                        <li><strong>Start Staking:</strong><br />
-                                            <ul style={{ listStyleType: 'disc' }}>
-                                                <li><strong>Access the Staking Interface:</strong> You can connect to our user-friendly interface with your wallet.</li>
-                                                <li><strong>Choose a Validator (if delegating):</strong> Research and choose a reliable validator to delegate your DMD. Look for validators with a good track record and solid reputation.</li>
-                                                <li><strong>Set the Amount:</strong> Decide how much DMD you want to stake or delegate.</li>
-                                                <li><strong>Confirm and Stake:</strong> Once you’ve chosen your validator and set the amount, confirm the transaction to start staking.</li>
-                                            </ul>
-                                        </li>
-                                    </ol>
-                                </div>
-                            </details>
-
-                            <details>
-                                <summary>4. I have some DMD. Which validator should I delegate it to?</summary>
-                                <p>
-                                    Choosing a validator for delegating your DMD is an important decision that can affect your staking rewards and the security of your coins. Here are some steps and considerations to help you choose the right validator:
-                                </p>
-                                <ul style={{ listStyleType: 'disc' }}>
-                                    <li><strong>Reputation and Reliability:</strong> Look for validators with a good reputation in the community. Validators with a history of uptime are generally more reliable.</li>
-                                    <li><strong>Community Involvement:</strong> Validators that are actively involved in the community and governance might be more aligned with the network’s long-term success.</li>
-                                    <li><strong>Diversify Your Delegation:</strong> To mitigate risk, you might consider splitting your DMD across multiple validators. This way, if one validator underperforms, your other staked tokens are still earning rewards.</li>
-                                </ul>
-                            </details>
-
-
-                            <details>
-                                <summary>5. Is there a minimum amount of DMD required to stake? </summary>
-                                <p>
-                                    The minimum required amount for staking is 100 DMD, when you want to stake on top of the validator candidate. If you want to create a pool as validator candidate yourself, 10000 DMD is required to be locked in staking mode.
-                                </p>
-                            </details>
-
-                            <details>
-                                <summary>6. What about rewards from staking?</summary>
-                                <p>The rewards per epoch cycle (12 hours) are always 1/6000 of all coins in delta pot and reinsert pot combined. Upfront, the DAO Governance share is taken (10%). The rest of the epoch rewards are split between all validators of the actual active set, and then once again between the participants (coin owners) on each validator. So if there are 25 validators in the active set, each validator gets 1/25 of this epoch rewards. Before this validator reward is split between coin owners on that validator proportional, a 20% share of rewards is removed and accounted to the node operator (validator owner) for the effort to set up and maintain the validator node. </p>
-                                <p>More calculation examples <a target="_blank" href="https://github.com/DMDcoin/whitepaper/wiki/D.-The-DMD-Diamond-Blockchain's-Solutions#d62-validators">here</a></p>
-                            </details>
-
-                            <div className="div-block-3">
-                                <a onClick={() => {startTransition(() => {navigate('faqs')})}} className="button w-button">See More</a>
-                            </div>
-                        </div>
+        <section className="logos-title-large">
+            <div className="container-8">
+                <div className="hero-wrapper-two">
+                    <div className="comparison-row-main">
+                        <h3 className="heading-3">Frequently Asked Questions</h3>
                     </div>
-                </section>
-            </>
-        )
-      }
+
+                    <details>
+                        <summary>1. What Is Staking?</summary>
+                        <p>
+                            Staking in the DMD ecosystem is a way for holders to grow their holdings while contributing to the security and governance of the network. You can either become a validator (actively participate in the network's operations) or delegate your DMD to a validator and by doing so increase his chance to become selected as an active validator. Validators perform tasks like creating new blocks and validating transactions, while delegators support a validator by staking their DMD with them and sharing in the rewards.
+                        </p>
+                    </details>
+
+                    <details>
+                        <summary>2. Who Is A Validator?</summary>
+                        <p>
+                            Blockchain validators or validator candidates are responsible for verifying and adding transactions to the blockchain. Users delegate their coins, or stake, to a validator. Validators receive 20% rewards from each Epoch they participate in as active validators, as a Validator operator reward. The rest of the Validator rewards (80%) are distributed proportionally based on the staked coins on that validator.
+                        </p>
+                        <p><strong>Validator candidates require:</strong></p>
+                        <ul style={{ listStyleType: 'disc' }}>
+                            <li>Full node installation of the DMDv4 chain on a Linux server with the DMD version of Open Ethereum, which includes the DMDv4 extensions (HBBFT/POSDAO) and proper configuration.</li>
+                            <li>Internet with a Static IP address and reliable 24/7 uptime.</li>
+                            <li>Minimum collateral of 10,000 DMD (from validator candidate owner), with a maximum of 50,000 DMD staked on one validator candidate (combined from the owner and others who stake on top of the node).</li>
+                            <li>Link to the address of the node that performs the work.</li>
+                            <li>Validator candidate registration and collateral locking through the POSDAO dApp.</li>
+                        </ul>
+                        <p>
+                            Explore more about validators <a target="_blank" href="https://github.com/DMDcoin/whitepaper/wiki/D.-The-DMD-Diamond-Blockchain's-Solutions#d62-validators">here</a>.
+                        </p>
+                    </details>
+
+                    <details>
+                        <summary>3. How do I participate in Staking?</summary>
+                        <div style={{ textAlign: 'left' }}>
+                            <p></p>
+                            <ol>
+                                <li><strong>Acquire DMD Tokens:</strong><br />
+                                    You can buy DMD tokens from supported cryptocurrency exchanges.
+                                </li>
+                                <br />
+                                <li><strong>Choose a Staking Method:</strong><br />
+                                    You can choose from multiple staking options:
+                                    <ul style={{ listStyleType: 'disc' }}>
+                                        <li><strong>Stake as a Validator:</strong> This requires running a full node and actively participating in network operations. It’s more technical and requires at least 10,000 DMD. As a node operator, you also earn 20% of the validator rewards in addition to rewards proportional to your coin holdings.</li>
+                                        <li><strong>Delegate to a Validator:</strong> If running a full node is not feasible, you can delegate your DMD to an existing validator. This is easier and still earns you rewards proportional to your coin holdings.</li>
+                                    </ul>
+                                </li>
+                                <br />
+                                <li><strong>Start Staking:</strong><br />
+                                    <ul style={{ listStyleType: 'disc' }}>
+                                        <li><strong>Access the Staking Interface:</strong> You can connect to our user-friendly interface with your wallet.</li>
+                                        <li><strong>Choose a Validator (if delegating):</strong> Research and choose a reliable validator to delegate your DMD. Look for validators with a good track record and solid reputation.</li>
+                                        <li><strong>Set the Amount:</strong> Decide how much DMD you want to stake or delegate.</li>
+                                        <li><strong>Confirm and Stake:</strong> Once you’ve chosen your validator and set the amount, confirm the transaction to start staking.</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                    </details>
+
+                    <details>
+                        <summary>4. I have some DMD. Which validator should I delegate it to?</summary>
+                        <p>
+                            Choosing a validator for delegating your DMD is an important decision that can affect your staking rewards and the security of your coins. Here are some steps and considerations to help you choose the right validator:
+                        </p>
+                        <ul style={{ listStyleType: 'disc' }}>
+                            <li><strong>Reputation and Reliability:</strong> Look for validators with a good reputation in the community. Validators with a history of uptime are generally more reliable.</li>
+                            <li><strong>Community Involvement:</strong> Validators that are actively involved in the community and governance might be more aligned with the network’s long-term success.</li>
+                            <li><strong>Diversify Your Delegation:</strong> To mitigate risk, you might consider splitting your DMD across multiple validators. This way, if one validator underperforms, your other staked tokens are still earning rewards.</li>
+                        </ul>
+                    </details>
+
+
+                    <details>
+                        <summary>5. Is there a minimum amount of DMD required to stake? </summary>
+                        <p>
+                            The minimum required amount for staking is 100 DMD, when you want to stake on top of the validator candidate. If you want to create a pool as validator candidate yourself, 10000 DMD is required to be locked in staking mode.
+                        </p>
+                    </details>
+
+                    <details>
+                        <summary>6. What about rewards from staking?</summary>
+                        <p>The rewards per epoch cycle (12 hours) are always 1/6000 of all coins in delta pot and reinsert pot combined. Upfront, the DAO Governance share is taken (10%). The rest of the epoch rewards are split between all validators of the actual active set, and then once again between the participants (coin owners) on each validator. So if there are 25 validators in the active set, each validator gets 1/25 of this epoch rewards. Before this validator reward is split between coin owners on that validator proportional, a 20% share of rewards is removed and accounted to the node operator (validator owner) for the effort to set up and maintain the validator node. </p>
+                        <p>More calculation examples <a target="_blank" href="https://github.com/DMDcoin/whitepaper/wiki/D.-The-DMD-Diamond-Blockchain's-Solutions#d62-validators">here</a></p>
+                    </details>
+
+                    <div className="div-block-3">
+                        <a onClick={() => {startTransition(() => {navigate('faqs')})}} className="button w-button">See More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
     </>
   );

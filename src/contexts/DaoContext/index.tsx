@@ -189,12 +189,13 @@ const DaoContextProvider: React.FC<ContextProviderProps> = ({ children }) => {
     try {
       if (updatedData && (!updatedData.proposer || !['1', '5', '6'].includes(updatedData.state))) {
         proposalDetails = await web3Context.contractsManager.daoContract.methods.getProposal(proposalId).call();
+        console.log({proposalDetails})
         updatedData = {
           ...updatedData,
           ...proposalDetails,
           values: proposalDetails?.[4],
           daoPhaseCount: proposalDetails?.[9] || "1",
-          proposalType: getProposalTypeString(proposalDetails?.[10] || "3"),
+          proposalType: getProposalTypeString(proposalDetails?.[11] || "3"),
         };
       }
 

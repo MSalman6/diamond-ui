@@ -2,6 +2,7 @@ import NavBar from "./layout/Navbar";
 import Footer from "./layout/Footer";
 import NotFound from "./pages/NotFound";
 import Loader from "./components/Loader";
+import UserProfile from "./pages/Profile";
 import React, { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -69,6 +70,8 @@ const App: React.FC<AppProps> = () => {
           
           <Route path="staking/" element={<Pools />} />
           <Route path="staking/details/:poolAddress" element={<PoolDetails />} />
+
+          <Route path="profile" element={<UserProfile />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>

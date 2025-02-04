@@ -47,7 +47,10 @@ const NavBar: React.FC<NavBarProps> = () => {
               </div>
                 
                 {web3Context.userWallet && web3Context.userWallet.myAddr ? (
-                  <a onClick={() => {startTransition(() => {navigate('dao')})}} className="nav-link w-nav-link">DAO</a>
+                  <>
+                    <a onClick={() => {startTransition(() => {navigate('dao')})}} className="nav-link w-nav-link">DAO</a>
+                    <button onClick={() => {startTransition(() => {navigate('profile')})}} className="button w-button w-nav-link-button">Profile</button>
+                  </>
                   ) : (
                     <button onClick={() => walletConnectContext.appKit.open()} disabled={isSyncingPools} className="button w-button w-nav-link-button">Connect</button>
                 )}
