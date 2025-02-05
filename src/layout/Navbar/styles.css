@@ -17,3 +17,48 @@
 .dropdown-toggle-2.w-dropdown-toggle:hover .text-block-12 {
   color: #39d6ff;
 }
+
+.icon.w-icon-dropdown-toggle {
+  margin: auto;
+}
+
+.w-dropdown-toggle {
+  margin-right: 0px;
+}
+
+.dropdown-toggle-2.w-dropdown-toggle {
+  padding-right: 0px;
+}
+
+.text-block-12 {
+  margin-right: 20px;
+}
+
+.infoContainer {
+  gap: 0.5rem;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.infoContainer > div {
+  display: flex;
+  text-align: start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.infoContainer > div:hover * {
+  color: #39d6ff;
+}
+
+.infoContainer > div > span {
+  color: #0e44b2;
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 15px;
+  font-weight: 600;
+}

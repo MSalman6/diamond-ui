@@ -12,9 +12,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useStakingContext } from "../../contexts/StakingContext";
 import { faArrowDownLong, faArrowUpLong } from "@fortawesome/free-solid-svg-icons";
 
-interface UserProfileProps {}
+interface UserProfileProps {
+  viewFor: string;
+}
 
-const UserProfile: React.FC<UserProfileProps> = ({ }) => {
+const UserProfile: React.FC<UserProfileProps> = ({ viewFor }) => {
   const navigate = useNavigate();
   const { userWallet } = useWeb3Context();
 
@@ -38,7 +40,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ }) => {
               : <Jazzicon diameter={60} seed={Math.round(Math.random() * 10000000)} />
           }
           <div>
-            <p>User</p>
+            {viewFor === "profile" ? <p>User</p> : ""}
             <p onClick={() => copyData(userWallet.myAddr)}>{truncateAddress(userWallet.myAddr)}</p>
           </div>
           {
@@ -51,7 +53,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ }) => {
         </div>
 
         <div className={styles.boxContainer}>
-          <div className={`${styles.block} ${styles.blockLarge}`}>
+          <div className={`${styles.block} ${viewFor === "profile" ? styles.blockLarge : ""}`}>
             <p className={styles.boxHeading}>Pool Stake <Tooltip text="" /></p>
             <p className={styles.boxDescriptionBig}>1000 DMD</p>
             <p className={styles.boxDescriptionSmall}>
@@ -63,8 +65,15 @@ const UserProfile: React.FC<UserProfileProps> = ({ }) => {
                 <button className="primaryBtn">Stake</button>
                 <button className="primaryBtn">Unstake</button>
               </div>
-              <button className="primaryBtn">History</button>
-              <button className="primaryBtn">Remove pool</button>
+              {
+                viewFor === "profile" && (
+                  <>
+                    <button className="primaryBtn">History</button>
+                    <button className="primaryBtn">Remove pool</button>
+                  </>
+                )
+              }
+              
             </div>
           </div>
           <div className={styles.block}>
@@ -89,6 +98,20 @@ const UserProfile: React.FC<UserProfileProps> = ({ }) => {
               Proposals created in the current Dao Phase: 10
             </p>
           </div>
+
+          {
+            viewFor !== "profile" && (
+              <div className={styles.block}>
+                <p className={styles.boxHeading}>Validator Stake</p>
+                <p className={styles.boxDescriptionBig}>10005 DMD</p>
+                <p className={styles.boxDescriptionSmall}>
+                  <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
+                  5 DMD since 01.01.24
+                </p>
+              </div>
+            )
+          }
+
           <div className={styles.block}>
             <p className={styles.boxHeading}>Monthly rewards <Tooltip text="" /></p>
             <p className={styles.boxDescriptionBig}>100 DMD</p>
@@ -99,32 +122,48 @@ const UserProfile: React.FC<UserProfileProps> = ({ }) => {
               <button className="primaryBtn">History</button>
             </div>
           </div>
-          <div className={styles.block}>
-            <p className={styles.boxHeading}>Node operator shared reward</p>
-            <p className={styles.boxDescriptionBig}>9%</p>
-            <p className={styles.boxDescriptionSmall}>
-              0x9515...62F94
-            </p>
-            <div className={styles.boxBtns}>
-              <button className="primaryBtn">Edit</button>
-            </div>
-          </div>
-          <div className={styles.block}>
-            <p className={styles.boxHeading}>My Total Stake</p>
-            <p className={styles.boxDescriptionBig}>17000 DMD</p>
-            <p className={styles.boxDescriptionSmall}>
-              <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
-              5 DMD since 01.01.24
-            </p>
-          </div>
-          <div className={styles.block}>
-            <p className={styles.boxHeading}>Stake on other pools</p>
-            <p className={styles.boxDescriptionBig}>7000 DMD</p>
-            <p className={styles.boxDescriptionSmall}>
-              <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
-              5 DMD since 01.01.24
-            </p>
-          </div>
+
+          {
+            viewFor === "profile" && (
+              <div className={styles.block}>
+                <p className={styles.boxHeading}>Node operator shared reward</p>
+                <p className={styles.boxDescriptionBig}>9%</p>
+                <p className={styles.boxDescriptionSmall}>
+                  0x9515...62F94
+                </p>
+                <div className={styles.boxBtns}>
+                  <button className="primaryBtn">Edit</button>
+                </div>
+              </div>
+            )
+          }
+
+          {
+            viewFor === "profile" && (
+              <div className={styles.block}>
+                <p className={styles.boxHeading}>My Total Stake</p>
+                <p className={styles.boxDescriptionBig}>17000 DMD</p>
+                <p className={styles.boxDescriptionSmall}>
+                  <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
+                  5 DMD since 01.01.24
+                </p>
+              </div>
+            )
+          }
+
+          {
+            viewFor === "profile" && (
+              <div className={styles.block}>
+                <p className={styles.boxHeading}>Stake on other pools</p>
+                <p className={styles.boxDescriptionBig}>7000 DMD</p>
+                <p className={styles.boxDescriptionSmall}>
+                  <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
+                  5 DMD since 01.01.24
+                </p>
+              </div>
+            )
+          }
+
           <div className={styles.block}>
             <p className={styles.boxHeading}>Delegated stake</p>
             <p className={styles.boxDescriptionBig}>100 DMD</p>
@@ -142,59 +181,63 @@ const UserProfile: React.FC<UserProfileProps> = ({ }) => {
                     <div className="comparison-row-main">
                         <h2 className="heading-3">Delegates</h2>
                     </div>
-                    <table className={styles.styledTable}>
-                        {
-                        (() => {
-                                return (
-                                    myPool && myPool.delegators.length ? (
-                                        <>
-                                            <thead>
-                                                <tr>
-                                                    <td></td>
-                                                    <td>Wallet</td>
-                                                    <td>Delegated Stake</td>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            {
-                                                myPool && myPool.delegators.length ? myPool.delegators.map((delegator, i) => (
-                                                <tr key={i} className={styles.tableBodyRow}>
-                                                    <td>
-                                                        <Jazzicon diameter={40} seed={jsNumberForAddress(delegator.address)} />
-                                                    </td>
-                                                    <td>{delegator.address}</td>
-                                                    <td>{BigNumber(delegator.amount).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
-                                                </tr>
-                                                )) : myPool && (
-                                                    <tr>
-                                                    </tr>
-                                                )
-                                            }
-                                            </tbody>
-                                        </>
-                                    ) : (
-                                        <thead>
-                                            <tr>
-                                                <th>No Delegations</th>
-                                            </tr>
-                                        </thead>
-                                    )
-                                )
-                            })()
-                        }
-                    </table>
+                    <div className={styles.tableContainer}>
+                      <table className={styles.styledTable}>
+                          {
+                          (() => {
+                                  return (
+                                      myPool && myPool.delegators.length ? (
+                                          <>
+                                              <thead>
+                                                  <tr>
+                                                      <td></td>
+                                                      <td>Wallet</td>
+                                                      <td>Delegated Stake</td>
+                                                  </tr>
+                                              </thead>
+                                              <tbody>
+                                              {
+                                                  myPool && myPool.delegators.length ? myPool.delegators.map((delegator, i) => (
+                                                  <tr key={i} className={styles.tableBodyRow}>
+                                                      <td>
+                                                          <Jazzicon diameter={40} seed={jsNumberForAddress(delegator.address)} />
+                                                      </td>
+                                                      <td>{delegator.address}</td>
+                                                      <td>{BigNumber(delegator.amount).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
+                                                  </tr>
+                                                  )) : myPool && (
+                                                      <tr>
+                                                      </tr>
+                                                  )
+                                              }
+                                              </tbody>
+                                          </>
+                                      ) : (
+                                          <thead>
+                                              <tr>
+                                                  <th>No Delegations</th>
+                                              </tr>
+                                          </thead>
+                                      )
+                                  )
+                              })()
+                          }
+                      </table>
+                    </div>
                 </>
             ) }
         </div>
 
+        { 
+          viewFor === "profile" && (
             <div className={styles.heroContainer + " hero-container"}>
-             <div className={styles.topValidatorsContainer}>
-                 <div className="comparison-row-main">
-                     <h3 className="heading-3">Validators I've Staked On</h3>
-                 </div>
-                 <div className={styles.tableContainer}>
-                     <table className={styles.styledTable}>
-                         {
+              <div className={styles.topValidatorsContainer}>
+                  <div className="comparison-row-main">
+                      <h3 className="heading-3">Validators I've Staked On</h3>
+                  </div>
+                  <div className={styles.tableContainer}>
+                      <table className={styles.styledTable}>
+                          {
                             (() => {
                                 const hasStakedOnValidators = pools.filter((p) => BigNumber(p.myStake).isGreaterThan(0)).slice(0, 5);
                                 return hasStakedOnValidators.length ? (
@@ -240,8 +283,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ }) => {
                         }
                     </table>
                 </div>
+              </div>
             </div>
-        </div>
+          )
+        }
     </section>
   );
 };

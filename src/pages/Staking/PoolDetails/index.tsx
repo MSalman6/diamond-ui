@@ -13,6 +13,7 @@ import { Pool } from "../../../contexts/StakingContext/models/model";
 import { timestampToDate, truncateAddress } from "../../../utils/common";
 import copy from "copy-to-clipboard";
 import { toast } from "react-toastify";
+import UserProfile from "../../Profile";
 
 interface PoolDetailsProps {}
 
@@ -73,6 +74,8 @@ const PoolDetails: React.FC<PoolDetailsProps> = ({}) => {
       <div className={styles.detailsSectionContainer + " sectionContainer"}>
 
       <Navigation start="/staking" />
+
+      <UserProfile viewFor="other" />
 
         {/* image address status */}
         <div className={styles.infoContainer}>

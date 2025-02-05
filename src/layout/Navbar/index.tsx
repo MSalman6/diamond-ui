@@ -5,13 +5,15 @@ import { useWeb3Context } from "../../contexts/Web3Context";
 import dmdLogoFull from "../../assets/images/logo_dmd_full.svg";
 import { useStakingContext } from "../../contexts/StakingContext";
 import { useWalletConnectContext } from "../../contexts/WalletConnect";
+import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import { truncateAddress } from "../../utils/common";
 
 interface NavBarProps {}
 
 const NavBar: React.FC<NavBarProps> = () => {
   const navigate = useNavigate();
   const web3Context = useWeb3Context();
-  const { isSyncingPools } = useStakingContext();
+  const { isSyncingPools, myPool } = useStakingContext();
   const walletConnectContext = useWalletConnectContext();
 
   return (
@@ -49,7 +51,16 @@ const NavBar: React.FC<NavBarProps> = () => {
                 {web3Context.userWallet && web3Context.userWallet.myAddr ? (
                   <>
                     <a onClick={() => {startTransition(() => {navigate('dao')})}} className="nav-link w-nav-link">DAO</a>
-                    <button onClick={() => {startTransition(() => {navigate('profile')})}} className="button w-button w-nav-link-button">Profile</button>
+                    <div className="infoContainer" onClick={() => {startTransition(() => {navigate('profile')})}} >
+                      {
+                        web3Context.userWallet.myAddr ? <Jazzicon diameter={40} seed={jsNumberForAddress(web3Context.userWallet.myAddr)} />
+                          : <Jazzicon diameter={40} seed={Math.round(Math.random() * 10000000)} />
+                      }
+                      <div>
+                        <span>User</span>
+                        <span>{truncateAddress(web3Context.userWallet.myAddr)}</span>
+                      </div>
+                    </div>
                   </>
                   ) : (
                     <button onClick={() => walletConnectContext.appKit.open()} disabled={isSyncingPools} className="button w-button w-nav-link-button">Connect</button>

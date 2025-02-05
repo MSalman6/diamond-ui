@@ -71,7 +71,7 @@ const App: React.FC<AppProps> = () => {
           <Route path="staking/" element={<Pools />} />
           <Route path="staking/details/:poolAddress" element={<PoolDetails />} />
 
-          <Route path="profile" element={<UserProfile />} />
+          <Route path="profile" element={<UserProfile viewFor="profile" />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>
