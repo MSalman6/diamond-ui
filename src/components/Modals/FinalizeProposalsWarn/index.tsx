@@ -1,3 +1,4 @@
+import ReactDOM from "react-dom";
 import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useRef, startTransition } from "react";
@@ -50,7 +51,7 @@ const FinalizeProposalsWarn: React.FC<ModalProps> = ({ buttonText }) => {
           {buttonText}
         </button>
 
-        {isOpen && (
+        {isOpen && ReactDOM.createPortal(
           <div
             onClick={(e) => e.stopPropagation()}
             className={styles.modalOverlay}
@@ -75,7 +76,8 @@ const FinalizeProposalsWarn: React.FC<ModalProps> = ({ buttonText }) => {
                 <button onClick={() => {startTransition(() => {navigate("/dao/historic")})}} className="primaryBtn">Go to the list</button>
               </section>
             </div>
-          </div>
+          </div>,
+          document.getElementById("modal-root") as HTMLElement
         )}
       </>
     );

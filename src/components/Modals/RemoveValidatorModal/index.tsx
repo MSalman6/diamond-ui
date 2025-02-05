@@ -1,3 +1,4 @@
+import ReactDOM from "react-dom";
 import BigNumber from "bignumber.js";
 import styles from "./styles.module.css";
 import { useWeb3Context } from "../../../contexts/Web3Context";
@@ -58,7 +59,7 @@ const RemoveValidatorModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
         {buttonText}
       </button>
 
-      {isOpen && (
+      {isOpen && ReactDOM.createPortal(
         <div onClick={(e) => e.stopPropagation()} className={styles.modalOverlay}>
           <div onClick={(e) => e.stopPropagation()} className={styles.modalContent} ref={modalRef}>
             <button className={styles.modalClose} onClick={closeModal}>
@@ -87,7 +88,8 @@ const RemoveValidatorModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
               </button>
             </form>
           </div>
-        </div>
+        </div>,
+        document.getElementById("modal-root") as HTMLElement
       )}
     </>
   );

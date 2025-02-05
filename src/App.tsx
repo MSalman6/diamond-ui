@@ -2,9 +2,9 @@ import NavBar from "./layout/Navbar";
 import Footer from "./layout/Footer";
 import NotFound from "./pages/NotFound";
 import Loader from "./components/Loader";
-import UserProfile from "./pages/Profile";
 import React, { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import UserProfile from "./components/Profile";
 
 const FAQ = lazy(() => import("./pages/FAQ"));
 const Home = lazy(() => import("./pages/Home"));

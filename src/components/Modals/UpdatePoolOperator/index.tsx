@@ -1,12 +1,13 @@
+import ReactDOM from "react-dom";
 import BigNumber from "bignumber.js";
 import { toast } from "react-toastify";
 import styles from "./styles.module.css";
+import { useNavigate } from "react-router-dom";
 import { isValidAddress } from "../../../utils/common";
 import { useWeb3Context } from "../../../contexts/Web3Context";
 import { useStakingContext } from "../../../contexts/StakingContext";
 import { Pool } from "../../../contexts/StakingContext/models/model";
 import React, { useState, useEffect, useRef, FormEvent, startTransition } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface ModalProps {
   buttonText: string;
@@ -92,7 +93,7 @@ const UpdatePoolOperatorModal: React.FC<ModalProps> = ({ buttonText, pool }) => 
         {buttonText}
       </button>
 
-      {isOpen && (
+      {isOpen && ReactDOM.createPortal(
         <div onClick={(e) => e.stopPropagation()} className={styles.modalOverlay}>
           <div onClick={(e) => e.stopPropagation()} className={styles.modalContent} ref={modalRef}>
             <button className={styles.modalClose} onClick={closeModal}>
@@ -145,7 +146,8 @@ const UpdatePoolOperatorModal: React.FC<ModalProps> = ({ buttonText, pool }) => 
               }
             </form>
           </div>
-        </div>
+        </div>,
+        document.getElementById("modal-root") as HTMLElement
       )}
     </>
   );

@@ -1,11 +1,12 @@
+import ReactDOM from "react-dom";
 import BigNumber from "bignumber.js";
+import { toast } from "react-toastify";
 import styles from "./styles.module.css";
+import { truncateAddress } from "../../../utils/common";
 import { useWeb3Context } from "../../../contexts/Web3Context";
 import { useStakingContext } from "../../../contexts/StakingContext";
 import { Pool } from "../../../contexts/StakingContext/models/model";
 import React, { useState, useEffect, useRef, FormEvent } from "react";
-import { toast } from "react-toastify";
-import { truncateAddress } from "../../../utils/common";
 
 interface ModalProps {
   buttonText: string;
@@ -141,7 +142,7 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
         {buttonText}
       </button>
 
-      {isOpen && (
+      {isOpen && ReactDOM.createPortal(
         <div onClick={(e) => e.stopPropagation()} className={styles.modalOverlay}>
           <div onClick={(e) => e.stopPropagation()} className={styles.modalContent} ref={modalRef}>
             <button className={styles.modalClose} onClick={closeModal}>
@@ -213,7 +214,8 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
               </button>
             </form>
           </div>
-        </div>
+        </div>,
+        document.getElementById("modal-root") as HTMLElement
       )}
     </>
   );

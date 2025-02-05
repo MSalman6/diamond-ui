@@ -11,6 +11,10 @@ import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useStakingContext } from "../../contexts/StakingContext";
 import { faArrowDownLong, faArrowUpLong } from "@fortawesome/free-solid-svg-icons";
+import StakeModal from "../Modals/StakeModal";
+import UnstakeModal from "../Modals/UnstakeModal";
+import RemoveValidatorModal from "../Modals/RemoveValidatorModal";
+import UpdatePoolOperatorModal from "../Modals/UpdatePoolOperator";
 
 interface UserProfileProps {
   viewFor: string;
@@ -53,29 +57,36 @@ const UserProfile: React.FC<UserProfileProps> = ({ viewFor }) => {
         </div>
 
         <div className={styles.boxContainer}>
-          <div className={`${styles.block} ${viewFor === "profile" ? styles.blockLarge : ""}`}>
-            <p className={styles.boxHeading}>Pool Stake <Tooltip text="" /></p>
-            <p className={styles.boxDescriptionBig}>1000 DMD</p>
-            <p className={styles.boxDescriptionSmall}>
-              <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
-              5 DMD since 01.01.24
-            </p>
-            <div className={styles.boxBtns}>
-              <div>
-                <button className="primaryBtn">Stake</button>
-                <button className="primaryBtn">Unstake</button>
+          {
+            myPool && (
+              <div className={`${styles.block} ${viewFor === "profile" ? styles.blockLarge : ""}`}>
+                <p className={styles.boxHeading}>Pool Stake <Tooltip text="" /></p>
+                <p className={styles.boxDescriptionBig}>1000 DMD</p>
+                <p className={styles.boxDescriptionSmall}>
+                  <FontAwesomeIcon className={styles.arrowGreen} icon={faArrowUpLong} />
+                  5 DMD since 01.01.24
+                </p>
+                <div className={styles.boxBtns}>
+                  <div>
+                    <StakeModal buttonText="Stake" pool={myPool} />
+                    <UnstakeModal buttonText="Unstake" pool={myPool} />
+                  </div>
+                  {
+                    viewFor === "profile" && (
+                      <>
+                        <button className="primaryBtn">History</button>
+                        {
+                          !myPool.isActive && <RemoveValidatorModal buttonText="Remove pool" pool={myPool} />
+                        }
+                      </>
+                    )
+                  }
+                  
+                </div>
               </div>
-              {
-                viewFor === "profile" && (
-                  <>
-                    <button className="primaryBtn">History</button>
-                    <button className="primaryBtn">Remove pool</button>
-                  </>
-                )
-              }
-              
-            </div>
-          </div>
+            )
+          }
+          
           <div className={styles.block}>
             <p className={styles.boxHeading}>Score <Tooltip text="" /></p>
             <p className={styles.boxDescriptionBig}>921</p>
@@ -124,15 +135,17 @@ const UserProfile: React.FC<UserProfileProps> = ({ viewFor }) => {
           </div>
 
           {
-            viewFor === "profile" && (
+            myPool && viewFor === "profile" && (
               <div className={styles.block}>
                 <p className={styles.boxHeading}>Node operator shared reward</p>
-                <p className={styles.boxDescriptionBig}>9%</p>
+                <p className={styles.boxDescriptionBig}>
+                  {myPool.poolOperatorShare && BigNumber(myPool.poolOperatorShare).dividedBy(100).toString()} %
+                </p>
                 <p className={styles.boxDescriptionSmall}>
                   0x9515...62F94
                 </p>
                 <div className={styles.boxBtns}>
-                  <button className="primaryBtn">Edit</button>
+                    <UpdatePoolOperatorModal buttonText="Edit" pool={myPool} />
                 </div>
               </div>
             )

@@ -1,3 +1,4 @@
+import ReactDOM from "react-dom";
 import BigNumber from "bignumber.js";
 import { toast } from "react-toastify";
 import styles from "./styles.module.css";
@@ -86,7 +87,7 @@ const CreateValidatorModal: React.FC<ModalProps> = ({ buttonText }) => {
         {buttonText}
       </button>
 
-      {isOpen && (
+      {isOpen && ReactDOM.createPortal(
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent} ref={modalRef}>
             <button className={styles.modalClose} onClick={closeModal}>
@@ -172,7 +173,8 @@ const CreateValidatorModal: React.FC<ModalProps> = ({ buttonText }) => {
               </button>
             </form>
           </div>
-        </div>
+        </div>,
+        document.getElementById("modal-root") as HTMLElement
       )}
     </>
   );
