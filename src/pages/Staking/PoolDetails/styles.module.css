@@ -67,11 +67,10 @@ p {
 
 .daoParticipationContainer {
   width: 100%;
-  gap: 1.5rem;
   display: flex;
   flex-direction: column;
   align-self: flex-start;
-  margin: 0px 0px 60px 0px;
+  margin: 2rem 0px 60px 0px;
   background-color: white;
 }
 
@@ -82,7 +81,6 @@ p {
 }
 
 .styledTable thead tr {
-  background-color: rgb(245, 247, 250);
   color: #0145b2;
   text-align: left;
   height: 80px;

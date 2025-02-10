@@ -5,6 +5,8 @@ p {
 
 .poolActive {
     color: green;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .poolBanned {
@@ -102,6 +104,7 @@ p {
 }
 
 .block>.boxDescriptionSmallBold {
+    font-size: 14px;
     font-weight: bold;
     text-align: center;
 }
@@ -146,6 +149,7 @@ p {
 }
 
 .heroSection {
+    width: 100%;
     padding-bottom: 0px;
 }
 
@@ -222,4 +226,10 @@ p {
 .topValidatorsContainer>a {
     margin-top: 2rem;
     align-self: center;
+}
+
+.profileAddr {
+    font-size: 18px;
+    color: #0145b2;
+    font-weight: bold;
 }

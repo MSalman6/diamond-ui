@@ -325,7 +325,7 @@ const ValidatorsTable: React.FC<ValidatorsTableProps> = ({ itemsPerPage = 100 })
 
     return (
         <div className={styles.sectionContainer + " sectionContainer"}>
-            <Navigation start="/" toPage="/" />
+            <Navigation start="/" />
             <div className={styles.stakingHeading}>
                 <h1>
                     Validators

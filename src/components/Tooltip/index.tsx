@@ -11,12 +11,12 @@ interface TooltipProps {
 
 const Tooltip: React.FC<TooltipProps> = ({ text, width, heading }) => {
     return (
-        <div className={styles.tooltipContainer}>
+        <span className={styles.tooltipContainer}>
             { heading ? heading : <FontAwesomeIcon icon={faInfoCircle} /> }
             <div className={styles.tooltipContent} style={{minWidth: width}}>
                 {text}
             </div>
-        </div>
+        </span>
     );
 };
 
