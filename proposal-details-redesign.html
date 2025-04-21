@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proposal Details - DMD Diamond</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="proposal-details-redesign.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="logo">
+        <a href="index.html"><h1>DMD</h1></a>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="validators.html">Validators</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle">DMD Ecosystem <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+              <div class="dropdown-content">
+                <div class="dropdown-section">
+                  <h4>INTERCHAIN TOOLS</h4>
+                  <ul>
+                    <li><a href="#">Wallets</a></li>
+                    <li><a href="#">Block Explorers</a></li>
+                  </ul>
+                </div>
+                <div class="dropdown-section">
+                  <ul>
+                    <li><a href="#">Interchain Ecosystem</a></li>
+                    <li><a href="#">Tokens</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle">3rd Party Projects <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+              <div class="dropdown-content">
+                <div class="dropdown-section">
+                  <h4>COMMUNITY</h4>
+                  <ul>
+                    <li><a href="#">Developer Chat <i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="#">Ecosystem Blog <i class="fas fa-external-link-alt"></i></a></li>
+                  </ul>
+                </div>
+                <div class="dropdown-section">
+                  <ul>
+                    <li><a href="#">Community Chat <i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="#">Discussion Forum <i class="fas fa-external-link-alt"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <div class="header-right">
+        <div class="theme-toggle-wrapper">
+          <label class="theme-toggle">
+            <input type="checkbox" id="theme-toggle">
+            <span class="theme-toggle-slider">
+              <i class="fas fa-sun theme-toggle-icon sun"></i>
+              <i class="fas fa-moon theme-toggle-icon moon"></i>
+            </span>
+          </label>
+        </div>
+        <div class="cta-button" id="connect-wallet-btn">
+          <i class="fas fa-wallet"></i> Connect Wallet
+        </div>
+      </div>
+      <div class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+  </header>
+
+  <main class="proposal-details-page">
+    <div class="cosmic-grid"></div>
+    <div class="cosmic-elements">
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+      <div class="diamond-custom diamond-custom-1"></div>
+      <div class="diamond-custom diamond-custom-2"></div>
+      <div class="diamond-custom diamond-custom-3"></div>
+    </div>
+
+    <div class="container">
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <a href="dao.html">Governance</a>
+        <span class="separator">›</span>
+        <span class="current">Proposal Details</span>
+      </div>
+
+      <!-- Proposal Header -->
+      <div class="proposal-header">
+        <h1>DMD Protocol Upgrade v2.6</h1>
+        <div class="proposal-meta">
+          <div class="date-badge">
+            <i class="fas fa-calendar"></i>
+            <span>Date: 4 Mar 2025</span>
+          </div>
+          <div class="status-badge executed">
+            <i class="fas fa-check-circle"></i>
+            <span>Executed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Creator Section -->
+      <div class="card creator-card fade-in">
+        <div class="card-header">
+          <h2>Created By</h2>
+        </div>
+        <div class="card-body">
+          <div class="creator-info">
+            <div class="wallet-icon">
+              <div class="wallet-icon-inner"></div>
+            </div>
+            <div class="address-container">
+              <span class="address">0x0F7c751bf6f7b6e6f4c4c4c4c4c4c4c4c4c4c4c4c</span>
+              <button class="copy-btn" data-clipboard-text="0x0F7c751bf6f7b6e6f4c4c4c4c4c4c4c4c4c4c4c4c">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Voting Progress Section -->
+      <div class="card voting-progress-card fade-in">
+        <div class="card-header">
+          <h2>Voting Progress</h2>
+        </div>
+        <div class="card-body">
+          <div class="status-message executed">
+            <i class="fas fa-check-circle"></i>
+            <span>This proposal was Executed by the community</span>
+          </div>
+          
+          <div class="progress-container">
+            <div class="progress-bar">
+              <div class="progress-yes" style="width: 68%"></div>
+              <div class="progress-no" style="width: 22%"></div>
+              <div class="threshold-line" style="left: 40%" data-tooltip="40% Threshold">
+                <div class="threshold-label">40%</div>
+              </div>
+            </div>
+            <div class="progress-legend">
+              <div class="legend-item yes">
+                <span class="legend-color"></span>
+                <span>Yes</span>
+              </div>
+              <div class="legend-item no">
+                <span class="legend-color"></span>
+                <span>No</span>
+              </div>
+              <!-- <div class="legend-item abstain">
+                <span class="legend-color"></span>
+                <span>Abstain</span>
+              </div> -->
+            </div>
+          </div>
+          
+          <div class="vote-stats">
+            <div class="vote-stat-row">
+              <div class="vote-stat-label">Total Stake</div>
+              <div class="vote-stat-value">28,755,000 DMD</div>
+              <div class="vote-stat-percentage">100%</div>
+            </div>
+            <div class="vote-stat-row yes">
+              <div class="vote-stat-label">Yes Votes</div>
+              <div class="vote-stat-value">19,570,000 DMD</div>
+              <div class="vote-stat-percentage">68%</div>
+            </div>
+            <div class="vote-stat-row no">
+              <div class="vote-stat-label">No Votes</div>
+              <div class="vote-stat-value">6,325,000 DMD</div>
+              <div class="vote-stat-percentage">22%</div>
+            </div>
+            <!-- <div class="vote-stat-row abstain">
+              <div class="vote-stat-label">Abstain</div>
+              <div class="vote-stat-value">2,860,000 DMD</div>
+              <div class="vote-stat-percentage">10%</div>
+            </div> -->
+          </div>
+          
+          <div class="vote-thresholds">
+            <div class="threshold-row">
+              <div class="threshold-label">Participation</div>
+              <div class="threshold-value">90%</div>
+            </div>
+            <div class="threshold-row">
+              <div class="threshold-label">Exceeding Yes</div>
+              <div class="threshold-value positive">+28%</div>
+            </div>
+          </div>
+          
+          <div class="voting-ended">
+            <i class="fas fa-clock"></i>
+            <span>Voting ended on 11 Mar 2025</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proposal Details Section -->
+      <div class="card proposal-details-card fade-in">
+        <div class="card-header">
+          <h2>Contract Upgrade</h2>
+        </div>
+        <div class="card-body">
+          <h3 class="proposal-subtitle">DMD Protocol Upgrade v2.6</h3>
+          
+          <div class="detail-group">
+            <div class="detail-label">Target Address:</div>
+            <div class="detail-value address-container">
+              <span class="address">0x3e5f271c4e6f7b6e6f4c4c4c4c4c4c4c4c4c4c4c4</span>
+              <button class="copy-btn" data-clipboard-text="0x3e5f271c4e6f7b6e6f4c4c4c4c4c4c4c4c4c4c4c4">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="detail-group expandable">
+            <div class="detail-label">Call Data:</div>
+            <div class="detail-value">
+              <button class="expand-btn">
+                <i class="fas fa-chevron-down"></i>
+                <span>Expand</span>
+              </button>
+              <div class="expandable-content">
+                <pre class="code-block">0x3e5f271c4e6f7b6e6f4c4c4c4c4c4c4c4c4c4c4c4...</pre>
+              </div>
+            </div>
+          </div>
+          
+          <div class="detail-group expandable">
+            <div class="detail-label">Decoded Call Data:</div>
+            <div class="detail-value">
+              <button class="expand-btn">
+                <i class="fas fa-chevron-down"></i>
+                <span>Expand</span>
+              </button>
+              <div class="expandable-content">
+                <pre class="code-block">function upgradeProtocol(
+    address newImplementation,
+    uint256 version,
+    bytes calldata initData
+) external onlyGovernance {
+    // Implementation details
+}</pre>
+              </div>
+            </div>
+          </div>
+          
+          <div class="description-section">
+            <h3>Description</h3>
+            <p>This protocol upgrade implements several performance improvements and new features for developers. The upgrade focuses on optimizing gas usage, enhancing security measures, and adding new functionality to the DMD ecosystem.</p>
+          </div>
+          
+          <div class="key-changes">
+            <h3>Key Changes</h3>
+            <ul>
+              <li><i class="fas fa-check"></i> Reduced gas costs for common operations by up to 25%</li>
+              <!-- <li><i class="fas fa-check"></i> Added new developer APIs for improved integration</li> -->
+              <li><i class="fas fa-check"></i> Enhanced security through improved validation mechanisms</li>
+              <li><i class="fas fa-check"></i> Fixed several edge case bugs in the previous implementation</li>
+            </ul>
+          </div>
+          
+          <!-- <div class="additional-resources">
+            <h3>Additional Resources</h3>
+            <div class="resource-links">
+              <a href="#" class="resource-link">
+                <i class="fas fa-file-alt"></i>
+                <span>Technical Documentation</span>
+              </a>
+              <a href="#" class="resource-link">
+                <i class="fas fa-comments"></i>
+                <span>Discussion Forum</span>
+              </a>
+              <a href="#" class="resource-link">
+                <i class="fab fa-github"></i>
+                <span>GitHub Repository</span>
+              </a>
+            </div>
+          </div> -->
+        </div>
+      </div>
+
+      <!-- Impact Assessment -->
+      <div class="card impact-card fade-in">
+        <div class="card-header">
+          <h2>Impact Assessment</h2>
+        </div>
+        <div class="card-body">
+          <div class="impact-grid">
+            <div class="impact-item high-positive">
+              <div class="impact-icon">
+                <i class="fas fa-tachometer-alt"></i>
+              </div>
+              <div class="impact-content">
+                <h4>Performance</h4>
+                <div class="impact-rating">
+                  <span class="impact-dot active"></span>
+                  <span class="impact-dot active"></span>
+                  <span class="impact-dot active"></span>
+                  <span class="impact-label high-positive">High Positive Impact</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="impact-item medium-positive">
+              <div class="impact-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div class="impact-content">
+                <h4>Security</h4>
+                <div class="impact-rating">
+                  <span class="impact-dot active"></span>
+                  <span class="impact-dot active"></span>
+                  <span class="impact-dot"></span>
+                  <span class="impact-label medium-positive">Medium Positive Impact</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="impact-item no-impact">
+              <div class="impact-icon">
+                <i class="fas fa-exchange-alt"></i>
+              </div>
+              <div class="impact-content">
+                <h4>Compatibility</h4>
+                <div class="impact-rating">
+                  <span class="impact-dot"></span>
+                  <span class="impact-dot"></span>
+                  <span class="impact-dot"></span>
+                  <span class="impact-label no-impact">No Impact</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="impact-item medium-positive">
+              <div class="impact-icon">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="impact-content">
+                <h4>User Experience</h4>
+                <div class="impact-rating">
+                  <span class="impact-dot active"></span>
+                  <span class="impact-dot active"></span>
+                  <span class="impact-dot"></span>
+                  <span class="impact-label medium-positive">Medium Positive Impact</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Discussion Section -->
+      <div class="card discussion-card fade-in">
+        <div class="card-header">
+          <h2>Discussion</h2>
+        </div>
+        <div class="card-body">
+          <div class="discussion-links">
+            <a href="#" class="discussion-link">
+              <i class="fab fa-discord"></i>
+              <span>Discord Channel</span>
+            </a>
+            <a href="#" class="discussion-link">
+              <i class="fas fa-comments"></i>
+              <span>Forum Thread</span>
+            </a>
+          </div>
+          
+          <div class="discussion-stats">
+            <div class="stat-item">
+              <i class="fas fa-comment"></i>
+              <span>42 comments</span>
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-users"></i>
+              <span>18 participants</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transaction Details -->
+      <div class="card transaction-card fade-in">
+        <div class="card-header">
+          <h2>Transaction Details</h2>
+        </div>
+        <div class="card-body">
+          <div class="transaction-detail">
+            <div class="detail-label">Proposal ID:</div>
+            <div class="detail-value">921380921831123213...</div>
+          </div>
+          
+          <div class="transaction-detail">
+            <div class="detail-label">Block:</div>
+            <div class="detail-value">8,234,567</div>
+          </div>
+          
+          <div class="transaction-detail">
+            <div class="detail-label">Proposal Tx:</div>
+            <div class="detail-value address-container">
+              <span class="address">0x7f4e6d8c9b3a2f1e0d1c2b3a4f5e6d7c8b9a0f1e2</span>
+              <button class="copy-btn" data-clipboard-text="0x7f4e6d8c9b3a2f1e0d1c2b3a4f5e6d7c8b9a0f1e2">
+                <i class="fas fa-copy"></i>
+              </button>
+              <a href="#" class="explorer-link">
+                <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="transaction-detail">
+            <div class="detail-label">Execution Tx:</div>
+            <div class="detail-value address-container">
+              <span class="address">0x8d2f3e4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1</span>
+              <button class="copy-btn" data-clipboard-text="0x8d2f3e4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1">
+                <i class="fas fa-copy"></i>
+              </button>
+              <a href="#" class="explorer-link">
+                <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proposal Timeline -->
+      <div class="card timeline-card fade-in">
+        <div class="card-header">
+          <h2>Proposal Timeline</h2>
+        </div>
+        <div class="card-body">
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-icon created">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-date">4 Mar 2025, 10:23 UTC</div>
+                <h4>Proposal Created</h4>
+                <p>Proposal was submitted to the DMD DAO governance system</p>
+              </div>
+            </div>
+            
+            <div class="timeline-item">
+              <div class="timeline-icon started">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-date">6 Mar 2025, 12:00 UTC</div>
+                <h4>Voting Started</h4>
+                <p>Voting period began after deposit threshold was met</p>
+              </div>
+            </div>
+            
+            <div class="timeline-item">
+              <div class="timeline-icon ended">
+                <i class="fas fa-stop-circle"></i>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-date">11 Mar 2025, 12:00 UTC</div>
+                <h4>Voting Ended</h4>
+                <p>Proposal passed with 68% Yes votes and 90% participation</p>
+              </div>
+            </div>
+            
+            <div class="timeline-item">
+              <div class="timeline-icon executed">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-date">13 Mar 2025, 14:30 UTC</div>
+                <h4>Proposal Executed</h4>
+                <p>Parameter change was successfully applied to the network</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resources Section -->
+      <!-- <div class="card resources-card fade-in">
+        <div class="card-header">
+          <h2>Resources</h2>
+        </div>
+        <div class="card-body">
+          <div class="resources-grid">
+            <a href="#" class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-book"></i>
+              </div>
+              <div class="resource-content">
+                <h4>Governance Docs</h4>
+                <p>Learn about the DMD governance process</p>
+              </div>
+            </a>
+            
+            <a href="#" class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div class="resource-content">
+                <h4>Analytics</h4>
+                <p>View historical voting patterns</p>
+              </div>
+            </a>
+            
+            <a href="#" class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-code"></i>
+              </div>
+              <div class="resource-content">
+                <h4>Technical Specs</h4>
+                <p>Parameter implementation details</p>
+              </div>
+            </a>
+            
+            <a href="#" class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-comments"></i>
+              </div>
+              <div class="resource-content">
+                <h4>Community Chat</h4>
+                <p>Discuss this proposal with others</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- Related Proposals -->
+      <div class="card related-proposals-card fade-in">
+        <div class="card-header">
+          <h2>Related Proposals</h2>
+        </div>
+        <div class="card-body">
+          <div class="related-proposals">
+            <a href="#" class="proposal-item">
+              <div class="proposal-status executed">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="proposal-content">
+                <h4>Validator Minimum Self-Delegation Increase</h4>
+                <div class="proposal-meta">
+                  <span class="proposal-id">DMD-20-02</span>
+                  <span class="proposal-date">Executed: 15 Feb 2025</span>
+                </div>
+              </div>
+            </a>
+            
+            <a href="#" class="proposal-item">
+              <div class="proposal-status active">
+                <i class="fas fa-circle-notch"></i>
+              </div>
+              <div class="proposal-content">
+                <h4>Stacking Penalty Adjustment</h4>
+                <div class="proposal-meta">
+                  <span class="proposal-id">DMD-25-03</span>
+                  <span class="proposal-date">Voting ends in 3 days</span>
+                </div>
+              </div>
+            </a>
+            
+            <a href="#" class="proposal-item">
+              <div class="proposal-status declined">
+                <i class="fas fa-times-circle"></i>
+              </div>
+              <div class="proposal-content">
+                <h4>Reduce Unbonding Period to 14 Days</h4>
+                <div class="proposal-meta">
+                  <span class="proposal-id">DMD-21-04</span>
+                  <span class="proposal-date">Declined: 10 Dec 2024</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Type Selector (Demo Only) -->
+      <div class="card type-selector-card fade-in">
+        <div class="card-header">
+          <h2>Proposal Types</h2>
+        </div>
+        <div class="card-body">
+          <div class="type-selector">
+            <button class="type-btn active" data-type="contract-upgrade">Contract Upgrade</button>
+            <button class="type-btn" data-type="parameter-change">Parameter Change</button>
+            <button class="type-btn" data-type="funding-request">Funding Request</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>DMD Diamond</h3>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Ecosystem</a></li>
+            <li><a href="#">Community</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Developers</h3>
+          <ul>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Tutorials</a></li>
+            <li><a href="#">GitHub</a></li>
+            <li><a href="#">SDK</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="#">Whitepaper</a></li>
+            <li><a href="#">Roadmap</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Connect</h3>
+          <ul>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">Discord</a></li>
+            <li><a href="#">Telegram</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 DMD Diamond. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+  <script src="theme.js"></script>
+  <script src="proposal-details-redesign.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Validators - DMD Diamond</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="validators.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="logo">
+        <a href="index.html"><h1>DMD</h1></a>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="validators.html">Validators</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle">DMD Ecosystem <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+              <div class="dropdown-content">
+                <div class="dropdown-section">
+                  <h4>INTERCHAIN TOOLS</h4>
+                  <ul>
+                    <li><a href="#">Wallets</a></li>
+                    <li><a href="#">Block Explorers</a></li>
+                  </ul>
+                </div>
+                <div class="dropdown-section">
+                  <ul>
+                    <li><a href="#">Interchain Ecosystem</a></li>
+                    <li><a href="#">Tokens</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle">3rd Party Projects <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+              <div class="dropdown-content">
+                <div class="dropdown-section">
+                  <h4>COMMUNITY</h4>
+                  <ul>
+                    <li><a href="#">Developer Chat <i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="#">Ecosystem Blog <i class="fas fa-external-link-alt"></i></a></li>
+                  </ul>
+                </div>
+                <div class="dropdown-section">
+                  <ul>
+                    <li><a href="#">Community Chat <i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="#">Discussion Forum <i class="fas fa-external-link-alt"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <div class="header-right">
+        <div class="theme-toggle-wrapper">
+          <label class="theme-toggle">
+            <input type="checkbox" id="theme-toggle">
+            <span class="theme-toggle-slider">
+              <i class="fas fa-sun theme-toggle-icon sun"></i>
+              <i class="fas fa-moon theme-toggle-icon moon"></i>
+            </span>
+          </label>
+        </div>
+        <div class="cta-button">
+          <i class="fas fa-wallet"></i> Connect Wallet</i>
+        </div>
+      </div>
+      <div class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- Validators Hero Section -->
+  <section class="validators-hero">
+    <div class="cosmic-grid"></div>
+    <div class="cosmic-elements">
+      <div class="diamond diamond-1"></div>
+      <div class="diamond diamond-2"></div>
+      <div class="diamond diamond-3"></div>
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+    </div>
+    <div class="container">
+      <div class="validators-hero-content">
+        <h1>Validators</h1>
+        <p>Explore and manage your stakes with the network validators. Monitor performance, stake your tokens, and participate in network consensus.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Validators Metrics Section -->
+  <section class="validators-metrics">
+    <div class="container">
+      <div class="metrics-grid">
+        <div class="metric-card fade-in">
+          <div class="metric-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3>Total Validators</h3>
+          <p class="metric-value">150</p>
+        </div>
+        <div class="metric-card fade-in">
+          <div class="metric-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h3>Active Validators</h3>
+          <p class="metric-value">142</p>
+        </div>
+        <div class="metric-card fade-in">
+          <div class="metric-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Valid Validators</h3>
+          <p class="metric-value">138</p>
+        </div>
+        <div class="metric-card fade-in">
+          <div class="metric-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <h3>Invalid Validators</h3>
+          <p class="metric-value">12</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Validators Table Section -->
+  <section class="validators-table-section">
+    <div class="container">
+      <div class="validators-controls">
+        <div class="search-filter-group">
+          <div class="search-container">
+            <input type="text" id="validator-search" placeholder="Search by wallet address...">
+            <button class="search-btn"><i class="fas fa-search"></i></button>
+          </div>
+          <div class="filter-container">
+            <select id="status-filter">
+              <option value="all">All Statuses</option>
+              <option value="active">Active</option>
+              <option value="valid">Valid</option>
+              <option value="invalid">Invalid</option>
+              <!-- <option value="jailed">Jailed</option> -->
+            </select>
+          </div>
+        </div>
+        <div class="customize-container">
+          <button id="customize-columns" class="btn-customize">
+            <i class="fas fa-columns"></i> Customize Columns
+          </button>
+        </div>
+      </div>
+
+      <div class="validators-table-container">
+        <table class="validators-table">
+          <thead>
+            <tr>
+              <th>Status <i class="fas fa-sort"></i></th>
+              <th>Wallet Address <i class="fas fa-sort"></i></th>
+              <th>Total Stake <i class="fas fa-sort"></i></th>
+              <th>Voting Power <i class="fas fa-sort"></i></th>
+              <th>Score <i class="fas fa-sort"></i></th>
+              <th>CR <i class="fas fa-sort"></i></th>
+              <th>My Stake <i class="fas fa-sort"></i></th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td class="wallet-address">0x7a2D...3F5e</td>
+              <td>1,250,000 DMD</td>
+              <td>4.2%</td>
+              <td>98.7%</td>
+              <td>5.8%</td>
+              <td>0 DMD</td>
+              <td>
+                <button class="btn-stake">Stake</button>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td class="wallet-address">0x3B1c...9D2a</td>
+              <td>980,500 DMD</td>
+              <td>3.3%</td>
+              <td>99.1%</td>
+              <td>6.2%</td>
+              <td>5,000 DMD</td>
+              <td>
+                <button class="btn-stake">Stake</button>
+                <button class="btn-unstake">Unstake</button>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="status-badge status-valid">Valid</span></td>
+              <td class="wallet-address">0xF42e...1A7b</td>
+              <td>750,200 DMD</td>
+              <td>2.5%</td>
+              <td>97.5%</td>
+              <td>5.5%</td>
+              <td>0 DMD</td>
+              <td>
+                <button class="btn-stake">Stake</button>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="status-badge status-invalid">Invalid</span></td>
+              <td class="wallet-address">0x8D5f...6E4c</td>
+              <td>420,800 DMD</td>
+              <td>1.4%</td>
+              <td>85.3%</td>
+              <td>4.2%</td>
+              <td>0 DMD</td>
+              <td>
+                <button class="btn-stake" disabled>Stake</button>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td class="wallet-address">0x2C9a...5B3d</td>
+              <td>1,120,600 DMD</td>
+              <td>3.8%</td>
+              <td>98.9%</td>
+              <td>6.0%</td>
+              <td>2,500 DMD</td>
+              <td>
+                <button class="btn-stake">Stake</button>
+                <button class="btn-unstake">Unstake</button>
+              </td>
+            </tr>
+            <!-- <tr>
+              <td><span class="status-badge status-jailed">Jailed</span></td>
+              <td class="wallet-address">0x6E7b...2F1a</td>
+              <td>320,400 DMD</td>
+              <td>1.1%</td>
+              <td>76.2%</td>
+              <td>3.8%</td>
+              <td>1,000 DMD</td>
+              <td>
+                <button class="btn-unstake">Unstake</button>
+              </td>
+            </tr> -->
+            <tr>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td class="wallet-address">0x9A3d...7C4e</td>
+              <td>890,700 DMD</td>
+              <td>3.0%</td>
+              <td>99.3%</td>
+              <td>6.1%</td>
+              <td>0 DMD</td>
+              <td>
+                <button class="btn-stake">Stake</button>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="status-badge status-valid">Valid</span></td>
+              <td class="wallet-address">0x4D2e...8F5a</td>
+              <td>680,300 DMD</td>
+              <td>2.3%</td>
+              <td>97.8%</td>
+              <td>5.7%</td>
+              <td>0 DMD</td>
+              <td>
+                <button class="btn-stake">Stake</button>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="status-badge status-active">Active</span></td>
+              <td class="wallet-address">0x1B5c...3A7d</td>
+              <td>1,050,800 DMD</td>
+              <td>3.5%</td>
+              <td>98.5%</td>
+              <td>5.9%</td>
+              <td>3,000 DMD</td>
+              <td>
+                <button class="btn-stake">Stake</button>
+                <button class="btn-unstake">Unstake</button>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="status-badge status-invalid">Invalid</span></td>
+              <td class="wallet-address">0x5E8f...2D6b</td>
+              <td>290,500 DMD</td>
+              <td>1.0%</td>
+              <td>82.7%</td>
+              <td>4.0%</td>
+              <td>0 DMD</td>
+              <td>
+                <button class="btn-stake" disabled>Stake</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-container">
+        <div class="pagination-content active" id="page-1">
+          <!-- Current table content remains here -->
+        </div>
+        <div class="pagination-content" id="page-2">
+          <!-- Page 2 content would go here -->
+        </div>
+        <div class="pagination-content" id="page-3">
+          <!-- Page 3 content would go here -->
+        </div>
+      </div>
+
+      <div class="pagination">
+        <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+        <button class="pagination-btn active">1</button>
+        <button class="pagination-btn">2</button>
+        <button class="pagination-btn">3</button>
+        <span class="pagination-ellipsis">...</span>
+        <button class="pagination-btn">10</button>
+        <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Customize Columns Modal -->
+  <div id="customize-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Add, delete and sort columns just how you need it</h3>
+      <button class="close-modal"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="columns-container">
+        <div class="columns-section">
+          <div class="columns-section-title">CURRENT COLUMNS</div>
+          <div class="active-columns" id="active-columns-container">
+            <div class="active-column" draggable="true" data-column="status">
+              <div class="column-number">1</div>
+              <div class="column-name">Status</div>
+              <div class="column-drag"><i class="fas fa-grip-lines"></i></div>
+            </div>
+            <div class="active-column" draggable="true" data-column="wallet">
+              <div class="column-number">2</div>
+              <div class="column-name">Wallet address</div>
+              <div class="column-drag"><i class="fas fa-grip-lines"></i></div>
+            </div>
+            <div class="active-column" draggable="true" data-column="stake">
+              <div class="column-number">3</div>
+              <div class="column-name">Total Stake</div>
+              <div class="column-drag"><i class="fas fa-grip-lines"></i></div>
+            </div>
+            <div class="active-column" draggable="true" data-column="voting">
+              <div class="column-number">4</div>
+              <div class="column-name">Voting Power</div>
+              <div class="column-drag"><i class="fas fa-grip-lines"></i></div>
+            </div>
+            <div class="active-column" draggable="true" data-column="score">
+              <div class="column-number">5</div>
+              <div class="column-name">Score</div>
+              <div class="column-drag"><i class="fas fa-grip-lines"></i></div>
+            </div>
+            <div class="active-column" draggable="true" data-column="cr">
+              <div class="column-number">6</div>
+              <div class="column-name">CR</div>
+              <div class="column-drag"><i class="fas fa-grip-lines"></i></div>
+            </div>
+            <div class="active-column" draggable="true" data-column="mystake">
+              <div class="column-number">7</div>
+              <div class="column-name">My Stake</div>
+              <div class="column-drag"><i class="fas fa-grip-lines"></i></div>
+            </div>
+            <!-- <div class="active-column" draggable="true" data-column="actions">
+              <div class="column-number">8</div>
+              <div class="column-name">Actions</div>
+              <div class="column-drag"><i class="fas fa-grip-lines"></i></div>
+            </div> -->
+          </div>
+        </div>
+        
+        <div class="columns-section">
+          <div class="columns-section-title">AVAILABLE COLUMNS</div>
+          <div class="available-columns" id="available-columns-container">
+            <div class="available-column selected" data-column="status">
+              <div class="column-name">Status</div>
+              <div class="column-remove"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="available-column selected" data-column="wallet">
+              <div class="column-name">Wallet address</div>
+              <div class="column-remove"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="available-column" data-column="miner">
+              <div class="column-name">Miner address</div>
+            </div>
+            <div class="available-column" data-column="publickey">
+              <div class="column-name">Public Key</div>
+            </div>
+            <div class="available-column selected" data-column="stake">
+              <div class="column-name">Total Stake</div>
+              <div class="column-remove"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="available-column selected" data-column="voting">
+              <div class="column-name">Voting Power</div>
+              <div class="column-remove"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="available-column selected" data-column="score">
+              <div class="column-name">Score</div>
+              <div class="column-remove"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="available-column selected" data-column="cr">
+              <div class="column-name">CR</div>
+              <div class="column-remove"><i class="fas fa-times"></i></div>
+            </div>
+            <!-- <div class="available-column" data-column="uptime">
+              <div class="column-name">Uptime</div>
+            </div> -->
+            <!-- <div class="available-column" data-column="commission">
+              <div class="column-name">Commission</div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="cancel-columns">Cancel</button>
+      <button class="btn-apply" id="apply-columns">Apply Changes</button>
+    </div>
+  </div>
+</div>
+
+  <!-- Stake Modal -->
+  <div id="stake-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Stake Tokens</h3>
+        <button class="close-modal"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="validator-info">
+          <p><strong>Validator:</strong> <span id="stake-validator-address">0x7a2D...3F5e</span></p>
+          <p><strong>Status:</strong> <span id="stake-validator-status" class="status-badge status-active">Active</span></p>
+          <p><strong>Current APR:</strong> <span id="stake-validator-apr">5.8%</span></p>
+        </div>
+        <div class="stake-form">
+          <div class="form-group">
+            <label for="stake-amount">Amount to Stake (DMD)</label>
+            <input type="number" id="stake-amount" placeholder="Enter amount...">
+            <div class="balance-info">
+              <span>Available: <strong>25,000 DMD</strong></span>
+              <button class="btn-max">MAX</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary close-modal">Cancel</button>
+        <button class="btn-primary" id="confirm-stake">Confirm Stake</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unstake Modal -->
+  <div id="unstake-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Unstake Tokens</h3>
+        <button class="close-modal"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="validator-info">
+          <p><strong>Validator:</strong> <span id="unstake-validator-address">0x3B1c...9D2a</span></p>
+          <p><strong>Status:</strong> <span id="unstake-validator-status" class="status-badge status-active">Active</span></p>
+          <p><strong>Unbonding Period:</strong> <span id="unstake-period">21 days</span></p>
+        </div>
+        <div class="stake-form">
+          <div class="form-group">
+            <label for="unstake-amount">Amount to Unstake (DMD)</label>
+            <input type="number" id="unstake-amount" placeholder="Enter amount...">
+            <div class="balance-info">
+              <span>Staked: <strong>5,000 DMD</strong></span>
+              <button class="btn-max">MAX</button>
+            </div>
+          </div>
+          <div class="warning-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Unstaked tokens will be subject to a 21-day unbonding period during which they cannot be transferred or used.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary close-modal">Cancel</button>
+        <button class="btn-primary" id="confirm-unstake">Confirm Unstake</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>DMD Diamond</h3>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Ecosystem</a></li>
+            <li><a href="#">Community</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Developers</h3>
+          <ul>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Tutorials</a></li>
+            <li><a href="#">GitHub</a></li>
+            <li><a href="#">SDK</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="#">Whitepaper</a></li>
+            <li><a href="#">Roadmap</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Connect</h3>
+          <ul>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">Discord</a></li>
+            <li><a href="#">Telegram</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 DMD Diamond. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="theme.js"></script>
+  <script>
+    // Mobile menu toggle
+    document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+      document.querySelector('.nav-links').classList.toggle('active');
+      this.classList.toggle('active');
+    });
+
+    // Intersection Observer for fade-in animations
+    document.addEventListener('DOMContentLoaded', function() {
+      const fadeElements = document.querySelectorAll('.fade-in');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+      
+      fadeElements.forEach(element => {
+        observer.observe(element);
+      });
+
+      // Modal functionality
+      const customizeBtn = document.getElementById('customize-columns');
+      const customizeModal = document.getElementById('customize-modal');
+      const stakeModal = document.getElementById('stake-modal');
+      const unstakeModal = document.getElementById('unstake-modal');
+      const closeButtons = document.querySelectorAll('.close-modal');
+      const stakeButtons = document.querySelectorAll('.btn-stake');
+      const unstakeButtons = document.querySelectorAll('.btn-unstake');
+      const cancelColumnsBtn = document.getElementById('cancel-columns');
+
+      // Open customize modal
+      if (customizeBtn) {
+        customizeBtn.addEventListener('click', function() {
+          customizeModal.classList.add('show');
+        });
+      }
+
+      // Open stake modal
+      stakeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Get validator data from the row
+          const row = this.closest('tr');
+          const address = row.querySelector('.wallet-address').textContent;
+          const status = row.querySelector('.status-badge').textContent;
+          
+          // Update modal with validator data
+          document.getElementById('stake-validator-address').textContent = address;
+          document.getElementById('stake-validator-status').textContent = status;
+          document.getElementById('stake-validator-status').className = row.querySelector('.status-badge').className;
+          
+          stakeModal.classList.add('show');
+        });
+      });
+
+      // Open unstake modal
+      unstakeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Get validator data from the row
+          const row = this.closest('tr');
+          const address = row.querySelector('.wallet-address').textContent;
+          const status = row.querySelector('.status-badge').textContent;
+          const myStake = row.cells[6].textContent;
+          
+          // Update modal with validator data
+          document.getElementById('unstake-validator-address').textContent = address;
+          document.getElementById('unstake-validator-status').textContent = status;
+          document.getElementById('unstake-validator-status').className = row.querySelector('.status-badge').className;
+          document.querySelector('#unstake-modal .balance-info strong').textContent = myStake;
+          
+          unstakeModal.classList.add('show');
+        });
+      });
+
+      // Close modals
+      closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          if (customizeModal) customizeModal.classList.remove('show');
+          if (stakeModal) stakeModal.classList.remove('show');
+          if (unstakeModal) unstakeModal.classList.remove('show');
+        });
+      });
+
+      // Cancel button for columns modal
+      if (cancelColumnsBtn) {
+        cancelColumnsBtn.addEventListener('click', function() {
+          customizeModal.classList.remove('show');
+        });
+      }
+
+      // Close modal when clicking outside
+      window.addEventListener('click', function(event) {
+        if (customizeModal && event.target === customizeModal) {
+          customizeModal.classList.remove('show');
+        }
+        if (stakeModal && event.target === stakeModal) {
+          stakeModal.classList.remove('show');
+        }
+        if (unstakeModal && event.target === unstakeModal) {
+          unstakeModal.classList.remove('show');
+        }
+      });
+
+      // MAX button functionality
+      const maxButtons = document.querySelectorAll('.btn-max');
+      maxButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const balanceText = this.closest('.balance-info').querySelector('strong').textContent;
+          const balance = balanceText.replace(/[^0-9]/g, '');
+          const inputField = this.closest('.form-group').querySelector('input');
+          inputField.value = balance;
+        });
+      });
+
+      // Search functionality
+      const searchInput = document.getElementById('validator-search');
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const tableRows = document.querySelectorAll('.validators-table tbody tr');
+        
+        tableRows.forEach(row => {
+          const address = row.querySelector('.wallet-address').textContent.toLowerCase();
+          if (address.includes(searchTerm)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+
+      // Filter functionality
+      const statusFilter = document.getElementById('status-filter');
+      statusFilter.addEventListener('change', function() {
+        const filterValue = this.value.toLowerCase();
+        const tableRows = document.querySelectorAll('.validators-table tbody tr');
+        
+        tableRows.forEach(row => {
+          const status = row.querySelector('.status-badge').textContent.toLowerCase();
+          
+          if (filterValue === 'all' || status === filterValue) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+
+      // Enhanced Column customization
+      const applyColumnsBtn = document.getElementById('apply-columns');
+      
+      // Toggle column selection in available columns
+      const availableColumns = document.querySelectorAll('.available-column');
+      availableColumns.forEach(column => {
+        column.addEventListener('click', function() {
+          const columnName = this.dataset.column;
+          
+          if (this.classList.contains('selected')) {
+            // Remove from active columns
+            this.classList.remove('selected');
+            this.querySelector('.column-remove')?.remove();
+            
+            // Find and remove from active columns
+            const activeColumn = document.querySelector(`.active-column[data-column="${columnName}"]`);
+            if (activeColumn) {
+              activeColumn.remove();
+              updateColumnNumbers();
+            }
+          } else {
+            // Add to active columns
+            this.classList.add('selected');
+            
+            // Add remove button
+            if (!this.querySelector('.column-remove')) {
+              const removeBtn = document.createElement('div');
+              removeBtn.className = 'column-remove';
+              removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+              this.appendChild(removeBtn);
+              
+              // Add event listener to remove button
+              removeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                column.click(); // Trigger the column click event
+              });
+            }
+            
+            // Add to active columns
+            const activeColumnsContainer = document.getElementById('active-columns-container');
+            const newActiveColumn = document.createElement('div');
+            newActiveColumn.className = 'active-column';
+            newActiveColumn.setAttribute('draggable', 'true');
+            newActiveColumn.dataset.column = columnName;
+            
+            const columnNumber = document.createElement('div');
+            columnNumber.className = 'column-number';
+            columnNumber.textContent = activeColumnsContainer.children.length + 1;
+            
+            const columnNameDiv = document.createElement('div');
+            columnNameDiv.className = 'column-name';
+            columnNameDiv.textContent = this.querySelector('.column-name').textContent;
+            
+            const columnDrag = document.createElement('div');
+            columnDrag.className = 'column-drag';
+            columnDrag.innerHTML = '<i class="fas fa-grip-lines"></i>';
+            
+            newActiveColumn.appendChild(columnNumber);
+            newActiveColumn.appendChild(columnNameDiv);
+            newActiveColumn.appendChild(columnDrag);
+            
+            activeColumnsContainer.appendChild(newActiveColumn);
+            
+            // Setup drag functionality for the new column
+            setupDragAndDrop(newActiveColumn);
+          }
+        });
+        
+        // Add event listener to remove buttons
+        const removeBtn = column.querySelector('.column-remove');
+        if (removeBtn) {
+          removeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            column.click(); // Trigger the column click event
+          });
+        }
+      });
+      
+      // Setup drag and drop for active columns
+      const activeColumns = document.querySelectorAll('.active-column');
+      activeColumns.forEach(column => {
+        setupDragAndDrop(column);
+      });
+      
+      function setupDragAndDrop(element) {
+        element.addEventListener('dragstart', function(e) {
+          e.dataTransfer.setData('text/plain', this.dataset.column);
+          this.classList.add('dragging');
+        });
+        
+        element.addEventListener('dragend', function() {
+          this.classList.remove('dragging');
+          updateColumnNumbers();
+        });
+        
+        element.addEventListener('dragover', function(e) {
+          e.preventDefault();
+        });
+        
+        element.addEventListener('drop', function(e) {
+          e.preventDefault();
+          const draggedColumn = document.querySelector(`.active-column.dragging`);
+          const container = document.getElementById('active-columns-container');
+          
+          if (draggedColumn !== this) {
+            // Determine whether to place before or after
+            const rect = this.getBoundingClientRect();
+            const midpoint = (rect.left + rect.right) / 2;
+            
+            if (e.clientX < midpoint) {
+              container.insertBefore(draggedColumn, this);
+            } else {
+              container.insertBefore(draggedColumn, this.nextSibling);
+            }
+            
+            updateColumnNumbers();
+          }
+        });
+      }
+      
+      // Update column numbers after reordering
+      function updateColumnNumbers() {
+        const activeColumns = document.querySelectorAll('.active-column');
+        activeColumns.forEach((column, index) => {
+          column.querySelector('.column-number').textContent = index + 1;
+        });
+      }
+      
+      // Apply column changes
+      applyColumnsBtn.addEventListener('click', function() {
+        const activeColumns = document.querySelectorAll('.active-column');
+        const tableHeaders = document.querySelectorAll('.validators-table th');
+        const tableRows = document.querySelectorAll('.validators-table tbody tr');
+        
+        // Get the current order of columns
+        const columnOrder = Array.from(activeColumns).map(col => col.dataset.column);
+        
+        // Hide all columns first
+        tableHeaders.forEach((header, index) => {
+          document.querySelectorAll(`.validators-table tr > *:nth-child(${index + 1})`).forEach(cell => {
+            cell.style.display = 'none';
+          });
+        });
+        
+        // Show only selected columns in the correct order
+        columnOrder.forEach((columnName, newIndex) => {
+          // Find the original index of this column
+          let originalIndex;
+          
+          switch(columnName) {
+            case 'status': originalIndex = 0; break;
+            case 'wallet': originalIndex = 1; break;
+            case 'stake': originalIndex = 2; break;
+            case 'voting': originalIndex = 3; break;
+            case 'score': originalIndex = 4; break;
+            case 'cr': originalIndex = 5; break;
+            case 'mystake': originalIndex = 6; break;
+            case 'actions': originalIndex = 7; break;
+            case 'uptime': originalIndex = 8; break; // These would be added if selected
+            case 'commission': originalIndex = 9; break;
+            case 'miner': originalIndex = 10; break;
+            case 'publickey': originalIndex = 11; break;
+            default: originalIndex = -1;
+          }
+          
+          if (originalIndex >= 0 && originalIndex < tableHeaders.length) {
+            // Show this column
+            document.querySelectorAll(`.validators-table tr > *:nth-child(${originalIndex + 1})`).forEach(cell => {
+              cell.style.display = '';
+            });
+          }
+        });
+        
+        customizeModal.classList.remove('show');
+      });
+
+      // Sorting functionality
+      const sortIcons = document.querySelectorAll('.validators-table th i.fa-sort');
+      sortIcons.forEach(icon => {
+        icon.addEventListener('click', function() {
+          const columnIndex = Array.from(this.closest('tr').children).indexOf(this.closest('th'));
+          const tableBody = document.querySelector('.validators-table tbody');
+          const rows = Array.from(tableBody.querySelectorAll('tr'));
+          
+          // Toggle sort direction
+          const isAscending = !this.classList.contains('fa-sort-up');
+          
+          // Update sort icons
+          sortIcons.forEach(i => {
+            i.className = 'fas fa-sort';
+          });
+          
+          this.className = isAscending ? 'fas fa-sort-up' : 'fas fa-sort-down';
+          
+          // Sort rows
+          rows.sort((a, b) => {
+            let aValue = a.children[columnIndex].textContent.trim();
+            let bValue = b.children[columnIndex].textContent.trim();
+            
+            // Handle numeric values
+            if (!isNaN(parseFloat(aValue.replace(/[^0-9.-]/g, '')))) {
+              aValue = parseFloat(aValue.replace(/[^0-9.-]/g, ''));
+              bValue = parseFloat(bValue.replace(/[^0-9.-]/g, ''));
+            }
+            
+            if (aValue < bValue) return isAscending ? -1 : 1;
+            if (aValue > bValue) return isAscending ? 1 : -1;
+            return 0;
+          });
+          
+          // Reorder rows
+          rows.forEach(row => {
+            tableBody.appendChild(row);
+          });
+        });
+      });
+
+    // Enhanced pagination functionality
+    const paginationButtons = document.querySelectorAll('.pagination-btn');
+    const paginationContent = document.querySelectorAll('.pagination-content');
+    
+    paginationButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Skip if it's a navigation arrow or already active
+        if (this.classList.contains('active') || 
+            this.querySelector('i.fa-chevron-left') || 
+            this.querySelector('i.fa-chevron-right')) {
+          return;
+        }
+        
+        // Update active button
+        paginationButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Get page number
+        const pageNumber = this.textContent;
+        
+        // Hide all content and show selected page
+        paginationContent.forEach(content => {
+          content.classList.remove('active');
+          
+          // Add animation to rows when changing pages
+          const rows = content.querySelectorAll('tr');
+          rows.forEach((row, index) => {
+            row.style.animationDelay = `${0.1 * index}s`;
+          });
+        });
+        
+        const selectedPage = document.getElementById(`page-${pageNumber}`);
+        if (selectedPage) {
+          selectedPage.classList.add('active');
+        }
+        
+        // Scroll to top of table
+        document.querySelector('.validators-table-container').scrollTop = 0;
+      });
+    });
+
+    // Add click event to validator rows to navigate to details page
+    const validatorRows = document.querySelectorAll('.validators-table tbody tr');
+    validatorRows.forEach(row => {
+      row.style.cursor = 'pointer';
+      
+      row.addEventListener('click', function(e) {
+        // Don't navigate if clicking on buttons
+        if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+          return;
+        }
+        
+        // Get validator address from the row
+        const address = this.querySelector('.wallet-address').textContent;
+        
+        // Navigate to validator details page
+        window.location.href = `validator-details.html?address=${encodeURIComponent(address)}`;
+      });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historic Proposals - DMD Diamond</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="dao.css">
+<link rel="stylesheet" href="historic-proposals.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<!-- Header -->
+<header>
+  <div class="container">
+    <div class="logo">
+      <a href="index.html"><h1>DMD</h1></a>
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="validators.html">Validators</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle">DMD Ecosystem <i class="fas fa-chevron-down"></i></a>
+          <div class="dropdown-menu">
+            <div class="dropdown-content">
+              <div class="dropdown-section">
+                <h4>INTERCHAIN TOOLS</h4>
+                <ul>
+                  <li><a href="#">Wallets</a></li>
+                  <li><a href="#">Block Explorers</a></li>
+                </ul>
+              </div>
+              <div class="dropdown-section">
+                <ul>
+                  <li><a href="#">Interchain Ecosystem</a></li>
+                  <li><a href="#">Tokens</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle">3rd Party Projects <i class="fas fa-chevron-down"></i></a>
+          <div class="dropdown-menu">
+            <div class="dropdown-content">
+              <div class="dropdown-section">
+                <h4>COMMUNITY</h4>
+                <ul>
+                  <li><a href="#">Developer Chat <i class="fas fa-external-link-alt"></i></a></li>
+                  <li><a href="#">Ecosystem Blog <i class="fas fa-external-link-alt"></i></a></li>
+                </ul>
+              </div>
+              <div class="dropdown-section">
+                <ul>
+                  <li><a href="#">Community Chat <i class="fas fa-external-link-alt"></i></a></li>
+                  <li><a href="#">Discussion Forum <i class="fas fa-external-link-alt"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="theme-toggle-wrapper">
+        <label class="theme-toggle">
+          <input type="checkbox" id="theme-toggle">
+          <span class="theme-toggle-slider">
+            <i class="fas fa-sun theme-toggle-icon sun"></i>
+            <i class="fas fa-moon theme-toggle-icon moon"></i>
+          </span>
+        </label>
+      </div>
+      <div class="cta-button">
+        <i class="fas fa-wallet"></i> Connect Wallet</i>
+      </div>
+    </div>
+    <div class="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+      <i class="fas fa-times"></i>
+    </div>
+  </div>
+</header>
+
+<!-- Historic Proposals Hero Section -->
+<section class="historic-hero">
+  <div class="cosmic-grid"></div>
+  <div class="cosmic-elements">
+    <div class="diamond diamond-1"></div>
+    <div class="diamond diamond-2"></div>
+    <div class="diamond diamond-3"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+  </div>
+  <div class="container">
+    <div class="historic-hero-content">
+      <h1>Historic Proposals</h1>
+      <p>Browse and analyze all past governance proposals and their outcomes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Search and Filter Section -->
+<section class="historic-controls">
+  <div class="container">
+    <div class="search-filter-container">
+      <div class="search-filter-group">
+        <div class="search-container">
+          <input type="text" id="proposal-search" placeholder="Search proposals...">
+          <button class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="filter-container">
+          <select id="proposal-filter">
+            <option value="all">All Types</option>
+            <option value="ecosystem">Ecosystem Parameter Change</option>
+            <option value="treasury">Treasury</option>
+            <option value="protocol">Protocol</option>
+            <option value="community">Community</option>
+            <option value="open">Open</option>
+          </select>
+        </div>
+      </div>
+      <div class="historic-stats">
+        <div class="stat-item">
+          <span class="stat-label">Total Proposals:</span>
+          <span class="stat-value">248</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Accepted:</span>
+          <span class="stat-value accepted">186</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Declined:</span>
+          <span class="stat-value declined">62</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Historic Proposals Table Section -->
+<section class="historic-proposals">
+  <div class="container">
+    <div class="proposals-table-container">
+      <table class="proposals-table">
+        <thead>
+          <tr>
+            <th>Date <i class="fas fa-sort"></i></th>
+            <th>Created by <i class="fas fa-sort"></i></th>
+            <th>Title <i class="fas fa-sort"></i></th>
+            <th>Type <i class="fas fa-sort"></i></th>
+            <th>Participation <i class="fas fa-sort"></i></th>
+            <th>Exceeding Yes <i class="fas fa-sort"></i></th>
+            <th>Result <i class="fas fa-sort"></i></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>4 Mar 2025</td>
+            <td>
+              <div class="creator-address">
+                <div class="address-icon" style="background-color: #3a7bd5"></div>
+                <span>0x8F3c...9D2b</span>
+              </div>
+            </td>
+            <td>
+              <div class="proposal-title">
+                <span>Increase Validator Commission Cap to 10%</span>
+              </div>
+            </td>
+            <td><span class="proposal-type ecosystem">Ecosystem Parameter Change</span></td>
+            <td>
+              <div class="participation-bar">
+                <div class="participation-progress" style="width: 65%"></div>
+                <span class="participation-value">65%</span>
+              </div>
+            </td>
+            <td><span class="exceeding-value positive">+12.5%</span></td>
+            <td><span class="proposal-status accepted">Accepted</span></td>
+          </tr>
+          <tr class="alt-row">
+            <td>28 Feb 2025</td>
+            <td>
+              <div class="creator-address">
+                <div class="address-icon" style="background-color: #5d26c1"></div>
+                <span>0x4A7f...1E3c</span>
+              </div>
+            </td>
+            <td>
+              <div class="proposal-title">
+                <span>Community Development Fund Allocation Q2</span>
+              </div>
+            </td>
+            <td><span class="proposal-type treasury">Treasury</span></td>
+            <td>
+              <div class="participation-bar">
+                <div class="participation-progress" style="width: 72%"></div>
+                <span class="participation-value">72%</span>
+              </div>
+            </td>
+            <td><span class="exceeding-value positive">+24.8%</span></td>
+            <td><span class="proposal-status executed">Executed</span></td>
+          </tr>
+          <tr>
+            <td>15 Feb 2025</td>
+            <td>
+              <div class="creator-address">
+                <div class="address-icon" style="background-color: #00d2ff"></div>
+                <span>0x2B5d...7F4e</span>
+              </div>
+            </td>
+            <td>
+              <div class="proposal-title">
+                <span>DMD Protocol Upgrade v2.6</span>
+              </div>
+            </td>
+            <td><span class="proposal-type protocol">Protocol</span></td>
+            <td>
+              <div class="participation-bar">
+                <div class="participation-progress" style="width: 58%"></div>
+                <span class="participation-value">58%</span>
+              </div>
+            </td>
+            <td><span class="exceeding-value positive">+18.2%</span></td>
+            <td><span class="proposal-status accepted">Accepted</span></td>
+          </tr>
+          <tr class="alt-row">
+            <td>8 Feb 2025</td>
+            <td>
+              <div class="creator-address">
+                <div class="address-icon" style="background-color: #a17fe0"></div>
+                <span>0x6C9b...2D5a</span>
+              </div>
+            </td>
+            <td>
+              <div class="proposal-title">
+                <span>Marketing Budget Increase for Q2</span>
+              </div>
+            </td>
+            <td><span class="proposal-type community">Community</span></td>
+            <td>
+              <div class="participation-bar">
+                <div class="participation-progress" style="width: 45%"></div>
+                <span class="participation-value">45%</span>
+              </div>
+            </td>
+            <td><span class="exceeding-value negative">-5.3%</span></td>
+            <td><span class="proposal-status declined">Declined</span></td>
+          </tr>
+          <tr>
+            <td>29 Jan 2025</td>
+            <td>
+              <div class="creator-address">
+                <div class="address-icon" style="background-color: #07f49e"></div>
+                <span>0x3E8c...6A1d</span>
+              </div>
+            </td>
+            <td>
+              <div class="proposal-title">
+                <span>Reduce Unbonding Period to 14 Days</span>
+              </div>
+            </td>
+            <td><span class="proposal-type ecosystem">Ecosystem Parameter Change</span></td>
+            <td>
+              <div class="participation-bar">
+                <div class="participation-progress" style="width: 68%"></div>
+                <span class="participation-value">68%</span>
+              </div>
+            </td>
+            <td><span class="exceeding-value negative">-2.1%</span></td>
+            <td><span class="proposal-status declined">Declined</span></td>
+          </tr>
+          <tr class="alt-row">
+            <td>15 Jan 2025</td>
+            <td>
+              <div class="creator-address">
+                <div class="address-icon" style="background-color: #ff9f43"></div>
+                <span>0x9D4e...2F7b</span>
+              </div>
+            </td>
+            <td>
+              <div class="proposal-title">
+                <span>Validator Slashing Penalty Adjustment</span>
+              </div>
+            </td>
+            <td><span class="proposal-type ecosystem">Ecosystem Parameter Change</span></td>
+            <td>
+              <div class="participation-bar">
+                <div class="participation-progress" style="width: 75%"></div>
+                <span class="participation-value">75%</span>
+              </div>
+            </td>
+            <td><span class="exceeding-value positive">+31.2%</span></td>
+            <td><span class="proposal-status executed">Executed</span></td>
+          </tr>
+          <tr>
+            <td>2 Jan 2025</td>
+            <td>
+              <div class="creator-address">
+                <div class="address-icon" style="background-color: #ff6b6b"></div>
+                <span>0x1F5a...8E3d</span>
+              </div>
+            </td>
+            <td>
+              <div class="proposal-title">
+                <span>Cross-Chain Bridge Implementation</span>
+              </div>
+            </td>
+            <td><span class="proposal-type protocol">Protocol</span></td>
+            <td>
+              <div class="participation-bar">
+                <div class="participation-progress" style="width: 82%"></div>
+                <span class="participation-value">82%</span>
+              </div>
+            </td>
+            <td><span class="exceeding-value positive">+45.7%</span></td>
+            <td><span class="proposal-status accepted">Accepted</span></td>
+          </tr>
+          <tr class="alt-row">
+            <td>20 Dec 2024</td>
+            <td>
+              <div class="creator-address">
+                <div class="address-icon" style="background-color: #3a7bd5"></div>
+                <span>0x7B2c...5D9a</span>
+              </div>
+            </td>
+            <td>
+              <div class="proposal-title">
+                <span>Treasury Fund Allocation for Q1 2025</span>
+              </div>
+            </td>
+            <td><span class="proposal-type treasury">Treasury</span></td>
+            <td>
+              <div class="participation-bar">
+                <div class="participation-progress" style="width: 70%"></div>
+                <span class="participation-value">70%</span>
+              </div>
+            </td>
+            <td><span class="exceeding-value positive">+28.3%</span></td>
+            <td><span class="proposal-status executed">Executed</span></td>
+          </tr>
+          <tr>
+            <td>12 Dec 2024</td>
+            <td>
+              <div class="creator-address">
+                <div class="address-icon" style="background-color: #5d26c1"></div>
+                <span>0x4E9f...2A1c</span>
+              </div>
+            </td>
+            <td>
+              <div class="proposal-title">
+                <span>Governance Voting Period Extension</span>
+              </div>
+            </td>
+            <td><span class="proposal-type open">Open</span></td>
+            <td>
+              <div class="participation-bar">
+                <div class="participation-progress" style="width: 55%"></div>
+                <span class="participation-value">55%</span>
+              </div>
+            </td>
+            <td><span class="exceeding-value negative">-8.4%</span></td>
+            <td><span class="proposal-status declined">Declined</span></td>
+          </tr>
+          <tr class="alt-row">
+            <td>5 Dec 2024</td>
+            <td>
+              <div class="creator-address">
+                <div class="address-icon" style="background-color: #00d2ff"></div>
+                <span>0x8D3b...7F2e</span>
+              </div>
+            </td>
+            <td>
+              <div class="proposal-title">
+                <span>Developer Grants Program Establishment</span>
+              </div>
+            </td>
+            <td><span class="proposal-type community">Community</span></td>
+            <td>
+              <div class="participation-bar">
+                <div class="participation-progress" style="width: 63%"></div>
+                <span class="participation-value">63%</span>
+              </div>
+            </td>
+            <td><span class="exceeding-value positive">+15.8%</span></td>
+            <td><span class="proposal-status executed">Executed</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+      <button class="pagination-btn active">1</button>
+      <button class="pagination-btn">2</button>
+      <button class="pagination-btn">3</button>
+      <span class="pagination-ellipsis">...</span>
+      <button class="pagination-btn">25</button>
+      <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>DMD Diamond</h3>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Ecosystem</a></li>
+          <li><a href="#">Community</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Developers</h3>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Tutorials</a></li>
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">SDK</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="#">Whitepaper</a></li>
+          <li><a href="#">Roadmap</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Connect</h3>
+        <ul>
+          <li><a href="#">Twitter</a></li>
+          <li><a href="#">Discord</a></li>
+          <li><a href="#">Telegram</a></li>
+          <li><a href="#">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 DMD Diamond. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="theme.js"></script>
+<script>
+  // Mobile menu toggle
+  document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+    document.querySelector('.nav-links').classList.toggle('active');
+    this.classList.toggle('active');
+  });
+
+  // Sorting functionality
+  const sortIcons = document.querySelectorAll('.proposals-table th i.fa-sort');
+  sortIcons.forEach(icon => {
+    icon.addEventListener('click', function() {
+      const columnIndex = Array.from(this.closest('tr').children).indexOf(this.closest('th'));
+      const tableBody = document.querySelector('.proposals-table tbody');
+      const rows = Array.from(tableBody.querySelectorAll('tr'));
+      
+      // Toggle sort direction
+      const isAscending = !this.classList.contains('fa-sort-up');
+      
+      // Update sort icons
+      sortIcons.forEach(i => {
+        i.className = 'fas fa-sort';
+      });
+      
+      this.className = isAscending ? 'fas fa-sort-up' : 'fas fa-sort-down';
+      
+      // Sort rows
+      rows.sort((a, b) => {
+        let aValue, bValue;
+        
+        // Handle different column types
+        if (columnIndex === 0) {
+          // Date column - convert to comparable format
+          const dateA = new Date(a.cells[columnIndex].textContent);
+          const dateB = new Date(b.cells[columnIndex].textContent);
+          return isAscending ? dateA - dateB : dateB - dateA;
+        } else if (columnIndex === 4) {
+          // Participation column
+          aValue = parseFloat(a.querySelector('.participation-value').textContent);
+          bValue = parseFloat(b.querySelector('.participation-value').textContent);
+        } else if (columnIndex === 5) {
+          // Exceeding Yes column
+          aValue = parseFloat(a.querySelector('.exceeding-value').textContent.replace('%', ''));
+          bValue = parseFloat(b.querySelector('.exceeding-value').textContent.replace('%', ''));
+        } else {
+          aValue = a.cells[columnIndex].textContent.trim().toLowerCase();
+          bValue = b.cells[columnIndex].textContent.trim().toLowerCase();
+        }
+        
+        if (aValue < bValue) return isAscending ? -1 : 1;
+        if (aValue > bValue) return isAscending ? 1 : -1;
+        return 0;
+      });
+      
+      // Reorder rows and maintain alternating row styling
+      rows.forEach((row, index) => {
+        // Remove any existing alt-row class
+        row.classList.remove('alt-row');
+        
+        // Add alt-row class to even rows
+        if (index % 2 === 1) {
+          row.classList.add('alt-row');
+        }
+        
+        tableBody.appendChild(row);
+      });
+    });
+  });
+
+  // Search functionality
+  const searchInput = document.getElementById('proposal-search');
+  searchInput.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const tableRows = document.querySelectorAll('.proposals-table tbody tr');
+    
+    tableRows.forEach(row => {
+      const title = row.querySelector('.proposal-title span').textContent.toLowerCase();
+      const creator = row.querySelector('.creator-address span').textContent.toLowerCase();
+      
+      if (title.includes(searchTerm) || creator.includes(searchTerm)) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+
+  // Filter functionality
+  const proposalFilter = document.getElementById('proposal-filter');
+  proposalFilter.addEventListener('change', function() {
+    const filterValue = this.value.toLowerCase();
+    const tableRows = document.querySelectorAll('.proposals-table tbody tr');
+    
+    tableRows.forEach(row => {
+      const type = row.querySelector('.proposal-type').className.split(' ')[1].toLowerCase();
+      
+      if (filterValue === 'all' || type === filterValue) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+
+  // Pagination functionality
+  const paginationButtons = document.querySelectorAll('.pagination-btn');
+  
+  paginationButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // Skip if it's a navigation arrow or already active
+      if (this.classList.contains('active') || 
+          this.querySelector('i.fa-chevron-left') || 
+          this.querySelector('i.fa-chevron-right')) {
+        return;
+      }
+      
+      // Update active button
+      paginationButtons.forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
+      
+      // In a real application, this would load the appropriate page data
+      // For this demo, we'll just scroll to the top of the table
+      document.querySelector('.proposals-table-container').scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
