@@ -6,6 +6,7 @@
   <title>Validators - DMD Diamond</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="validators.css">
+  <link rel="stylesheet" href="enhanced-light-theme.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -171,7 +172,6 @@
               <th>Total Stake <i class="fas fa-sort"></i></th>
               <th>Voting Power <i class="fas fa-sort"></i></th>
               <th>Score <i class="fas fa-sort"></i></th>
-              <th>CR <i class="fas fa-sort"></i></th>
               <th>My Stake <i class="fas fa-sort"></i></th>
               <th>Actions</th>
             </tr>
@@ -183,7 +183,6 @@
               <td>1,250,000 DMD</td>
               <td>4.2%</td>
               <td>98.7%</td>
-              <td>5.8%</td>
               <td>0 DMD</td>
               <td>
                 <button class="btn-stake">Stake</button>
@@ -195,7 +194,6 @@
               <td>980,500 DMD</td>
               <td>3.3%</td>
               <td>99.1%</td>
-              <td>6.2%</td>
               <td>5,000 DMD</td>
               <td>
                 <button class="btn-stake">Stake</button>
@@ -208,7 +206,6 @@
               <td>750,200 DMD</td>
               <td>2.5%</td>
               <td>97.5%</td>
-              <td>5.5%</td>
               <td>0 DMD</td>
               <td>
                 <button class="btn-stake">Stake</button>
@@ -220,7 +217,6 @@
               <td>420,800 DMD</td>
               <td>1.4%</td>
               <td>85.3%</td>
-              <td>4.2%</td>
               <td>0 DMD</td>
               <td>
                 <button class="btn-stake" disabled>Stake</button>
@@ -232,7 +228,6 @@
               <td>1,120,600 DMD</td>
               <td>3.8%</td>
               <td>98.9%</td>
-              <td>6.0%</td>
               <td>2,500 DMD</td>
               <td>
                 <button class="btn-stake">Stake</button>
@@ -257,7 +252,6 @@
               <td>890,700 DMD</td>
               <td>3.0%</td>
               <td>99.3%</td>
-              <td>6.1%</td>
               <td>0 DMD</td>
               <td>
                 <button class="btn-stake">Stake</button>
@@ -269,7 +263,6 @@
               <td>680,300 DMD</td>
               <td>2.3%</td>
               <td>97.8%</td>
-              <td>5.7%</td>
               <td>0 DMD</td>
               <td>
                 <button class="btn-stake">Stake</button>
@@ -281,7 +274,6 @@
               <td>1,050,800 DMD</td>
               <td>3.5%</td>
               <td>98.5%</td>
-              <td>5.9%</td>
               <td>3,000 DMD</td>
               <td>
                 <button class="btn-stake">Stake</button>
@@ -294,7 +286,6 @@
               <td>290,500 DMD</td>
               <td>1.0%</td>
               <td>82.7%</td>
-              <td>4.0%</td>
               <td>0 DMD</td>
               <td>
                 <button class="btn-stake" disabled>Stake</button>
@@ -444,7 +435,6 @@
         <div class="validator-info">
           <p><strong>Validator:</strong> <span id="stake-validator-address">0x7a2D...3F5e</span></p>
           <p><strong>Status:</strong> <span id="stake-validator-status" class="status-badge status-active">Active</span></p>
-          <p><strong>Current APR:</strong> <span id="stake-validator-apr">5.8%</span></p>
         </div>
         <div class="stake-form">
           <div class="form-group">
@@ -475,7 +465,7 @@
         <div class="validator-info">
           <p><strong>Validator:</strong> <span id="unstake-validator-address">0x3B1c...9D2a</span></p>
           <p><strong>Status:</strong> <span id="unstake-validator-status" class="status-badge status-active">Active</span></p>
-          <p><strong>Unbonding Period:</strong> <span id="unstake-period">21 days</span></p>
+          <p><strong>Claim period:</strong> <span id="unstake-period">Next epoch</span></p>
         </div>
         <div class="stake-form">
           <div class="form-group">
@@ -488,7 +478,7 @@
           </div>
           <div class="warning-message">
             <i class="fas fa-exclamation-triangle"></i>
-            <p>Unstaked tokens will be subject to a 21-day unbonding period during which they cannot be transferred or used.</p>
+            <p>Unstaked tokens will claimable in next epoch</p>
           </div>
         </div>
       </div>

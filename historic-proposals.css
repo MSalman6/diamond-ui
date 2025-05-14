@@ -370,3 +370,176 @@
     transition: none;
   }
 }
+
+/* Light Theme Styles */
+body.light-theme .historic-hero {
+  background-color: #f5f7fa;
+}
+
+body.light-theme .historic-hero-content h1 {
+  color: #1a202c;
+}
+
+body.light-theme .historic-hero-content p {
+  color: #4a5568;
+}
+
+body.light-theme .historic-controls {
+  background-color: #e2e8f0;
+}
+
+body.light-theme .stat-label {
+  color: #4a5568;
+}
+
+body.light-theme .stat-value {
+  color: #1a202c;
+}
+
+body.light-theme .historic-proposals {
+  background-color: #f5f7fa;
+}
+
+body.light-theme .proposals-table-container {
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .proposals-table th {
+  background-color: #edf2f7;
+  color: #2d3748;
+  border-bottom-color: #e2e8f0;
+}
+
+body.light-theme .proposals-table td {
+  color: #2d3748;
+  border-bottom-color: #edf2f7;
+}
+
+body.light-theme .proposals-table tbody tr:hover {
+  background-color: #f7fafc;
+}
+
+body.light-theme .proposals-table tbody tr.alt-row {
+  background-color: #f9fafb;
+}
+
+body.light-theme .proposals-table tbody tr.alt-row:hover {
+  background-color: #f7fafc;
+}
+
+body.light-theme .participation-bar {
+  background-color: #e2e8f0;
+}
+
+body.light-theme .participation-value {
+  color: #4a5568;
+}
+
+/* Proposal types in light theme */
+body.light-theme .proposal-type.ecosystem {
+  background-color: rgba(0, 210, 255, 0.15);
+  color: #0086a8;
+}
+
+body.light-theme .proposal-type.treasury {
+  background-color: rgba(161, 127, 224, 0.15);
+  color: #6b46c1;
+}
+
+body.light-theme .proposal-type.protocol {
+  background-color: rgba(255, 159, 67, 0.15);
+  color: #dd6b20;
+}
+
+body.light-theme .proposal-type.community {
+  background-color: rgba(7, 244, 158, 0.15);
+  color: #059669;
+}
+
+body.light-theme .proposal-type.open {
+  background-color: rgba(255, 107, 107, 0.15);
+  color: #e53e3e;
+}
+
+/* Proposal statuses in light theme */
+body.light-theme .proposal-status.accepted {
+  background-color: rgba(7, 244, 158, 0.15);
+  color: #059669;
+}
+
+body.light-theme .proposal-status.declined {
+  background-color: rgba(255, 107, 107, 0.15);
+  color: #e53e3e;
+}
+
+body.light-theme .proposal-status.executed {
+  background-color: rgba(0, 210, 255, 0.15);
+  color: #0086a8;
+}
+
+/* Exceeding values in light theme */
+body.light-theme .exceeding-value.positive {
+  color: #059669;
+}
+
+body.light-theme .exceeding-value.negative {
+  color: #e53e3e;
+}
+
+/* Pagination in light theme */
+body.light-theme .pagination-btn {
+  background-color: #ffffff;
+  color: #2d3748;
+  border-color: #e2e8f0;
+}
+
+body.light-theme .pagination-btn:hover {
+  background-color: #edf2f7;
+}
+
+body.light-theme .pagination-btn.active {
+  background-color: #3a7bd5;
+  color: #ffffff;
+  border-color: #3a7bd5;
+}
+
+body.light-theme .pagination-ellipsis {
+  color: #4a5568;
+}
+
+/* Search and filter controls in light theme */
+body.light-theme .search-container input {
+  background-color: #ffffff;
+  color: #2d3748;
+  border-color: #e2e8f0;
+}
+
+body.light-theme .search-container input::placeholder {
+  color: #a0aec0;
+}
+
+body.light-theme .search-btn {
+  background-color: #3a7bd5;
+  color: #ffffff;
+}
+
+body.light-theme .filter-container select {
+  background-color: #ffffff;
+  color: #2d3748;
+  border-color: #e2e8f0;
+}
+
+/* Cosmic elements in light theme */
+body.light-theme .cosmic-grid {
+  opacity: 0.3;
+}
+
+body.light-theme .diamond {
+  opacity: 0.7;
+}
+
+body.light-theme .glow {
+  opacity: 0.4;
+}

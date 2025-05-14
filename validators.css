@@ -917,3 +917,297 @@
   background: rgba(255, 255, 255, 0.05);
   box-shadow: 0 0 15px rgba(0, 157, 255, 0.1);
 }
+
+/* Light Theme Enhancements */
+body.light-theme .validators-hero {
+  background: linear-gradient(to bottom, #f0f7ff, #f5f7fa);
+}
+
+body.light-theme .validators-hero-content h1 {
+  color: #0f172a;
+}
+
+body.light-theme .validators-hero-content p {
+  color: #334155;
+}
+
+body.light-theme .validators-metrics {
+  background-color: var(--darker-bg);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .metric-card {
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+body.light-theme .metric-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  background-color: white;
+}
+
+body.light-theme .metric-card h3 {
+  color: #64748b;
+}
+
+body.light-theme .metric-icon {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #64748b;
+}
+
+body.light-theme .metric-card:hover .metric-icon {
+  color: #121826;
+}
+
+body.light-theme .validators-table-section {
+  background-color: white;
+}
+
+body.light-theme .search-container input {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #121826;
+}
+
+body.light-theme .search-btn {
+  color: #64748b;
+}
+
+body.light-theme .filter-container select {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #121826;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+body.light-theme .filter-container select option {
+  background-color: white;
+  color: #121826;
+}
+
+body.light-theme .btn-customize {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #121826;
+}
+
+body.light-theme .btn-customize:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+body.light-theme .validators-table-container {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .validators-table th {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  color: #121826;
+}
+
+body.light-theme .validators-table td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: #121826;
+}
+
+body.light-theme .validators-table tbody tr:hover {
+  background-color: rgba(0, 112, 243, 0.04);
+}
+
+body.light-theme .validators-table th i {
+  color: #64748b;
+}
+
+body.light-theme .validators-table th i:hover {
+  color: #121826;
+}
+
+body.light-theme .wallet-address {
+  color: #121826;
+}
+
+body.light-theme .status-active {
+  background: rgba(0, 210, 255, 0.15);
+  color: #0277bd;
+}
+
+body.light-theme .status-valid {
+  background: rgba(7, 244, 158, 0.15);
+  color: #038d5a;
+}
+
+body.light-theme .status-invalid {
+  background: rgba(255, 107, 107, 0.15);
+  color: #d32f2f;
+}
+
+body.light-theme .status-jailed {
+  background: rgba(255, 159, 67, 0.15);
+  color: #e65100;
+}
+
+body.light-theme .btn-stake {
+  background: rgba(7, 244, 158, 0.15);
+  color: #038d5a;
+}
+
+body.light-theme .btn-stake:hover {
+  background: rgba(7, 244, 158, 0.25);
+}
+
+body.light-theme .btn-unstake {
+  background: rgba(255, 107, 107, 0.15);
+  color: #d32f2f;
+}
+
+body.light-theme .btn-unstake:hover {
+  background: rgba(255, 107, 107, 0.25);
+}
+
+body.light-theme .pagination-btn {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #121826;
+}
+
+body.light-theme .pagination-btn.active {
+  background-color: rgba(0, 157, 255, 0.1);
+  border-color: rgba(0, 157, 255, 0.3);
+  color: #0070f3;
+}
+
+body.light-theme .pagination-ellipsis {
+  color: #64748b;
+}
+
+body.light-theme .modal-content {
+  background: white;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .modal-header h3 {
+  color: #0f172a;
+}
+
+body.light-theme .close-modal {
+  color: #64748b;
+}
+
+body.light-theme .modal-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .modal-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .columns-section {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+body.light-theme .columns-section-title {
+  color: #64748b;
+}
+
+body.light-theme .active-column {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .active-column:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+body.light-theme .column-name {
+  color: #121826;
+}
+
+body.light-theme .available-column {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .available-column:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+body.light-theme .available-column.selected {
+  background-color: rgba(0, 112, 243, 0.1);
+  border-color: rgba(0, 112, 243, 0.3);
+}
+
+body.light-theme .column-remove {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #64748b;
+}
+
+body.light-theme .column-remove:hover {
+  background-color: rgba(255, 0, 0, 0.15);
+  color: #d32f2f;
+}
+
+body.light-theme .btn-cancel {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #121826;
+}
+
+body.light-theme .btn-cancel:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .validator-info {
+  background-color: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .validator-info p {
+  color: #121826;
+}
+
+body.light-theme .form-group label {
+  color: #121826;
+}
+
+body.light-theme .form-group input {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #121826;
+}
+
+body.light-theme .form-group input::placeholder {
+  color: rgba(18, 24, 38, 0.4);
+}
+
+body.light-theme .balance-info {
+  color: #64748b;
+}
+
+body.light-theme .balance-info strong {
+  color: #121826;
+}
+
+body.light-theme .btn-max {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #121826;
+}
+
+body.light-theme .btn-max:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .warning-message {
+  background-color: rgba(255, 159, 67, 0.1);
+  border: 1px solid rgba(255, 159, 67, 0.2);
+}
+
+body.light-theme .warning-message i {
+  color: #e65100;
+}
+
+body.light-theme .warning-message p {
+  color: #121826;
+}

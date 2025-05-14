@@ -982,3 +982,250 @@
     animation: none;
   }
 }
+
+/* Add the following light theme styles at the end of the file */
+
+/* Light Theme Styles for Validator Details Page */
+body.light-theme .validator-hero {
+  background: linear-gradient(to bottom, #f0f7ff, #f5f7fa);
+}
+
+body.light-theme .validator-header h1 {
+  color: #0f172a;
+}
+
+body.light-theme .back-link a {
+  color: #334155;
+}
+
+body.light-theme .status-badge.status-active {
+  background: rgba(7, 244, 158, 0.15);
+  color: #038d5a;
+}
+
+body.light-theme .status-badge.status-inactive {
+  background: rgba(255, 107, 107, 0.15);
+  color: #d32f2f;
+}
+
+body.light-theme .validator-statistics,
+body.light-theme .delegates-section,
+body.light-theme .dao-section {
+  background-color: var(--darker-bg);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .validator-performance {
+  background-color: white;
+}
+
+body.light-theme .section-title h2 {
+  color: #0f172a;
+}
+
+body.light-theme .section-title p {
+  color: #334155;
+}
+
+body.light-theme .stat-card,
+body.light-theme .performance-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: white;
+}
+
+body.light-theme .stat-card:hover,
+body.light-theme .performance-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+  background-color: white;
+}
+
+body.light-theme .stat-card h3,
+body.light-theme .performance-header h3 {
+  color: #64748b;
+}
+
+body.light-theme .stat-value {
+  background: linear-gradient(90deg, #0070f3, #00a2ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+body.light-theme .stat-trend {
+  color: #64748b;
+}
+
+body.light-theme .stat-trend.positive {
+  color: #038d5a;
+}
+
+body.light-theme .stat-trend.negative {
+  color: #d32f2f;
+}
+
+body.light-theme .performance-value {
+  color: #121826;
+}
+
+body.light-theme .progress-bar {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .performance-info {
+  color: #64748b;
+}
+
+body.light-theme .delegates-table-container,
+body.light-theme .dao-table-container {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+body.light-theme .delegates-table th,
+body.light-theme .dao-table th {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  color: #121826;
+}
+
+body.light-theme .delegates-table td,
+body.light-theme .dao-table td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: #121826;
+}
+
+body.light-theme .delegates-table tbody tr:hover,
+body.light-theme .dao-table tbody tr:hover {
+  background-color: rgba(0, 112, 243, 0.04);
+}
+
+body.light-theme .proposal-type.protocol {
+  background: rgba(0, 210, 255, 0.15);
+  color: #0277bd;
+}
+
+body.light-theme .proposal-type.treasury {
+  background: rgba(161, 127, 224, 0.15);
+  color: #7b1fa2;
+}
+
+body.light-theme .proposal-type.parameter {
+  background: rgba(255, 159, 67, 0.15);
+  color: #e65100;
+}
+
+body.light-theme .proposal-type.community {
+  background: rgba(7, 244, 158, 0.15);
+  color: #038d5a;
+}
+
+body.light-theme .vote-badge.vote-yes {
+  background: rgba(7, 244, 158, 0.15);
+  color: #038d5a;
+}
+
+body.light-theme .vote-badge.vote-no {
+  background: rgba(255, 107, 107, 0.15);
+  color: #d32f2f;
+}
+
+body.light-theme .vote-badge.vote-abstain {
+  background: rgba(255, 159, 67, 0.15);
+  color: #e65100;
+}
+
+body.light-theme .proposal-status.passed {
+  background: rgba(7, 244, 158, 0.15);
+  color: #038d5a;
+}
+
+body.light-theme .proposal-status.rejected {
+  background: rgba(255, 107, 107, 0.15);
+  color: #d32f2f;
+}
+
+body.light-theme .proposal-status.pending {
+  background: rgba(255, 159, 67, 0.15);
+  color: #e65100;
+}
+
+body.light-theme .pagination-btn {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #121826;
+}
+
+body.light-theme .pagination-btn.active {
+  background-color: rgba(0, 157, 255, 0.1);
+  border-color: rgba(0, 157, 255, 0.3);
+  color: #0070f3;
+}
+
+body.light-theme .pagination-ellipsis {
+  color: #64748b;
+}
+
+body.light-theme .staking-info {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+body.light-theme .info-label {
+  color: #64748b;
+}
+
+body.light-theme .info-value {
+  color: #121826;
+}
+
+body.light-theme .progress-step {
+  background-color: white;
+}
+
+body.light-theme .progress-step.active {
+  background: rgba(0, 157, 255, 0.1);
+}
+
+body.light-theme .progress-step.completed {
+  background: rgba(7, 244, 158, 0.1);
+}
+
+body.light-theme .step-icon {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #64748b;
+}
+
+body.light-theme .step-label {
+  color: #121826;
+}
+
+body.light-theme .progress-connector {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .transaction-details {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+body.light-theme .transaction-message {
+  color: #121826;
+}
+
+body.light-theme .transaction-hash {
+  color: #64748b;
+}
+
+body.light-theme .cta-button {
+  color: #121826;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .cta-button:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}

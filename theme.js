@@ -24,21 +24,21 @@ document.addEventListener("DOMContentLoaded", () => {
       "--cosmic-grid-color": "rgba(255, 255, 255, 0.05)",
     },
     light: {
-      "--bg": "#f8f9fc",
-      "--darker-bg": "#eef1f8",
-      "--card-bg": "rgba(0, 0, 0, 0.03)",
-      "--card-hover": "rgba(0, 0, 0, 0.06)",
-      "--border-color": "rgba(0, 0, 0, 0.1)",
-      "--text": "#1a1a2e",
-      "--text-secondary": "rgba(26, 26, 46, 0.7)",
-      "--purple-glow": "rgba(138, 43, 226, 0.15)",
-      "--blue-glow": "rgba(0, 157, 255, 0.15)",
-      "--teal-glow": "rgba(0, 255, 191, 0.15)",
-      "--header-bg": "rgba(248, 249, 252, 0.8)",
-      "--diamond-1-color": "rgba(1, 69, 178, 0.15)",
-      "--diamond-2-color": "rgba(138, 43, 226, 0.15)",
-      "--diamond-3-color": "rgba(0, 157, 255, 0.15)",
-      "--cosmic-grid-color": "rgba(0, 0, 0, 0.03)",
+      "--bg": "#ffffff", // Pure white background for maximum contrast
+      "--darker-bg": "#f0f4fa", // Slightly more saturated blue-gray for better section distinction
+      "--card-bg": "rgba(0, 0, 0, 0.04)", // Slightly darker card background
+      "--card-hover": "rgba(0, 0, 0, 0.08)", // Darker hover state for better feedback
+      "--border-color": "rgba(0, 0, 0, 0.15)", // Darker borders for better definition
+      "--text": "#121826", // Darker text for better readability (almost black with slight blue tint)
+      "--text-secondary": "rgba(18, 24, 38, 0.75)", // Higher opacity for secondary text
+      "--purple-glow": "rgba(138, 43, 226, 0.25)", // More saturated purple glow
+      "--blue-glow": "rgba(0, 157, 255, 0.25)", // More saturated blue glow
+      "--teal-glow": "rgba(0, 255, 191, 0.25)", // More saturated teal glow
+      "--header-bg": "rgba(255, 255, 255, 0.95)", // More opaque header for better readability
+      "--diamond-1-color": "rgba(1, 69, 178, 0.25)", // More visible diamond colors
+      "--diamond-2-color": "rgba(138, 43, 226, 0.25)",
+      "--diamond-3-color": "rgba(0, 157, 255, 0.25)",
+      "--cosmic-grid-color": "rgba(0, 0, 0, 0.06)", // Darker grid lines for better visibility
     },
   }
 

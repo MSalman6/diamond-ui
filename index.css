@@ -1462,3 +1462,180 @@ header.authenticated::after {
     font-size: 1.5rem;
   }
 }
+
+/* Light Theme Enhancements */
+body.light-theme {
+  /* Improved text rendering for better readability */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Enhanced card styling with subtle shadows for depth */
+body.light-theme .feature-card,
+body.light-theme .stat-card,
+body.light-theme .participate-card,
+body.light-theme .community-stat,
+body.light-theme .faq-item,
+body.light-theme .user-info-card,
+body.light-theme .validator-info-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: white;
+}
+
+/* Enhanced hover states for cards */
+body.light-theme .feature-card:hover,
+body.light-theme .stat-card:hover,
+body.light-theme .participate-card:hover,
+body.light-theme .community-stat:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+  background-color: white;
+}
+
+/* Improved section differentiation */
+body.light-theme .features,
+body.light-theme .smart-contracts,
+body.light-theme .testimonial,
+body.light-theme .news {
+  background-color: var(--darker-bg);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Enhanced button styling */
+body.light-theme .btn-primary {
+  background: linear-gradient(90deg, #0070f3, #00a2ff);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(0, 112, 243, 0.25);
+}
+
+body.light-theme .btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(0, 112, 243, 0.35);
+}
+
+body.light-theme .btn-secondary {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #121826;
+}
+
+body.light-theme .btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* Enhanced header styling */
+body.light-theme header {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Fix for dropdown menus in light theme */
+body.light-theme .dropdown-menu {
+  background-color: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .dropdown-menu .dropdown-content {
+  background-color: white;
+}
+
+body.light-theme .dropdown-menu a {
+  color: #121826;
+}
+
+body.light-theme .dropdown-menu a:hover {
+  background-color: rgba(0, 112, 243, 0.08);
+}
+
+body.light-theme .dropdown-section {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .dropdown-section h4 {
+  color: #121826;
+}
+
+body.light-theme .dropdown-menu::before {
+  border-color: rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+/* Enhanced table styling */
+body.light-theme .table-container {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  background-color: white;
+}
+
+body.light-theme th {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  color: #121826;
+}
+
+body.light-theme td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: #121826;
+}
+
+body.light-theme tr:hover td {
+  background-color: rgba(0, 112, 243, 0.04);
+}
+
+/* Enhanced status badges */
+body.light-theme .status-badge.active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #059669;
+  font-weight: 600;
+}
+
+body.light-theme .status-badge.inactive {
+  background: rgba(249, 115, 22, 0.15);
+  color: #c2410c;
+  font-weight: 600;
+}
+
+body.light-theme .status-badge.banned {
+  background: rgba(239, 68, 68, 0.15);
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+/* Enhanced section headers */
+body.light-theme section h2 {
+  color: #0f172a;
+}
+
+/* Enhanced stat values */
+body.light-theme .stat-value {
+  background: linear-gradient(90deg, #0070f3, #00a2ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+/* Enhanced footer */
+body.light-theme footer {
+  background-color: #f0f4fa;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced modal styling */
+body.light-theme .modal-content {
+  background: white;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Fix for cosmic elements in light mode */
+body.light-theme .cosmic-grid {
+  opacity: 0.3;
+}
+
+body.light-theme .diamond-custom {
+  opacity: 0.5;
+}
+
+body.light-theme .glow {
+  opacity: 0.3;
+}

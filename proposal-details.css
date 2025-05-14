@@ -1312,3 +1312,286 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Add light theme styles at the end of the file */
+
+/* Light Theme Styles for Proposal Details */
+body.light-theme .proposal-hero {
+  background: #f5f7fa;
+}
+
+body.light-theme .diamond {
+  background-color: rgba(1, 69, 178, 0.05);
+  box-shadow: 0 8px 32px rgba(1, 69, 178, 0.08);
+  border: 1px solid rgba(1, 69, 178, 0.1);
+}
+
+body.light-theme .diamond-1 {
+  background-color: rgba(1, 69, 178, 0.05);
+}
+
+body.light-theme .diamond-2 {
+  background-color: rgba(138, 43, 226, 0.05);
+}
+
+body.light-theme .diamond-3 {
+  background-color: rgba(0, 157, 255, 0.05);
+}
+
+body.light-theme .diamond:hover {
+  transform: rotate(45deg) scale(1.1);
+  box-shadow: 0 15px 40px rgba(1, 69, 178, 0.15);
+}
+
+body.light-theme .proposal-details {
+  background: #ffffff;
+}
+
+body.light-theme .proposal-card,
+body.light-theme .proposal-timeline-section,
+body.light-theme .resources-section,
+body.light-theme .related-proposals-section {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .proposal-card:hover,
+body.light-theme .proposal-timeline-section:hover,
+body.light-theme .resources-section:hover,
+body.light-theme .related-proposals-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .card-header {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+body.light-theme .card-header h3 {
+  color: #111827;
+}
+
+/* Status badges */
+body.light-theme .proposal-status.active {
+  background: rgba(0, 157, 255, 0.15);
+  color: #0077cc;
+}
+
+body.light-theme .proposal-status.executed {
+  background: rgba(0, 200, 83, 0.15);
+  color: #00a651;
+}
+
+body.light-theme .proposal-status.declined {
+  background: rgba(255, 76, 76, 0.15);
+  color: #e53935;
+}
+
+/* Parameter comparison */
+body.light-theme .parameter-comparison {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .parameter-current .value {
+  color: #f57c00;
+}
+
+body.light-theme .parameter-proposed .value {
+  color: #0077cc;
+}
+
+body.light-theme .parameter-fee {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .info-tooltip {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Impact items */
+body.light-theme .impact-icon.positive {
+  background: rgba(0, 200, 83, 0.15);
+  color: #00a651;
+}
+
+body.light-theme .impact-icon.negative {
+  background: rgba(255, 76, 76, 0.15);
+  color: #e53935;
+}
+
+/* Funding details */
+body.light-theme .funding-details {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .payout-amount .value {
+  color: #0077cc;
+}
+
+/* Breakdown progress bars */
+body.light-theme .breakdown-progress.dev-grants {
+  background: linear-gradient(90deg, #3a7bd5, #00a7cc);
+}
+
+body.light-theme .breakdown-progress.education {
+  background: linear-gradient(90deg, #5d26c1, #8e44ad);
+}
+
+body.light-theme .breakdown-progress.events {
+  background: linear-gradient(90deg, #16a085, #27ae60);
+}
+
+body.light-theme .breakdown-progress.marketing {
+  background: linear-gradient(90deg, #f2994a, #f2c94c);
+}
+
+/* Milestone items */
+body.light-theme .milestone-icon {
+  background: rgba(0, 157, 255, 0.15);
+  color: #0077cc;
+}
+
+/* Contract upgrade */
+body.light-theme .technical-details {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .code-block {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .nested-data {
+  border-left: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .resource-link {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .resource-link:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .impact-item {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Voting status */
+body.light-theme .voting-status-message.executed {
+  background: rgba(0, 200, 83, 0.15);
+  color: #00a651;
+}
+
+body.light-theme .voting-status-message.declined {
+  background: rgba(255, 76, 76, 0.15);
+  color: #e53935;
+}
+
+body.light-theme .voting-progress-bar {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .progress-yes {
+  background: linear-gradient(90deg, #16a085, #27ae60);
+}
+
+body.light-theme .progress-no {
+  background: linear-gradient(90deg, #e53935, #f57c00);
+}
+
+body.light-theme .threshold-line {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+body.light-theme .threshold-label {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+body.light-theme .voting-progress-tooltip {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+body.light-theme .yes-votes .stat-value,
+body.light-theme .yes-votes .stat-percentage {
+  color: #27ae60;
+}
+
+body.light-theme .no-votes .stat-value,
+body.light-theme .no-votes .stat-percentage {
+  color: #e53935;
+}
+
+body.light-theme .abstain-votes .stat-value,
+body.light-theme .abstain-votes .stat-percentage {
+  color: #f57c00;
+}
+
+body.light-theme .stat-divider {
+  background: #e5e7eb;
+}
+
+body.light-theme .threshold-met {
+  color: #27ae60;
+}
+
+body.light-theme .threshold-not-met {
+  color: #e53935;
+}
+
+body.light-theme .voting-time {
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Discussion links */
+body.light-theme .discussion-link {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .discussion-link:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .discussion-stats {
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Timeline */
+body.light-theme .timeline::before {
+  background: #e5e7eb;
+}
+
+body.light-theme .timeline-dot {
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+}
+
+body.light-theme .timeline-content {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+/* Related proposals */
+body.light-theme .related-proposal-item {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+body.light-theme .related-proposal-item:hover {
+  background: #f9fafb;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Type selector */
+body.light-theme .type-btn {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .type-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .type-btn.active {
+  background: rgba(0, 157, 255, 0.2);
+  color: #0077cc;
+}
