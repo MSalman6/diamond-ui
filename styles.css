@@ -431,6 +431,11 @@ header .container {
   align-items: center;
 }
 
+.logo-img {
+  width: 150px;
+  margin-left: -10px;
+}
+
 .logo h1 {
   font-size: 1.8rem;
   letter-spacing: 1px;
