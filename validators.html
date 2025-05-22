@@ -165,6 +165,8 @@
             <tr>
               <th>Status <i class="fas fa-sort"></i></th>
               <th>Wallet Address <i class="fas fa-sort"></i></th>
+              <th class="miner-address-header" style="display: none;">Miner Address <i class="fas fa-sort"></i></th>
+              <th class="public-key-header" style="display: none;">Public Key <i class="fas fa-sort"></i></th>
               <th>Total Stake <i class="fas fa-sort"></i></th>
               <th>Voting Power <i class="fas fa-sort"></i></th>
               <th>Score <i class="fas fa-sort"></i></th>
@@ -177,6 +179,8 @@
             <tr>
               <td><span class="status-badge status-active">Active</span></td>
               <td class="wallet-address">0x7a2D...3F5e</td>
+              <td class="miner-address" style="display: none;">0x8b3F...2A7c</td>
+              <td class="public-key" style="display: none;">BHr9x...k7Yz</td>
               <td>1,250,000 DMD</td>
               <td>4.2%</td>
               <td>987</td>
@@ -189,6 +193,8 @@
             <tr>
               <td><span class="status-badge status-active">Active</span></td>
               <td class="wallet-address">0x3B1c...9D2a</td>
+              <td class="miner-address" style="display: none;">0x9c4A...1E8d</td>
+              <td class="public-key" style="display: none;">CFi2y...m6Xw</td>
               <td>980,500 DMD</td>
               <td>3.3%</td>
               <td>991</td>
@@ -202,6 +208,8 @@
             <tr>
               <td><span class="status-badge status-valid">Valid</span></td>
               <td class="wallet-address">0xF42e...1A7b</td>
+              <td class="miner-address" style="display: none;">0x2d7B...5C9e</td>
+              <td class="public-key" style="display: none;">GLa5z...p8Rq</td>
               <td>750,200 DMD</td>
               <td>2.5%</td>
               <td>975</td>
@@ -214,10 +222,12 @@
             <tr>
               <td><span class="status-badge status-invalid">Invalid</span></td>
               <td class="wallet-address">0x8D5f...6E4c</td>
+              <td class="miner-address" style="display: none;">0x6e1C...7F3a</td>
+              <td class="public-key" style="display: none;">AKw8v...u2Zs</td>
               <td>420,800 DMD</td>
               <td>1.4%</td>
               <td>853</td>
-              <td><span class="cr-value cr-danger">22</span></td>
+              <td><span class="cr-value cr-danger">36</span></td>
               <td>0 DMD</td>
               <td>
                 <button class="btn-stake" disabled>Stake</button>
@@ -226,6 +236,8 @@
             <tr>
               <td><span class="status-badge status-active">Active</span></td>
               <td class="wallet-address">0x2C9a...5B3d</td>
+              <td class="miner-address" style="display: none;">0x1f8D...9B4c</td>
+              <td class="public-key" style="display: none;">DMy4x...q1Vt</td>
               <td>1,120,600 DMD</td>
               <td>3.8%</td>
               <td>989</td>
@@ -239,6 +251,8 @@
             <tr>
               <td><span class="status-badge status-active">Active</span></td>
               <td class="wallet-address">0x9A3d...7C4e</td>
+              <td class="miner-address" style="display: none;">0x5a2E...3D6f</td>
+              <td class="public-key" style="display: none;">JOp7b...r9Yn</td>
               <td>890,700 DMD</td>
               <td>3.0%</td>
               <td>993</td>
@@ -251,6 +265,8 @@
             <tr>
               <td><span class="status-badge status-valid">Valid</span></td>
               <td class="wallet-address">0x4D2e...8F5a</td>
+              <td class="miner-address" style="display: none;">0x7c9F...4E1a</td>
+              <td class="public-key" style="display: none;">LTw1h...s5Xo</td>
               <td>680,300 DMD</td>
               <td>2.3%</td>
               <td>978</td>
@@ -263,6 +279,8 @@
             <tr>
               <td><span class="status-badge status-active">Active</span></td>
               <td class="wallet-address">0x1B5c...3A7d</td>
+              <td class="miner-address" style="display: none;">0x3b6A...8C2b</td>
+              <td class="public-key" style="display: none;">QRs3k...t7Zm</td>
               <td>1,050,800 DMD</td>
               <td>3.5%</td>
               <td>985</td>
@@ -276,10 +294,12 @@
             <tr>
               <td><span class="status-badge status-invalid">Invalid</span></td>
               <td class="wallet-address">0x5E8f...2D6b</td>
+              <td class="miner-address" style="display: none;">0x4d5B...6A9c</td>
+              <td class="public-key" style="display: none;">YZv6n...w4Up</td>
               <td>290,500 DMD</td>
               <td>1.0%</td>
               <td>827</td>
-              <td><span class="cr-value cr-danger">22</span></td>
+              <td><span class="cr-value cr-danger">42</span></td>
               <td>0 DMD</td>
               <td>
                 <button class="btn-stake" disabled>Stake</button>
@@ -570,10 +590,33 @@
       const stakeButtons = document.querySelectorAll('.btn-stake');
       const unstakeButtons = document.querySelectorAll('.btn-unstake');
       const cancelColumnsBtn = document.getElementById('cancel-columns');
+      
+      // Store the initial state of columns
+      let initialColumnState = {
+        status: true,
+        wallet: true,
+        miner: false,
+        publickey: false,
+        stake: true,
+        voting: true,
+        score: true,
+        cr: true,
+        mystake: true,
+        actions: true
+      };
+      
+      // Create a working copy for the modal
+      let workingColumnState = {...initialColumnState};
 
       // Open customize modal
       if (customizeBtn) {
         customizeBtn.addEventListener('click', function() {
+          // Reset working state to match current table state
+          workingColumnState = {...initialColumnState};
+          
+          // Reset UI to match current state
+          updateColumnsUI();
+          
           customizeModal.classList.add('show');
         });
       }
@@ -626,6 +669,8 @@
       // Cancel button for columns modal
       if (cancelColumnsBtn) {
         cancelColumnsBtn.addEventListener('click', function() {
+          // Reset working state to match current table state without applying changes
+          workingColumnState = {...initialColumnState};
           customizeModal.classList.remove('show');
         });
       }
@@ -690,33 +735,28 @@
       // Enhanced Column customization
       const applyColumnsBtn = document.getElementById('apply-columns');
       
-      // Toggle column selection in available columns
-      const availableColumns = document.querySelectorAll('.available-column');
-      availableColumns.forEach(column => {
-        column.addEventListener('click', function() {
-          const columnName = this.dataset.column;
+      // Function to update the UI based on the working column state
+      function updateColumnsUI() {
+        const availableColumns = document.querySelectorAll('.available-column');
+        const activeColumnsContainer = document.getElementById('active-columns-container');
+        
+        // Clear active columns
+        activeColumnsContainer.innerHTML = '';
+        
+        // Update available columns UI
+        availableColumns.forEach(column => {
+          const columnName = column.dataset.column;
           
-          if (this.classList.contains('selected')) {
-            // Remove from active columns
-            this.classList.remove('selected');
-            this.querySelector('.column-remove')?.remove();
+          if (workingColumnState[columnName]) {
+            // Column is selected
+            column.classList.add('selected');
             
-            // Find and remove from active columns
-            const activeColumn = document.querySelector(`.active-column[data-column="${columnName}"]`);
-            if (activeColumn) {
-              activeColumn.remove();
-              updateColumnNumbers();
-            }
-          } else {
-            // Add to active columns
-            this.classList.add('selected');
-            
-            // Add remove button
-            if (!this.querySelector('.column-remove')) {
+            // Add remove button if not present
+            if (!column.querySelector('.column-remove')) {
               const removeBtn = document.createElement('div');
               removeBtn.className = 'column-remove';
               removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-              this.appendChild(removeBtn);
+              column.appendChild(removeBtn);
               
               // Add event listener to remove button
               removeBtn.addEventListener('click', function(e) {
@@ -726,7 +766,6 @@
             }
             
             // Add to active columns
-            const activeColumnsContainer = document.getElementById('active-columns-container');
             const newActiveColumn = document.createElement('div');
             newActiveColumn.className = 'active-column';
             newActiveColumn.setAttribute('draggable', 'true');
@@ -734,11 +773,11 @@
             
             const columnNumber = document.createElement('div');
             columnNumber.className = 'column-number';
-            columnNumber.textContent = activeColumnsContainer.children.length + 1;
+            // We'll update the numbers after all columns are added
             
             const columnNameDiv = document.createElement('div');
             columnNameDiv.className = 'column-name';
-            columnNameDiv.textContent = this.querySelector('.column-name').textContent;
+            columnNameDiv.textContent = column.querySelector('.column-name').textContent;
             
             const columnDrag = document.createElement('div');
             columnDrag.className = 'column-drag';
@@ -752,25 +791,32 @@
             
             // Setup drag functionality for the new column
             setupDragAndDrop(newActiveColumn);
+          } else {
+            // Column is not selected
+            column.classList.remove('selected');
+            column.querySelector('.column-remove')?.remove();
           }
         });
         
-        // Add event listener to remove buttons
-        const removeBtn = column.querySelector('.column-remove');
-        if (removeBtn) {
-          removeBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            column.click(); // Trigger the column click event
-          });
-        }
+        // Update column numbers
+        updateColumnNumbers();
+      }
+      
+      // Toggle column selection in available columns
+      const availableColumns = document.querySelectorAll('.available-column');
+      availableColumns.forEach(column => {
+        column.addEventListener('click', function() {
+          const columnName = this.dataset.column;
+          
+          // Toggle selection state in working copy
+          workingColumnState[columnName] = !workingColumnState[columnName];
+          
+          // Update UI to reflect changes
+          updateColumnsUI();
+        });
       });
       
       // Setup drag and drop for active columns
-      const activeColumns = document.querySelectorAll('.active-column');
-      activeColumns.forEach(column => {
-        setupDragAndDrop(column);
-      });
-      
       function setupDragAndDrop(element) {
         element.addEventListener('dragstart', function(e) {
           e.dataTransfer.setData('text/plain', this.dataset.column);
@@ -818,50 +864,53 @@
       // Apply column changes
       applyColumnsBtn.addEventListener('click', function() {
         const activeColumns = document.querySelectorAll('.active-column');
-        const tableHeaders = document.querySelectorAll('.validators-table th');
-        const tableRows = document.querySelectorAll('.validators-table tbody tr');
         
         // Get the current order of columns
         const columnOrder = Array.from(activeColumns).map(col => col.dataset.column);
         
+        // Update the initialColumnState to match the working state
+        initialColumnState = {...workingColumnState};
+        
+        // Apply changes to the table
+        applyColumnsToTable(columnOrder);
+        
+        customizeModal.classList.remove('show');
+      });
+      
+      // Function to apply column changes to the table
+      function applyColumnsToTable(columnOrder) {
+        // Map column names to their indices in the table
+        const columnIndices = {
+          status: 0,
+          wallet: 1,
+          miner: 2,
+          publickey: 3,
+          stake: 4,
+          voting: 5,
+          score: 6,
+          cr: 7,
+          mystake: 8,
+          actions: 9
+        };
+        
         // Hide all columns first
-        tableHeaders.forEach((header, index) => {
-          document.querySelectorAll(`.validators-table tr > *:nth-child(${index + 1})`).forEach(cell => {
+        for (let i = 0; i < 10; i++) {
+          document.querySelectorAll(`.validators-table tr > *:nth-child(${i + 1})`).forEach(cell => {
             cell.style.display = 'none';
           });
-        });
+        }
         
         // Show only selected columns in the correct order
-        columnOrder.forEach((columnName, newIndex) => {
-          // Find the original index of this column
-          let originalIndex;
+        columnOrder.forEach((columnName, index) => {
+          const columnIndex = columnIndices[columnName];
           
-          switch(columnName) {
-            case 'status': originalIndex = 0; break;
-            case 'wallet': originalIndex = 1; break;
-            case 'stake': originalIndex = 2; break;
-            case 'voting': originalIndex = 3; break;
-            case 'score': originalIndex = 4; break;
-            case 'cr': originalIndex = 5; break;
-            case 'mystake': originalIndex = 6; break;
-            case 'actions': originalIndex = 7; break;
-            case 'uptime': originalIndex = 8; break; // These would be added if selected
-            case 'commission': originalIndex = 9; break;
-            case 'miner': originalIndex = 10; break;
-            case 'publickey': originalIndex = 11; break;
-            default: originalIndex = -1;
-          }
-          
-          if (originalIndex >= 0 && originalIndex < tableHeaders.length) {
-            // Show this column
-            document.querySelectorAll(`.validators-table tr > *:nth-child(${originalIndex + 1})`).forEach(cell => {
+          if (columnIndex !== undefined) {
+            document.querySelectorAll(`.validators-table tr > *:nth-child(${columnIndex + 1})`).forEach(cell => {
               cell.style.display = '';
             });
           }
         });
-        
-        customizeModal.classList.remove('show');
-      });
+      }
 
       // Sorting functionality
       const sortIcons = document.querySelectorAll('.validators-table th i.fa-sort');

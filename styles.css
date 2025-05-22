@@ -413,6 +413,11 @@ section h2 {
 }
 
 /* Header */
+.logo-img {
+  width: 150px;
+  margin-left: -10px;
+}
+
 header {
   position: fixed;
   top: 0;
@@ -429,11 +434,6 @@ header .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.logo-img {
-  width: 150px;
-  margin-left: -10px;
 }
 
 .logo h1 {
@@ -1805,7 +1805,7 @@ header .container {
 }
 
 .faq-item.active .faq-answer {
-  max-height: 200px;
+  max-height: 100%;
 }
 
 /* Footer */
@@ -2077,4 +2077,121 @@ footer {
   .theme-transition *:after {
     transition: none !important;
   }
+}
+
+/* Mobile Menu Styles */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 70px);
+  background: var(--darker-bg);
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 20px;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.mobile-menu.active {
+  transform: translateX(0);
+  display: block;
+}
+
+.mobile-nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-nav-links li {
+  margin-bottom: 15px;
+}
+
+.mobile-nav-links a {
+  display: block;
+  padding: 10px 0;
+  font-size: 1.1rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.mobile-dropdown {
+  position: relative;
+}
+
+.mobile-dropdown-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mobile-dropdown-toggle i {
+  transition: transform 0.3s ease;
+}
+
+.mobile-dropdown.active .mobile-dropdown-toggle i {
+  transform: rotate(180deg);
+}
+
+.mobile-dropdown-content {
+  display: none;
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.mobile-dropdown.active .mobile-dropdown-content {
+  display: block;
+}
+
+.mobile-dropdown-content a {
+  padding: 8px 0;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mobile-wallet-container {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.mobile-wallet-container .cta-button,
+.mobile-wallet-container .user-wallet-info {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Hide the connect wallet button in header on mobile */
+@media (max-width: 768px) {
+  .header-right .cta-button,
+  .header-right .user-wallet-info {
+    display: none !important;
+  }
+
+  .header-right {
+    justify-content: flex-end;
+  }
+
+  .theme-toggle-wrapper {
+    margin-right: 0;
+  }
+}
+
+/* Light theme adjustments for mobile menu */
+body.light-theme .mobile-menu {
+  background: #f8fafc;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .mobile-dropdown-content {
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .mobile-wallet-container {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
