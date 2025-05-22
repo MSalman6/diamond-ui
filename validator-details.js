@@ -1,41 +1,200 @@
 // Add JavaScript to ensure content is visible and handle animations
 document.addEventListener("DOMContentLoaded", () => {
-  // Make sure all fade-in elements are visible
-  const fadeElements = document.querySelectorAll(".fade-in")
+  // Theme toggle functionality
+  const themeToggle = document.getElementById("theme-toggle")
 
-  // Add visible class to all fade elements immediately
-  fadeElements.forEach((element) => {
-    element.classList.add("visible")
+  // Initialize theme based on localStorage or system preference
+  if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light-theme")
+    themeToggle.checked = true
+  } else if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.remove("light-theme")
+    themeToggle.checked = false
+  } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) {
+    document.body.classList.add("light-theme")
+    themeToggle.checked = true
+  }
+
+  // Toggle theme when the switch is clicked
+  themeToggle.addEventListener("change", function () {
+    if (this.checked) {
+      document.body.classList.add("light-theme")
+      localStorage.setItem("theme", "light")
+    } else {
+      document.body.classList.remove("light-theme")
+      localStorage.setItem("theme", "dark")
+    }
   })
 
   // Mobile menu toggle
-  document.querySelector(".mobile-menu-btn").addEventListener("click", function () {
-    document.querySelector(".nav-links").classList.toggle("active")
-    this.classList.toggle("active")
-  })
+  const mobileMenuBtn = document.querySelector(".mobile-menu-btn")
+  const navLinks = document.querySelector(".nav-links")
 
-  // Copy address functionality
-  document.getElementById("copy-address").addEventListener("click", () => {
-    const address = document.getElementById("validator-address").textContent
-    navigator.clipboard.writeText(address).then(() => {
-      // Show a temporary tooltip or notification
-      alert("Address copied to clipboard!")
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener("click", function () {
+      this.classList.toggle("active")
+      navLinks.classList.toggle("active")
+    })
+  }
+
+  // Dropdown toggle on mobile
+  const dropdownToggles = document.querySelectorAll(".dropdown-toggle")
+
+  dropdownToggles.forEach((toggle) => {
+    toggle.addEventListener("click", function (e) {
+      if (window.innerWidth <= 768) {
+        e.preventDefault()
+        this.parentElement.classList.toggle("active")
+      }
     })
   })
 
-  // View in explorer functionality
-  document.getElementById("view-explorer").addEventListener("click", () => {
-    const address = document.getElementById("validator-address").textContent
-    // Open explorer in a new tab (replace with actual explorer URL)
-    window.open(`https://explorer.dmd.com/validator/${address}`, "_blank")
+  // Modal functionality
+  const stakeButton = document.getElementById("stake-button")
+  const stakeModal = document.getElementById("stake-modal")
+  const confirmStakeButton = document.getElementById("confirm-stake")
+  const stakingProgressModal = document.getElementById("staking-progress-modal")
+  const closeModalButtons = document.querySelectorAll(".close-modal")
+
+  // Open stake modal
+  if (stakeButton) {
+    stakeButton.addEventListener("click", () => {
+      stakeModal.classList.add("show")
+    })
+  }
+
+  // Close modals
+  closeModalButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const modal = this.closest(".modal")
+      if (modal) {
+        modal.classList.remove("show")
+      }
+    })
+  })
+
+  // Close modal when clicking outside
+  window.addEventListener("click", (e) => {
+    if (e.target.classList.contains("modal")) {
+      e.target.classList.remove("show")
+    }
+  })
+
+  // Confirm stake and show progress modal
+  if (confirmStakeButton) {
+    confirmStakeButton.addEventListener("click", () => {
+      stakeModal.classList.remove("show")
+      setTimeout(() => {
+        stakingProgressModal.classList.add("show")
+      }, 300)
+    })
+  }
+
+  // MAX button functionality
+  const maxButton = document.querySelector(".btn-max")
+  const stakeAmountInput = document.getElementById("stake-amount")
+
+  if (maxButton && stakeAmountInput) {
+    maxButton.addEventListener("click", () => {
+      stakeAmountInput.value = "25000" // Set to available balance
+    })
+  }
+
+  // Copy address button
+  const copyAddressButton = document.getElementById("copy-address")
+  const validatorAddress = document.getElementById("validator-address")
+
+  if (copyAddressButton && validatorAddress) {
+    copyAddressButton.addEventListener("click", () => {
+      const address = validatorAddress.textContent
+      navigator.clipboard
+        .writeText(address)
+        .then(() => {
+          alert("Address copied to clipboard!")
+        })
+        .catch((err) => {
+          console.error("Could not copy text: ", err)
+        })
+    })
+  }
+
+  // View in explorer button
+  const viewExplorerButton = document.getElementById("view-explorer")
+
+  if (viewExplorerButton && validatorAddress) {
+    viewExplorerButton.addEventListener("click", () => {
+      const address = validatorAddress.textContent
+      window.open(`https://explorer.example.com/validator/${address}`, "_blank")
+    })
+  }
+
+  // Rewards history button
+  const rewardsHistoryButton = document.getElementById("rewards-history-button")
+
+  if (rewardsHistoryButton) {
+    rewardsHistoryButton.addEventListener("click", () => {
+      alert("History will be displayed here. This feature is coming soon!")
+    })
+  }
+
+  // Tooltip functionality for info icons
+  const infoIcons = document.querySelectorAll(".info-icon")
+
+  infoIcons.forEach((icon) => {
+    const tooltip = icon.getAttribute("title")
+    if (tooltip) {
+      icon.setAttribute("data-tooltip", tooltip)
+      icon.removeAttribute("title")
+
+      icon.addEventListener("mouseenter", function () {
+        const tooltipEl = document.createElement("div")
+        tooltipEl.className = "tooltip"
+        tooltipEl.textContent = this.getAttribute("data-tooltip")
+        document.body.appendChild(tooltipEl)
+
+        const iconRect = this.getBoundingClientRect()
+        tooltipEl.style.top = `${iconRect.top - tooltipEl.offsetHeight - 10}px`
+        tooltipEl.style.left = `${iconRect.left + (iconRect.width / 2) - tooltipEl.offsetWidth / 2}px`
+        tooltipEl.style.opacity = "1"
+      })
+
+      icon.addEventListener("mouseleave", () => {
+        const tooltip = document.querySelector(".tooltip")
+        if (tooltip) {
+          tooltip.remove()
+        }
+      })
+    }
+  })
+
+  // Add fade-in animation to elements
+  const fadeElements = document.querySelectorAll(".fade-in")
+
+  const fadeInObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = "1"
+          entry.target.style.transform = "translateY(0)"
+          fadeInObserver.unobserve(entry.target)
+        }
+      })
+    },
+    {
+      threshold: 0.1,
+    },
+  )
+
+  fadeElements.forEach((element) => {
+    element.style.opacity = "0"
+    element.style.transform = "translateY(20px)"
+    fadeInObserver.observe(element)
   })
 
   // Stake button functionality
   const stakeButtons = document.querySelectorAll("#stake-button, #delegate-button")
-  const stakeModal = document.getElementById("stake-modal")
   const closeButtons = document.querySelectorAll(".close-modal")
   const confirmStakeBtn = document.getElementById("confirm-stake")
-  const stakingProgressModal = document.getElementById("staking-progress-modal")
 
   // Open stake modal
   stakeButtons.forEach((button) => {
@@ -51,6 +210,16 @@ document.addEventListener("DOMContentLoaded", () => {
       openModals.forEach((modal) => {
         modal.classList.remove("show")
       })
+    })
+  })
+
+  // Close modals when clicking outside
+  window.addEventListener("click", (event) => {
+    const openModals = document.querySelectorAll(".modal.show")
+    openModals.forEach((modal) => {
+      if (event.target === modal) {
+        modal.classList.remove("show")
+      }
     })
   })
 

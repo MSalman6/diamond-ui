@@ -498,7 +498,7 @@
   background: #07f49e;
 }
 
-.breakdown-dot.rejected {
+.breakdown-dot.declined {
   background: #ff6b6b;
 }
 
@@ -507,7 +507,7 @@
   background: #00a86b;
 }
 
-.light-theme .breakdown-dot.rejected {
+.light-theme .breakdown-dot.declined {
   background: #e53e3e;
 }
 
@@ -1002,7 +1002,7 @@
   color: #07f49e;
 }
 
-.proposal-status.rejected {
+.proposal-status.declined {
   background: rgba(255, 107, 107, 0.15);
   color: #ff6b6b;
 }
@@ -1023,7 +1023,7 @@
   color: #00a86b;
 }
 
-.light-theme .proposal-status.rejected {
+.light-theme .proposal-status.declined {
   background: rgba(229, 62, 62, 0.12);
   color: #e53e3e;
 }

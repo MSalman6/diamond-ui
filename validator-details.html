@@ -15,9 +15,7 @@
   <header>
     <div class="container">
       <div class="logo">
-        <a href="index.html">
-          <img class="logo-img" src="/assets/images/Property 1=horizontal.png" alt="DMD Diamond Logo">
-        </a>
+        <a href="index.html"><h1>DMD</h1></a>
       </div>
       <nav>
         <ul class="nav-links">
@@ -27,9 +25,16 @@
             <div class="dropdown-menu">
               <div class="dropdown-content">
                 <div class="dropdown-section">
+                  <h4>INTERCHAIN TOOLS</h4>
                   <ul>
-                    <li><a href="https://bit.diamonds" target="_blank">Bit Diamonds<i class="fas fa-external-link-alt"></i></a></li>
-                    <li><a href="https://dmd.diamonds" target="_blank">DMD Explorer<i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="#">Wallets</a></li>
+                    <li><a href="#">Block Explorers</a></li>
+                  </ul>
+                </div>
+                <div class="dropdown-section">
+                  <ul>
+                    <li><a href="#">Interchain Ecosystem</a></li>
+                    <li><a href="#">Tokens</a></li>
                   </ul>
                 </div>
               </div>
@@ -40,10 +45,16 @@
             <div class="dropdown-menu">
               <div class="dropdown-content">
                 <div class="dropdown-section">
+                  <h4>COMMUNITY</h4>
                   <ul>
-                    <li><a href="https://uniq.directory/" target="_blank">NFT Marketplace <i class="fas fa-external-link-alt"></i></a></li>
-                    <li><a href="https://uniq.diamonds/" target="_blank">uNiq Diamonds <i class="fas fa-external-link-alt"></i></a></li>
-                    <li><a href="https://gladiators.diamonds/" target="_blank">uNiq Gladiators <i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="#">Developer Chat <i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="#">Ecosystem Blog <i class="fas fa-external-link-alt"></i></a></li>
+                  </ul>
+                </div>
+                <div class="dropdown-section">
+                  <ul>
+                    <li><a href="#">Community Chat <i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="#">Discussion Forum <i class="fas fa-external-link-alt"></i></a></li>
                   </ul>
                 </div>
               </div>
@@ -61,15 +72,8 @@
             </span>
           </label>
         </div>
-        <div class="user-wallet-info" id="user-wallet-info" style="display: none;">
-          <div class="wallet-icon">
-            <div class="wallet-icon-inner"></div>
-          </div>
-          <div class="wallet-address">0x7F...A3D2</div>
-          <i class="fas fa-chevron-down"></i>
-        </div>
-        <div class="cta-button" id="connect-wallet-btn">
-          <i class="fas fa-wallet"></i> Connect Wallet
+        <div class="cta-button">
+          <i class="fas fa-wallet"></i> Connect Wallet</i>
         </div>
       </div>
       <div class="mobile-menu-btn">
@@ -152,6 +156,7 @@
           <div class="stat-trend positive">
             <i class="fas fa-arrow-up"></i> 0.3% this month
           </div>
+          <button class="history-button" id="rewards-history-button">History</button>
         </div>
         <div class="stat-card fade-in">
           <h3>Voting Power</h3>
@@ -160,72 +165,81 @@
             <i class="fas fa-arrow-down"></i> 0.1% this week
           </div>
         </div>
+        <!-- Monthly Rewards Box (now styled as a stat card) -->
+        <div class="stat-card fade-in">
+          <h3>Monthly Rewards <i class="fas fa-info-circle info-icon" title="Estimated rewards based on current APR and stake amount"></i></h3>
+          <p class="stat-value" id="monthly-rewards">100 DMD</p>
+          <div class="stat-trend">
+            <span>Earned per 1000DMD = 5.88DMD</span>
+          </div>
+          <button class="history-button" id="rewards-history-button">History</button>
+        </div>
       </div>
     </div>
   </section>
 
- <!-- Validator Performance Section -->
- <section class="validator-performance">
-  <div class="container">
-    <div class="section-title">
-      <h2>Performance Metrics</h2>
+  <!-- Validator Performance Section -->
+  <section class="validator-performance">
+    <div class="container">
+      <div class="section-title">
+        <h2>Performance Metrics</h2>
+      </div>
+      <div class="performance-grid">
+        <div class="performance-card fade-in">
+          <div class="performance-header">
+            <h3>Uptime</h3>
+            <span class="performance-value">99.8%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 99.8%"></div>
+          </div>
+          <p class="performance-info">Last 30 days</p>
+        </div>
+        <div class="performance-card fade-in">
+          <div class="performance-header">
+            <h3>Commission Rate</h3>
+            <span class="performance-value">5.8%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 58%"></div>
+          </div>
+          <p class="performance-info">Of rewards</p>
+        </div>
+        <div class="performance-card fade-in">
+          <div class="performance-header">
+            <h3>Blocks Proposed</h3>
+            <span class="performance-value">12,458</span>
+          </div>
+          <div class="blocks-chart">
+            <div class="blocks-bar" style="height: 60%"></div>
+            <div class="blocks-bar" style="height: 80%"></div>
+            <div class="blocks-bar" style="height: 40%"></div>
+            <div class="blocks-bar" style="height: 90%"></div>
+            <div class="blocks-bar" style="height: 70%"></div>
+            <div class="blocks-bar" style="height: 85%"></div>
+            <div class="blocks-bar" style="height: 65%"></div>
+          </div>
+          <p class="performance-info">Last 7 days</p>
+        </div>
+        <div class="performance-card fade-in">
+          <div class="performance-header">
+            <h3>Rewards Generated</h3>
+            <span class="performance-value">58,920 DMD</span>
+          </div>
+          <div class="rewards-chart">
+            <div class="rewards-bar" style="height: 50%"></div>
+            <div class="rewards-bar" style="height: 70%"></div>
+            <div class="rewards-bar" style="height: 60%"></div>
+            <div class="rewards-bar" style="height: 80%"></div>
+            <div class="rewards-bar" style="height: 65%"></div>
+            <div class="rewards-bar" style="height: 75%"></div>
+            <div class="rewards-bar" style="height: 90%"></div>
+          </div>
+          <p class="performance-info">Last 30 days</p>
+        </div>
+      </div>
     </div>
-    <div class="performance-grid">
-      <div class="performance-card fade-in">
-        <div class="performance-header">
-          <h3>Uptime</h3>
-          <span class="performance-value">99.8%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress" style="width: 99.8%"></div>
-        </div>
-        <p class="performance-info">Last 30 days</p>
-      </div>
-      <div class="performance-card fade-in">
-        <div class="performance-header">
-          <h3>Commission Rate</h3>
-          <span class="performance-value">5.8%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress" style="width: 58%"></div>
-        </div>
-        <p class="performance-info">Of rewards</p>
-      </div>
-      <div class="performance-card fade-in">
-        <div class="performance-header">
-          <h3>Blocks Proposed</h3>
-          <span class="performance-value">12,458</span>
-        </div>
-        <div class="blocks-chart">
-          <div class="blocks-bar" style="height: 60%"></div>
-          <div class="blocks-bar" style="height: 80%"></div>
-          <div class="blocks-bar" style="height: 40%"></div>
-          <div class="blocks-bar" style="height: 90%"></div>
-          <div class="blocks-bar" style="height: 70%"></div>
-          <div class="blocks-bar" style="height: 85%"></div>
-          <div class="blocks-bar" style="height: 65%"></div>
-        </div>
-        <p class="performance-info">Last 7 days</p>
-      </div>
-      <div class="performance-card fade-in">
-        <div class="performance-header">
-          <h3>Rewards Generated</h3>
-          <span class="performance-value">58,920 DMD</span>
-        </div>
-        <div class="rewards-chart">
-          <div class="rewards-bar" style="height: 50%"></div>
-          <div class="rewards-bar" style="height: 70%"></div>
-          <div class="rewards-bar" style="height: 60%"></div>
-          <div class="rewards-bar" style="height: 80%"></div>
-          <div class="rewards-bar" style="height: 65%"></div>
-          <div class="rewards-bar" style="height: 75%"></div>
-          <div class="rewards-bar" style="height: 90%"></div>
-        </div>
-        <p class="performance-info">Last 30 days</p>
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 
 <!-- Delegates Section -->
 <section class="delegates-section">
