@@ -698,14 +698,14 @@
     <div class="container">
       <div class="section-header">
         <h2 class="fade-in">Blockchain that scales</h2>
-        <div class="stats">
+        <!-- <div class="stats">
           <div class="stat">
             <span class="stat-value">90 ILS</span>
           </div>
           <div class="stat">
             <span class="stat-value">500 ms</span>
           </div>
-        </div>
+        </div> -->
         <p>DMD Diamond is a fair-launched, truly decentralized Layer 1 blockchain, built by a dedicated community — without a company, premine, or ICO. Established in 2013, it has continuously evolved to prioritize security, efficiency, and decentralization.</p>
         <a href="https://github.com/DMDcoin/whitepaper/wiki/A.-Home" target="_blank" class="btn-primary">Learn more about DMD <i class="fas fa-arrow-right"></i></a>
       </div>
@@ -814,15 +814,43 @@
       <div class="stats-grid">
         <div class="stat-card fade-in">
           <h3>Current Epoch</h3>
-          <p class="stat-value">1,245</p>
+          <p class="stat-value">396</p>
         </div>
         <div class="stat-card fade-in">
-          <h3>Next Round</h3>
-          <p class="stat-value">12h 34m</p>
+          <h3>Key Gen. Round</h3>
+          <p class="stat-value">1</p>
         </div>
         <div class="stat-card fade-in">
-          <h3>Stake Start Time</h3>
-          <p class="stat-value">08:00 UTC</p>
+          <h3>Epoch Start Time</h3>
+          <p class="stat-value">22 May 2025 16:41:57</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Epoch Start Block</h3>
+          <p class="stat-value">112839</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Active Validators</h3>
+          <p class="stat-value">25</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Valid Candidates</h3>
+          <p class="stat-value">61</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Min. Gas Fee</h3>
+          <p class="stat-value">1 Gwei</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Reinsert Pot</h3>
+          <p class="stat-value">345662.1747 DMD</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Delta Pot</h3>
+          <p class="stat-value">512829.4899 DMD</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Claiming Pot</h3>
+          <p class="stat-value">2114280.8052 DMD</p>
         </div>
       </div>
     </div>
@@ -941,7 +969,7 @@
           </div>
           <div class="faq-answer">
             <p>Blockchain validators or validator candidates are responsible for verifying and adding transactions to the blockchain. Users delegate their coins, or stake, to a validator. Validators receive 20% rewards from each Epoch they participate in as active validators, as a Validator operator reward. The rest of the Validator rewards (80%) are distributed proportionally based on the staked coins on that validator.</p>
-            <p><strong>Validator candidates require:</strong></p>
+            <p class="p-heading"><strong>Validator candidates require:</strong></p>
             <ul>
               <li>Full node installation of the DMDv4 chain on a Linux server with the DMD version of Open Ethereum, which includes the DMDv4 extensions (HBBFT/POSDAO) and proper configuration.</li>
               <li>Internet with a Static IP address and reliable 24/7 uptime.</li>
@@ -965,14 +993,14 @@
                 <br />
                 <li><strong>Choose a Staking Method:</strong><br />
                     You can choose from multiple staking options:
-                    <ul style="listStyleType:disc">
+                    <ul>
                         <li><strong>Stake as a Validator:</strong> This requires running a full node and actively participating in network operations. It’s more technical and requires at least 10,000 DMD. As a node operator, you also earn 20% of the validator rewards in addition to rewards proportional to your coin holdings.</li>
                         <li><strong>Delegate to a Validator:</strong> If running a full node is not feasible, you can delegate your DMD to an existing validator. This is easier and still earns you rewards proportional to your coin holdings.</li>
                     </ul>
                 </li>
                 <br />
                 <li><strong>Start Staking:</strong><br />
-                    <ul style="listStyleType:disc">
+                    <ul>
                         <li><strong>Access the Staking Interface:</strong> You can connect to our user-friendly interface with your wallet.</li>
                         <li><strong>Choose a Validator (if delegating):</strong> Research and choose a reliable validator to delegate your DMD. Look for validators with a good track record and solid reputation.</li>
                         <li><strong>Set the Amount:</strong> Decide how much DMD you want to stake or delegate.</li>
@@ -991,7 +1019,7 @@
             <p>
               Choosing a validator for delegating your DMD is an important decision that can affect your staking rewards and the security of your coins. Here are some steps and considerations to help you choose the right validator:
             </p>
-            <ul style="listStyleType:disc">
+            <ul style="padding-bottom: 20px;">
                 <li><strong>Reputation and Reliability:</strong> Look for validators with a good reputation in the community. Validators with a history of uptime are generally more reliable.</li>
                 <li><strong>Community Involvement:</strong> Validators that are actively involved in the community and governance might be more aligned with the network’s long-term success.</li>
                 <li><strong>Diversify Your Delegation:</strong> To mitigate risk, you might consider splitting your DMD across multiple validators. This way, if one validator underperforms, your other staked tokens are still earning rewards.</li>
@@ -1015,7 +1043,7 @@
             <i class="fas fa-plus"></i>
           </div>
           <div class="faq-answer">
-            <p>The rewards per epoch cycle (12 hours) are always 1/6000 of all coins in delta pot and reinsert pot combined. Upfront, the DAO Governance share is taken (10%). The rest of the epoch rewards are split between all validators of the actual active set, and then once again between the participants (coin owners) on each validator. So if there are 25 validators in the active set, each validator gets 1/25 of this epoch rewards. Before this validator reward is split between coin owners on that validator proportional, a 20% share of rewards is removed and accounted to the node operator (validator owner) for the effort to set up and maintain the validator node. </p>
+            <p>The rewards per epoch cycle (12 hours) are always 1/6000 of all coins in delta pot and reinsert pot combined. Upfront, the DAO Governance share is taken (10%). The rest of the epoch rewards are split between all validators of the actual active set, and then once again between the participants (coin owners) on each validator. So if there are 25 validators in the active set, each validator gets 1/25 of this epoch rewards. Before this validator reward is split between coin owners on that validator proportional, a 20% share of rewards is removed and accounted to the node operator (validator owner) for the effort to set up and maintain the validator node.</p>
             <p>More calculation examples <a target="_blank" href="https://github.com/DMDcoin/whitepaper/wiki/D.-The-DMD-Diamond-Blockchain's-Solutions#d62-validators">here</a></p>
           </div>
         </div>
