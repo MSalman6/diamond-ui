@@ -96,5 +96,15 @@ document.addEventListener("DOMContentLoaded", () => {
       cosmicGrid.style.backgroundImage = `linear-gradient(${theme["--cosmic-grid-color"]} 1px, transparent 1px), 
                                          linear-gradient(90deg, ${theme["--cosmic-grid-color"]} 1px, transparent 1px)`
     }
+
+    // Update logo based on theme
+    const logoImg = document.querySelector(".logo-img")
+    if (logoImg) {
+      if (themeName === "light") {
+        logoImg.src = "/assets/images/dmd-logo-dark.png"
+      } else {
+        logoImg.src = "/assets/images/dmd-logo.png"
+      }
+    }
   }
 })
