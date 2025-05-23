@@ -1799,34 +1799,20 @@ header .container {
   margin: 0;
 }
 
-.faq-answer ol {
-  padding: 20px 40px;
-  opacity: 0.8;
-  margin: 0;
-}
-
-.faq-answer p a {
-  color: var(--text);
-  text-decoration: underline;
-  transition: color 0.5s ease;
-}
-
-.faq-answer .p-heading {
-  padding: 0px 20px;
-}
-
 .faq-item.active .faq-question {
   background: var(--card-hover);
   transition: background-color 0.3s ease;
 }
 
 .faq-item.active .faq-answer {
-  max-height: 100%;
+  max-height: 200px;
 }
 
-.faq-item.active .faq-answer ul {
-  padding-left: 40px;
-  list-style-type: disc;
+/* FAQ Actions */
+.faq-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
 }
 
 /* Footer */
