@@ -1,23 +1,23 @@
-/* Validators Page Specific Styles */
 
-/* Validators Hero Section */
+
+
 .validators-hero {
-  min-height: 350px; /* Increased minimum height */
+  min-height: 350px; 
   display: flex;
   align-items: center;
   background: var(--dark-bg);
   position: relative;
   overflow: hidden;
   padding: 0px;
-  padding-top: 120px; /* Increased padding-top */
-  padding-bottom: 40px; /* Added padding-bottom */
+  padding-top: 120px; 
+  padding-bottom: 40px; 
 }
 
 .validators-hero-content {
   max-width: 700px;
   position: relative;
   z-index: 2;
-  padding-top: 60px; /* Increased padding-top for content */
+  padding-top: 60px; 
 }
 
 .validators-hero-content h1 {
@@ -32,7 +32,7 @@
   max-width: 600px;
 }
 
-/* Validators Metrics Section */
+
 .validators-metrics {
   background: var(--darker-bg);
   position: relative;
@@ -99,7 +99,7 @@
   opacity: 1;
 }
 
-/* Validators Table Section */
+
 .validators-table-section {
   background: var(--dark-bg);
   position: relative;
@@ -276,7 +276,7 @@
   color: #ff9f43;
 }
 
-/* Add these styles for the CR column after the status badge styles */
+
 
 .cr-value {
   display: inline-block;
@@ -377,7 +377,7 @@
   opacity: 0.7;
 }
 
-/* Modal Styles */
+
 .modal {
   display: none;
   position: fixed;
@@ -398,7 +398,7 @@
   opacity: 1;
 }
 
-/* Customize Columns Modal - Enhanced Version */
+
 .modal-content {
   background: var(--darker-bg);
   border-radius: 12px;
@@ -450,7 +450,7 @@
   gap: 15px;
 }
 
-/* New Column Customization Styles */
+
 .columns-container {
   display: flex;
   flex-direction: column;
@@ -595,7 +595,7 @@
   box-shadow: 0 4px 12px rgba(0, 112, 243, 0.3);
 }
 
-/* Animation for the modal */
+
 @keyframes modalFadeIn {
   from {
     opacity: 0;
@@ -611,7 +611,7 @@
   animation: modalFadeIn 0.3s ease forwards;
 }
 
-/* Customize Columns Modal */
+
 .column-options {
   display: flex;
   flex-direction: column;
@@ -650,7 +650,7 @@
   opacity: 1;
 }
 
-/* Stake/Unstake Modal */
+
 .validator-info {
   background: var(--card-bg);
   border-radius: 4px;
@@ -738,7 +738,7 @@
   opacity: 0.9;
 }
 
-/* Responsive Styles */
+
 @media (max-width: 992px) {
   .validators-hero-content h1 {
     font-size: 3rem;
@@ -827,7 +827,7 @@
   }
 }
 
-/* Active nav link */
+
 .nav-links a.active {
   opacity: 1;
   font-weight: 600;
@@ -845,7 +845,7 @@
   border-radius: 2px;
 }
 
-/* Animation for table rows */
+
 .validators-table tbody tr {
   opacity: 0;
   transform: translateY(10px);
@@ -890,7 +890,7 @@
   animation-delay: 1s;
 }
 
-/* Shimmer effect for table headers */
+
 .validators-table th {
   position: relative;
   overflow: hidden;
@@ -906,7 +906,7 @@
   }
 }
 
-/* Fix dropdown styling */
+
 .filter-container select {
   color: var(--text-white);
 }
@@ -916,7 +916,7 @@
   color: var(--text-white);
 }
 
-/* Improved pagination behavior */
+
 .pagination-content {
   display: none;
   animation: fadeInRows 0.5s forwards;
@@ -926,24 +926,24 @@
   display: block;
 }
 
-/* Enhanced form controls */
+
 .form-group input::placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* Enhanced button states */
+
 .btn-stake:active,
 .btn-unstake:active {
   transform: scale(0.95);
 }
 
-/* Enhanced table hover effects */
+
 .validators-table tbody tr:hover {
   background: rgba(255, 255, 255, 0.05);
   box-shadow: 0 0 15px rgba(0, 157, 255, 0.1);
 }
 
-/* Light Theme Enhancements */
+
 body.light-theme .validators-hero {
   background: linear-gradient(to bottom, #f0f7ff, #f5f7fa);
 }
@@ -1237,7 +1237,7 @@ body.light-theme .warning-message p {
   color: #121826;
 }
 
-/* Add these styles to the light theme section */
+
 
 body.light-theme .cr-zero {
   color: #121826;
@@ -1253,14 +1253,14 @@ body.light-theme .cr-danger {
   color: #d32f2f;
 }
 
-/* Miner address and public key styling */
+
 .miner-address,
 .public-key {
   font-family: "Courier New", monospace;
   font-weight: 500;
 }
 
-/* Ensure table cells have proper padding */
+
 .validators-table td {
   padding: 15px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -1271,7 +1271,7 @@ body.light-theme .cr-danger {
   max-width: 200px;
 }
 
-/* Light theme styling for the new columns */
+
 body.light-theme .miner-address,
 body.light-theme .public-key {
   color: #121826;

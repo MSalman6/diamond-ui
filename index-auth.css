@@ -1,6 +1,6 @@
-/* Additional styles for authenticated views */
 
-/* User Wallet Info in Header */
+
+
 .user-wallet-info {
   display: flex;
   align-items: center;
@@ -42,7 +42,7 @@
   font-weight: 500;
 }
 
-/* User Dashboard */
+
 .user-dashboard,
 .validator-dashboard {
   width: 100%;
@@ -50,10 +50,10 @@
   padding-bottom: 40px;
 }
 
-/* Redesigned Validator Dashboard */
+
 .validator-dashboard {
   width: 100%;
-  padding: 120px 0 40px; /* Increased top padding to prevent overlap with header */
+  padding: 120px 0 40px; 
 }
 
 .validator-header {
@@ -61,8 +61,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
-  gap: 20px; /* Add gap for when items wrap */
+  flex-wrap: wrap; 
+  gap: 20px; 
 }
 
 .validator-identity {
@@ -75,13 +75,13 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
-  gap: 10px; /* Add gap for when items wrap */
+  flex-wrap: wrap; 
+  gap: 10px; 
 }
 
 .validator-details h1 {
   margin: 0;
-  font-size: clamp(1.5rem, 5vw, 2rem); /* Responsive font size */
+  font-size: clamp(1.5rem, 5vw, 2rem); 
 }
 
 .validator-score {
@@ -105,7 +105,7 @@
 
 .validator-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
   gap: 20px;
   margin-bottom: 30px;
 }
@@ -145,8 +145,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
-  gap: 10px; /* Add gap for when items wrap */
+  flex-wrap: wrap; 
+  gap: 10px; 
 }
 
 .btn-outline-sm {
@@ -178,8 +178,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
-  gap: 15px; /* Add gap for when items wrap */
+  flex-wrap: wrap; 
+  gap: 15px; 
 }
 
 .node-stake-header h3 {
@@ -244,8 +244,8 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
-  gap: 15px; /* Add gap for when items wrap */
+  flex-wrap: wrap; 
+  gap: 15px; 
 }
 
 .voting-power {
@@ -266,7 +266,7 @@
   gap: 10px;
 }
 
-/* Tooltip for stake bars */
+
 [data-tooltip] {
   position: relative;
   cursor: pointer;
@@ -302,8 +302,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
-  gap: 20px; /* Add gap for when items wrap */
+  flex-wrap: wrap; 
+  gap: 20px; 
 }
 
 .user-wallet,
@@ -315,7 +315,7 @@
 
 .wallet-details h1 {
   margin-bottom: 5px;
-  font-size: clamp(1.5rem, 5vw, 2rem); /* Responsive font size */
+  font-size: clamp(1.5rem, 5vw, 2rem); 
 }
 
 .wallet-details p {
@@ -326,7 +326,7 @@
 .user-stats {
   display: flex;
   gap: 30px;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  flex-wrap: wrap; 
 }
 
 .stat-item {
@@ -345,10 +345,10 @@
   display: flex;
   justify-content: flex-end;
   gap: 15px;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  flex-wrap: wrap; 
 }
 
-/* Status Badge */
+
 .status-badge {
   display: inline-block;
   padding: 4px 10px;
@@ -373,7 +373,7 @@
   color: #ef4444;
 }
 
-/* Validator Stats Grid */
+
 .validator-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -446,11 +446,11 @@
   align-items: center;
   justify-content: space-between;
   margin-top: 10px;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
-  gap: 10px; /* Add gap for when items wrap */
+  flex-wrap: wrap; 
+  gap: 10px; 
 }
 
-/* Tables */
+
 .table-container {
   overflow-x: auto;
   margin: 20px 0;
@@ -497,11 +497,11 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
-  gap: 10px; /* Add gap for when items wrap */
+  flex-wrap: wrap; 
+  gap: 10px; 
 }
 
-/* DAO Stats */
+
 .dao-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -532,7 +532,7 @@
   color: #6ee7b7;
 }
 
-/* Sections */
+
 .validators-staked,
 .delegates-section,
 .dao-overview,
@@ -545,7 +545,7 @@
 .delegates-section h2,
 .dao-overview h2,
 .top-validators h2 {
-  font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive font size */
+  font-size: clamp(1.8rem, 5vw, 2.5rem); 
   margin-bottom: 30px;
 }
 
@@ -554,12 +554,12 @@
   background: var(--darker-bg);
 }
 
-/* Current user highlight */
+
 .current-user {
   background: rgba(110, 231, 183, 0.05);
 }
 
-/* Modals */
+
 .modal {
   display: none;
   position: fixed;
@@ -572,7 +572,7 @@
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(5px);
-  padding: 20px; /* Add padding to ensure modal content doesn't touch screen edges */
+  padding: 20px; 
 }
 
 .modal-content {
@@ -583,8 +583,8 @@
   border: 1px solid var(--border-color);
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
   overflow: hidden;
-  max-height: 90vh; /* Prevent modal from being taller than viewport */
-  overflow-y: auto; /* Allow scrolling if content is too tall */
+  max-height: 90vh; 
+  overflow-y: auto; 
 }
 
 .modal-header {
@@ -593,7 +593,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: sticky; /* Keep header visible when scrolling */
+  position: sticky; 
   top: 0;
   background: var(--darker-bg);
   z-index: 1;
@@ -609,7 +609,7 @@
   cursor: pointer;
   opacity: 0.7;
   transition: var(--transition-speed);
-  padding: 5px; /* Larger touch target */
+  padding: 5px; 
 }
 
 .close-modal:hover {
@@ -656,24 +656,24 @@
   justify-content: flex-end;
   gap: 15px;
   margin-top: 30px;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  flex-wrap: wrap; 
 }
 
-/* Fix for hero section in authenticated views */
+
 .hero.user-info-section,
 .hero.validator-info-section {
-  min-height: auto; /* Override any min-height that might cause overflow */
-  height: auto; /* Let the content determine the height */
-  padding-bottom: 60px; /* Add padding to separate from next section */
+  min-height: auto; 
+  height: auto; 
+  padding-bottom: 60px; 
 }
 
-/* Ensure proper spacing between sections */
+
 .user-info-section + section,
 .validator-info-section + section {
-  margin-top: 0; /* Remove any margin that might cause overlap */
+  margin-top: 0; 
 }
 
-/* User Stats Grid Layout */
+
 .user-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -804,7 +804,7 @@
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* New Validator Dashboard Layout */
+
 .validator-stats-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -872,7 +872,7 @@
   font-size: 0.8rem;
 }
 
-/* Score section in header */
+
 .score-change {
   font-size: 0.8rem;
   font-weight: 500;
@@ -883,7 +883,7 @@
   align-self: flex-end;
 }
 
-/* Node stake panel adjustments */
+
 .node-stake-panel {
   background: rgba(59, 130, 246, 0.05);
   border-radius: 12px;
@@ -892,7 +892,7 @@
   margin-bottom: 40px;
 }
 
-/* Combined Stake Card */
+
 .combined-stake-card {
   background: rgba(255, 255, 255, 0.03);
   border-radius: 12px;
@@ -1021,7 +1021,7 @@
   color: #ef4444;
 }
 
-/* Update node-stake-info to be horizontal */
+
 .node-stake-info {
   display: flex;
   justify-content: space-between;
@@ -1035,7 +1035,7 @@
   flex-shrink: 0;
 }
 
-/* Responsive styles */
+
 @media (max-width: 992px) {
   .user-info-header,
   .validator-info-header {
@@ -1062,7 +1062,7 @@
     gap: 15px;
   }
 
-  /* Ensure buttons are full width on medium screens */
+  
   .stake-actions {
     width: 100%;
   }
@@ -1090,7 +1090,7 @@
     flex: 1;
     min-width: 80px;
   }
-  /* Increase padding for mobile */
+  
   .validator-dashboard,
   .user-dashboard {
     padding-top: 100px;
@@ -1115,7 +1115,7 @@
     text-align: left;
   }
 
-  /* Ensure proper spacing between sections */
+  
   .validators-staked,
   .delegates-section,
   .dao-overview,
@@ -1123,7 +1123,7 @@
     padding: 40px 0;
   }
 
-  /* Make table text smaller on mobile */
+  
   .validators-table,
   .delegates-table {
     font-size: 0.9rem;
@@ -1148,7 +1148,7 @@
   .stat-actions .btn-sm {
     width: 100%;
   }
-  /* Further adjustments for very small screens */
+  
   .dao-stats-grid {
     grid-template-columns: 1fr;
   }
@@ -1166,7 +1166,7 @@
     width: 100%;
   }
 
-  /* Make wallet address and icons smaller */
+  
   .wallet-icon.large {
     width: 40px;
     height: 40px;
@@ -1176,7 +1176,7 @@
     font-size: 1.3rem;
   }
 
-  /* Adjust padding for very small screens */
+  
   .node-stake-panel {
     padding: 20px 15px;
   }
@@ -1185,12 +1185,12 @@
     padding: 15px;
   }
 
-  /* Make highlight values smaller */
+  
   .highlight {
     font-size: 1.5rem;
   }
 
-  /* Ensure form actions stack properly */
+  
   .form-actions {
     flex-direction: column;
   }
@@ -1200,7 +1200,7 @@
   }
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .validator-stats-row {
     grid-template-columns: 1fr;

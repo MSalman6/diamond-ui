@@ -1,6 +1,6 @@
-/* Proposal Details Page Styles */
 
-/* Hero Section */
+
+
 .proposal-hero {
   min-height: 300px;
   display: flex;
@@ -73,7 +73,7 @@
   color: #ff4c4c;
 }
 
-/* Diamond Animation */
+
 @keyframes float-around {
   0%,
   100% {
@@ -131,7 +131,7 @@
   animation-delay: 4s;
 }
 
-/* Proposal Details Section */
+
 .proposal-details {
   padding: 60px 0;
   background: var(--bg);
@@ -139,20 +139,20 @@
   transition: background-color 0.5s ease;
 }
 
-/* Update the proposal grid to be more flexible */
+
 .proposal-grid {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   gap: 25px;
 }
 
-/* Add a new class for full-width sections */
+
 .full-width-sections {
   grid-column: 1 / -1;
   margin-top: 30px;
 }
 
-/* Create a three-column layout for the bottom sections */
+
 .bottom-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -160,7 +160,7 @@
   margin-top: 30px;
 }
 
-/* Make each section take one column */
+
 .proposal-timeline-section,
 .resources-section,
 .related-proposals-section {
@@ -178,7 +178,7 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* Adjust the timeline to fit in the new layout */
+
 .timeline {
   padding-left: 25px;
   margin: 20px;
@@ -198,7 +198,7 @@
   height: 16px;
 }
 
-/* Adjust resources grid to be a single column in its section */
+
 .resources-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -206,7 +206,7 @@
   padding: 0 20px 20px;
 }
 
-/* Make related proposals fit in their section */
+
 .related-proposal-item {
   margin: 0 20px 15px;
 }
@@ -215,7 +215,7 @@
   margin-bottom: 20px;
 }
 
-/* Proposal Cards */
+
 .proposal-card {
   background: var(--card-bg);
   border-radius: 8px;
@@ -245,7 +245,7 @@
   padding: 20px;
 }
 
-/* Creator Card */
+
 .creator-address {
   display: flex;
   align-items: center;
@@ -301,7 +301,7 @@
   visibility: visible;
 }
 
-/* Parameter Change Card */
+
 .parameter-name h4 {
   font-size: 1.3rem;
   margin-bottom: 20px;
@@ -441,7 +441,7 @@
   margin: 0;
 }
 
-/* Funding Request Card */
+
 .funding-purpose h4 {
   font-size: 1.3rem;
   margin-bottom: 20px;
@@ -568,7 +568,7 @@
   margin: 0;
 }
 
-/* Contract Upgrade Card */
+
 .upgrade-title h4 {
   font-size: 1.3rem;
   margin-bottom: 20px;
@@ -763,7 +763,7 @@
   font-size: 0.85rem;
 }
 
-/* Voting Card */
+
 .voting-status-message {
   display: flex;
   align-items: center;
@@ -960,7 +960,7 @@
   opacity: 0.8;
 }
 
-/* Discussion Card */
+
 .discussion-links {
   display: flex;
   flex-direction: column;
@@ -995,7 +995,7 @@
   opacity: 0.8;
 }
 
-/* Transaction Card */
+
 .transaction-item {
   display: flex;
   flex-direction: column;
@@ -1031,7 +1031,7 @@
   color: var(--text);
 }
 
-/* Type Selector (for demo purposes) */
+
 .proposal-type-selector {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
@@ -1070,12 +1070,12 @@
   color: #00d2ff;
 }
 
-/* Utility Classes */
+
 .hidden {
   display: none;
 }
 
-/* Add a new section to the left column to balance vertical space */
+
 .additional-resources {
   margin-top: 30px;
 }
@@ -1126,7 +1126,7 @@
   margin: 0;
 }
 
-/* Add a related proposals section to balance vertical space */
+
 .related-proposals {
   margin-top: 30px;
 }
@@ -1186,7 +1186,7 @@
   opacity: 0.7;
 }
 
-/* Add activity timeline to balance vertical space */
+
 .proposal-timeline {
   margin-top: 30px;
 }
@@ -1256,14 +1256,14 @@
   margin: 0;
 }
 
-/* Make the right column cards more compact */
+
 .voting-card .card-content,
 .discussion-card .card-content,
 .transaction-card .card-content {
   padding: 15px;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 1200px) {
   .proposal-grid {
     grid-template-columns: 1fr 350px;
@@ -1313,9 +1313,9 @@
   }
 }
 
-/* Add light theme styles at the end of the file */
 
-/* Light Theme Styles for Proposal Details */
+
+
 body.light-theme .proposal-hero {
   background: #f5f7fa;
 }
@@ -1372,7 +1372,7 @@ body.light-theme .card-header h3 {
   color: #111827;
 }
 
-/* Status badges */
+
 body.light-theme .proposal-status.active {
   background: rgba(0, 157, 255, 0.15);
   color: #0077cc;
@@ -1388,7 +1388,7 @@ body.light-theme .proposal-status.declined {
   color: #e53935;
 }
 
-/* Parameter comparison */
+
 body.light-theme .parameter-comparison {
   background: rgba(0, 0, 0, 0.05);
 }
@@ -1409,7 +1409,7 @@ body.light-theme .info-tooltip {
   background: rgba(0, 0, 0, 0.8);
 }
 
-/* Impact items */
+
 body.light-theme .impact-icon.positive {
   background: rgba(0, 200, 83, 0.15);
   color: #00a651;
@@ -1420,7 +1420,7 @@ body.light-theme .impact-icon.negative {
   color: #e53935;
 }
 
-/* Funding details */
+
 body.light-theme .funding-details {
   background: rgba(0, 0, 0, 0.05);
 }
@@ -1429,7 +1429,7 @@ body.light-theme .payout-amount .value {
   color: #0077cc;
 }
 
-/* Breakdown progress bars */
+
 body.light-theme .breakdown-progress.dev-grants {
   background: linear-gradient(90deg, #3a7bd5, #00a7cc);
 }
@@ -1446,13 +1446,13 @@ body.light-theme .breakdown-progress.marketing {
   background: linear-gradient(90deg, #f2994a, #f2c94c);
 }
 
-/* Milestone items */
+
 body.light-theme .milestone-icon {
   background: rgba(0, 157, 255, 0.15);
   color: #0077cc;
 }
 
-/* Contract upgrade */
+
 body.light-theme .technical-details {
   background: rgba(0, 0, 0, 0.05);
 }
@@ -1477,7 +1477,7 @@ body.light-theme .impact-item {
   background: rgba(0, 0, 0, 0.05);
 }
 
-/* Voting status */
+
 body.light-theme .voting-status-message.executed {
   background: rgba(0, 200, 83, 0.15);
   color: #00a651;
@@ -1543,7 +1543,7 @@ body.light-theme .voting-time {
   border-top: 1px solid #e5e7eb;
 }
 
-/* Discussion links */
+
 body.light-theme .discussion-link {
   background: rgba(0, 0, 0, 0.05);
 }
@@ -1556,7 +1556,7 @@ body.light-theme .discussion-stats {
   border-top: 1px solid #e5e7eb;
 }
 
-/* Timeline */
+
 body.light-theme .timeline::before {
   background: #e5e7eb;
 }
@@ -1571,7 +1571,7 @@ body.light-theme .timeline-content {
   border: 1px solid #e5e7eb;
 }
 
-/* Related proposals */
+
 body.light-theme .related-proposal-item {
   background: #ffffff;
   border: 1px solid #e5e7eb;
@@ -1582,7 +1582,7 @@ body.light-theme .related-proposal-item:hover {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* Type selector */
+
 body.light-theme .type-btn {
   background: rgba(0, 0, 0, 0.05);
 }

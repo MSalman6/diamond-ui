@@ -1,6 +1,6 @@
-/* Create Proposal Page Specific Styles */
 
-/* Proposal Hero Section */
+
+
 .proposal-hero {
   height: 30vh;
   min-height: 250px;
@@ -36,12 +36,12 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for hero content */
+
 .light-theme .proposal-hero-content p {
   color: #555;
 }
 
-/* Proposal Form Section */
+
 .proposal-form-section {
   background: var(--bg);
   padding: 40px 0 80px;
@@ -59,7 +59,7 @@
   gap: 40px;
 }
 
-/* Form Sections */
+
 .form-section {
   background: var(--card-bg);
   border-radius: 12px;
@@ -68,7 +68,7 @@
   transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
-/* Light theme adjustments for form sections */
+
 .light-theme .form-section {
   background: #ffffff;
   border: 1px solid #e0e4e8;
@@ -82,7 +82,7 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for section titles */
+
 .light-theme .section-title {
   color: #333;
 }
@@ -93,12 +93,12 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for section descriptions */
+
 .light-theme .section-description {
   color: #555;
 }
 
-/* Form Controls */
+
 .form-group {
   margin-bottom: 25px;
 }
@@ -115,12 +115,12 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for form labels */
+
 .light-theme .form-group label {
   color: #333;
 }
 
-/* Updated form control styling */
+
 .form-control {
   width: 100%;
   background: var(--darker-bg);
@@ -133,14 +133,14 @@
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.5s ease;
 }
 
-/* Light theme adjustments for form controls */
+
 .light-theme .form-control {
   background: #ffffff;
   border: 1px solid #d0d5dd;
   color: #333;
 }
 
-/* Updated select styling */
+
 select.form-control {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
@@ -149,7 +149,7 @@ select.form-control {
   padding-right: 40px;
 }
 
-/* Light theme adjustments */
+
 .light-theme select.form-control {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
 }
@@ -160,13 +160,13 @@ select.form-control {
   box-shadow: 0 0 0 2px rgba(0, 157, 255, 0.2);
 }
 
-/* Light theme adjustments for form control focus */
+
 .light-theme .form-control:focus {
   border-color: #0077cc;
   box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.15);
 }
 
-/* Option styling */
+
 .form-control option {
   background-color: var(--darker-bg);
   color: var(--text);
@@ -182,7 +182,7 @@ select.form-control {
   opacity: 0.6;
 }
 
-/* Light theme adjustments for placeholders */
+
 .light-theme .form-control::placeholder {
   color: #999;
   opacity: 0.8;
@@ -195,12 +195,12 @@ select.form-control {
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for form hints */
+
 .light-theme .form-hint {
   color: #666;
 }
 
-/* Slider Control */
+
 .slider-container {
   margin-top: 10px;
 }
@@ -213,7 +213,7 @@ select.form-control {
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for slider info */
+
 .light-theme .slider-info {
   color: #666;
 }
@@ -223,7 +223,7 @@ select.form-control {
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for slider info strong text */
+
 .light-theme .slider-info strong {
   color: #333;
 }
@@ -241,7 +241,7 @@ select.form-control {
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for min/max values */
+
 .light-theme .min-value,
 .light-theme .max-value {
   color: #666;
@@ -256,7 +256,7 @@ select.form-control {
   outline: none;
 }
 
-/* Light theme adjustments for slider */
+
 .light-theme .form-slider {
   background: rgba(0, 0, 0, 0.08);
 }
@@ -282,7 +282,7 @@ select.form-control {
   border: none;
 }
 
-/* Light theme adjustments for slider thumb */
+
 .light-theme .form-slider::-webkit-slider-thumb {
   background: linear-gradient(90deg, #0077cc, #3a7bd5);
 }
@@ -301,7 +301,7 @@ select.form-control {
   transform: scale(1.2);
 }
 
-/* Transaction Sections */
+
 .transaction-section {
   background: var(--darker-bg);
   border-radius: 8px;
@@ -311,7 +311,7 @@ select.form-control {
   transition: background-color 0.5s ease, border-color 0.5s ease, opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Light theme adjustments for transaction sections */
+
 .light-theme .transaction-section {
   background: #f5f7fa;
   border: 1px solid #e0e4e8;
@@ -341,7 +341,7 @@ select.form-control {
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for transaction header */
+
 .light-theme .transaction-header h3 {
   color: #333;
 }
@@ -359,7 +359,7 @@ select.form-control {
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-/* Light theme adjustments for remove transaction button */
+
 .light-theme .btn-remove-transaction {
   color: #e53e3e;
 }
@@ -388,7 +388,7 @@ select.form-control {
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-/* Light theme adjustments for add transaction button */
+
 .light-theme .btn-add-transaction {
   border: 1px solid #d0d5dd;
   color: #333;
@@ -399,7 +399,7 @@ select.form-control {
   transform: translateY(-2px);
 }
 
-/* Light theme adjustments for add transaction button hover */
+
 .light-theme .btn-add-transaction:hover {
   background: #f0f2f5;
 }
@@ -408,12 +408,12 @@ select.form-control {
   color: #07f49e;
 }
 
-/* Light theme adjustments for add transaction button icon */
+
 .light-theme .btn-add-transaction i {
   color: #00a86b;
 }
 
-/* Info Box */
+
 .info-box {
   display: flex;
   gap: 15px;
@@ -423,7 +423,7 @@ select.form-control {
   margin-top: 30px;
 }
 
-/* Light theme adjustments for info box */
+
 .light-theme .info-box {
   background: rgba(0, 119, 204, 0.08);
 }
@@ -433,7 +433,7 @@ select.form-control {
   color: #00d2ff;
 }
 
-/* Light theme adjustments for info icon */
+
 .light-theme .info-icon {
   color: #0077cc;
 }
@@ -445,7 +445,7 @@ select.form-control {
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for info content */
+
 .light-theme .info-content p {
   color: #333;
 }
@@ -454,14 +454,14 @@ select.form-control {
   margin-bottom: 0;
 }
 
-/* Fee Information Box */
+
 .fee-info-box {
   background: rgba(255, 159, 67, 0.1);
   border-radius: 8px;
   overflow: hidden;
 }
 
-/* Light theme adjustments for fee info box */
+
 .light-theme .fee-info-box {
   background: rgba(230, 126, 34, 0.08);
 }
@@ -471,7 +471,7 @@ select.form-control {
   padding: 15px 20px;
 }
 
-/* Light theme adjustments for fee info header */
+
 .light-theme .fee-info-header {
   background: rgba(230, 126, 34, 0.15);
 }
@@ -485,7 +485,7 @@ select.form-control {
   gap: 10px;
 }
 
-/* Light theme adjustments for fee info header title */
+
 .light-theme .fee-info-header h3 {
   color: #e67e22;
 }
@@ -501,7 +501,7 @@ select.form-control {
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for fee info content */
+
 .light-theme .fee-info-content p {
   color: #333;
 }
@@ -514,12 +514,12 @@ select.form-control {
   color: #ff9f43;
 }
 
-/* Light theme adjustments for fee info strong text */
+
 .light-theme .fee-info-content strong {
   color: #e67e22;
 }
 
-/* Form Actions */
+
 .form-actions {
   display: flex;
   justify-content: center;
@@ -543,7 +543,7 @@ select.form-control {
   overflow: hidden;
 }
 
-/* Light theme adjustments for create proposal button */
+
 .light-theme .btn-create-proposal {
   background: linear-gradient(90deg, #0077cc, #3a7bd5);
 }
@@ -569,12 +569,12 @@ select.form-control {
   box-shadow: 0 8px 25px rgba(0, 157, 255, 0.3);
 }
 
-/* Light theme adjustments for create proposal button hover */
+
 .light-theme .btn-create-proposal:hover {
   box-shadow: 0 8px 25px rgba(0, 119, 204, 0.3);
 }
 
-/* Dynamic Sections Animation */
+
 .dynamic-section {
   display: none;
 }
@@ -590,7 +590,7 @@ select.form-control {
   transform: translateY(0);
 }
 
-/* Animation for fade-in elements */
+
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
@@ -602,7 +602,7 @@ select.form-control {
   transform: translateY(0);
 }
 
-/* Shimmer animation for buttons */
+
 @keyframes shimmer {
   0% {
     background-position: -100% 0;
@@ -612,7 +612,7 @@ select.form-control {
   }
 }
 
-/* Responsive Styles */
+
 @media (max-width: 992px) {
   .proposal-hero-content h1 {
     font-size: 3rem;
@@ -669,7 +669,7 @@ select.form-control {
   }
 }
 
-/* Accessibility */
+
 @media (prefers-reduced-motion: reduce) {
   .form-slider::-webkit-slider-thumb,
   .form-slider::-moz-range-thumb,

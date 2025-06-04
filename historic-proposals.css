@@ -1,6 +1,6 @@
-/* Historic Proposals Page Specific Styles */
 
-/* Historic Hero Section */
+
+
 .historic-hero {
   height: 30vh;
   min-height: 250px;
@@ -35,7 +35,7 @@
   transition: color 0.5s ease;
 }
 
-/* Search and Filter Controls */
+
 .historic-controls {
   background: var(--darker-bg);
   padding: 30px 0;
@@ -89,14 +89,14 @@
   color: #ff6b6b;
 }
 
-/* Historic Proposals Section */
+
 .historic-proposals {
   background: var(--bg);
   padding: 40px 0 60px;
   transition: background-color 0.5s ease;
 }
 
-/* Proposals Table */
+
 .proposals-table-container {
   background: var(--card-bg);
   border-radius: 8px;
@@ -150,7 +150,7 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
-/* Alternating row colors */
+
 .proposals-table tbody tr.alt-row {
   background: rgba(255, 255, 255, 0.01);
 }
@@ -273,7 +273,7 @@
   color: #00d2ff;
 }
 
-/* Responsive Styles */
+
 @media (max-width: 1200px) {
   .search-filter-container {
     flex-direction: column;
@@ -352,7 +352,7 @@
   }
 }
 
-/* Animation for fade-in elements */
+
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
@@ -364,14 +364,14 @@
   transform: translateY(0);
 }
 
-/* Accessibility */
+
 @media (prefers-reduced-motion: reduce) {
   .participation-progress {
     transition: none;
   }
 }
 
-/* Light Theme Styles */
+
 body.light-theme .historic-hero {
   background-color: #f5f7fa;
 }
@@ -437,7 +437,7 @@ body.light-theme .participation-value {
   color: #4a5568;
 }
 
-/* Proposal types in light theme */
+
 body.light-theme .proposal-type.ecosystem {
   background-color: rgba(0, 210, 255, 0.15);
   color: #0086a8;
@@ -463,7 +463,7 @@ body.light-theme .proposal-type.open {
   color: #e53e3e;
 }
 
-/* Proposal statuses in light theme */
+
 body.light-theme .proposal-status.accepted {
   background-color: rgba(7, 244, 158, 0.15);
   color: #059669;
@@ -479,7 +479,7 @@ body.light-theme .proposal-status.executed {
   color: #0086a8;
 }
 
-/* Exceeding values in light theme */
+
 body.light-theme .exceeding-value.positive {
   color: #059669;
 }
@@ -488,7 +488,7 @@ body.light-theme .exceeding-value.negative {
   color: #e53e3e;
 }
 
-/* Pagination in light theme */
+
 body.light-theme .pagination-btn {
   background-color: #ffffff;
   color: #2d3748;
@@ -509,7 +509,7 @@ body.light-theme .pagination-ellipsis {
   color: #4a5568;
 }
 
-/* Search and filter controls in light theme */
+
 body.light-theme .search-container input {
   background-color: #ffffff;
   color: #2d3748;
@@ -531,7 +531,7 @@ body.light-theme .filter-container select {
   border-color: #e2e8f0;
 }
 
-/* Cosmic elements in light theme */
+
 body.light-theme .cosmic-grid {
   opacity: 0.3;
 }

@@ -1,15 +1,15 @@
-/* Validator Details Page Specific Styles */
 
-/* Validator Hero Section */
+
+
 .validator-hero {
-  min-height: 350px; /* Increased minimum height */
+  min-height: 350px; 
   display: flex;
   align-items: center;
   background: var(--bg);
   position: relative;
   overflow: hidden;
-  padding-top: 120px; /* Increased padding-top */
-  padding-bottom: 40px; /* Added padding-bottom */
+  padding-top: 120px; 
+  padding-bottom: 40px; 
   transition: background-color 0.5s ease;
 }
 
@@ -18,7 +18,7 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  padding-top: 60px; /* Increased padding-top for content */
+  padding-top: 60px; 
 }
 
 .back-link {
@@ -46,7 +46,7 @@
   gap: 15px;
 }
 
-/* New styles for the title row */
+
 .validator-title-row {
   display: flex;
   align-items: center;
@@ -109,7 +109,7 @@
   color: #ff6b6b;
 }
 
-/* Updated validator actions */
+
 .validator-actions {
   display: flex;
   flex-wrap: wrap;
@@ -124,7 +124,7 @@
   flex-wrap: wrap;
 }
 
-/* Validator Statistics Section */
+
 .validator-statistics {
   background: var(--darker-bg);
   position: relative;
@@ -157,7 +157,7 @@
   margin-bottom: 40px;
 }
 
-/* Updated stat card styling to exactly match authenticated view */
+
 .stat-card-wireframe {
   background: var(--card-bg);
   border-radius: 12px;
@@ -314,7 +314,7 @@
   opacity: 1;
 }
 
-/* Light theme styles for wireframe cards - Updated to match authenticated view */
+
 body.light-theme .stat-card-wireframe {
   background: #ffffff;
   border: 2px solid #e2e8f0;
@@ -384,7 +384,7 @@ body.light-theme .info-icon {
   color: #718096;
 }
 
-/* Responsive adjustments - Improved */
+
 @media (max-width: 1200px) {
   .stats-grid-wireframe {
     gap: 20px;
@@ -582,13 +582,13 @@ body.light-theme .info-icon {
   }
 }
 
-/* Ensure content doesn't overflow */
+
 .stat-card-wireframe * {
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
-/* Improve button responsiveness */
+
 .stat-actions {
   min-height: 32px;
 }
@@ -605,7 +605,7 @@ body.light-theme .info-icon {
   }
 }
 
-/* Legacy stat card styles (keeping for compatibility) */
+
 .stat-card {
   background: var(--card-bg);
   border-radius: 8px;
@@ -655,7 +655,7 @@ body.light-theme .info-icon {
   color: #ff6b6b;
 }
 
-/* History Button in Stat Card */
+
 .stat-card .history-button {
   background: transparent;
   border: 1px solid var(--border-color);
@@ -682,7 +682,7 @@ body.light-theme .stat-card .history-button:hover {
   background: rgba(0, 0, 0, 0.05);
 }
 
-/* Info Icon in Stat Card */
+
 .stat-card h3 .info-icon {
   font-size: 0.9rem;
   margin-left: 5px;
@@ -703,7 +703,7 @@ body.light-theme .stat-card h3 .info-icon:hover {
   color: #0f172a;
 }
 
-/* Validator Performance Section - Updated to match page styling */
+
 .validator-performance {
   background: var(--bg);
   position: relative;
@@ -799,7 +799,7 @@ body.light-theme .stat-card h3 .info-icon:hover {
   background: linear-gradient(180deg, #a17fe0, #5d26c1);
 }
 
-/* Light theme styles for performance cards */
+
 body.light-theme .performance-card {
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -828,7 +828,7 @@ body.light-theme .performance-info {
   color: #64748b;
 }
 
-/* Delegates Section - Updated to match page styling */
+
 .delegates-section {
   background: var(--darker-bg);
   position: relative;
@@ -906,7 +906,7 @@ body.light-theme .performance-info {
   border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Light theme styles for delegates table */
+
 body.light-theme .delegates-table-container {
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -932,7 +932,7 @@ body.light-theme .address-icon {
   border: 2px solid rgba(0, 0, 0, 0.1);
 }
 
-/* DAO Participation Section - Updated to match page styling */
+
 .dao-section {
   background: var(--bg);
   position: relative;
@@ -1075,7 +1075,7 @@ body.light-theme .address-icon {
   color: #ff9f43;
 }
 
-/* Light theme styles for DAO table */
+
 body.light-theme .dao-table-container {
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -1147,7 +1147,7 @@ body.light-theme .proposal-status.pending {
   color: #e65100;
 }
 
-/* Pagination - Updated styling */
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -1190,7 +1190,7 @@ body.light-theme .proposal-status.pending {
   font-weight: 500;
 }
 
-/* Light theme pagination */
+
 body.light-theme .pagination-btn {
   background: #f8fafc;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -1212,7 +1212,7 @@ body.light-theme .pagination-ellipsis {
   color: #64748b;
 }
 
-/* Style the stake button like "Get started" */
+
 .btn-stake-hero {
   display: inline-flex;
   align-items: center;
@@ -1251,7 +1251,7 @@ body.light-theme .pagination-ellipsis {
   box-shadow: 0 8px 25px rgba(0, 157, 255, 0.3);
 }
 
-/* Style for claim button */
+
 .btn-claim-hero {
   display: inline-flex;
   align-items: center;
@@ -1290,7 +1290,7 @@ body.light-theme .pagination-ellipsis {
   box-shadow: 0 8px 25px rgba(138, 43, 226, 0.3);
 }
 
-/* Style for unstake button */
+
 .btn-unstake-hero {
   display: inline-flex;
   align-items: center;
@@ -1329,7 +1329,7 @@ body.light-theme .pagination-ellipsis {
   box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
 }
 
-/* Style the copy and view buttons like "Connect Wallet" */
+
 .cta-button {
   gap: 8px;
   display: flex;
@@ -1351,7 +1351,7 @@ body.light-theme .pagination-ellipsis {
   transform: translateY(-2px);
 }
 
-/* Add shimmer animation for the stake button */
+
 @keyframes shimmer {
   0% {
     background-position: -100% 0;
@@ -1361,7 +1361,7 @@ body.light-theme .pagination-ellipsis {
   }
 }
 
-/* Responsive Styles */
+
 @media (max-width: 992px) {
   .validator-header h1 {
     font-size: 2rem;
@@ -1432,14 +1432,14 @@ body.light-theme .pagination-ellipsis {
   }
 }
 
-/* Animation for fade-in elements */
+
 .fade-in {
   opacity: 1;
   transform: translateY(0);
   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
-/* Accessibility */
+
 @media (prefers-reduced-motion: reduce) {
   .progress-bar .progress,
   .blocks-bar,
@@ -1451,10 +1451,10 @@ body.light-theme .pagination-ellipsis {
   }
 }
 
-/* Modal and other existing styles remain the same... */
-/* [Previous modal, staking progress, and other styles continue here] */
 
-/* Staking Progress Modal */
+
+
+
 .staking-progress {
   padding: 20px 0;
 }
@@ -1568,7 +1568,7 @@ body.light-theme .pagination-ellipsis {
   word-break: break-all;
 }
 
-/* Modal Styles */
+
 .modal {
   display: none;
   position: fixed;
@@ -1782,7 +1782,7 @@ body.light-theme .pagination-ellipsis {
   box-shadow: 0 4px 12px rgba(0, 112, 243, 0.3);
 }
 
-/* Light Theme Modal Styles */
+
 body.light-theme .modal {
   background: rgba(0, 0, 0, 0.7);
 }
@@ -1870,7 +1870,7 @@ body.light-theme .btn-cancel:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Tooltip styles */
+
 .tooltip {
   position: fixed;
   background: rgba(0, 0, 0, 0.8);

@@ -1,6 +1,6 @@
-/* Base Styles */
+
 :root {
-  /* Theme variables - will be overridden by JavaScript */
+  
   --bg: #030014;
   --darker-bg: #020010;
   --card-bg: rgba(255, 255, 255, 0.05);
@@ -20,7 +20,7 @@
   --transition-speed: 0.3s;
 }
 
-/* Theme Transition */
+
 .theme-transition,
 .theme-transition *,
 .theme-transition *:before,
@@ -29,7 +29,7 @@
   transition-delay: 0 !important;
 }
 
-/* Theme Toggle Switch */
+
 .theme-toggle-wrapper {
   display: flex;
   align-items: center;
@@ -112,13 +112,13 @@ input:checked + .theme-toggle-slider .theme-toggle-icon.moon {
   color: rgba(255, 255, 255, 0.3);
 }
 
-/* Animation Keyframes */
+
 @keyframes scrollPartners {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-220px * 6 - 50px * 6)); /* Width of logos (220px) × number of logos (6) + margins (50px) × number of logos (6) */
+    transform: translateX(calc(-220px * 6 - 50px * 6)); 
   }
 }
 
@@ -220,7 +220,7 @@ input:checked + .theme-toggle-slider .theme-toggle-icon.moon {
   box-sizing: border-box;
 }
 
-/* Apply theme to elements */
+
 body {
   font-family: "Inter", sans-serif;
   background-color: var(--bg);
@@ -269,21 +269,21 @@ ul {
   list-style: none;
 }
 
-/* Adjust section spacing for consistency */
+
 section {
   padding: 80px 0;
   position: relative;
   overflow: hidden;
 }
 
-/* Add consistent bottom margin to section headers */
+
 section h2 {
   font-size: 3.5rem;
   margin-bottom: 30px;
   line-height: 1.1;
 }
 
-/* Buttons */
+
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -412,7 +412,7 @@ section h2 {
   background: var(--card-bg);
 }
 
-/* Header */
+
 .logo-img {
   width: 150px;
   margin-left: -10px;
@@ -462,7 +462,7 @@ header .container {
   cursor: pointer;
 }
 
-/* Dropdown Menu Styles */
+
 .dropdown {
   position: relative;
 }
@@ -549,7 +549,7 @@ header .container {
   font-size: 0.7rem;
 }
 
-/* Desktop hover behavior */
+
 @media (min-width: 769px) {
   .dropdown:hover .dropdown-menu {
     opacity: 1;
@@ -562,7 +562,7 @@ header .container {
   }
 }
 
-/* Mobile styles for dropdown */
+
 @media (max-width: 768px) {
   section {
     padding: 60px 0;
@@ -688,7 +688,7 @@ header .container {
     width: 100%;
   }
 
-  /* Dropdown styles for mobile */
+  
   .dropdown-menu {
     position: static;
     transform: none;
@@ -766,7 +766,7 @@ header .container {
     padding: 10px 0;
   }
 
-  /* Theme toggle adjustments for mobile */
+  
   .theme-toggle-wrapper {
     margin-right: 10px;
   }
@@ -789,13 +789,13 @@ header .container {
   }
 }
 
-/* Header Right Section */
+
 .header-right {
   display: flex;
   align-items: center;
 }
 
-/* Cosmic Elements */
+
 .cosmic-grid {
   position: absolute;
   top: 0;
@@ -820,8 +820,8 @@ header .container {
   overflow: hidden;
 }
 
-/* Diamond Elements */
-/* Diamond Elements */
+
+
 .diamond {
   position: absolute;
   animation: float-around 8s infinite ease-in-out;
@@ -1156,7 +1156,7 @@ header .container {
   transition: background-color 0.5s ease;
 }
 
-/* Adjust specific section spacing */
+
 .hero {
   height: 100vh;
   display: flex;
@@ -1165,28 +1165,28 @@ header .container {
   position: relative;
   overflow: hidden;
   padding-top: 80px;
-  padding-bottom: 0; /* Remove bottom padding since we have the partners bar */
+  padding-bottom: 0; 
   transition: background-color 0.5s ease;
 }
 
-/* Update the hero section styling to account for fixed header */
+
 .hero,
 .validators-hero,
 .governance-hero,
 .validator-hero,
 .proposal-hero {
-  padding-top: 120px; /* Increased padding-top */
-  min-height: 350px; /* Increased minimum height */
+  padding-top: 120px; 
+  min-height: 350px; 
   display: flex;
   align-items: center;
   background: var(--bg);
   position: relative;
   overflow: hidden;
-  padding-bottom: 40px; /* Added padding-bottom */
+  padding-bottom: 40px; 
   transition: background-color 0.5s ease;
 }
 
-/* Adjust hero content positioning */
+
 .hero-content {
   max-width: 700px;
   position: relative;
@@ -1194,7 +1194,7 @@ header .container {
   margin-bottom: 100px;
 }
 
-/* Adjust hero content positioning */
+
 .hero-content,
 .validators-hero-content,
 .governance-hero-content,
@@ -1222,7 +1222,7 @@ header .container {
   margin-top: 40px;
 }
 
-/* Partners Bar */
+
 .partners-bar {
   position: absolute;
   bottom: 0;
@@ -1266,7 +1266,7 @@ header .container {
   transform: scale(1.1);
 }
 
-/* Add consistent spacing to section content */
+
 .section-header,
 .design-content,
 .smart-contracts-content,
@@ -1276,7 +1276,7 @@ header .container {
   margin-bottom: 40px;
 }
 
-/* Add consistent spacing between sections */
+
 .features,
 .design-section,
 .smart-contracts,
@@ -1290,7 +1290,7 @@ header .container {
   padding: 80px 0;
 }
 
-/* Features Section */
+
 .features {
   background: var(--darker-bg);
   position: relative;
@@ -1370,7 +1370,7 @@ header .container {
   margin-bottom: 15px;
 }
 
-/* Design Section */
+
 .design-section {
   background: var(--bg);
   position: relative;
@@ -1433,7 +1433,7 @@ header .container {
   margin-bottom: 0;
 }
 
-/* Smart Contracts Section */
+
 .smart-contracts {
   background: var(--darker-bg);
   position: relative;
@@ -1466,7 +1466,7 @@ header .container {
   z-index: 1;
 }
 
-/* Statistics Section */
+
 .statistics {
   background: var(--bg);
   position: relative;
@@ -1539,14 +1539,14 @@ header .container {
   -webkit-text-fill-color: transparent;
 }
 
-/* Testimonial Section */
+
 .testimonial {
   background: var(--darker-bg);
   position: relative;
   transition: background-color 0.5s ease;
 }
 
-/* Add more space after testimonial section */
+
 .testimonial {
   padding-bottom: 100px;
 }
@@ -1582,7 +1582,7 @@ header .container {
   -webkit-text-fill-color: transparent;
 }
 
-/* Community Section */
+
 .community {
   background: var(--bg);
   text-align: center;
@@ -1639,7 +1639,7 @@ header .container {
   margin-bottom: 0;
 }
 
-/* News Section */
+
 .news {
   background: var(--darker-bg);
   position: relative;
@@ -1688,7 +1688,7 @@ header .container {
   filter: blur(40px);
 }
 
-/* Participate Section */
+
 .participate {
   background: var(--bg);
   text-align: center;
@@ -1742,14 +1742,14 @@ header .container {
   z-index: 1;
 }
 
-/* FAQ Section */
+
 .faq {
   background: var(--darker-bg);
   position: relative;
   transition: background-color 0.5s ease;
 }
 
-/* Ensure FAQ heading is centered */
+
 .faq h2 {
   text-align: center;
   margin-bottom: 40px;
@@ -1808,7 +1808,7 @@ header .container {
   max-height: 200px;
 }
 
-/* FAQ Actions */
+
 .faq-actions {
   display: flex;
   justify-content: center;
@@ -1819,7 +1819,7 @@ header .container {
   min-width: 180px;
 }
 
-/* Footer */
+
 footer {
   background: var(--darker-bg);
   padding: 80px 0 20px;
@@ -1888,7 +1888,7 @@ footer {
   opacity: 1;
 }
 
-/* Responsive Styles */
+
 @media (max-width: 1200px) {
   section h2 {
     font-size: 3rem;
@@ -1917,15 +1917,15 @@ footer {
   }
 }
 
-/* Responsive adjustments for smaller screens */
+
 @media (max-width: 768px) {
   .hero,
   .validators-hero,
   .governance-hero,
   .validator-hero,
   .proposal-hero {
-    padding-top: 100px; /* Slightly less padding on mobile */
-    min-height: 300px; /* Adjusted minimum height for mobile */
+    padding-top: 100px; 
+    min-height: 300px; 
   }
 
   .hero-content,
@@ -1933,7 +1933,7 @@ footer {
   .governance-hero-content,
   .validator-hero-content,
   .proposal-hero-content {
-    margin-top: 40px; /* Adjusted margin for mobile */
+    margin-top: 40px; 
   }
 }
 
@@ -2042,18 +2042,18 @@ footer {
   }
 }
 
-/* Adjust user dashboard sections that might be affected */
+
 .user-info-section,
 .validator-info-section {
   padding-top: 100px;
 }
 
-/* Ensure the header doesn't cover modal content */
+
 .modal {
-  z-index: 2000; /* Higher than header's z-index */
+  z-index: 2000; 
 }
 
-/* Adjust the cosmic elements to maintain visual appeal with new padding */
+
 .cosmic-elements {
   top: 0;
   height: 100%;
@@ -2090,7 +2090,7 @@ footer {
   }
 }
 
-/* Mobile Menu Styles */
+
 .mobile-menu {
   display: none;
   position: fixed;
@@ -2177,7 +2177,7 @@ footer {
   justify-content: center;
 }
 
-/* Hide the connect wallet button in header on mobile */
+
 @media (max-width: 768px) {
   .header-right .cta-button,
   .header-right .user-wallet-info {
@@ -2193,7 +2193,7 @@ footer {
   }
 }
 
-/* Light theme adjustments for mobile menu */
+
 body.light-theme .mobile-menu {
   background: #f8fafc;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
@@ -2207,7 +2207,7 @@ body.light-theme .mobile-wallet-container {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* Improve card visibility in light mode */
+
 body.light-theme .stake-card,
 body.light-theme .validator-card,
 body.light-theme .rewards-card,
@@ -2220,7 +2220,7 @@ body.light-theme .combined-stake-card {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Improve card hover states */
+
 body.light-theme .stake-card:hover,
 body.light-theme .validator-card:hover,
 body.light-theme .rewards-card:hover,
@@ -2232,7 +2232,7 @@ body.light-theme .combined-stake-card:hover {
   border-color: rgba(0, 0, 0, 0.15);
 }
 
-/* Improve text contrast in light mode */
+
 body.light-theme .stake-card h3,
 body.light-theme .validator-card h3,
 body.light-theme .rewards-card h3,
@@ -2253,7 +2253,7 @@ body.light-theme .combined-stake-card p {
   color: #4a5568;
 }
 
-/* Improve value text visibility */
+
 body.light-theme .stake-value,
 body.light-theme .reward-value,
 body.light-theme .voting-value,
@@ -2263,7 +2263,7 @@ body.light-theme .stat-value {
   font-weight: 700;
 }
 
-/* Improve labels */
+
 body.light-theme .stake-label,
 body.light-theme .reward-label,
 body.light-theme .voting-label,
@@ -2272,7 +2272,7 @@ body.light-theme .stat-label {
   color: #718096;
 }
 
-/* Improve progress bars */
+
 body.light-theme .progress-bar {
   background-color: #e2e8f0;
 }
@@ -2281,7 +2281,7 @@ body.light-theme .progress-bar-fill {
   background: linear-gradient(90deg, #3182ce, #63b3ed);
 }
 
-/* Improve buttons in light mode */
+
 body.light-theme .dashboard-btn,
 body.light-theme .action-btn,
 body.light-theme .history-btn {
@@ -2307,7 +2307,7 @@ body.light-theme .primary-btn:hover {
   box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
 }
 
-/* Improve tables in light mode */
+
 body.light-theme .data-table {
   background-color: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -2328,14 +2328,14 @@ body.light-theme .data-table tr:hover {
   background-color: #f7fafc;
 }
 
-/* Improve charts and graphs */
+
 body.light-theme .chart-container {
   background-color: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Improve tooltips */
+
 body.light-theme .tooltip {
   background-color: #ffffff;
   color: #2d3748;
@@ -2343,7 +2343,7 @@ body.light-theme .tooltip {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Improve badges */
+
 body.light-theme .status-badge {
   background-color: #edf2f7;
   color: #4a5568;
@@ -2359,7 +2359,7 @@ body.light-theme .status-badge.pending {
   color: #c05621;
 }
 
-/* Improve combined stake card */
+
 body.light-theme .combined-stake-card {
   background-color: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -2385,7 +2385,7 @@ body.light-theme .stake-info {
   color: #718096;
 }
 
-/* Improve voting power card */
+
 body.light-theme .voting-power-card {
   background-color: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -2399,7 +2399,7 @@ body.light-theme .voting-power-label {
   color: #718096;
 }
 
-/* Improve rewards section */
+
 body.light-theme .rewards-section {
   background-color: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -2421,7 +2421,7 @@ body.light-theme .reward-amount {
   color: #1a202c;
 }
 
-/* Improve tabs */
+
 body.light-theme .tabs-container {
   border-bottom: 1px solid #e2e8f0;
 }
@@ -2439,12 +2439,12 @@ body.light-theme .tab:hover {
   color: #4a5568;
 }
 
-/* Improve grid layouts */
+
 body.light-theme .dashboard-grid {
   gap: 20px;
 }
 
-/* Improve icons */
+
 body.light-theme .icon {
   color: #4a5568;
 }
@@ -2465,7 +2465,7 @@ body.light-theme .icon-danger {
   color: #e53e3e;
 }
 
-/* Improve form elements */
+
 body.light-theme input,
 body.light-theme select,
 body.light-theme textarea {
@@ -2487,7 +2487,7 @@ body.light-theme textarea::placeholder {
   color: #a0aec0;
 }
 
-/* Improve modals */
+
 body.light-theme .modal-content {
   background-color: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -2510,7 +2510,7 @@ body.light-theme .close-modal:hover {
   color: #2d3748;
 }
 
-/* Improve notifications */
+
 body.light-theme .notification {
   background-color: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -2533,7 +2533,7 @@ body.light-theme .notification-info {
   border-left: 4px solid #3182ce;
 }
 
-/* Performance optimization for resize events */
+
 @media (prefers-reduced-motion: reduce) {
   .resize-animation-stopper * {
     animation: none !important;
@@ -2541,15 +2541,15 @@ body.light-theme .notification-info {
   }
 }
 
-/* Add a class that can be toggled during resize to stop animations */
+
 .resize-animation-stopper * {
   animation: none !important;
   transition: none !important;
 }
 
-/* Comprehensive Light Mode Improvements for Authenticated Views */
 
-/* User Dashboard Cards */
+
+
 body.light-theme .user-info-card,
 body.light-theme .validator-info-card {
   background: #ffffff;
@@ -2563,7 +2563,7 @@ body.light-theme .validator-info-card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
-/* Stats Grid and Sections */
+
 body.light-theme .user-stats-grid,
 body.light-theme .validator-stats-grid {
   gap: 24px;
@@ -2583,7 +2583,7 @@ body.light-theme .stat-card:hover {
   transform: translateY(-2px);
 }
 
-/* Combined Stake Card */
+
 body.light-theme .combined-stake-card {
   background: #ffffff;
   border: 2px solid #e2e8f0;
@@ -2604,14 +2604,14 @@ body.light-theme .stake-distribution-section {
   border-top: 2px solid #e2e8f0;
 }
 
-/* Validator Stats Row */
+
 body.light-theme .validator-stats-row .stat-card {
   background: #ffffff;
   border: 2px solid #e2e8f0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Node Stake Panel */
+
 body.light-theme .node-stake-panel {
   background: #f0f8ff;
   border: 2px solid #bee3f8;
@@ -2623,7 +2623,7 @@ body.light-theme .node-stake-panel:hover {
   box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
 }
 
-/* Text Colors */
+
 body.light-theme .stat-header h3,
 body.light-theme .stat-label,
 body.light-theme .stake-label,
@@ -2668,7 +2668,7 @@ body.light-theme .proposals-info {
   color: #718096;
 }
 
-/* Buttons */
+
 body.light-theme .btn-sm,
 body.light-theme .btn-primary.btn-sm {
   background: linear-gradient(135deg, #3182ce, #2c5282);
@@ -2696,7 +2696,7 @@ body.light-theme .btn-secondary.btn-sm:hover {
   border-color: #cbd5e0;
 }
 
-/* Tables */
+
 body.light-theme .table-container {
   border: 2px solid #e2e8f0;
   border-radius: 12px;
@@ -2733,7 +2733,7 @@ body.light-theme .current-user {
   border-left: 4px solid #38b2ac;
 }
 
-/* DAO Stats */
+
 body.light-theme .dao-stat-card {
   background: #ffffff;
   border: 2px solid #e2e8f0;
@@ -2760,7 +2760,7 @@ body.light-theme .dao-stat-card .countdown {
   color: #38a169;
 }
 
-/* Status Badges */
+
 body.light-theme .status-badge {
   font-weight: 600;
   border: 1px solid transparent;
@@ -2778,13 +2778,13 @@ body.light-theme .status-badge.inactive {
   border-color: #feb2b2;
 }
 
-/* Wallet Icons */
+
 body.light-theme .wallet-icon {
   border: 2px solid #e2e8f0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Progress Bars */
+
 body.light-theme .stake-bar {
   background: #edf2f7;
   border: 1px solid #e2e8f0;
@@ -2810,7 +2810,7 @@ body.light-theme .delegated-stake-label {
   color: #805ad5;
 }
 
-/* Sections Background */
+
 body.light-theme .validators-staked,
 body.light-theme .delegates-section,
 body.light-theme .dao-overview,
@@ -2825,13 +2825,13 @@ body.light-theme .top-validators h2 {
   color: #1a202c;
 }
 
-/* Hero Sections for Authenticated Views */
+
 body.light-theme .user-info-section,
 body.light-theme .validator-info-section {
   background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
 }
 
-/* Modals */
+
 body.light-theme .modal-content {
   background: #ffffff;
   border: 2px solid #e2e8f0;
@@ -2855,7 +2855,7 @@ body.light-theme .close-modal:hover {
   color: #2d3748;
 }
 
-/* Form Elements */
+
 body.light-theme .form-group label {
   color: #2d3748;
   font-weight: 600;
@@ -2876,7 +2876,7 @@ body.light-theme .form-group input::placeholder {
   color: #a0aec0;
 }
 
-/* Validator Header */
+
 body.light-theme .validator-header {
   border-radius: 12px;
   margin-bottom: 30px;
@@ -2890,13 +2890,13 @@ body.light-theme .score-label {
   color: #718096;
 }
 
-/* Info Values */
+
 body.light-theme .info-value.negative {
   color: #e53e3e;
   font-weight: 600;
 }
 
-/* Ensure proper contrast for all text elements */
+
 body.light-theme .user-dashboard *,
 body.light-theme .validator-dashboard * {
   color: inherit;

@@ -1,15 +1,15 @@
-/* DAO Governance Page Specific Styles */
 
-/* Governance Hero Section */
+
+
 .governance-hero {
-  min-height: 350px; /* Increased minimum height */
+  min-height: 350px; 
   display: flex;
   align-items: center;
   background: var(--bg);
   position: relative;
   overflow: hidden;
-  padding-top: 120px; /* Increased padding-top */
-  padding-bottom: 40px; /* Added padding-bottom */
+  padding-top: 120px; 
+  padding-bottom: 40px; 
   transition: background-color 0.5s ease;
 }
 
@@ -18,7 +18,7 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  padding-top: 60px; /* Increased padding-top for content */
+  padding-top: 60px; 
 }
 
 .governance-hero-content h1 {
@@ -49,7 +49,7 @@
   width: fit-content;
 }
 
-/* Light theme adjustments for phase badge */
+
 .light-theme .phase-badge {
   background: rgba(0, 157, 255, 0.12);
   color: #0077cc;
@@ -91,7 +91,7 @@
   border-color: rgba(7, 244, 158, 0.4);
 }
 
-/* Light theme adjustments for step dots */
+
 .light-theme .phase-step.active .step-dot {
   background: #0077cc;
   border-color: rgba(0, 119, 204, 0.4);
@@ -118,7 +118,7 @@
   color: #07f49e;
 }
 
-/* Light theme adjustments for step labels */
+
 .light-theme .phase-step.active span {
   color: #0077cc;
 }
@@ -139,13 +139,13 @@
   background: linear-gradient(90deg, #00d2ff, #3a7bd5);
 }
 
-/* Light theme adjustments for connectors */
+
 .light-theme .phase-step.active + .phase-connector,
 .light-theme .phase-step.completed + .phase-connector {
   background: linear-gradient(90deg, #0077cc, #3a7bd5);
 }
 
-/* Statistics Cards Section */
+
 .governance-stats {
   background: var(--darker-bg);
   position: relative;
@@ -153,7 +153,7 @@
   transition: background-color 0.5s ease;
 }
 
-/* Light theme adjustments for stats section */
+
 .light-theme .governance-stats {
   background: #f5f7fa;
 }
@@ -164,7 +164,7 @@
   gap: 25px;
 }
 
-/* Responsive adjustments for stats grid */
+
 @media (max-width: 1200px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -189,7 +189,7 @@
   transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
-/* Light theme adjustments for stat cards */
+
 .light-theme .stat-card {
   background: #ffffff;
   border: 1px solid #e0e4e8;
@@ -202,7 +202,7 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* Light theme adjustments for stat card hover */
+
 .light-theme .stat-card:hover {
   background: #ffffff;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
@@ -235,7 +235,7 @@
   transition: color 0.5s ease, background-color 0.5s ease;
 }
 
-/* Light theme adjustments for stat icons */
+
 .light-theme .stat-icon {
   background: rgba(0, 119, 204, 0.1);
   color: #0077cc;
@@ -256,14 +256,14 @@
   margin-bottom: 15px;
 }
 
-/* Light theme adjustments for stat values */
+
 .light-theme .stat-value {
   background: linear-gradient(90deg, #0077cc, #3a7bd5);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* DAO Phase Card */
+
 .countdown-timer {
   display: flex;
   justify-content: space-between;
@@ -308,7 +308,7 @@
   overflow: hidden;
 }
 
-/* Light theme adjustments for create proposal button */
+
 .light-theme .create-proposal-btn {
   background: linear-gradient(90deg, #0077cc, #3a7bd5);
 }
@@ -334,12 +334,12 @@
   box-shadow: 0 8px 25px rgba(0, 157, 255, 0.3);
 }
 
-/* Light theme adjustments for create proposal button hover */
+
 .light-theme .create-proposal-btn:hover {
   box-shadow: 0 8px 20px rgba(0, 119, 204, 0.3);
 }
 
-/* Voting Power Card */
+
 .stat-details {
   margin-bottom: 15px;
 }
@@ -370,7 +370,7 @@
   margin-top: 10px;
 }
 
-/* Light theme adjustments for voting power bar */
+
 .light-theme .voting-power-bar {
   background: rgba(0, 0, 0, 0.08);
 }
@@ -382,12 +382,12 @@
   transition: width 1s ease-in-out;
 }
 
-/* Light theme adjustments for power progress */
+
 .light-theme .power-progress {
   background: linear-gradient(90deg, #0077cc, #3a7bd5);
 }
 
-/* Governance Pot Card */
+
 .stat-trend {
   font-size: 0.9rem;
   color: var(--text-secondary);
@@ -406,7 +406,7 @@
   color: #ff6b6b;
 }
 
-/* Light theme adjustments for stat trends */
+
 .light-theme .stat-trend.positive {
   color: #00a86b;
 }
@@ -447,7 +447,7 @@
   overflow: hidden;
 }
 
-/* Light theme adjustments for distribution bar */
+
 .light-theme .distribution-bar {
   background: rgba(0, 0, 0, 0.08);
 }
@@ -466,7 +466,7 @@
   background: linear-gradient(90deg, #a17fe0, #5d26c1);
 }
 
-/* Light theme adjustments for distribution progress */
+
 .light-theme .distribution-progress.protocol {
   background: linear-gradient(90deg, #0077cc, #3a7bd5);
 }
@@ -475,7 +475,7 @@
   background: linear-gradient(90deg, #8a63d2, #5d26c1);
 }
 
-/* Historic Proposals Card */
+
 .proposals-breakdown {
   display: flex;
   flex-direction: column;
@@ -503,7 +503,7 @@
   background: #ff6b6b;
 }
 
-/* Light theme adjustments for breakdown dots */
+
 .light-theme .breakdown-dot.passed {
   background: #00a86b;
 }
@@ -542,7 +542,7 @@
   text-align: center;
 }
 
-/* Light theme adjustments for view history button */
+
 .light-theme .view-history-btn {
   border: 1px solid #d0d5dd;
   color: #333;
@@ -553,13 +553,13 @@
   transform: translateY(-2px);
 }
 
-/* Light theme adjustments for view history button hover */
+
 .light-theme .view-history-btn:hover {
   background: #f5f7fa;
   border-color: #b0b7c3;
 }
 
-/* Proposals Management Section */
+
 .proposals-management {
   background: var(--bg);
   position: relative;
@@ -595,7 +595,7 @@
   transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
 }
 
-/* Light theme adjustments for search input */
+
 .light-theme .search-container input {
   background: #ffffff;
   border: 1px solid #d0d5dd;
@@ -608,7 +608,7 @@
   box-shadow: 0 0 10px rgba(0, 157, 255, 0.2);
 }
 
-/* Light theme adjustments for search input focus */
+
 .light-theme .search-container input:focus {
   border-color: #0077cc;
   box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.15);
@@ -627,7 +627,7 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for search button */
+
 .light-theme .search-btn {
   color: #666;
 }
@@ -636,7 +636,7 @@
   opacity: 1;
 }
 
-/* Updated dropdown styling */
+
 .filter-container select {
   background-color: var(--darker-bg);
   border: 1px solid var(--border-color);
@@ -659,13 +659,13 @@
   box-shadow: 0 0 10px rgba(0, 157, 255, 0.2);
 }
 
-/* Dropdown option styling */
+
 .filter-container select option {
   background-color: var(--darker-bg);
   color: var(--text);
 }
 
-/* Light theme adjustments */
+
 .light-theme .filter-container select {
   background-color: #ffffff;
   border: 1px solid #d0d5dd;
@@ -683,7 +683,7 @@
   color: #333;
 }
 
-/* Proposals Tabs */
+
 .proposals-tabs {
   display: flex;
   gap: 10px;
@@ -692,7 +692,7 @@
   transition: border-color 0.5s ease;
 }
 
-/* Light theme adjustments for tabs border */
+
 .light-theme .proposals-tabs {
   border-bottom: 1px solid #e0e4e8;
 }
@@ -709,7 +709,7 @@
   transition: color 0.3s ease;
 }
 
-/* Light theme adjustments for tab buttons */
+
 .light-theme .tab-btn {
   color: #666;
 }
@@ -722,7 +722,7 @@
   color: var(--text);
 }
 
-/* Light theme adjustments for active tab */
+
 .light-theme .tab-btn:hover,
 .light-theme .tab-btn.active {
   color: #0077cc;
@@ -739,7 +739,7 @@
   border-radius: 2px 2px 0 0;
 }
 
-/* Light theme adjustments for active tab indicator */
+
 .light-theme .tab-btn.active::after {
   background: linear-gradient(90deg, #0077cc, #3a7bd5);
 }
@@ -752,7 +752,7 @@
   display: block;
 }
 
-/* Proposals Table */
+
 .proposals-table-container {
   background: var(--card-bg);
   border-radius: 8px;
@@ -762,7 +762,7 @@
   transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
-/* Light theme adjustments for table container */
+
 .light-theme .proposals-table-container {
   background: #ffffff;
   border: 1px solid #e0e4e8;
@@ -786,7 +786,7 @@
   transition: color 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
 }
 
-/* Light theme adjustments for table headers */
+
 .light-theme .proposals-table th {
   background: #f5f7fa;
   color: #333;
@@ -812,7 +812,7 @@
   transition: color 0.5s ease, border-color 0.5s ease;
 }
 
-/* Light theme adjustments for table cells */
+
 .light-theme .proposals-table td {
   border-bottom: 1px solid #e0e4e8;
   color: #333;
@@ -826,7 +826,7 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
-/* Light theme adjustments for table row hover */
+
 .light-theme .proposals-table tbody tr:hover {
   background: #f9fafc;
 }
@@ -879,7 +879,7 @@
   color: #07f49e;
 }
 
-/* Light theme adjustments for proposal types */
+
 .light-theme .proposal-type.protocol {
   background: rgba(0, 119, 204, 0.12);
   color: #0077cc;
@@ -910,7 +910,7 @@
   position: relative;
 }
 
-/* Light theme adjustments for participation bar */
+
 .light-theme .participation-bar {
   background: rgba(0, 0, 0, 0.08);
 }
@@ -922,7 +922,7 @@
   transition: width 1s ease-in-out;
 }
 
-/* Light theme adjustments for participation progress */
+
 .light-theme .participation-progress {
   background: linear-gradient(90deg, #0077cc, #3a7bd5);
 }
@@ -936,7 +936,7 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for participation value */
+
 .light-theme .participation-value {
   color: #666;
 }
@@ -953,7 +953,7 @@
   color: #ff6b6b;
 }
 
-/* Light theme adjustments for exceeding values */
+
 .light-theme .exceeding-value.positive {
   color: #00a86b;
 }
@@ -976,7 +976,7 @@
   color: #ff6b6b;
 }
 
-/* Light theme adjustments for voted status */
+
 .light-theme .voted-status.voted {
   color: #00a86b;
 }
@@ -1013,7 +1013,7 @@
   color: #ff9f43;
 }
 
-/* Light theme adjustments for proposal status */
+
 .light-theme .proposal-status.active {
   background: rgba(0, 119, 204, 0.12);
   color: #0077cc;
@@ -1049,7 +1049,7 @@
   transition: var(--transition);
 }
 
-/* Light theme adjustments for vote button */
+
 .light-theme .btn-vote {
   background: rgba(0, 119, 204, 0.12);
   color: #0077cc;
@@ -1060,12 +1060,12 @@
   transform: translateY(-2px);
 }
 
-/* Light theme adjustments for vote button hover */
+
 .light-theme .btn-vote:hover {
   background: rgba(0, 119, 204, 0.25);
 }
 
-/* Empty State */
+
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -1079,7 +1079,7 @@
   transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
-/* Light theme adjustments for empty state */
+
 .light-theme .empty-state {
   background: #ffffff;
   border: 1px solid #e0e4e8;
@@ -1093,7 +1093,7 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for empty state icon */
+
 .light-theme .empty-state-icon {
   color: #999;
 }
@@ -1114,7 +1114,7 @@
   transition: color 0.5s ease;
 }
 
-/* Create Proposal Modal */
+
 .form-group {
   margin-bottom: 20px;
 }
@@ -1141,7 +1141,7 @@
   transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
 }
 
-/* Light theme adjustments for form controls */
+
 .light-theme .form-group label {
   color: #333;
 }
@@ -1154,7 +1154,7 @@
   color: #333;
 }
 
-/* Updated select styling for modal */
+
 .form-group select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
@@ -1163,7 +1163,7 @@
   padding-right: 40px;
 }
 
-/* Light theme adjustments for modal select */
+
 .light-theme .form-group select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
 }
@@ -1176,7 +1176,7 @@
   box-shadow: 0 0 10px rgba(0, 157, 255, 0.2);
 }
 
-/* Light theme adjustments for form control focus */
+
 .light-theme .form-group input:focus,
 .light-theme .form-group select:focus,
 .light-theme .form-group textarea:focus {
@@ -1206,7 +1206,7 @@
   transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
-/* Light theme adjustments for deposit info */
+
 .light-theme .deposit-info {
   background: #f5f7fa;
   border: 1px solid #e0e4e8;
@@ -1226,7 +1226,7 @@
   transition: color 0.5s ease;
 }
 
-/* Vote Modal */
+
 .proposal-info {
   margin-bottom: 25px;
 }
@@ -1238,7 +1238,7 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for proposal info */
+
 .light-theme .proposal-info h4 {
   color: #333;
 }
@@ -1255,7 +1255,7 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for proposal date */
+
 .light-theme .proposal-date {
   color: #666;
 }
@@ -1269,7 +1269,7 @@
   transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
-/* Light theme adjustments for proposal description */
+
 .light-theme .proposal-description {
   background: #f5f7fa;
   border: 1px solid #e0e4e8;
@@ -1281,7 +1281,7 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for proposal description text */
+
 .light-theme .proposal-description p {
   color: #333;
 }
@@ -1302,7 +1302,7 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for stat label */
+
 .light-theme .stat-label {
   color: #333;
 }
@@ -1326,7 +1326,7 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for result label */
+
 .light-theme .result-label {
   color: #333;
 }
@@ -1339,7 +1339,7 @@
   overflow: hidden;
 }
 
-/* Light theme adjustments for result progress container */
+
 .light-theme .result-progress-container {
   background: rgba(0, 0, 0, 0.08);
 }
@@ -1362,7 +1362,7 @@
   background: #ff9f43;
 }
 
-/* Light theme adjustments for result progress */
+
 .light-theme .result-bar.yes .result-progress {
   background: #00a86b;
 }
@@ -1384,7 +1384,7 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for result value */
+
 .light-theme .result-value {
   color: #333;
 }
@@ -1399,7 +1399,7 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for vote options heading */
+
 .light-theme .vote-options h4 {
   color: #333;
 }
@@ -1426,7 +1426,7 @@
   transition: var(--transition);
 }
 
-/* Light theme adjustments for vote buttons */
+
 .light-theme .vote-btn {
   border: 1px solid #e0e4e8;
   background: #ffffff;
@@ -1467,7 +1467,7 @@
   color: #ff9f43;
 }
 
-/* Light theme adjustments for vote button states */
+
 .light-theme .vote-btn.vote-yes {
   border-color: rgba(0, 168, 107, 0.3);
 }
@@ -1510,7 +1510,7 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for voting power info */
+
 .light-theme .voting-power-info {
   color: #666;
 }
@@ -1519,7 +1519,7 @@
   color: #333;
 }
 
-/* Responsive Styles */
+
 @media (max-width: 992px) {
   .governance-hero-content h1 {
     font-size: 3rem;
@@ -1626,7 +1626,7 @@
   }
 }
 
-/* Animation for fade-in elements */
+
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
@@ -1638,7 +1638,7 @@
   transform: translateY(0);
 }
 
-/* Shimmer animation for buttons */
+
 @keyframes shimmer {
   0% {
     background-position: -100% 0;
@@ -1648,7 +1648,7 @@
   }
 }
 
-/* Accessibility */
+
 @media (prefers-reduced-motion: reduce) {
   .countdown-timer,
   .participation-progress,
@@ -1663,7 +1663,7 @@
   }
 }
 
-/* Fix modal display issues */
+
 .modal {
   display: none;
   position: fixed;
@@ -1679,7 +1679,7 @@
   transition: opacity 0.3s ease;
 }
 
-/* Light theme adjustments for modal backdrop */
+
 .light-theme .modal {
   background: rgba(0, 0, 0, 0.5);
 }
@@ -1701,7 +1701,7 @@
   transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
-/* Light theme adjustments for modal content */
+
 .light-theme .modal-content {
   background: #ffffff;
   border: 1px solid #e0e4e8;
@@ -1717,7 +1717,7 @@
   transition: border-color 0.5s ease;
 }
 
-/* Light theme adjustments for modal header */
+
 .light-theme .modal-header {
   border-bottom: 1px solid #e0e4e8;
 }
@@ -1729,7 +1729,7 @@
   transition: color 0.5s ease;
 }
 
-/* Light theme adjustments for modal header title */
+
 .light-theme .modal-header h3 {
   color: #333;
 }
@@ -1744,7 +1744,7 @@
   transition: var(--transition);
 }
 
-/* Light theme adjustments for close button */
+
 .light-theme .close-modal {
   color: #666;
 }
@@ -1766,12 +1766,12 @@
   transition: border-color 0.5s ease;
 }
 
-/* Light theme adjustments for modal footer */
+
 .light-theme .modal-footer {
   border-top: 1px solid #e0e4e8;
 }
 
-/* Fix pagination styling to match rest of site */
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -1795,7 +1795,7 @@
   transition: var(--transition);
 }
 
-/* Light theme adjustments for pagination buttons */
+
 .light-theme .pagination-btn {
   background: #ffffff;
   border: 1px solid #e0e4e8;
@@ -1806,7 +1806,7 @@
   background: var(--card-hover);
 }
 
-/* Light theme adjustments for pagination button hover */
+
 .light-theme .pagination-btn:hover {
   background: #f5f7fa;
   border-color: #d0d5dd;
@@ -1817,7 +1817,7 @@
   border-color: rgba(0, 157, 255, 0.4);
 }
 
-/* Light theme adjustments for active pagination button */
+
 .light-theme .pagination-btn.active {
   background: rgba(0, 119, 204, 0.12);
   border-color: rgba(0, 119, 204, 0.3);
@@ -1829,12 +1829,12 @@
   opacity: 0.7;
 }
 
-/* Light theme adjustments for pagination ellipsis */
+
 .light-theme .pagination-ellipsis {
   color: #666;
 }
 
-/* Animation for the modal */
+
 @keyframes modalFadeIn {
   from {
     opacity: 0;

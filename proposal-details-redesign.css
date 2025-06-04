@@ -1,8 +1,8 @@
-/* Proposal Details Redesign - Single Column Layout with DMD Diamond Theme */
 
-/* Base Variables - Match with main site theme */
+
+
 :root {
-  /* Theme variables - will match with main site */
+  
   --bg: #030014;
   --darker-bg: #020010;
   --card-bg: rgba(255, 255, 255, 0.05);
@@ -26,7 +26,7 @@
   --transition-speed: 0.3s;
 }
 
-/* Proposal Details Page Specific Styles */
+
 .proposal-details-page {
   position: relative;
   padding: 100px 0 60px;
@@ -43,16 +43,16 @@
   padding: 0 20px;
 }
 
-/* Adjust proposal-details-specific hero section */
+
 .proposal-hero {
-  min-height: 350px; /* Increased minimum height */
+  min-height: 350px; 
   display: flex;
   align-items: center;
   background: var(--bg);
   position: relative;
   overflow: hidden;
-  padding-top: 120px; /* Increased padding-top */
-  padding-bottom: 40px; /* Added padding-bottom */
+  padding-top: 120px; 
+  padding-bottom: 40px; 
   transition: background-color 0.5s ease;
 }
 
@@ -61,20 +61,20 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  padding-top: 60px; /* Increased padding-top for content */
+  padding-top: 60px; 
 }
 
-/* Ensure proposal hero content is properly positioned */
+
 .proposal-hero-content {
   padding-top: 20px;
 }
 
-/* Adjust back link position if present */
+
 .back-link {
   margin-top: 10px;
 }
 
-/* Cosmic Elements */
+
 .cosmic-grid {
   position: absolute;
   top: 0;
@@ -99,7 +99,7 @@
   overflow: hidden;
 }
 
-/* Diamond Elements */
+
 .diamond-custom {
   position: absolute;
   background-color: rgba(1, 69, 178, 0.08);
@@ -167,7 +167,7 @@
   transition: background-color 0.5s ease;
 }
 
-/* Animation Keyframes */
+
 @keyframes float-rotate {
   0%,
   100% {
@@ -206,7 +206,7 @@
   }
 }
 
-/* Breadcrumb */
+
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -234,7 +234,7 @@
   font-weight: 500;
 }
 
-/* Proposal Header */
+
 .proposal-header {
   margin-bottom: 2rem;
   position: relative;
@@ -289,7 +289,7 @@
   color: var(--no-color);
 }
 
-/* Card Styling */
+
 .card {
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
@@ -326,7 +326,7 @@
   padding: 1.5rem;
 }
 
-/* Creator Card */
+
 .creator-info {
   display: flex;
   align-items: center;
@@ -393,7 +393,7 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Voting Progress Card */
+
 .status-message {
   display: flex;
   align-items: center;
@@ -577,7 +577,7 @@
   color: var(--text-secondary);
 }
 
-/* Proposal Details Card */
+
 .proposal-subtitle {
   font-size: 1.125rem;
   font-weight: 600;
@@ -730,7 +730,7 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Impact Assessment Card */
+
 .impact-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -826,7 +826,7 @@
   color: var(--abstain-color);
 }
 
-/* Discussion Card */
+
 .discussion-links {
   display: flex;
   flex-wrap: wrap;
@@ -866,7 +866,7 @@
   color: var(--text-secondary);
 }
 
-/* Transaction Card */
+
 .transaction-detail {
   display: flex;
   flex-direction: column;
@@ -878,7 +878,7 @@
   margin-bottom: 0;
 }
 
-/* Timeline Card */
+
 .timeline {
   position: relative;
   padding-left: 2rem;
@@ -960,7 +960,7 @@
   color: var(--text-secondary);
 }
 
-/* Resources Card */
+
 .resources-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1013,7 +1013,7 @@
   color: var(--text-secondary);
 }
 
-/* Related Proposals Card */
+
 .related-proposals {
   display: flex;
   flex-direction: column;
@@ -1080,7 +1080,7 @@
   color: var(--text-secondary);
 }
 
-/* Type Selector (Demo Only) */
+
 .type-selector {
   display: flex;
   gap: 0.75rem;
@@ -1107,7 +1107,7 @@
   color: var(--purple-glow);
 }
 
-/* Fade-in Animation for Cards */
+
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
@@ -1146,7 +1146,7 @@
   animation-delay: 0.8s;
 }
 
-/* Responsive Styles */
+
 @media (min-width: 640px) {
   .impact-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1193,7 +1193,7 @@
   }
 }
 
-/* Prefers reduced motion */
+
 @media (prefers-reduced-motion: reduce) {
   .diamond-custom,
   .glow,
@@ -1208,9 +1208,9 @@
   }
 }
 
-/* Add light theme styles at the end of the file */
 
-/* Light Theme Styles for Proposal Details Redesign */
+
+
 body.light-theme .proposal-details-page {
   background-color: #f5f7fa;
 }
