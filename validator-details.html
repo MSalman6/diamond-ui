@@ -34,7 +34,7 @@
                 <div class="dropdown-section">
                   <ul>
                     <li><a href="#">Interchain Ecosystem</a></li>
-                    <li><a href="#">Coins</a></li>
+                    <li><a href="#">Tokens</a></li>
                   </ul>
                 </div>
               </div>
@@ -130,53 +130,90 @@
   </section>
 
   <!-- Validator Statistics Section -->
-  <section class="validator-statistics">
-    <div class="container">
-      <div class="section-title">
-        <h2>Validator Statistics</h2>
+<section class="validator-statistics">
+  <div class="container">
+    <div class="section-title">
+      <h2>Validator Statistics</h2>
+    </div>
+    <div class="stats-grid-wireframe">
+      <!-- Top Row -->
+      <div class="stat-card-wireframe fade-in">
+        <div class="stat-header">
+          <h3>Pool stake <i class="fas fa-info-circle info-icon" title=""></i></h3>
+        </div>
+        <p class="stat-value-large">10105 DMD</p>
+        <div class="stat-trend positive">
+          <i class="fas fa-arrow-up"></i> 5 DMD since 01.01.24
+        </div>
+        <div class="stat-actions">
+          <button class="btn-stake-action" id="stake-button">Stake</button>
+          <button class="btn-unstake-action" id="unstake-button">Unstake</button>
+        </div>
+        <div class="stat-footer">
+          <span class="connectivity-info">Connectivity reports: 0 <i class="fas fa-info-circle info-icon" title=""></i></span>
+        </div>
       </div>
-      <div class="stats-grid">
-        <div class="stat-card fade-in">
-          <h3>Total Stake</h3>
-          <p class="stat-value" id="total-stake">1,250,000 DMD</p>
-          <div class="stat-trend positive">
-            <i class="fas fa-arrow-up"></i> 2.5% this week
-          </div>
+
+      <div class="stat-card-wireframe fade-in">
+        <div class="stat-header">
+          <h3>Score <i class="fas fa-info-circle info-icon" title=""></i></h3>
         </div>
-        <div class="stat-card fade-in">
-          <h3>Candidate Stake</h3>
-          <p class="stat-value" id="candidate-stake">250,000 DMD</p>
-          <div class="stat-trend">
-            <span>20% of total stake</span>
-          </div>
+        <p class="stat-value-large">921</p>
+        <div class="stat-trend negative">
+          <i class="fas fa-arrow-down"></i> 10 since 01.01.24
         </div>
-        <div class="stat-card fade-in">
-          <h3>Score</h3>
-          <p class="stat-value" id="validator-score">98.7%</p>
-          <div class="stat-trend positive">
-            <i class="fas fa-arrow-up"></i> 0.3% this month
-          </div>
+        <div class="stat-actions">
+          <button class="history-button">History</button>
+        </div>
+      </div>
+
+      <div class="stat-card-wireframe fade-in">
+        <div class="stat-header">
+          <h3>Voting power <i class="fas fa-info-circle info-icon" title=""></i></h3>
+        </div>
+        <p class="stat-value-large">12%</p>
+        <div class="stat-trend negative">
+          <i class="fas fa-arrow-down"></i> 0.01% since 01.01.24
+        </div>
+        <div class="stat-footer">
+          <span class="proposals-info">Proposals created: 10</span>
+        </div>
+      </div>
+
+      <!-- Bottom Row -->
+      <div class="stat-card-wireframe fade-in">
+        <div class="stat-header">
+          <h3>Validator stake <i class="fas fa-info-circle info-icon" title=""></i></h3>
+        </div>
+        <p class="stat-value-large">10005 DMD</p>
+        <div class="stat-trend positive">
+          <i class="fas fa-arrow-up"></i> 5 DMD since 01.01.24
+        </div>
+      </div>
+
+      <div class="stat-card-wireframe fade-in">
+        <div class="stat-header">
+          <h3>Monthly rewards <i class="fas fa-info-circle info-icon" title=""></i></h3>
+        </div>
+        <p class="stat-value-large">100 DMD</p>
+        <div class="stat-subtitle">Earned per 1000DMD = 5.88DMD</div>
+        <div class="stat-actions">
           <button class="history-button" id="rewards-history-button">History</button>
         </div>
-        <div class="stat-card fade-in">
-          <h3>Voting Power</h3>
-          <p class="stat-value" id="voting-power">4.2%</p>
-          <div class="stat-trend negative">
-            <i class="fas fa-arrow-down"></i> 0.1% this week
-          </div>
+      </div>
+
+      <div class="stat-card-wireframe fade-in">
+        <div class="stat-header">
+          <h3>Delegated stake <i class="fas fa-info-circle info-icon" title=""></i></h3>
         </div>
-        <!-- Monthly Rewards Box (now styled as a stat card) -->
-        <div class="stat-card fade-in">
-          <h3>Monthly Rewards <i class="fas fa-info-circle info-icon" title="Estimated rewards based on current APR and stake amount"></i></h3>
-          <p class="stat-value" id="monthly-rewards">100 DMD</p>
-          <div class="stat-trend">
-            <span>Earned per 1000DMD = 5.88DMD</span>
-          </div>
-          <button class="history-button" id="rewards-history-button">History</button>
+        <p class="stat-value-large">100 DMD</p>
+        <div class="stat-trend positive">
+          <i class="fas fa-arrow-up"></i> 5 DMD since 01.01.24
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- Validator Performance Section -->
   <!-- <section class="validator-performance">
@@ -246,7 +283,7 @@
   <div class="container">
     <div class="section-title">
       <h2>Delegates</h2>
-      <p>Users who have delegated their coins to this validator</p>
+      <p>Users who have delegated their tokens to this validator</p>
     </div>
     <div class="delegates-table-container">
       <table class="delegates-table">
@@ -419,7 +456,7 @@
 <div id="stake-modal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <h3>Stake Coins</h3>
+      <h3>Stake Tokens</h3>
       <button class="close-modal"><i class="fas fa-times"></i></button>
     </div>
     <div class="modal-body">

@@ -1111,12 +1111,6 @@
     flex: 1;
   }
 
-  .validator-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-  }
-
   .validator-score {
     text-align: left;
   }
