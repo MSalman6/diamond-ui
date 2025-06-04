@@ -1815,6 +1815,10 @@ header .container {
   margin-top: 40px;
 }
 
+.faq-actions .btn-primary {
+  min-width: 180px;
+}
+
 /* Footer */
 footer {
   background: var(--darker-bg);

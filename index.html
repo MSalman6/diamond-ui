@@ -155,15 +155,55 @@
                   <p>User Account</p>
                 </div>
               </div>
-              <div class="user-stats">
-                <div class="stat-item">
-                  <span class="stat-label">Staked on other candidates</span>
-                  <span class="stat-value">1,250 DMD</span>
+            </div>
+            
+            <div class="user-stats-grid">
+              <div class="stat-section">
+                <div class="stat-header">
+                  <h3>My stake on other pools</h3>
+                </div>
+                <div class="stat-value-container">
+                  <div class="stat-value highlight">100.6267 DMD</div>
+                  <div class="stat-change positive">+5 DMD since 01.01.24</div>
+                </div>
+                <div class="stat-actions">
+                  <div>
+                    <button class="btn-primary btn-sm">Stake</button>
+                    <button class="btn-secondary btn-sm">Unstake</button>
+                  </div>
+                  <div>
+                    <button class="btn-secondary btn-sm">History</button>
+                    <button class="btn-primary btn-sm" id="create-pool-btn">Create pool</button>
+                  </div>        
                 </div>
               </div>
-            </div>
-            <div class="user-actions">
-              <button class="btn-primary" id="create-pool-btn">Create a pool <i class="fas fa-plus"></i></button>
+              
+              <div class="stat-section">
+                <div class="stat-header">
+                  <h3>Monthly rewards</h3>
+                </div>
+                <div class="stat-value-container">
+                  <div class="stat-value highlight">100 DMD</div>
+                  <div class="stat-change positive">+5 DMD since 01.01.24</div>
+                  <div class="stat-note">from staking on 1 validator</div>
+                </div>
+                <div class="stat-actions">
+                  <button class="btn-secondary btn-sm">History</button>
+                </div>
+              </div>
+              
+              <div class="stat-section">
+                <div class="stat-header">
+                  <h3>DAO participation</h3>
+                </div>
+                <div class="stat-value-container">
+                  <div class="stat-value highlight">2 proposals created</div>
+                  <div class="stat-note">Total voting power of the validators I've staked on: 1.33%</div>
+                </div>
+                <div class="stat-actions">
+                  <a href="dao.html" class="btn-primary btn-sm">Go to DAO</a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -350,60 +390,101 @@
             <div class="validator-score">
               <div class="score-label">Score</div>
               <div class="score-value">97.5</div>
+              <!-- <div class="score-change negative">-10 since 01.01.24</div>
+              <button class="btn-secondary btn-sm score-history-btn">History</button> -->
             </div>
           </div>
           
-          <div class="validator-stats">
-            <div class="stat-box">
-              <div class="stat-label">My stake</div>
-              <div class="stat-value highlight">5,000 DMD</div>
-            </div>
-            
-            <div class="stat-box">
-              <div class="stat-label">Staked on other candidates</div>
-              <div class="stat-value highlight">750 DMD</div>
-            </div>
-            
-            <div class="stat-box">
-              <div class="stat-label">Node Operator shared rewards</div>
-              <div class="stat-value-with-action">
-                <span class="highlight">10%</span>
-                <button class="btn-outline-sm" id="update-rewards-btn">Update</button>
-              </div>
-            </div>
-          </div>
+          <div class="combined-stake-card">
+  <div class="stake-card-header">
+    <h3>My Stake Overview</h3>
+    <div class="total-stake-value highlight">17,000 DMD</div>
+  </div>
+  
+  <div class="stake-breakdown">
+    <div class="stake-item">
+      <div class="stake-item-header">
+        <span class="stake-label">My pool stake</span>
+        <span class="stake-value highlight">10,100 DMD</span>
+      </div>
+      <div class="stake-change positive">+5 DMD since 01.01.24</div>
+      <div class="stake-note">Connectivity reports: 0</div>
+      <div class="stake-actions">
+        <button class="btn-primary btn-sm">Stake</button>
+        <button class="btn-secondary btn-sm">Unstake</button>
+        <button class="btn-secondary btn-sm">History</button>
+        <button class="btn-secondary btn-sm">Remove pool</button>
+      </div>
+    </div>
+    
+    <div class="stake-item">
+      <div class="stake-item-header">
+        <span class="stake-label">My stake on other pools</span>
+        <span class="stake-value highlight">7,000 DMD</span>
+      </div>
+      <div class="stake-change positive">+5 DMD since 01.01.24</div>
+      <button class="btn-secondary btn-sm">History</button>
+    </div>
+  </div>
+  
+  <div class="stake-distribution-section">
+    <div class="distribution-header">
+      <span class="distribution-label">Stake Distribution</span>
+    </div>
+    <div class="stake-distribution">
+      <div class="stake-bar">
+        <div class="own-stake" style="width: 59%;" data-tooltip="59% own stake"></div>
+        <div class="delegated-stake" style="width: 41%;" data-tooltip="41% delegated"></div>
+      </div>
+      <div class="stake-labels">
+        <span class="own-stake-label">59% own stake</span>
+        <span class="delegated-stake-label">41% delegated</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+          <div class="validator-stats-row">
+  <div class="stat-card">
+    <div class="stat-label">Monthly rewards</div>
+    <div class="stat-value highlight">100 DMD</div>
+    <div class="stat-note">Earned per 1000DMD = 5,88DMD</div>
+    <button class="btn-secondary btn-sm">History</button>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">Delegated stake to my pool</div>
+    <div class="stat-value highlight">100 DMD</div>
+    <div class="stat-change positive">+5 DMD since 01.01.24</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">Node operator shared reward</div>
+    <div class="stat-value highlight">9%</div>
+    <div class="stat-note">0x9f515...62F94</div>
+    <button class="btn-primary btn-sm" id="edit-reward-btn">Edit</button>
+  </div>
+</div>
           
           <div class="node-stake-panel">
-            <div class="node-stake-header">
-              <h3>Node stake</h3>
-              <div class="node-stake-value highlight">15,750 DMD</div>
-            </div>
-            
-            <div class="node-stake-details">
-              <div class="stake-distribution">
-                <div class="stake-bar">
-                  <div class="own-stake" style="width: 32%;" data-tooltip="32% own"></div>
-                  <div class="delegated-stake" style="width: 68%;" data-tooltip="68% delegated"></div>
-                </div>
-                <div class="stake-labels">
-                  <span class="own-stake-label">32% own</span>
-                  <span class="delegated-stake-label">68% delegated</span>
-                </div>
-              </div>
-              
-              <div class="node-stake-info">
-                <div class="voting-power">
-                  <span class="info-label">Voting power:</span>
-                  <span class="info-value">7.8%</span>
-                </div>
-                
-                <div class="stake-actions">
-                  <button class="btn-primary">Stake</button>
-                  <button class="btn-secondary">Claim/Unstake</button>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="node-stake-header">
+    <h3>Voting power</h3>
+    <div class="node-stake-value highlight">12%</div>
+  </div>
+  
+  <div class="node-stake-details">
+    <div class="node-stake-info">
+      <div class="voting-power">
+        <div>
+          <span class="info-value negative">-0.01%</span>
+          <span class="info-label">since 01.01.24</span>
+        </div>
+        <span class="proposals-info">Proposals created: 10</span>
+      </div>
+      <button class="btn-secondary btn-sm">History</button>
+    </div>
+  </div>
+</div>
         </div>
       </div>
     </section>
@@ -1342,6 +1423,14 @@
       // Open update rewards modal
       if (updateRewardsBtn) {
         updateRewardsBtn.addEventListener('click', function() {
+          updateRewardsModal.style.display = 'flex';
+        });
+      }
+
+      // Open edit reward modal (reuse update rewards modal)
+      const editRewardBtn = document.getElementById('edit-reward-btn');
+      if (editRewardBtn) {
+        editRewardBtn.addEventListener('click', function() {
           updateRewardsModal.style.display = 'flex';
         });
       }
