@@ -1,8 +1,9 @@
-
-
+.proposal-hero-content {
+  padding-top: 60px;
+}
 
 .proposal-hero {
-  min-height: 300px;
+  min-height: 350px;
   display: flex;
   align-items: center;
   background: var(--bg);
@@ -83,54 +84,6 @@
     transform: translateY(-20px) scale(1.05);
   }
 }
-
-.diamond {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background-color: rgba(1, 69, 178, 0.08);
-  border-radius: 20%;
-  backdrop-filter: blur(10px);
-  transform: rotate(45deg);
-  opacity: 0.8;
-  animation: float-around 8s infinite ease-in-out;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 8px 32px rgba(1, 69, 178, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.diamond:hover {
-  transform: rotate(45deg) scale(1.1);
-  box-shadow: 0 15px 40px rgba(1, 69, 178, 0.2);
-}
-
-.diamond-1 {
-  top: 20%;
-  right: 15%;
-  width: 150px;
-  height: 150px;
-  background-color: var(--diamond-1-color);
-  animation-delay: 0s;
-}
-
-.diamond-2 {
-  top: 35%;
-  right: 10%;
-  width: 100px;
-  height: 100px;
-  background-color: var(--diamond-2-color);
-  animation-delay: 2s;
-}
-
-.diamond-3 {
-  top: 45%;
-  right: 18%;
-  width: 120px;
-  height: 120px;
-  background-color: var(--diamond-3-color);
-  animation-delay: 4s;
-}
-
 
 .proposal-details {
   padding: 60px 0;

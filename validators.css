@@ -1264,13 +1264,17 @@ body.light-theme .cr-danger {
 .validators-table td {
   padding: 15px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  font-size: 0.95rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 200px;
 }
 
+.validators-table td,
+.validators-table button,
+.validators-table span {
+  font-size: 0.95rem !important;
+}
 
 body.light-theme .miner-address,
 body.light-theme .public-key {

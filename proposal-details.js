@@ -117,21 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 550)
     })
   })
-
-  // Add animation to diamonds
-  const diamonds = document.querySelectorAll(".diamond")
-  diamonds.forEach((diamond) => {
-    diamond.addEventListener("mouseover", function () {
-      this.style.transform = "rotate(45deg) scale(1.1)"
-      this.style.boxShadow = "0 15px 40px rgba(1, 69, 178, 0.2)"
-    })
-
-    diamond.addEventListener("mouseout", function () {
-      this.style.transform = "rotate(45deg)"
-      this.style.boxShadow = "0 8px 32px rgba(1, 69, 178, 0.1)"
-    })
-  })
-
+  
   // Animate the progress bar on load
   const progressYes = document.querySelector(".progress-yes")
   const progressNo = document.querySelector(".progress-no")

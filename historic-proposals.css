@@ -2,8 +2,7 @@
 
 
 .historic-hero {
-  height: 30vh;
-  min-height: 250px;
+  min-height: 350px;
   display: flex;
   align-items: center;
   background: var(--bg);
@@ -14,6 +13,7 @@
 }
 
 .historic-hero-content {
+  padding-top: 60px;
   max-width: 900px;
   position: relative;
   z-index: 2;

@@ -291,13 +291,14 @@
 }
 
 .create-proposal-btn {
+  display: block !important;
   margin-top: auto;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   background: linear-gradient(90deg, #00d2ff, #3a7bd5);
   color: white;
-  padding: 12px 20px;
+  padding: 10px 16px;
   border-radius: 4px;
   font-weight: 500;
   transition: var(--transition-speed);
@@ -306,6 +307,9 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+  line-height: normal;
+  max-height: 40px;
+  font-size: 0.95rem;
 }
 
 
@@ -540,6 +544,9 @@
   border: 1px solid var(--border-color);
   cursor: pointer;
   text-align: center;
+  height: 40px;
+  max-height: 40px;
+  font-size: 0.95rem;
 }
 
 
@@ -906,7 +913,6 @@
   border-radius: 4px;
   overflow: hidden;
   width: 100%;
-  max-width: 120px;
   position: relative;
 }
 

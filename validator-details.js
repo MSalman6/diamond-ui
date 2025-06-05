@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (viewExplorerButton && validatorAddress) {
     viewExplorerButton.addEventListener("click", () => {
       const address = validatorAddress.textContent
-      window.open(`https://explorer.example.com/validator/${address}`, "_blank")
+      window.open(`https://beta-explorer.bit.diamonds/${address}`, "_blank")
     })
   }
 
