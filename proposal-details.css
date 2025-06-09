@@ -214,7 +214,6 @@
 }
 
 .address-text {
-  font-family: monospace;
   font-size: 0.9rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -591,7 +590,6 @@
 }
 
 .code-block code {
-  font-family: monospace;
   font-size: 0.85rem;
   white-space: pre-wrap;
   word-break: break-all;
@@ -611,7 +609,6 @@
 
 .decoded-value {
   flex: 1;
-  font-family: monospace;
   word-break: break-all;
 }
 
@@ -970,7 +967,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: monospace;
   font-size: 0.85rem;
   word-break: break-all;
 }

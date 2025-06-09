@@ -357,7 +357,6 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: "Inter", sans-serif;
   font-size: 0.875rem;
 }
 
@@ -532,10 +531,6 @@
   color: var(--abstain-color);
 }
 
-.vote-stat-value {
-  font-family: "Inter", sans-serif;
-}
-
 .vote-stat-percentage {
   text-align: right;
   font-weight: 600;
@@ -642,7 +637,6 @@
 }
 
 .code-block {
-  font-family: "Inter", sans-serif;
   font-size: 0.75rem;
   margin: 0;
   white-space: pre-wrap;

@@ -302,7 +302,6 @@
 }
 
 .wallet-address {
-  font-family: "Courier New", monospace;
   font-weight: 500;
 }
 
@@ -1256,7 +1255,6 @@ body.light-theme .cr-danger {
 
 .miner-address,
 .public-key {
-  font-family: "Courier New", monospace;
   font-weight: 500;
 }
 
