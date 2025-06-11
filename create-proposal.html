@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Proposal - DMD Diamond</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="dao.css">
+<link rel="stylesheet" href="create-proposal.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<!-- Header -->
+<header>
+  <div class="container">
+    <div class="logo">
+      <a href="index.html">
+        <img class="logo-img" src="/assets/images/dmd-logo.png" alt="DMD Diamond Logo">
+      </a>
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="validators.html">Validators</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle">DMD Ecosystem <i class="fas fa-chevron-down"></i></a>
+          <div class="dropdown-menu">
+            <div class="dropdown-content">
+              <div class="dropdown-section">
+                <ul>
+                  <li><a href="https://bit.diamonds" target="_blank">Bit Diamonds<i class="fas fa-external-link-alt"></i></a></li>
+                  <li><a href="https://dmd.diamonds" target="_blank">DMD Explorer<i class="fas fa-external-link-alt"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle">3rd Party Projects <i class="fas fa-chevron-down"></i></a>
+          <div class="dropdown-menu">
+            <div class="dropdown-content">
+              <div class="dropdown-section">
+                <ul>
+                  <li><a href="https://uniq.directory/" target="_blank">NFT Marketplace <i class="fas fa-external-link-alt"></i></a></li>
+                  <li><a href="https://uniq.diamonds/" target="_blank">uNiq Diamonds <i class="fas fa-external-link-alt"></i></a></li>
+                  <li><a href="https://gladiators.diamonds/" target="_blank">uNiq Gladiators <i class="fas fa-external-link-alt"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="theme-toggle-wrapper">
+        <label class="theme-toggle">
+          <input type="checkbox" id="theme-toggle">
+          <span class="theme-toggle-slider">
+            <i class="fas fa-sun theme-toggle-icon sun"></i>
+            <i class="fas fa-moon theme-toggle-icon moon"></i>
+          </span>
+        </label>
+      </div>
+      <div class="user-wallet-info" id="user-wallet-info" style="display: none;">
+        <div class="wallet-icon">
+          <div class="wallet-icon-inner"></div>
+        </div>
+        <div class="wallet-address">0x7F...A3D2</div>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+      <div class="cta-button" id="connect-wallet-btn">
+        <i class="fas fa-wallet"></i> Connect Wallet
+      </div>
+    </div>
+    <div class="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+      <i class="fas fa-times"></i>
+    </div>
+  </div>
+</header>
+
+<!-- Create Proposal Hero Section -->
+<section class="proposal-hero">
+  <div class="cosmic-grid"></div>
+  <div class="cosmic-elements">
+    <div class="diamond diamond-1"></div>
+    <div class="diamond diamond-2"></div>
+    <div class="diamond diamond-3"></div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+  </div>
+  <div class="container">
+    <div class="proposal-hero-content">
+      <h1>Create Proposal</h1>
+      <p>Submit a new governance proposal to the DMD Diamond community.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Create Proposal Form Section -->
+<section class="proposal-form-section">
+  <div class="container">
+    <div class="proposal-form-container">
+      <form id="proposal-form" class="proposal-form">
+        <!-- Proposal Type Selection -->
+        <div class="form-section">
+          <h2 class="section-title">Proposal Type</h2>
+          <p class="section-description">Please choose a proposal type you want to create:</p>
+          
+          <div class="form-group">
+            <select id="proposal-type" class="form-control">
+              <option value="" selected disabled>Select proposal type</option>
+              <option value="ecosystem">Ecosystem parameter change</option>
+              <option value="contract">Contract upgrade</option>
+              <option value="open">Open Proposal</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Common Form Fields -->
+        <div class="form-section">
+          <h2 class="section-title">Proposal Details</h2>
+          
+          <div class="form-group">
+            <label for="proposal-title">Proposal Title</label>
+            <input type="text" id="proposal-title" class="form-control" placeholder="Enter a descriptive title">
+          </div>
+          
+          <div class="form-group">
+            <label for="proposal-description">Proposal Description</label>
+            <textarea id="proposal-description" class="form-control" rows="6" placeholder="Provide a detailed description of your proposal"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="discussion-url">Discussion URL (optional)</label>
+            <input type="url" id="discussion-url" class="form-control" placeholder="https://forum.dmd.com/discussion/...">
+            <div class="form-hint">Link to a discussion thread about this proposal</div>
+          </div>
+        </div>
+
+        <!-- Dynamic Form Fields - Ecosystem Parameter Change -->
+        <div id="ecosystem-fields" class="form-section dynamic-section">
+          <h2 class="section-title">Parameter Change Details</h2>
+          
+          <div class="form-group">
+            <label for="parameter-select">Select Parameter</label>
+            <select id="parameter-select" class="form-control">
+              <option value="gas-price">Minimum Gas Price</option>
+              <option value="delegator-stake">Delegator Min. Stake</option>
+              <option value="validator-stake">Validator Min. Stake</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="parameter-value">Parameter Value</label>
+            <div class="slider-container">
+              <div class="slider-info">
+                <span>Current: <strong id="current-value">5 DMD</strong></span>
+                <span>New: <strong id="new-value">5 DMD</strong></strong></span>
+              </div>
+              <div class="slider-control">
+                <span class="min-value">1 DMD</span>
+                <input type="range" id="parameter-value" class="form-slider" min="1" max="100" value="5">
+                <span class="max-value">100 DMD</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="info-box">
+            <div class="info-icon"><i class="fas fa-info-circle"></i></div>
+            <div class="info-content">
+              <p>Each parameter on the list can be changed only once per month. If multiple proposals to change the same parameter receive sufficient "yes" votes and participation during the DAO phase, the community will decide which proposal is finalized and executed.</p>
+              <!-- <p>Please ensure your proposed value is within the acceptable range for network stability.</p> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Form Fields - Contract Upgrade -->
+        <div id="contract-fields" class="form-section dynamic-section">
+          <h2 class="section-title">Contract Upgrade Details</h2>
+          
+          <div id="transactions-container">
+            <div class="transaction-section" data-index="1">
+              <div class="transaction-header">
+                <h3>Transaction #1</h3>
+                <button type="button" class="btn-remove-transaction" disabled><i class="fas fa-minus-circle"></i></button>
+              </div>
+              
+              <div class="form-group">
+                <label for="contract-address-1">Contract Address</label>
+                <input type="text" id="contract-address-1" class="form-control contract-address" placeholder="0x...">
+              </div>
+              
+              <div class="form-group">
+                <label for="contract-calldata-1">Contract Calldata</label>
+                <textarea id="contract-calldata-1" class="form-control contract-calldata" rows="4" placeholder="0x..."></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <button type="button" id="add-transaction-contract" class="btn-add-transaction">
+            <i class="fas fa-plus-circle"></i> Add Transaction
+          </button>
+          
+          <div class="info-box">
+            <div class="info-icon"><i class="fas fa-info-circle"></i></div>
+            <div class="info-content">
+              <p>Contract upgrades must be thoroughly tested before submission. Include links to audit reports in your proposal description.</p>
+              <p>Multiple transactions will be executed in the order listed.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Form Fields - Open Proposal -->
+        <div id="open-fields" class="form-section dynamic-section">
+          <h2 class="section-title">Open Proposal Details</h2>
+          
+          <div id="open-transactions-container">
+            <div class="transaction-section" data-index="1">
+              <div class="transaction-header">
+                <h3>Transaction #1</h3>
+                <button type="button" class="btn-remove-transaction" disabled><i class="fas fa-minus-circle"></i></button>
+              </div>
+              
+              <div class="form-group">
+                <label for="payout-address-1">Payout Address (optional)</label>
+                <input type="text" id="payout-address-1" class="form-control payout-address" placeholder="0x...">
+              </div>
+              
+              <div class="form-group">
+                <label for="payout-amount-1">Payout Amount in DMD (optional)</label>
+                <input type="number" id="payout-amount-1" class="form-control payout-amount" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+          
+          <button type="button" id="add-transaction-open" class="btn-add-transaction">
+            <i class="fas fa-plus-circle"></i> Add Transaction
+          </button>
+          
+          <div class="info-box">
+            <div class="info-icon"><i class="fas fa-info-circle"></i></div>
+            <div class="info-content">
+              <p>Open proposals can be used for community initiatives, marketing campaigns, or other governance actions.</p>
+              <p>If requesting funds, provide detailed justification in your proposal description.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fee Information -->
+        <div class="form-section">
+          <div class="fee-info-box">
+            <div class="fee-info-header">
+              <h3><i class="fas fa-exclamation-circle"></i> Important Fee Information</h3>
+            </div>
+            <div class="fee-info-content">
+              <p>Creating a proposal requires a <strong>100 DMD</strong> proposal fee and a service fee.</p>
+              <p>Proposals can be dismissed during the voting phase by the creator.</p>
+              <p>The proposal fee will be returned if your proposal is accepted. The service fee is non-refundable.</p>
+              <p><strong>Warning:</strong> If your proposal is not accepted, you will lose the proposal fee.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button type="submit" class="btn-create-proposal">
+            <i class="fas fa-plus-circle"></i> Create
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>DMD Diamond</h3>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Ecosystem</a></li>
+          <li><a href="#">Community</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Developers</h3>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Tutorials</a></li>
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">SDK</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="#">Whitepaper</a></li>
+          <li><a href="#">Roadmap</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Connect</h3>
+        <ul>
+          <li><a href="#">Twitter</a></li>
+          <li><a href="#">Discord</a></li>
+          <li><a href="#">Telegram</a></li>
+          <li><a href="#">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 DMD Diamond. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="theme.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu toggle
+    document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+      document.querySelector('.nav-links').classList.toggle('active');
+      this.classList.toggle('active');
+    });
+
+    // Form elements
+    const proposalTypeSelect = document.getElementById('proposal-type');
+    const ecosystemFields = document.getElementById('ecosystem-fields');
+    const contractFields = document.getElementById('contract-fields');
+    const openFields = document.getElementById('open-fields');
+    const parameterValueSlider = document.getElementById('parameter-value');
+    const newValueDisplay = document.getElementById('new-value');
+    const addTransactionContractBtn = document.getElementById('add-transaction-contract');
+    const addTransactionOpenBtn = document.getElementById('add-transaction-open');
+    const transactionsContainer = document.getElementById('transactions-container');
+    const openTransactionsContainer = document.getElementById('open-transactions-container');
+    const proposalForm = document.getElementById('proposal-form');
+
+    // Hide all dynamic sections initially
+    ecosystemFields.style.display = 'none';
+    contractFields.style.display = 'none';
+    openFields.style.display = 'none';
+
+    // Show appropriate fields based on proposal type selection
+    proposalTypeSelect.addEventListener('change', function() {
+      // Hide all dynamic sections
+      ecosystemFields.style.display = 'none';
+      contractFields.style.display = 'none';
+      openFields.style.display = 'none';
+
+      // Show selected section with animation
+      if (this.value === 'ecosystem') {
+        ecosystemFields.style.display = 'block';
+        ecosystemFields.classList.add('fade-in');
+        setTimeout(() => ecosystemFields.classList.add('visible'), 10);
+      } else if (this.value === 'contract') {
+        contractFields.style.display = 'block';
+        contractFields.classList.add('fade-in');
+        setTimeout(() => contractFields.classList.add('visible'), 10);
+      } else if (this.value === 'open') {
+        openFields.style.display = 'block';
+        openFields.classList.add('fade-in');
+        setTimeout(() => openFields.classList.add('visible'), 10);
+      }
+    });
+
+    // Update slider value display
+    parameterValueSlider.addEventListener('input', function() {
+      newValueDisplay.textContent = `${this.value} DMD`;
+    });
+
+    // Add transaction for Contract Upgrade
+    let contractTransactionCount = 1;
+    addTransactionContractBtn.addEventListener('click', function() {
+      contractTransactionCount++;
+      
+      const transactionSection = document.createElement('div');
+      transactionSection.className = 'transaction-section';
+      transactionSection.dataset.index = contractTransactionCount;
+      
+      transactionSection.innerHTML = `
+        <div class="transaction-header">
+          <h3>Transaction #${contractTransactionCount}</h3>
+          <button type="button" class="btn-remove-transaction"><i class="fas fa-minus-circle"></i></button>
+        </div>
+        
+        <div class="form-group">
+          <label for="contract-address-${contractTransactionCount}">Contract Address</label>
+          <input type="text" id="contract-address-${contractTransactionCount}" class="form-control contract-address" placeholder="0x...">
+        </div>
+        
+        <div class="form-group">
+          <label for="contract-calldata-${contractTransactionCount}">Contract Calldata</label>
+          <textarea id="contract-calldata-${contractTransactionCount}" class="form-control contract-calldata" rows="4" placeholder="0x..."></textarea>
+        </div>
+      `;
+      
+      transactionsContainer.appendChild(transactionSection);
+      
+      // Add animation
+      transactionSection.classList.add('fade-in');
+      setTimeout(() => transactionSection.classList.add('visible'), 10);
+      
+      // Add event listener to remove button
+      const removeBtn = transactionSection.querySelector('.btn-remove-transaction');
+      removeBtn.addEventListener('click', function() {
+        transactionSection.classList.remove('visible');
+        setTimeout(() => {
+          transactionsContainer.removeChild(transactionSection);
+          updateTransactionNumbers('contract');
+        }, 300);
+      });
+    });
+
+    // Add transaction for Open Proposal
+    let openTransactionCount = 1;
+    addTransactionOpenBtn.addEventListener('click', function() {
+      openTransactionCount++;
+      
+      const transactionSection = document.createElement('div');
+      transactionSection.className = 'transaction-section';
+      transactionSection.dataset.index = openTransactionCount;
+      
+      transactionSection.innerHTML = `
+        <div class="transaction-header">
+          <h3>Transaction #${openTransactionCount}</h3>
+          <button type="button" class="btn-remove-transaction"><i class="fas fa-minus-circle"></i></button>
+        </div>
+        
+        <div class="form-group">
+          <label for="payout-address-${openTransactionCount}">Payout Address (optional)</label>
+          <input type="text" id="payout-address-${openTransactionCount}" class="form-control payout-address" placeholder="0x...">
+        </div>
+        
+        <div class="form-group">
+          <label for="payout-amount-${openTransactionCount}">Payout Amount in DMD (optional)</label>
+          <input type="number" id="payout-amount-${openTransactionCount}" class="form-control payout-amount" placeholder="0.00">
+        </div>
+      `;
+      
+      openTransactionsContainer.appendChild(transactionSection);
+      
+      // Add animation
+      transactionSection.classList.add('fade-in');
+      setTimeout(() => transactionSection.classList.add('visible'), 10);
+      
+      // Add event listener to remove button
+      const removeBtn = transactionSection.querySelector('.btn-remove-transaction');
+      removeBtn.addEventListener('click', function() {
+        transactionSection.classList.remove('visible');
+        setTimeout(() => {
+          openTransactionsContainer.removeChild(transactionSection);
+          updateTransactionNumbers('open');
+        }, 300);
+      });
+    });
+
+    // Update transaction numbers after removal
+    function updateTransactionNumbers(type) {
+      const container = type === 'contract' ? transactionsContainer : openTransactionsContainer;
+      const sections = container.querySelectorAll('.transaction-section');
+      
+      sections.forEach((section, index) => {
+        const number = index + 1;
+        section.dataset.index = number;
+        section.querySelector('h3').textContent = `Transaction #${number}`;
+        
+        // Disable remove button for first transaction
+        const removeBtn = section.querySelector('.btn-remove-transaction');
+        if (number === 1) {
+          removeBtn.disabled = true;
+        } else {
+          removeBtn.disabled = false;
+        }
+        
+        // Update IDs
+        if (type === 'contract') {
+          section.querySelector('.contract-address').id = `contract-address-${number}`;
+          section.querySelector('.contract-calldata').id = `contract-calldata-${number}`;
+          section.querySelector('label[for^="contract-address"]').setAttribute('for', `contract-address-${number}`);
+          section.querySelector('label[for^="contract-calldata"]').setAttribute('for', `contract-calldata-${number}`);
+        } else {
+          section.querySelector('.payout-address').id = `payout-address-${number}`;
+          section.querySelector('.payout-amount').id = `payout-amount-${number}`;
+          section.querySelector('label[for^="payout-address"]').setAttribute('for', `payout-address-${number}`);
+          section.querySelector('label[for^="payout-amount"]').setAttribute('for', `payout-amount-${number}`);
+        }
+      });
+    }
+
+    // Form submission
+    proposalForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Validate form
+      const proposalType = proposalTypeSelect.value;
+      const proposalTitle = document.getElementById('proposal-title').value;
+      const proposalDescription = document.getElementById('proposal-description').value;
+      
+      if (!proposalType) {
+        alert('Please select a proposal type.');
+        return;
+      }
+      
+      if (!proposalTitle) {
+        alert('Please enter a proposal title.');
+        return;
+      }
+      
+      if (!proposalDescription) {
+        alert('Please enter a proposal description.');
+        return;
+      }
+      
+      // Show success message
+      alert('Your proposal has been submitted successfully!');
+      
+      // In a real application, you would submit the form data to the server here
+      // For this demo, we'll just reset the form
+      proposalForm.reset();
+      
+      // Hide dynamic sections
+      ecosystemFields.style.display = 'none';
+      contractFields.style.display = 'none';
+      openFields.style.display = 'none';
+      
+      // Reset transaction containers
+      while (transactionsContainer.children.length > 1) {
+        transactionsContainer.removeChild(transactionsContainer.lastChild);
+      }
+      
+      while (openTransactionsContainer.children.length > 1) {
+        openTransactionsContainer.removeChild(openTransactionsContainer.lastChild);
+      }
+      
+      contractTransactionCount = 1;
+      openTransactionCount = 1;
+    });
+
+    // Add animation to form sections
+    const formSections = document.querySelectorAll('.form-section:not(.dynamic-section)');
+    formSections.forEach((section, index) => {
+      section.classList.add('fade-in');
+      setTimeout(() => {
+        section.classList.add('visible');
+      }, 100 * index);
+    });
+  });
+</script>
+</body>
+</html>

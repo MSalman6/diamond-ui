@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DMD Diamond</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="index-auth.css">
+  <link rel="stylesheet" href="enhanced-light-theme.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
+  <style>
+    diamond {
+      display: block;
+      position: absolute;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="logo">
+        <a href="index.html">
+          <img class="logo-img" src="/assets/images/dmd-logo.png" alt="DMD Diamond Logo">
+        </a>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="validators.html">Validators</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle">DMD Ecosystem <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+              <div class="dropdown-content">
+                <div class="dropdown-section">
+                  <ul>
+                    <li><a href="https://bit.diamonds" target="_blank">Bit Diamonds<i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="https://dmd.diamonds" target="_blank">DMD Explorer<i class="fas fa-external-link-alt"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle">3rd Party Projects <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+              <div class="dropdown-content">
+                <div class="dropdown-section">
+                  <ul>
+                    <li><a href="https://uniq.directory/" target="_blank">NFT Marketplace <i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="https://uniq.diamonds/" target="_blank">uNiq Diamonds <i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="https://gladiators.diamonds/" target="_blank">uNiq Gladiators <i class="fas fa-external-link-alt"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <div class="header-right">
+        <div class="theme-toggle-wrapper">
+          <label class="theme-toggle">
+            <input type="checkbox" id="theme-toggle">
+            <span class="theme-toggle-slider">
+              <i class="fas fa-sun theme-toggle-icon sun"></i>
+              <i class="fas fa-moon theme-toggle-icon moon"></i>
+            </span>
+          </label>
+        </div>
+        <div class="user-wallet-info" id="user-wallet-info" style="display: none;">
+          <div class="wallet-icon">
+            <div class="wallet-icon-inner"></div>
+          </div>
+          <div class="wallet-address">0x7F...A3D2</div>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="cta-button" id="connect-wallet-btn">
+          <i class="fas fa-wallet"></i> Connect Wallet
+        </div>
+      </div>
+      <div class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- Unauthenticated View -->
+  <div id="unauthenticated-view">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="cosmic-grid"></div>
+      <div class="cosmic-elements">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+      </div>
+      <div class="container">
+        <div class="hero-content">
+          <h1>Become DMD Chain Participant</h1>
+          <p>
+            Welcome to the DMD Diamond Staking Platform – your gateway to earning rewards while contributing to the security and functionality of the DMD network. Embark on your staking adventure with us and unlock the full potential of your digital assets.
+          </p>
+          <div class="hero-buttons">
+            <a href="#" class="btn-primary">Connect wallet <i class="fas fa-arrow-right"></i></a>
+            <a href="https://github.com/DMDcoin/whitepaper/wiki/A.-Home" target="_blank" class="btn-secondary">GitHub Wiki <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="diamond-custom diamond-custom-1"></div>
+          <div class="diamond-custom diamond-custom-2"></div>
+          <div class="diamond-custom diamond-custom-3"></div>
+          <div class="glow-custom glow-custom-1"></div>
+          <div class="glow-custom glow-custom-2"></div>
+        </div>
+      </div>
+      <div class="partners-bar">
+        <div class="partners-scroll">
+          <div class="partners-track">
+            <div class="partner-logo">P2P b2b</div>
+            <div class="partner-logo">BitMart</div>
+            <div class="partner-logo">XeggeX</div>
+            <div class="partner-logo">BlockServ</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Authenticated User View (Without Validator) -->
+  <div id="authenticated-user-view" style="display: none;">
+    <!-- User Information Section -->
+    <section class="hero user-info-section">
+      <div class="cosmic-grid"></div>
+      <div class="cosmic-elements">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+      </div>
+      <div class="container">
+        <div class="user-dashboard">
+          <div class="user-info-card">
+            <div class="user-info-header">
+              <div class="user-wallet">
+                <div class="wallet-icon large">
+                  <div class="wallet-icon-inner"></div>
+                </div>
+                <div class="wallet-details">
+                  <h1>0x7F...A3D2</h1>
+                  <p>User Account</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="user-stats-grid">
+              <div class="stat-section">
+                <div class="stat-header">
+                  <h3>My stake on other pools <i class="fas fa-info-circle info-icon" title=""></i></h3>
+                </div>
+                <div class="stat-value-container">
+                  <div class="stat-value highlight">100.6267 DMD</div>
+                  <div class="stat-change positive">+5 DMD since 01.01.24</div>
+                </div>
+                <div class="stat-actions">
+                  <div>
+                    <button class="btn-primary btn-sm">Stake</button>
+                    <button class="btn-secondary btn-sm">Unstake</button>
+                  </div>
+                  <div>
+                    <button class="btn-secondary btn-sm">History</button>
+                    <button class="btn-primary btn-sm" id="create-pool-btn">Create pool</button>
+                  </div>        
+                </div>
+              </div>
+              
+              <div class="stat-section">
+                <div class="stat-header">
+                  <h3>Monthly rewards <i class="fas fa-info-circle info-icon" title=""></i></h3>
+                </div>
+                <div class="stat-value-container">
+                  <div class="stat-value highlight">100 DMD</div>
+                  <div class="stat-change positive">+5 DMD since 01.01.24</div>
+                  <div class="stat-note">from staking on 1 validator</div>
+                </div>
+                <div class="stat-actions">
+                  <button class="btn-secondary btn-sm">History</button>
+                </div>
+              </div>
+              
+              <div class="stat-section">
+                <div class="stat-header">
+                  <h3>DAO participation <i class="fas fa-info-circle info-icon" title=""></i></h3>
+                </div>
+                <div class="stat-value-container">
+                  <div class="stat-value highlight">2 proposals created</div>
+                  <div class="stat-note">Total voting power of the validators I've staked on: 1.33%</div>
+                </div>
+                <div class="stat-actions">
+                  <a href="dao.html" class="btn-primary btn-sm">Go to DAO</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Validators I've Staked On Section -->
+    <section class="validators-staked">
+      <div class="container">
+        <h2>Validators I've Staked On</h2>
+        <div class="table-container">
+          <table class="validators-table">
+            <thead>
+              <tr>
+                <th>Validator</th>
+                <th>Total Stake</th>
+                <th>My Stake</th>
+                <th>Voting Power</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="validator-info">
+                    <div class="wallet-icon">
+                      <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #FF5E62, #FF9966);"></div>
+                    </div>
+                    <span>0x8A...B4F1</span>
+                  </div>
+                </td>
+                <td>25,430 DMD</td>
+                <td>500 DMD</td>
+                <td>12.5%</td>
+                <td>98.2</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="validator-info">
+                    <div class="wallet-icon">
+                      <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #56CCF2, #2F80ED);"></div>
+                    </div>
+                    <span>0x3C...D9E7</span>
+                  </div>
+                </td>
+                <td>18,750 DMD</td>
+                <td>750 DMD</td>
+                <td>9.2%</td>
+                <td>95.7</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- DAO Section -->
+    <section class="dao-overview">
+      <div class="container">
+        <h2>DAO</h2>
+        <div class="dao-stats-grid">
+          <div class="dao-stat-card">
+            <h3>Count</h3>
+            <p class="stat-value">24</p>
+          </div>
+          <div class="dao-stat-card">
+            <h3>Phase</h3>
+            <p class="stat-value">Proposal</p>
+          </div>
+          <div class="dao-stat-card">
+            <h3>Time till end</h3>
+            <p class="stat-value countdown">2d 14h 35m</p>
+          </div>
+          <div class="dao-stat-card">
+            <h3>Governance Pot</h3>
+            <p class="stat-value">15,750 DMD</p>
+          </div>
+        </div>
+        <div class="dao-actions">
+          <a href="dao.html" class="btn-primary">Go to DAO <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Network Statistics Section -->
+    <section class="statistics">
+      <div class="container">
+        <div class="statistics-header">
+          <h2 class="fade-in">DMD: your protocol's<br>connection to the<br>global digital economy</h2>
+          <div class="big-stat">
+            <span class="big-stat-value">4M+</span>
+            <span class="big-stat-label">Total DMD Emission</span>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card fade-in">
+            <h3>Current Epoch</h3>
+            <p class="stat-value">1,245</p>
+          </div>
+          <div class="stat-card fade-in">
+            <h3>Next Round</h3>
+            <p class="stat-value">12h 34m</p>
+          </div>
+          <div class="stat-card fade-in">
+            <h3>Stake Start Time</h3>
+            <p class="stat-value">08:00 UTC</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top Validators Section -->
+    <section class="top-validators">
+      <div class="container">
+        <h2>Top Validators</h2>
+        <div class="table-container">
+          <table class="validators-table">
+            <thead>
+              <tr>
+                <th>Validator</th>
+                <th>Total Stake</th>
+                <th>Voting Power</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="validator-info">
+                    <div class="wallet-icon">
+                      <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #FF5E62, #FF9966);"></div>
+                    </div>
+                    <span>0x8A...B4F1</span>
+                  </div>
+                </td>
+                <td>25,430 DMD</td>
+                <td>12.5%</td>
+                <td>98.2</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="validator-info">
+                    <div class="wallet-icon">
+                      <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #56CCF2, #2F80ED);"></div>
+                    </div>
+                    <span>0x3C...D9E7</span>
+                  </div>
+                </td>
+                <td>18,750 DMD</td>
+                <td>9.2%</td>
+                <td>95.7</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="validators-actions">
+          <a href="validators.html" class="btn-primary">View all validators <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Authenticated User View (With Validator) -->
+  <div id="authenticated-validator-view" style="display: none;">
+    <!-- User/Validator Information Section -->
+    <section class="hero validator-info-section">
+      <div class="cosmic-grid"></div>
+      <div class="cosmic-elements">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+      </div>
+      <div class="container">
+        <div class="validator-dashboard">
+          <div class="validator-header">
+            <div class="validator-identity">
+              <div class="wallet-icon large">
+                <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #6EE7B7, #3B82F6);"></div>
+              </div>
+              <div class="validator-details">
+                <h1>0x7F...A3D2</h1>
+                <span class="status-badge active">Active</span>
+              </div>
+            </div>
+            <div class="validator-score">
+              <div class="score-label">Score</div>
+              <div class="score-value">97.5</div>
+              <!-- <div class="score-change negative">-10 since 01.01.24</div>
+              <button class="btn-secondary btn-sm score-history-btn">History</button> -->
+            </div>
+          </div>
+          
+          <div class="combined-stake-card">
+  <div class="stake-card-header">
+    <h3>My Stake Overview <i class="fas fa-info-circle info-icon" title=""></i></h3>
+    <div class="total-stake-value highlight">17,000 DMD</div>
+  </div>
+  
+  <div class="stake-breakdown">
+    <div class="stake-item">
+      <div class="stake-item-header">
+        <span class="stake-label">My pool stake <i class="fas fa-info-circle info-icon" title=""></i></span>
+        <span class="stake-value highlight">10,100 DMD</span>
+      </div>
+      <div class="stake-change positive">+5 DMD since 01.01.24</div>
+      <div class="stake-note">Connectivity reports: 0</div>
+      <div class="stake-actions">
+        <button class="btn-primary btn-sm">Stake</button>
+        <button class="btn-secondary btn-sm">Unstake</button>
+        <button class="btn-secondary btn-sm">History</button>
+        <button class="btn-secondary btn-sm">Remove pool</button>
+      </div>
+    </div>
+    
+    <div class="stake-item">
+      <div class="stake-item-header">
+        <span class="stake-label">My stake on other pools <i class="fas fa-info-circle info-icon" title=""></i></span>
+        <span class="stake-value highlight">7,000 DMD</span>
+      </div>
+      <div class="stake-change positive">+5 DMD since 01.01.24</div>
+      <button class="btn-secondary btn-sm">History</button>
+    </div>
+  </div>
+  
+  <div class="stake-distribution-section">
+    <div class="distribution-header">
+      <span class="distribution-label">Stake Distribution <i class="fas fa-info-circle info-icon" title=""></i></span>
+    </div>
+    <div class="stake-distribution">
+      <div class="stake-bar">
+        <div class="own-stake" style="width: 59%;" data-tooltip="59% own stake"></div>
+        <div class="delegated-stake" style="width: 41%;" data-tooltip="41% delegated"></div>
+      </div>
+      <div class="stake-labels">
+        <span class="own-stake-label">59% own stake</span>
+        <span class="delegated-stake-label">41% delegated</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+          <div class="validator-stats-row">
+  <div class="stat-card">
+    <div class="stat-label">Monthly rewards <i class="fas fa-info-circle info-icon" title=""></i></div>
+    <div class="stat-value highlight">100 DMD</div>
+    <div class="stat-note">Earned per 1000DMD = 5,88DMD</div>
+    <button class="btn-secondary btn-sm">History</button>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">Delegated stake to my pool <i class="fas fa-info-circle info-icon" title=""></i></div>
+    <div class="stat-value highlight">100 DMD</div>
+    <div class="stat-change positive">+5 DMD since 01.01.24</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">Node operator shared reward <i class="fas fa-info-circle info-icon" title=""></i></div>
+    <div class="stat-value highlight">9%</div>
+    <div class="stat-note">0x9f515...62F94</div>
+    <button class="btn-primary btn-sm" id="edit-reward-btn">Edit</button>
+  </div>
+</div>
+          
+          <div class="node-stake-panel">
+  <div class="node-stake-header">
+    <h3>Voting power <i class="fas fa-info-circle info-icon" title=""></i></h3>
+    <div class="node-stake-value highlight">12%</div>
+  </div>
+  
+  <div class="node-stake-details">
+    <div class="node-stake-info">
+      <div class="voting-power">
+        <div>
+          <span class="info-value negative">-0.01%</span>
+          <span class="info-label">since 01.01.24</span>
+        </div>
+        <span class="proposals-info">Proposals created: 10</span>
+      </div>
+      <button class="btn-secondary btn-sm">History</button>
+    </div>
+  </div>
+</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Delegates Section -->
+    <section class="delegates-section">
+      <div class="container">
+        <h2>Delegates</h2>
+        <div class="table-container">
+          <table class="delegates-table">
+            <thead>
+              <tr>
+                <th>Delegate</th>
+                <th>Delegated Stake</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="delegate-info">
+                    <div class="wallet-icon">
+                      <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #FF5E62, #FF9966);"></div>
+                    </div>
+                    <span>0x8A...B4F1</span>
+                  </div>
+                </td>
+                <td>3,500 DMD</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="delegate-info">
+                    <div class="wallet-icon">
+                      <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #56CCF2, #2F80ED);"></div>
+                    </div>
+                    <span>0x3C...D9E7</span>
+                  </div>
+                </td>
+                <td>2,750 DMD</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="delegate-info">
+                    <div class="wallet-icon">
+                      <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #A17FE0, #5D26C1);"></div>
+                    </div>
+                    <span>0x5D...F2A8</span>
+                  </div>
+                </td>
+                <td>2,250 DMD</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="delegate-info">
+                    <div class="wallet-icon">
+                      <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #F97794, #623AA2);"></div>
+                    </div>
+                    <span>0x9B...C4D3</span>
+                  </div>
+                </td>
+                <td>1,500 DMD</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Validators I've Staked On Section -->
+    <section class="validators-staked">
+      <div class="container">
+        <h2>Validators I've Staked On</h2>
+        <div class="table-container">
+          <table class="validators-table">
+            <thead>
+              <tr>
+                <th>Validator</th>
+                <th>Total Stake</th>
+                <th>My Stake</th>
+                <th>Voting Power</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="validator-info">
+                    <div class="wallet-icon">
+                      <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #FF5E62, #FF9966);"></div>
+                    </div>
+                    <span>0x8A...B4F1</span>
+                  </div>
+                </td>
+                <td>25,430 DMD</td>
+                <td>500 DMD</td>
+                <td>12.5%</td>
+                <td>98.2</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="validator-info">
+                    <div class="wallet-icon">
+                      <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #56CCF2, #2F80ED);"></div>
+                    </div>
+                    <span>0x3C...D9E7</span>
+                  </div>
+                </td>
+                <td>18,750 DMD</td>
+                <td>250 DMD</td>
+                <td>9.2%</td>
+                <td>95.7</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- DAO Section -->
+    <section class="dao-overview">
+      <div class="container">
+        <h2>DAO</h2>
+        <div class="dao-stats-grid">
+          <div class="dao-stat-card">
+            <h3>Count</h3>
+            <p class="stat-value">24</p>
+          </div>
+          <div class="dao-stat-card">
+            <h3>Phase</h3>
+            <p class="stat-value">Proposal</p>
+          </div>
+          <div class="dao-stat-card">
+            <h3>Time till end</h3>
+            <p class="stat-value countdown">2d 14h 35m</p>
+          </div>
+          <div class="dao-stat-card">
+            <h3>Governance Pot</h3>
+            <p class="stat-value">15,750 DMD</p>
+          </div>
+        </div>
+        <div class="dao-actions">
+          <a href="dao.html" class="btn-primary">Go to DAO <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Network Statistics Section -->
+    <section class="statistics">
+      <div class="container">
+        <div class="statistics-header">
+          <h2 class="fade-in">DMD: your protocol's<br>connection to the<br>global digital economy</h2>
+          <div class="big-stat">
+            <span class="big-stat-value">4M+</span>
+            <span class="big-stat-label">Total DMD Emission</span>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card fade-in">
+            <h3>Current Epoch</h3>
+            <p class="stat-value">1,245</p>
+          </div>
+          <div class="stat-card fade-in">
+            <h3>Next Round</h3>
+            <p class="stat-value">12h 34m</p>
+          </div>
+          <div class="stat-card fade-in">
+            <h3>Stake Start Time</h3>
+            <p class="stat-value">08:00 UTC</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top Validators Section -->
+    <section class="top-validators">
+      <div class="container">
+        <h2>Top Validators</h2>
+        <div class="table-container">
+          <table class="validators-table">
+            <thead>
+              <tr>
+                <th>Validator</th>
+                <th>Total Stake</th>
+                <th>Voting Power</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="validator-info">
+                    <div class="wallet-icon">
+                      <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #FF5E62, #FF9966);"></div>
+                    </div>
+                    <span>0x8A...B4F1</span>
+                  </div>
+                </td>
+                <td>25,430 DMD</td>
+                <td>12.5%</td>
+                <td>98.2</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="validator-info">
+                    <div class="wallet-icon">
+                      <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #56CCF2, #2F80ED);"></div>
+                    </div>
+                    <span>0x3C...D9E7</span>
+                  </div>
+                </td>
+                <td>18,750 DMD</td>
+                <td>9.2%</td>
+                <td>95.7</td>
+              </tr>
+              <tr class="current-user">
+                <td>
+                  <div class="validator-info">
+                    <div class="wallet-icon">
+                      <div class="wallet-icon-inner" style="background: linear-gradient(45deg, #6EE7B7, #3B82F6);"></div>
+                    </div>
+                    <span>0x7F...A3D2 (You)</span>
+                  </div>
+                </td>
+                <td>15,750 DMD</td>
+                <td>7.8%</td>
+                <td>97.5</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="validators-actions">
+          <a href="validators.html" class="btn-primary">See the list <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Create Pool Modal -->
+  <div class="modal" id="create-pool-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Create a Validator Pool</h3>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="create-pool-form">
+          <div class="form-group">
+            <label for="initial-stake">Initial Stake (DMD)</label>
+            <input type="number" id="initial-stake" placeholder="Minimum 10000 DMD">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Create Pool</button>
+            <button type="button" class="btn-secondary cancel-modal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Update Rewards Modal -->
+  <div class="modal" id="update-rewards-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Update Shared Rewards</h3>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="update-rewards-form">
+          <div class="form-group">
+            <label for="new-reward-share">New Reward Share (%)</label>
+            <input type="number" id="new-reward-share" placeholder="Enter percentage (0-100)">
+            <p class="form-help">This is the percentage of rewards that will be shared with your delegates.</p>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Update</button>
+            <button type="button" class="btn-secondary cancel-modal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="fade-in">Blockchain that scales</h2>
+        <!-- <div class="stats">
+          <div class="stat">
+            <span class="stat-value">90 ILS</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">500 ms</span>
+          </div>
+        </div> -->
+        <p>DMD Diamond is a fair-launched, truly decentralized Layer 1 blockchain, built by a dedicated community — without a company, premine, or ICO. Established in 2013, it has continuously evolved to prioritize security, efficiency, and decentralization.</p>
+        <a href="https://github.com/DMDcoin/whitepaper/wiki/A.-Home" target="_blank" class="btn-primary">Learn more about DMD <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <i class="fas fa-network-wired"></i>
+          </div>
+          <h3>Decentralized</h3>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Secure</h3>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h3>Scalable</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Design Section -->
+  <section class="design-section">
+    <div class="container">
+      <div class="design-grid">
+        <div class="design-content">
+          <h2>The Next Evolution of DMD Diamond</h2>
+          <p>DMD Diamond is relaunching as a fully EVM-compatible Layer 1, designed to empower developers and projects with cutting-edge blockchain technology.</p>
+          <a href="https://github.com/DMDcoin/whitepaper/wiki/A.-Home" target="_blank" class="btn-primary">Explore the ecosystem <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="design-features">
+          <div class="design-feature">
+            <div class="feature-icon">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <div class="feature-text">
+              <h4>Lightning Fast</h4>
+              <p>500ms block times</p>
+            </div>
+          </div>
+          <div class="design-feature">
+            <div class="feature-icon">
+              <i class="fas fa-lock"></i>
+            </div>
+            <div class="feature-text">
+              <h4>HBBFT Protocol</h4>
+              <p>Secure cross-chain transfers</p>
+            </div>
+          </div>
+          <div class="design-feature">
+            <div class="feature-icon">
+              <i class="fas fa-code-branch"></i>
+            </div>
+            <div class="feature-text">
+              <h4>EVM Compatibility</h4>
+              <p>Build exactly what you need</p>
+            </div>
+          </div>
+          <div class="design-feature">
+            <div class="feature-icon">
+              <i class="fas fa-server"></i>
+            </div>
+            <div class="feature-text">
+              <h4>Validator Network</h4>
+              <p>Decentralized consensus</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  <!-- Smart Contracts Section -->
+  <section class="smart-contracts">
+    <div class="container">
+      <div class="smart-contracts-grid">
+        <div class="smart-contracts-content">
+          <h2 class="fade-in">Smart contracts<br>done smarter</h2>
+          <p>The Diamond platform offers a secure, energy-efficient environment for smart contract execution—leveraging DMD’s high-performance blockchain architecture.</p>
+          <a href="validators.html" class="btn-primary">Start Staking <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="cosmic-elements contracts-elements">
+      <div class="glow glow-blue"></div>
+    </div>
+  </section>
+
+  <!-- Network Statistics Section -->
+  <section class="statistics">
+    <div class="container">
+      <div class="statistics-header">
+        <h2 class="fade-in">DMD: your protocol's<br>connection to the<br>global digital economy</h2>
+        <div class="big-stat">
+          <span class="big-stat-value">4M+</span>
+          <span class="big-stat-label">Total DMD Emission</span>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card fade-in">
+          <h3>Current Epoch</h3>
+          <p class="stat-value">396</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Key Gen. Round</h3>
+          <p class="stat-value">1</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Epoch Start Time</h3>
+          <p class="stat-value">22 May 2025 16:41:57</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Epoch Start Block</h3>
+          <p class="stat-value">112839</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Active Validators</h3>
+          <p class="stat-value">25</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Valid Candidates</h3>
+          <p class="stat-value">61</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Min. Gas Fee</h3>
+          <p class="stat-value">1 Gwei</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Reinsert Pot</h3>
+          <p class="stat-value">345662.1747 DMD</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Delta Pot</h3>
+          <p class="stat-value">512829.4899 DMD</p>
+        </div>
+        <div class="stat-card fade-in">
+          <h3>Claiming Pot</h3>
+          <p class="stat-value">2114280.8052 DMD</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonial Section -->
+  <section class="testimonial">
+    <div class="container">
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          <p>"As a true blockchain purist, DMD Diamond's core values ​include complete decentralization. DMD Diamond is a community-driven project with no corporations behind us."</p>
+          <div class="testimonial-author">
+            <div class="author-logo">Origin</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community Section -->
+  <section class="community">
+    <div class="container">
+      <h2 class="fade-in">A fast-growing, global <br> community</h2>
+      <p>Whether you're a developer, creator, or supporter, there's a place for you in the Diamond ecosystem. Build dApps on our fast, secure, and energy-efficient chain. Help shape the future of the blockchain with the help of decentralized governance. Or simply stake and participate in consensus—every role matters.
+        Join the community. Build with purpose. Own your impact.</p>
+
+      <div class="community-stats">
+        <div class="community-stat">
+          <i class="fas fa-users"></i>
+          <h3>Community Size</h3>
+          <p>1,500+ members</p>
+        </div>
+        <div class="community-stat">
+          <i class="fas fa-code"></i>
+          <h3>Core team</h3>
+          <p>10+ active developers</p>
+        </div>
+        <div class="community-stat">
+          <i class="fas fa-project-diagram"></i>
+          <h3>Projects Built</h3>
+          <p>5+ on top of DMD chain</p>
+        </div>
+        <div class="community-stat">
+          <i class="fas fa-globe"></i>
+          <h3>Global Reach</h3>
+          <p>50+ countries</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- News Section -->
+  <section class="news">
+    <div class="container">
+      <h2 class="fade-in">News & Updates</h2>
+      <div class="news-card">
+        <div class="news-content">
+          <h3>Connect to DMD</h3>
+          <p>Are you a third-party company seeking a sustainable blockchain solution with industry-leading features for hosting your project? Look no further!</p>
+          <a href="#" class="btn-small">Learn more</a>
+        </div>
+        <div class="news-image">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Become Participant Section -->
+  <section class="participate">
+    <div class="container">
+      <h2 class="fade-in">Start Staking</h2>
+      <div class="participate-grid">
+        <div class="participate-card fade-in">
+          <div class="participate-icon">
+            <i class="fas fa-wallet"></i>
+          </div>
+          <h3>Seamless Staking Experience</h3>
+          <p>Begin your journey by connecting your cryptocurrency wallet and explore the variety of staking options available. Our intuitive UI ensures a smooth and straightforward staking process.</p>
+        </div>
+        <div class="participate-card fade-in">
+          <div class="participate-icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <h3>Real-Time Analytics</h3>
+          <p>Stay informed with transparent data on staking pools, performance, and rewards. Our platform provides you with the insights needed to make the best staking decisions.</p>
+        </div>
+        <div class="participate-card fade-in">
+          <div class="participate-icon">
+            <i class="fas fa-coins"></i>
+          </div>
+          <h3>Earn Rewards</h3>
+          <p>By staking your DMD coins, you actively participate in transaction validation, securing the blockchain, and in return, receive additional DMD as rewards.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq">
+    <div class="container">
+      <h2 class="fade-in">Frequently Asked Questions</h2>
+      <div class="faq-container">
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>What is Staking?</h3>
+            <i class="fas fa-plus"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Staking in the DMD ecosystem is a way for holders to grow their holdings while contributing to the security and governance of the network. You can either become a validator (actively participate in the network's operations) or delegate your DMD to a validator and by doing so increase his chance to become selected as an active validator. Validators perform tasks like creating new blocks and validating transactions, while delegators support a validator by staking their DMD with them and sharing in the rewards.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>Who is a Validator?</h3>
+            <i class="fas fa-plus"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Blockchain validators or validator candidates are responsible for verifying and adding transactions to the blockchain. Users delegate their coins, or stake, to a validator. Validators receive 20% rewards from each Epoch they participate in as active validators, as a Validator operator reward. The rest of the Validator rewards (80%) are distributed proportionally based on the staked coins on that validator.</p>
+            <div class="heading">Validator candidates require:</div>
+            <ul class="pl40 pr20">
+              <li>Full node installation of the DMDv4 chain on a Linux server with the DMD version of Open Ethereum, which includes the DMDv4 extensions (HBBFT/POSDAO) and proper configuration.</li>
+              <li>Internet with a Static IP address and reliable 24/7 uptime.</li>
+              <li>Minimum collateral of 10,000 DMD (from validator candidate owner), with a maximum of 50,000 DMD staked on one validator candidate (combined from the owner and others who stake on top of the node).</li>
+              <li>Link to the address of the node that performs the work.</li>
+              <li>Validator candidate registration and collateral locking through the POSDAO dApp.</li>
+            </ul>
+            <p>Explore more about validators <a target="_blank" href="https://github.com/DMDcoin/whitepaper/wiki/D.-The-DMD-Diamond-Blockchain's-Solutions#d62-validators">here</a></p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>How do I start staking?</h3>
+            <i class="fas fa-plus"></i>
+          </div>
+          <div class="faq-answer">
+            <ol>
+                <li><strong>Acquire DMD Tokens:</strong><br />
+                    You can buy DMD tokens from supported cryptocurrency exchanges.
+                </li>
+                <br />
+                <li><strong>Choose a Staking Method:</strong><br />
+                    You can choose from multiple staking options:
+                    <ul class="pl20 pr20">
+                        <li><strong>Stake as a Validator:</strong> This requires running a full node and actively participating in network operations. It's more technical and requires at least 10,000 DMD. As a node operator, you also earn 20% of the validator rewards in addition to rewards proportional to your coin holdings.</li>
+                        <li><strong>Delegate to a Validator:</strong> If running a full node is not feasible, you can delegate your DMD to an existing validator. This is easier and still earns you rewards proportional to your coin holdings.</li>
+                    </ul>
+                </li>
+                <br />
+                <li><strong>Start Staking:</strong><br />
+                    <ul class="pl20 pr20">
+                        <li><strong>Access the Staking Interface:</strong> You can connect to our user-friendly interface with your wallet.</li>
+                        <li><strong>Choose a Validator (if delegating):</strong> Research and choose a reliable validator to delegate your DMD. Look for validators with a good track record and solid reputation.</li>
+                        <li><strong>Set the Amount:</strong> Decide how much DMD you want to stake or delegate.</li>
+                        <li><strong>Confirm and Stake:</strong> Once you've chosen your validator and set the amount, confirm the transaction to start staking.</li>
+                    </ul>
+                </li>
+            </ol>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>I have some DMD. Which validator should I delegate to?</h3>
+            <i class="fas fa-plus"></i>
+          </div>
+          <div class="faq-answer">
+            <p>
+              Choosing a validator for delegating your DMD is an important decision that can affect your staking rewards and the security of your coins. Here are some steps and considerations to help you choose the right validator:
+            </p>
+            <ul class="ml40 pr20 pb20">
+                <li><strong>Reputation and Reliability:</strong> Look for validators with a good reputation in the community. Validators with a history of uptime are generally more reliable.</li>
+                <li><strong>Community Involvement:</strong> Validators that are actively involved in the community and governance might be more aligned with the network's long-term success.</li>
+                <li><strong>Diversify Your Delegation:</strong> To mitigate risk, you might consider splitting your DMD across multiple validators. This way, if one validator underperforms, your other staked tokens are still earning rewards.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>Is there a minimum amount of DMD required to stake?</h3>
+            <i class="fas fa-plus"></i>
+          </div>
+          <div class="faq-answer">
+            <p>
+              The minimum required amount for staking is 100 DMD, when you want to stake on top of the validator candidate. If you want to create a pool as validator candidate yourself, 10000 DMD is required to be locked in staking mode.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>What about rewards from staking?</h3>
+            <i class="fas fa-plus"></i>
+          </div>
+          <div class="faq-answer">
+            <p>The rewards per epoch cycle (12 hours) are always 1/6000 of all coins in delta pot and reinsert pot combined. Upfront, the DAO Governance share is taken (10%). The rest of the epoch rewards are split between all validators of the actual active set, and then once again between the participants (coin owners) on each validator. So if there are 25 validators in the active set, each validator gets 1/25 of this epoch rewards. Before this validator reward is split between coin owners on that validator proportional, a 20% share of rewards is removed and accounted to the node operator (validator owner) for the effort to set up and maintain the validator node.</p>
+            <p class="pt0">More calculation examples <a target="_blank" href="https://github.com/DMDcoin/whitepaper/wiki/D.-The-DMD-Diamond-Blockchain's-Solutions#d62-validators">here</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="faq-actions">
+        <a href="faqs.html" class="btn-primary">See all FAQs <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>DMD Diamond</h3>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Ecosystem</a></li>
+            <li><a href="#">Community</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Developers</h3>
+          <ul>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Tutorials</a></li>
+            <li><a href="#">GitHub</a></li>
+            <li><a href="#">SDK</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="#">Whitepaper</a></li>
+            <li><a href="#">Roadmap</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Connect</h3>
+          <ul>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">Discord</a></li>
+            <li><a href="#">Telegram</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 DMD Diamond. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="theme.js"></script>
+  <script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    
+    // Make sure DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize mobile menu
+      mobileMenuBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleMobileMenu();
+      });
+      
+      function toggleMobileMenu() {
+        navLinks.classList.toggle('active');
+        mobileMenuBtn.classList.toggle('active');
+        
+        // When closing the menu, also close any open dropdowns
+        if (!navLinks.classList.contains('active')) {
+          document.querySelectorAll('.dropdown').forEach(dropdown => {
+            dropdown.classList.remove('active');
+          });
+          document.body.style.overflow = '';
+        } else {
+          document.body.style.overflow = 'hidden';
+        }
+      }
+      
+      // Close mobile menu when clicking regular links (not dropdowns)
+      const regularLinks = document.querySelectorAll('.nav-links > li:not(.dropdown) > a');
+      
+      regularLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          // Only run this on mobile
+          if (window.innerWidth <= 768) {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            document.body.style.overflow = '';
+          }
+        });
+      });
+      
+      // Handle dropdown clicks inside mobile menu
+      const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+      let dropdownClickHandlers = [];
+      let documentClickHandler = null;
+      
+      // Function to handle mobile dropdown toggle
+      function setupMobileDropdowns() {
+        // First, clean up any existing event listeners
+        dropdownToggles.forEach((toggle, index) => {
+          if (dropdownClickHandlers[index]) {
+            toggle.removeEventListener('click', dropdownClickHandlers[index]);
+          }
+        });
+        
+        // Remove document click handler if it exists
+        if (documentClickHandler) {
+          document.removeEventListener('click', documentClickHandler);
+          documentClickHandler = null;
+        }
+        
+        // Reset handlers array
+        dropdownClickHandlers = [];
+        
+        if (window.innerWidth <= 768) {
+          // Mobile behavior - click to toggle
+          dropdownToggles.forEach((toggle, index) => {
+            const clickHandler = function(e) {
+              e.preventDefault();
+              e.stopPropagation(); // Stop event from bubbling up
+              const parent = this.parentElement;
+              
+              // Close other dropdowns first
+              document.querySelectorAll('.dropdown').forEach(dropdown => {
+                if (dropdown !== parent) {
+                  dropdown.classList.remove('active');
+                }
+              });
+              
+              // Toggle current dropdown
+              parent.classList.toggle('active');
+            };
+            
+            // Store reference to handler
+            dropdownClickHandlers[index] = clickHandler;
+            
+            // Add event listener
+            toggle.addEventListener('click', clickHandler);
+          });
+          
+          // Close dropdown when clicking outside
+          documentClickHandler = function(e) {
+            if (!e.target.closest('.dropdown') && !e.target.closest('.mobile-menu-btn')) {
+              document.querySelectorAll('.dropdown').forEach(dropdown => {
+                dropdown.classList.remove('active');
+              });
+            }
+          };
+          
+          document.addEventListener('click', documentClickHandler);
+        }
+      }
+      
+      // Initial setup
+      setupMobileDropdowns();
+      
+      // Handle ESC key to close mobile menu
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+          navLinks.classList.remove('active');
+          mobileMenuBtn.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+      
+      // Reconfigure on window resize
+      window.addEventListener('resize', function() {
+        setupMobileDropdowns();
+        
+        // Reset overflow if menu is closed on resize
+        if (window.innerWidth > 768) {
+          document.body.style.overflow = '';
+        }
+      });
+    });
+
+    // FAQ accordion
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+          const item = question.parentElement;
+          item.classList.toggle('active');
+
+          // Update icon
+          const icon = question.querySelector('i');
+          if (item.classList.contains('active')) {
+            icon.classList.remove('fa-plus');
+            icon.classList.add('fa-minus');
+          } else {
+            icon.classList.remove('fa-minus');
+            icon.classList.add('fa-plus');
+          }
+        });
+      });
+    });
+
+    // Intersection Observer for fade-in animations
+    document.addEventListener('DOMContentLoaded', function () {
+      const fadeElements = document.querySelectorAll('.fade-in');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+
+      fadeElements.forEach(element => {
+        observer.observe(element);
+      });
+    });
+
+    // Authentication state toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const connectWalletBtn = document.getElementById('connect-wallet-btn');
+      const userWalletInfo = document.getElementById('user-wallet-info');
+      const unauthenticatedView = document.getElementById('unauthenticated-view');
+      const authenticatedUserView = document.getElementById('authenticated-user-view');
+      const authenticatedValidatorView = document.getElementById('authenticated-validator-view');
+      
+      // Track authentication state (0: unauthenticated, 1: user, 2: validator)
+      let authState = 0;
+      
+      // Connect wallet button click handler
+      connectWalletBtn.addEventListener('click', function() {
+        authState = (authState + 1) % 3;
+        updateAuthView();
+      });
+      
+      // User wallet info click handler (for logging out)
+      userWalletInfo.addEventListener('click', function() {
+        authState = (authState + 1) % 3;
+        updateAuthView();
+      });
+      
+      // Update the view based on authentication state
+      function updateAuthView() {
+        switch(authState) {
+          case 0: // Unauthenticated
+            connectWalletBtn.style.display = 'flex';
+            userWalletInfo.style.display = 'none';
+            unauthenticatedView.style.display = 'block';
+            authenticatedUserView.style.display = 'none';
+            authenticatedValidatorView.style.display = 'none';
+            break;
+          case 1: // Authenticated User
+            connectWalletBtn.style.display = 'none';
+            userWalletInfo.style.display = 'flex';
+            unauthenticatedView.style.display = 'none';
+            authenticatedUserView.style.display = 'block';
+            authenticatedValidatorView.style.display = 'none';
+            break;
+          case 2: // Authenticated Validator
+            connectWalletBtn.style.display = 'none';
+            userWalletInfo.style.display = 'flex';
+            unauthenticatedView.style.display = 'none';
+            authenticatedUserView.style.display = 'none';
+            authenticatedValidatorView.style.display = 'block';
+            break;
+        }
+      }
+      
+      // Modal functionality
+      const createPoolBtn = document.getElementById('create-pool-btn');
+      const updateRewardsBtn = document.getElementById('update-rewards-btn');
+      const createPoolModal = document.getElementById('create-pool-modal');
+      const updateRewardsModal = document.getElementById('update-rewards-modal');
+      const closeModalBtns = document.querySelectorAll('.close-modal');
+      const cancelModalBtns = document.querySelectorAll('.cancel-modal');
+      
+      // Open create pool modal
+      if (createPoolBtn) {
+        createPoolBtn.addEventListener('click', function() {
+          createPoolModal.style.display = 'flex';
+        });
+      }
+      
+      // Open update rewards modal
+      if (updateRewardsBtn) {
+        updateRewardsBtn.addEventListener('click', function() {
+          updateRewardsModal.style.display = 'flex';
+        });
+      }
+
+      // Open edit reward modal (reuse update rewards modal)
+      const editRewardBtn = document.getElementById('edit-reward-btn');
+      if (editRewardBtn) {
+        editRewardBtn.addEventListener('click', function() {
+          updateRewardsModal.style.display = 'flex';
+        });
+      }
+      
+      // Close modals
+      closeModalBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          createPoolModal.style.display = 'none';
+          updateRewardsModal.style.display = 'none';
+        });
+      });
+      
+      cancelModalBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          createPoolModal.style.display = 'none';
+          updateRewardsModal.style.display = 'none';
+        });
+      });
+      
+      // Close modal when clicking outside
+      window.addEventListener('click', function(e) {
+        if (e.target === createPoolModal) {
+          createPoolModal.style.display = 'none';
+        }
+        if (e.target === updateRewardsModal) {
+          updateRewardsModal.style.display = 'none';
+        }
+      });
+      
+      // Form submissions
+      const createPoolForm = document.getElementById('create-pool-form');
+      const updateRewardsForm = document.getElementById('update-rewards-form');
+      
+      if (createPoolForm) {
+        createPoolForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          // Here you would handle the form submission
+          createPoolModal.style.display = 'none';
+          // Switch to validator view
+          authState = 2;
+          updateAuthView();
+        });
+      }
+      
+      if (updateRewardsForm) {
+        updateRewardsForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          // Here you would handle the form submission
+          updateRewardsModal.style.display = 'none';
+        });
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const partnersTrack = document.querySelector('.partners-track');
+      if (!partnersTrack) return;
+
+      const partnerLogos = partnersTrack.querySelectorAll('.partner-logo');
+      let isAnimating = false;
+      let resizeTimeout;
+
+      const calculateSetsNeeded = () => {
+        const trackWidth = partnersTrack.scrollWidth;
+        const viewportWidth = window.innerWidth;
+        const minSetsNeeded = Math.ceil((viewportWidth * 3) / trackWidth);
+        return Math.max(5, minSetsNeeded);
+      };
+
+      const fillWithLogos = () => {
+        if (isAnimating) return;
+        
+        // Clear existing clones
+        const existingClones = partnersTrack.querySelectorAll('.partner-logo-clone');
+        existingClones.forEach(clone => clone.remove());
+        
+        const setsNeeded = calculateSetsNeeded();
+        const fragment = document.createDocumentFragment();
+        
+        for (let i = 0; i < setsNeeded; i++) {
+          partnerLogos.forEach(logo => {
+            const clone = logo.cloneNode(true);
+            clone.classList.add('partner-logo-clone');
+            fragment.appendChild(clone);
+          });
+        }
+        
+        partnersTrack.appendChild(fragment);
+      };
+
+      const resetAnimation = () => {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        const scrollDistance = partnersTrack.scrollWidth / 2;
+        
+        partnersTrack.style.transition = 'none';
+        partnersTrack.style.transform = 'translateX(0)';
+        
+        // Use requestAnimationFrame for better performance
+        requestAnimationFrame(() => {
+          const duration = Math.min(40, Math.max(20, scrollDistance / 5));
+          partnersTrack.style.transition = `transform ${duration}s linear`;
+          partnersTrack.style.transform = `translateX(-${scrollDistance}px)`;
+          isAnimating = false;
+        });
+      };
+
+      // Initial setup
+      fillWithLogos();
+      partnersTrack.style.animation = 'none';
+      resetAnimation();
+
+      // Debounced resize handler
+      const handleResize = debounce(() => {
+        if (!isAnimating) {
+          fillWithLogos();
+          resetAnimation();
+        }
+      }, 500);
+
+      partnersTrack.addEventListener('transitionend', resetAnimation);
+      window.addEventListener('resize', handleResize);
+
+      // Cleanup function
+      window._partnersCleanup = () => {
+        window.removeEventListener('resize', handleResize);
+        partnersTrack.removeEventListener('transitionend', resetAnimation);
+      };
+    });
+  </script>
+</body>
+
+</html>

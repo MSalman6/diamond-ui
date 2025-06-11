@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAO Governance - DMD Diamond</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="dao.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="logo">
+        <a href="index.html">
+          <img class="logo-img" src="/assets/images/dmd-logo.png" alt="DMD Diamond Logo">
+        </a>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="validators.html">Validators</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle">DMD Ecosystem <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+              <div class="dropdown-content">
+                <div class="dropdown-section">
+                  <ul>
+                    <li><a href="https://bit.diamonds" target="_blank">Bit Diamonds<i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="https://dmd.diamonds" target="_blank">DMD Explorer<i class="fas fa-external-link-alt"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle">3rd Party Projects <i class="fas fa-chevron-down"></i></a>
+            <div class="dropdown-menu">
+              <div class="dropdown-content">
+                <div class="dropdown-section">
+                  <ul>
+                    <li><a href="https://uniq.directory/" target="_blank">NFT Marketplace <i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="https://uniq.diamonds/" target="_blank">uNiq Diamonds <i class="fas fa-external-link-alt"></i></a></li>
+                    <li><a href="https://gladiators.diamonds/" target="_blank">uNiq Gladiators <i class="fas fa-external-link-alt"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <div class="header-right">
+        <div class="theme-toggle-wrapper">
+          <label class="theme-toggle">
+            <input type="checkbox" id="theme-toggle">
+            <span class="theme-toggle-slider">
+              <i class="fas fa-sun theme-toggle-icon sun"></i>
+              <i class="fas fa-moon theme-toggle-icon moon"></i>
+            </span>
+          </label>
+        </div>
+        <div class="user-wallet-info" id="user-wallet-info" style="display: none;">
+          <div class="wallet-icon">
+            <div class="wallet-icon-inner"></div>
+          </div>
+          <div class="wallet-address">0x7F...A3D2</div>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="cta-button" id="connect-wallet-btn">
+          <i class="fas fa-wallet"></i> Connect Wallet
+        </div>
+      </div>
+      <div class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- Governance Hero Section -->
+  <section class="governance-hero">
+    <div class="cosmic-grid"></div>
+    <div class="cosmic-elements">
+      <div class="diamond diamond-1"></div>
+      <div class="diamond diamond-2"></div>
+      <div class="diamond diamond-3"></div>
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+    </div>
+    <div class="container">
+      <div class="governance-hero-content">
+        <h1>Governance</h1>
+        <div class="phase-indicator">
+          <div class="phase-badge">
+            <i class="fas fa-hourglass-half"></i> Current Phase: Proposal
+          </div>
+          <div class="phase-progress">
+            <div class="phase-step active">
+              <div class="step-dot"></div>
+              <span>Proposal</span>
+            </div>
+            <div class="phase-connector"></div>
+            <div class="phase-step">
+              <div class="step-dot"></div>
+              <span>Voting</span>
+            </div>
+            <!-- <div class="phase-connector"></div>
+            <div class="phase-step">
+              <div class="step-dot"></div>
+              <span>Execution</span>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Cards Section -->
+  <section class="governance-stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card dao-phase-card">
+          <div class="stat-header">
+            <h3>DAO Phase</h3>
+            <div class="stat-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+          </div>
+          <div class="stat-content">
+            <p class="stat-value">Proposal Phase 61</p>
+            <div class="countdown-timer">
+              <div class="countdown-item">
+                <span class="countdown-value">02</span>
+                <span class="countdown-label">Days</span>
+              </div>
+              <div class="countdown-item">
+                <span class="countdown-value">18</span>
+                <span class="countdown-label">Hours</span>
+              </div>
+              <div class="countdown-item">
+                <span class="countdown-value">45</span>
+                <span class="countdown-label">Minutes</span>
+              </div>
+              <div class="countdown-item">
+                <span class="countdown-value">32</span>
+                <span class="countdown-label">Seconds</span>
+              </div>
+            </div>
+            <a href="create-proposal.html" class="btn-primary create-proposal-btn">
+              <i class="fas fa-plus-circle"></i> Create Proposal
+            </a>
+          </div>
+        </div>
+        
+        <div class="stat-card voting-power-card">
+          <div class="stat-header">
+            <h3>Voting Power</h3>
+            <div class="stat-icon">
+              <i class="fas fa-vote-yea"></i>
+            </div>
+          </div>
+          <div class="stat-content">
+            <p class="stat-value">4.2%</p>
+            <div class="stat-details">
+              <div class="detail-item">
+                <span class="detail-label">Pool Stake:</span>
+                <span class="detail-value">1,250,000 DMD</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Total Stake:</span>
+                <span class="detail-value">29,750,000 DMD</span>
+              </div>
+            </div>
+            <div class="voting-power-bar">
+              <div class="power-progress" style="width: 4.2%"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="stat-card governance-pot-card">
+          <div class="stat-header">
+            <h3>Governance Pot</h3>
+            <div class="stat-icon">
+              <i class="fas fa-coins"></i>
+            </div>
+          </div>
+          <div class="stat-content">
+            <p class="stat-value">750,000 DMD</p>
+            <div class="stat-trend positive">
+              <i class="fas fa-arrow-up"></i> 3.5% this month
+            </div>
+            <div class="pot-distribution">
+              <!-- <div class="distribution-item">
+                <span class="distribution-label">Protocol:</span>
+                <span class="distribution-value">450,000 DMD</span>
+                <div class="distribution-bar">
+                  <div class="distribution-progress protocol" style="width: 60%"></div>
+                </div>
+              </div> -->
+              <div class="distribution-item">
+                <span class="distribution-label">Community:</span>
+                <span class="distribution-value">300,000 DMD</span>
+                <div class="distribution-bar">
+                  <div class="distribution-progress community" style="width: 40%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="stat-card historic-proposals-card">
+          <div class="stat-header">
+            <h3>Historic Proposals</h3>
+            <div class="stat-icon">
+              <i class="fas fa-history"></i>
+            </div>
+          </div>
+          <div class="stat-content">
+            <p class="stat-value">248</p>
+            <div class="proposals-breakdown">
+              <div class="breakdown-item">
+                <span class="breakdown-dot passed"></span>
+                <span class="breakdown-label">Passed:</span>
+                <span class="breakdown-value">186</span>
+              </div>
+              <div class="breakdown-item">
+                <span class="breakdown-dot declined"></span>
+                <span class="breakdown-label">Declined:</span>
+                <span class="breakdown-value">62</span>
+              </div>
+            </div>
+            <a href="historic-proposals.html" class="cta-button view-history-btn">
+              <i class="fas fa-external-link-alt"></i> View History
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proposals Management Section -->
+  <section class="proposals-management">
+    <div class="container">
+      <div class="proposals-controls">
+        <div class="search-filter-group">
+          <div class="search-container">
+            <input type="text" id="proposal-search" placeholder="Search proposals...">
+            <button class="search-btn"><i class="fas fa-search"></i></button>
+          </div>
+          <div class="filter-container">
+            <select id="proposal-filter">
+              <option value="all">All Types</option>
+              <!-- <option value="protocol">Protocol</option> -->
+              <option value="treasury">Treasury</option>
+              <option value="parameter">Parameter</option>
+              <option value="community">Community</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="proposals-tabs">
+        <button class="tab-btn active" data-tab="current">Proposals of the current DAO phase</button>
+        <button class="tab-btn" data-tab="actions">Actions needed</button>
+      </div>
+
+      <div class="proposals-tab-content active" id="current-tab">
+        <div class="proposals-table-container">
+          <table class="proposals-table">
+            <thead>
+              <tr>
+              <th>Date&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Created&nbsp;by&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Title&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Type&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Participation&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Exceeding&nbsp;Yes&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Voted&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Status&nbsp;<i class="fas fa-sort"></i></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2025-04-02</td>
+                <td>
+                  <div class="creator-address">
+                    <span>0x8F3c...9D2b</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="proposal-title">
+                    <span>Increase Validator Commission Cap to 10%</span>
+                  </div>
+                </td>
+                <td><span class="proposal-type parameter">Parameter</span></td>
+                <td>
+                  65%
+                  <!-- <div class="participation-bar">
+                    <div class="participation-progress" style="width: 65%"></div>
+                    <span class="participation-value">65%</span>
+                  </div> -->
+                </td>
+                <td><span class="exceeding-value positive">+12.5%</span></td>
+                <td><span class="voted-status voted"><i class="fas fa-check-circle"></i></span></td>
+                <td><span class="proposal-status active">Active</span></td>
+              </tr>
+              <!-- <tr>
+                <td>2025-04-01</td>
+                <td>
+                  <div class="creator-address">
+                    <span>0x4A7f...1E3c</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="proposal-title">
+                    <span>Community Development Fund Allocation Q2</span>
+                  </div>
+                </td>
+                <td><span class="proposal-type treasury">Treasury</span></td>
+                <td>
+                  <div class="participation-bar">
+                    <div class="participation-progress" style="width: 72%"></div>
+                    <span class="participation-value">72%</span>
+                  </div>
+                </td>
+                <td><span class="exceeding-value positive">+24.8%</span></td>
+                <td><span class="voted-status voted"><i class="fas fa-check-circle"></i></span></td>
+                <td><span class="proposal-status active">Active</span></td>
+              </tr> -->
+              <!-- <tr>
+                <td>2025-03-30</td>
+                <td>
+                  <div class="creator-address">
+                    <span>0x2B5d...7F4e</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="proposal-title">
+                    <span>DMD Protocol Upgrade v2.6</span>
+                  </div>
+                </td>
+                <td><span class="proposal-type protocol">Protocol</span></td>
+                <td>
+                  <div class="participation-bar">
+                    <div class="participation-progress" style="width: 58%"></div>
+                    <span class="participation-value">58%</span>
+                  </div>
+                </td>
+                <td><span class="exceeding-value positive">+18.2%</span></td>
+                <td><span class="voted-status not-voted"><i class="fas fa-times-circle"></i></span></td>
+                <td><span class="proposal-status active">Active</span></td>
+              </tr> -->
+              <tr>
+                <td>2025-03-28</td>
+                <td>
+                  <div class="creator-address">
+                    <span>0x6C9b...2D5a</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="proposal-title">
+                    <span>Marketing Budget Increase for Q2</span>
+                  </div>
+                </td>
+                <td><span class="proposal-type community">Open</span></td>
+                <td>
+                  45%
+                  <!-- <div class="participation-bar">
+                    <div class="participation-progress" style="width: 45%"></div>
+                    <span class="participation-value">45%</span>
+                  </div> -->
+                </td>
+                <td><span class="exceeding-value negative">-5.3%</span></td>
+                <td><span class="voted-status voted"><i class="fas fa-check-circle"></i></span></td>
+                <td><span class="proposal-status active">Active</span></td>
+              </tr>
+              <tr>
+                <td>2025-03-25</td>
+                <td>
+                  <div class="creator-address">
+                    <span>0x3E8c...6A1d</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="proposal-title">
+                    <span>Reduce Unbonding Period to 14 Days</span>
+                  </div>
+                </td>
+                <td><span class="proposal-type parameter">Parameter</span></td>
+                <td>
+                  68%
+                  <!-- <div class="participation-bar">
+                    <div class="participation-progress" style="width: 68%"></div>
+                    <span class="participation-value">68%</span>
+                  </div> -->
+                </td>
+                <td><span class="exceeding-value negative">-2.1%</span></td>
+                <td><span class="voted-status not-voted"><i class="fas fa-times-circle"></i></span></td>
+                <td><span class="proposal-status active">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="proposals-tab-content" id="actions-tab">
+        <div class="proposals-table-container">
+          <table class="proposals-table">
+            <thead>
+              <tr>
+              <th>Date&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Created&nbsp;by&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Title&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Type&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Participation&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Exceeding&nbsp;Yes&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Action&nbsp;<i class="fas fa-sort"></i></th>
+              <th>Status&nbsp;<i class="fas fa-sort"></i></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2025-03-30</td>
+                <td>
+                  <div class="creator-address">
+                    <span>0x2B5d...7F4e</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="proposal-title">
+                    <span>DMD Protocol Upgrade v2.6</span>
+                  </div>
+                </td>
+                <td><span class="proposal-type protocol">Protocol</span></td>
+                <td>
+                  <div class="participation-bar">
+                    <div class="participation-progress" style="width: 58%"></div>
+                    <span class="participation-value">58%</span>
+                  </div>
+                </td>
+                <td><span class="exceeding-value positive">+18.2%</span></td>
+                <td>
+                  <button class="btn-vote">
+                    <i class="fas fa-vote-yea"></i> Vote
+                  </button>
+                </td>
+                <td><span class="proposal-status active">Active</span></td>
+              </tr>
+              <tr>
+                <td>2025-03-25</td>
+                <td>
+                  <div class="creator-address">
+                    <span>0x3E8c...6A1d</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="proposal-title">
+                    <span>Reduce Unbonding Period to 14 Days</span>
+                  </div>
+                </td>
+                <td><span class="proposal-type parameter">Parameter</span></td>
+                <td>
+                  <div class="participation-bar">
+                    <div class="participation-progress" style="width: 68%"></div>
+                    <span class="participation-value">68%</span>
+                  </div>
+                </td>
+                <td><span class="exceeding-value negative">-2.1%</span></td>
+                <td>
+                  <button class="btn-vote">
+                    <i class="fas fa-vote-yea"></i> Vote
+                  </button>
+                </td>
+                <td><span class="proposal-status active">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" style="display: none;">
+        <div class="empty-state-icon">
+          <i class="fas fa-file-alt"></i>
+        </div>
+        <h3>No proposals found</h3>
+        <p>There are no proposals matching your search criteria.</p>
+        <button class="btn-primary create-proposal-btn">
+          <i class="fas fa-plus-circle"></i> Create Proposal
+        </button>
+      </div>
+
+      <div class="pagination">
+        <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+        <button class="pagination-btn active">1</button>
+        <button class="pagination-btn">2</button>
+        <button class="pagination-btn">3</button>
+        <span class="pagination-ellipsis">...</span>
+        <button class="pagination-btn">10</button>
+        <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Create Proposal Modal -->
+  <!-- <div id="create-proposal-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Create New Proposal</h3>
+        <button class="close-modal"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="proposal-title">Proposal Title</label>
+          <input type="text" id="proposal-title" placeholder="Enter a descriptive title...">
+        </div>
+        <div class="form-group">
+          <label for="proposal-type">Proposal Type</label>
+          <select id="proposal-type">
+            <option value="protocol">Protocol</option>
+            <option value="treasury">Treasury</option>
+            <option value="parameter">Parameter</option>
+            <option value="community">Community</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="proposal-description">Description</label>
+          <textarea id="proposal-description" rows="6" placeholder="Describe your proposal in detail..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="proposal-changes">Proposed Changes</label>
+          <textarea id="proposal-changes" rows="4" placeholder="List the specific changes or actions..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Required Deposit</label>
+          <div class="deposit-info">
+            <span class="deposit-amount">5,000 DMD</span>
+            <div class="balance-info">
+              <span>Your Balance: <strong>25,000 DMD</strong></span>
+            </div>
+          </div>
+          <p class="deposit-note">This deposit will be returned if your proposal passes or is declined with sufficient participation. It will be burned if the proposal is deemed spam.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary close-modal">Cancel</button>
+        <button class="btn-primary" id="submit-proposal">Submit Proposal</button>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- Vote Modal -->
+  <div id="vote-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Vote on Proposal</h3>
+        <button class="close-modal"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="proposal-info">
+          <h4 id="vote-proposal-title">DMD Protocol Upgrade v2.6</h4>
+          <div class="proposal-meta">
+            <span class="proposal-type protocol">Protocol</span>
+            <span class="proposal-date">Created on 2025-03-30</span>
+          </div>
+          <div class="proposal-description">
+            <p>This proposal aims to upgrade the DMD Protocol to version 2.6, introducing performance improvements and new features.</p>
+          </div>
+        </div>
+        <div class="voting-stats">
+          <div class="voting-stat">
+            <span class="stat-label">Participation</span>
+            <div class="participation-bar">
+              <div class="participation-progress" style="width: 58%"></div>
+              <span class="participation-value">58%</span>
+            </div>
+          </div>
+          <div class="voting-stat">
+            <span class="stat-label">Current Results</span>
+            <div class="results-bars">
+              <div class="result-bar yes">
+                <span class="result-label">Yes</span>
+                <div class="result-progress-container">
+                  <div class="result-progress" style="width: 68%"></div>
+                </div>
+                <span class="result-value">68%</span>
+              </div>
+              <div class="result-bar no">
+                <span class="result-label">No</span>
+                <div class="result-progress-container">
+                  <div class="result-progress" style="width: 22%"></div>
+                </div>
+                <span class="result-value">22%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="vote-options">
+          <h4>Cast Your Vote</h4>
+          <div class="vote-buttons">
+            <button class="vote-btn vote-yes">
+              <i class="fas fa-check-circle"></i> Yes
+            </button>
+            <button class="vote-btn vote-no">
+              <i class="fas fa-times-circle"></i> No
+            </button>
+          </div>
+          <div class="voting-power-info">
+            <span>Your Voting Power: <strong>4.2%</strong></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary close-modal">Cancel</button>
+        <button class="btn-primary" id="confirm-vote" disabled>Confirm Vote</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>DMD Diamond</h3>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Ecosystem</a></li>
+            <li><a href="#">Community</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Developers</h3>
+          <ul>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Tutorials</a></li>
+            <li><a href="#">GitHub</a></li>
+            <li><a href="#">SDK</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="#">Whitepaper</a></li>
+            <li><a href="#">Roadmap</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Connect</h3>
+          <ul>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">Discord</a></li>
+            <li><a href="#">Telegram</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 DMD Diamond. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="theme.js"></script>
+  <script src="dao.js"></script>
+</body>
+</html>

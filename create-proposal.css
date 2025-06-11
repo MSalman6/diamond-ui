@@ -1,0 +1,688 @@
+
+.proposal-hero {
+  min-height: 350px;
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  padding-top: 100px;
+  transition: background-color 0.5s ease;
+}
+
+.proposal-hero-content {
+  max-width: 900px;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding-top: 60px;
+}
+
+.proposal-hero-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  line-height: 1.1;
+  color: var(--text);
+  transition: color 0.5s ease;
+}
+
+.proposal-hero-content p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  color: var(--text-secondary);
+  transition: color 0.5s ease;
+}
+
+
+.light-theme .proposal-hero-content p {
+  color: #555;
+}
+
+
+.proposal-form-section {
+  background: var(--bg);
+  padding: 40px 0 80px;
+  transition: background-color 0.5s ease;
+}
+
+.proposal-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.proposal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+
+.form-section {
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  padding: 30px;
+  transition: background-color 0.5s ease, border-color 0.5s ease;
+}
+
+
+.light-theme .form-section {
+  background: #ffffff;
+  border: 1px solid #e0e4e8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: var(--text);
+  transition: color 0.5s ease;
+}
+
+
+.light-theme .section-title {
+  color: #333;
+}
+
+.section-description {
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  transition: color 0.5s ease;
+}
+
+
+.light-theme .section-description {
+  color: #555;
+}
+
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text);
+  transition: color 0.5s ease;
+}
+
+
+.light-theme .form-group label {
+  color: #333;
+}
+
+
+.form-control {
+  width: 100%;
+  background: var(--darker-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px 15px;
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.5s ease;
+}
+
+
+.light-theme .form-control {
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  color: #333;
+}
+
+
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  padding-right: 40px;
+}
+
+
+.light-theme select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  padding-right: 40px;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: rgba(0, 157, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(0, 157, 255, 0.2);
+}
+
+
+.light-theme .form-control:focus {
+  border-color: #0077cc;
+  box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.15);
+}
+
+
+.form-control option {
+  background-color: var(--darker-bg);
+  color: var(--text);
+}
+
+.light-theme .form-control option {
+  background-color: #ffffff;
+  color: #333;
+}
+
+.form-control::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+
+.light-theme .form-control::placeholder {
+  color: #999;
+  opacity: 0.8;
+}
+
+.form-hint {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  transition: color 0.5s ease;
+}
+
+
+.light-theme .form-hint {
+  color: #666;
+}
+
+
+.slider-container {
+  margin-top: 10px;
+}
+
+.slider-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  color: var(--text-secondary);
+  transition: color 0.5s ease;
+}
+
+
+.light-theme .slider-info {
+  color: #666;
+}
+
+.slider-info strong {
+  color: var(--text);
+  transition: color 0.5s ease;
+}
+
+
+.light-theme .slider-info strong {
+  color: #333;
+}
+
+.slider-control {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.min-value,
+.max-value {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  transition: color 0.5s ease;
+}
+
+
+.light-theme .min-value,
+.light-theme .max-value {
+  color: #666;
+}
+
+.form-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 6px;
+  background: var(--darker-bg);
+  border-radius: 3px;
+  outline: none;
+}
+
+
+.light-theme .form-slider {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.form-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.form-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  border: none;
+}
+
+
+.light-theme .form-slider::-webkit-slider-thumb {
+  background: linear-gradient(90deg, #0077cc, #3a7bd5);
+}
+
+.light-theme .form-slider::-moz-range-thumb {
+  background: linear-gradient(90deg, #0077cc, #3a7bd5);
+}
+
+.form-slider::-webkit-slider-thumb:hover,
+.form-slider:active::-webkit-slider-thumb {
+  transform: scale(1.2);
+}
+
+.form-slider::-moz-range-thumb:hover,
+.form-slider:active::-moz-range-thumb {
+  transform: scale(1.2);
+}
+
+
+.transaction-section {
+  background: var(--darker-bg);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+  transition: background-color 0.5s ease, border-color 0.5s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+
+.light-theme .transaction-section {
+  background: #f5f7fa;
+  border: 1px solid #e0e4e8;
+}
+
+.transaction-section.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.transaction-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.transaction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.transaction-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--text);
+  transition: color 0.5s ease;
+}
+
+
+.light-theme .transaction-header h3 {
+  color: #333;
+}
+
+.btn-remove-transaction {
+  background: transparent;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+
+.light-theme .btn-remove-transaction {
+  color: #e53e3e;
+}
+
+.btn-remove-transaction:hover {
+  transform: scale(1.1);
+}
+
+.btn-remove-transaction:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn-add-transaction {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  padding: 12px 20px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+
+.light-theme .btn-add-transaction {
+  border: 1px solid #d0d5dd;
+  color: #333;
+}
+
+.btn-add-transaction:hover {
+  background: var(--card-hover);
+  transform: translateY(-2px);
+}
+
+
+.light-theme .btn-add-transaction:hover {
+  background: #f0f2f5;
+}
+
+.btn-add-transaction i {
+  color: #07f49e;
+}
+
+
+.light-theme .btn-add-transaction i {
+  color: #00a86b;
+}
+
+
+.info-box {
+  display: flex;
+  gap: 15px;
+  background: rgba(0, 157, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+
+.light-theme .info-box {
+  background: rgba(0, 119, 204, 0.08);
+}
+
+.info-icon {
+  font-size: 1.5rem;
+  color: #00d2ff;
+}
+
+
+.light-theme .info-icon {
+  color: #0077cc;
+}
+
+.info-content p {
+  margin: 0 0 10px;
+  color: var(--text);
+  font-size: 0.95rem;
+  transition: color 0.5s ease;
+}
+
+
+.light-theme .info-content p {
+  color: #333;
+}
+
+.info-content p:last-child {
+  margin-bottom: 0;
+}
+
+
+.fee-info-box {
+  background: rgba(255, 159, 67, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+
+.light-theme .fee-info-box {
+  background: rgba(230, 126, 34, 0.08);
+}
+
+.fee-info-header {
+  background: rgba(255, 159, 67, 0.2);
+  padding: 15px 20px;
+}
+
+
+.light-theme .fee-info-header {
+  background: rgba(230, 126, 34, 0.15);
+}
+
+.fee-info-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #ff9f43;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.light-theme .fee-info-header h3 {
+  color: #e67e22;
+}
+
+.fee-info-content {
+  padding: 20px;
+}
+
+.fee-info-content p {
+  margin: 0 0 10px;
+  color: var(--text);
+  font-size: 0.95rem;
+  transition: color 0.5s ease;
+}
+
+
+.light-theme .fee-info-content p {
+  color: #333;
+}
+
+.fee-info-content p:last-child {
+  margin-bottom: 0;
+}
+
+.fee-info-content strong {
+  color: #ff9f43;
+}
+
+
+.light-theme .fee-info-content strong {
+  color: #e67e22;
+}
+
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-create-proposal {
+  background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+
+.light-theme .btn-create-proposal {
+  background: linear-gradient(90deg, #0077cc, #3a7bd5);
+}
+
+.btn-create-proposal::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+
+.btn-create-proposal:hover::after {
+  left: 100%;
+  animation: shimmer 1.5s;
+}
+
+.btn-create-proposal:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 157, 255, 0.3);
+}
+
+
+.light-theme .btn-create-proposal:hover {
+  box-shadow: 0 8px 25px rgba(0, 119, 204, 0.3);
+}
+
+
+.dynamic-section {
+  display: none;
+}
+
+.dynamic-section.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.dynamic-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+@keyframes shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+
+@media (max-width: 992px) {
+  .proposal-hero-content h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .proposal-hero {
+    height: auto;
+    padding: 100px 0 40px;
+  }
+
+  .proposal-hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .form-section {
+    padding: 20px;
+  }
+
+  .slider-control {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .min-value,
+  .max-value {
+    text-align: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .proposal-hero {
+    padding: 90px 0 30px;
+  }
+
+  .proposal-hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+  }
+
+  .info-box {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-create-proposal {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .form-slider::-webkit-slider-thumb,
+  .form-slider::-moz-range-thumb,
+  .btn-remove-transaction,
+  .btn-add-transaction,
+  .btn-create-proposal,
+  .transaction-section,
+  .dynamic-section,
+  .fade-in {
+    transition: none;
+  }
+
+  .btn-create-proposal::after {
+    display: none;
+  }
+}
