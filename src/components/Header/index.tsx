@@ -98,7 +98,7 @@ export default function Header() {
     <header>
       <div className="container">
         <div className="logo">
-          <a href="index.html">
+          <a href="">
             <Image 
               className="logo-img" 
               src="/logos/dmd-logo.png" 
