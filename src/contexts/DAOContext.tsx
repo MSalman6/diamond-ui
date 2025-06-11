@@ -3,6 +3,7 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 
 interface DAOContextType {
+  initialized: boolean;
 }
 
 const DAOContext = createContext<DAOContextType | undefined>(undefined);
@@ -21,6 +22,7 @@ interface DAOProviderProps {
 
 export const DAOProvider: React.FC<DAOProviderProps> = ({ children }) => {
   const value: DAOContextType = {
+    initialized: false,
   };
 
   return (

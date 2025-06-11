@@ -3,6 +3,7 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 
 interface StakingContextType {
+  initialized: boolean;
 }
 
 const StakingContext = createContext<StakingContextType | undefined>(undefined);
@@ -21,6 +22,7 @@ interface StakingProviderProps {
 
 export const StakingProvider: React.FC<StakingProviderProps> = ({ children }) => {
   const value: StakingContextType = {
+    initialized: false,
   };
 
   return (

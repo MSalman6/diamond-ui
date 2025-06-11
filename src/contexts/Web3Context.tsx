@@ -3,6 +3,7 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 
 interface Web3ContextType {
+  initialized: boolean;
 }
 
 const Web3Context = createContext<Web3ContextType | undefined>(undefined);
@@ -21,6 +22,7 @@ interface Web3ProviderProps {
 
 export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   const value: Web3ContextType = {
+    initialized: false,
   };
 
   return (

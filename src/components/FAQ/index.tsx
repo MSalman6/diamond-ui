@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import styles from './FAQ.module.css';
 import { faqData, FAQItem } from './faqData';
 
 interface FAQProps {
