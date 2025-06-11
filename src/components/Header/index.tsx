@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import styles from './Header.module.css';
+import Image from 'next/image';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -99,7 +99,18 @@ export default function Header() {
       <div className="container">
         <div className="logo">
           <a href="index.html">
-            <img className="logo-img" src="/logos/dmd-logo.png" alt="DMD Diamond Logo" />
+            <Image 
+              className="logo-img" 
+              src="/logos/dmd-logo.png" 
+              alt="DMD Diamond Logo"
+              width={150}
+              height={0}
+              style={{
+                width: '150px',
+                height: 'auto',
+              }}
+              priority
+            />
           </a>
         </div>
         
