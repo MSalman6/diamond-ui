@@ -118,9 +118,9 @@ export default function Header() {
         <nav>
           <ul className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`} ref={navLinksRef}>
             <li>
-              <a href="validators.html" onClick={handleRegularLinkClick}>
+              <Link href="/validators" onClick={handleRegularLinkClick}>
                 Validators
-              </a>
+              </Link>
             </li>
             
             <li className={`dropdown ${activeDropdown === 'ecosystem' ? 'active' : ''}`}>

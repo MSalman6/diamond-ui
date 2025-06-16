@@ -53,7 +53,7 @@ export default function ProfilePage() {
                   <div className="user-stats-grid">
                     <div className="stat-section">
                       <div className="stat-header">
-                        <h3>My stake on other pools <i className="fas fa-info-circle info-icon" title=""></i></h3>
+                        <h3>My delegated stake <i className="fas fa-info-circle info-icon" title=""></i></h3>
                       </div>
                       <div className="stat-value-container">
                         <div className="stat-value highlight">100.6267 DMD</div>
@@ -91,7 +91,7 @@ export default function ProfilePage() {
                       </div>
                       <div className="stat-value-container">
                         <div className="stat-value highlight">2 proposals created</div>
-                        <div className="stat-note">Total voting power of the validators I've staked on: 1.33%</div>
+                        <div className="stat-note">Total voting power of the Staked With: 1.33%</div>
                       </div>
                       <div className="stat-actions">
                         <a href="dao.html" className="btn-primary btn-sm">Go to DAO</a>
@@ -103,10 +103,10 @@ export default function ProfilePage() {
             </div>
           </section>
 
-          {/* Validators I've Staked On Section */}
+          {/* Staked With Section */}
           <section className="validators-staked">
             <div className="container">
-              <h2>Validators I've Staked On</h2>
+              <h2>Staked With</h2>
               <div className="table-container">
                 <table className="validators-table">
                   <thead>
@@ -268,7 +268,7 @@ export default function ProfilePage() {
           
           <div className="stake-item">
             <div className="stake-item-header">
-              <span className="stake-label">My stake on other pools <i className="fas fa-info-circle info-icon" title=""></i></span>
+              <span className="stake-label">My delegated stake <i className="fas fa-info-circle info-icon" title=""></i></span>
               <span className="stake-value highlight">7,000 DMD</span>
             </div>
             <div className="stake-change positive">+5 DMD since 01.01.24</div>
@@ -401,10 +401,10 @@ export default function ProfilePage() {
             </div>
           </section>
 
-          {/* Validators I've Staked On Section */}
+          {/* Staked With Section */}
           <section className="validators-staked">
             <div className="container">
-              <h2>Validators I've Staked On</h2>
+              <h2>Staked With</h2>
               <div className="table-container">
                 <table className="validators-table">
                   <thead>
