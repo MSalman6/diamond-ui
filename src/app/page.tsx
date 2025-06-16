@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
 import "./page.css";
+import { useEffect } from 'react';
 import FAQ from '../components/FAQ';
 
 export default function Home() {
@@ -30,6 +30,36 @@ export default function Home() {
     };
   }, []);
 
+  // Add Link functionality to Connect Wallet button
+  useEffect(() => {
+    const connectWalletBtn = document.getElementById('connect-wallet-btn');
+    
+    if (connectWalletBtn) {
+      // Store original content and styles
+      const originalOnClick = connectWalletBtn.onclick;
+      
+      // Create a Link-like behavior by adding click handler
+      const handleWalletClick = (e: Event) => {
+        e.preventDefault();
+        window.location.href = '/profile';
+      };
+      
+      // Add the click handler
+      connectWalletBtn.addEventListener('click', handleWalletClick);
+      
+      // Cleanup function to remove the click handler when component unmounts or page changes
+      return () => {
+        if (connectWalletBtn) {
+          connectWalletBtn.removeEventListener('click', handleWalletClick);
+          // Restore original onclick if it existed
+          if (originalOnClick) {
+            connectWalletBtn.onclick = originalOnClick;
+          }
+        }
+      };
+    }
+  }, []);
+
   return (
     <div>
         {/* Unauthenticated View */}
@@ -48,7 +78,7 @@ export default function Home() {
                   Welcome to the DMD Diamond Staking Platform – your gateway to earning rewards while contributing to the security and functionality of the DMD network. Embark on your staking adventure with us and unlock the full potential of your digital assets.
                 </p>
                 <div className="hero-buttons">
-                  <a href="#" className="btn-primary">Connect wallet <i className="fas fa-arrow-right"></i></a>
+                  <a href="#" className="btn-primary" id="connect-wallet-btn">Connect wallet <i className="fas fa-arrow-right"></i></a>
                   <a href="https://github.com/DMDcoin/whitepaper/wiki/A.-Home" target="_blank" className="btn-secondary">GitHub Wiki <i className="fas fa-arrow-right"></i></a>
                 </div>
               </div>

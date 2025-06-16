@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -98,7 +99,7 @@ export default function Header() {
     <header>
       <div className="container">
         <div className="logo">
-          <a href="">
+          <Link href="/">
             <Image 
               className="logo-img" 
               src="/logos/dmd-logo.png" 
@@ -111,7 +112,7 @@ export default function Header() {
               }}
               priority
             />
-          </a>
+          </Link>
         </div>
         
         <nav>
