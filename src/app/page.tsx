@@ -1,6 +1,7 @@
 'use client';
 
 import "./page.css";
+import Image from "next/image";
 import { useEffect } from 'react';
 import FAQ from '../components/FAQ';
 
@@ -91,12 +92,78 @@ export default function Home() {
               </div>
             </div>
             <div className="partners-bar">
-              <div className="partners-scroll">
-                <div className="partners-track">
-                  <div className="partner-logo">P2P b2b</div>
-                  <div className="partner-logo">BitMart</div>
-                  <div className="partner-logo">XeggeX</div>
-                  <div className="partner-logo">BlockServ</div>
+              <div className="slider">
+                <div className="slide-track">
+                  <div className="slide">
+                    <a href="https://www.bitmart.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_bitmart.png" height="100" width="250" alt="BitMart" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://blockserv.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_blockserv.png" height="100" width="250" alt="BlockServ" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://p2pb2b.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_p2pb2b.png" height="100" width="250" alt="P2PB2B" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://xegex.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_xegex.png" height="100" width="250" alt="Xegex" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://www.bitmart.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_bitmart.png" height="100" width="250" alt="BitMart" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://blockserv.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_blockserv.png" height="100" width="250" alt="BlockServ" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://p2pb2b.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_p2pb2b.png" height="100" width="250" alt="P2PB2B" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://xegex.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_xegex.png" height="100" width="250" alt="Xegex" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://www.bitmart.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_bitmart.png" height="100" width="250" alt="BitMart" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://blockserv.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_blockserv.png" height="100" width="250" alt="BlockServ" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://p2pb2b.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_p2pb2b.png" height="100" width="250" alt="P2PB2B" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://xegex.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_xegex.png" height="100" width="250" alt="Xegex" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://www.bitmart.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_bitmart.png" height="100" width="250" alt="BitMart" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://blockserv.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_blockserv.png" height="100" width="250" alt="BlockServ" />
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>

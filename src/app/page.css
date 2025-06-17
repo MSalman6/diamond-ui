@@ -1,6 +1,3 @@
-
-
-
 .user-wallet-info {
     display: flex;
     align-items: center;
@@ -254,6 +251,7 @@
   
   .info-label {
     opacity: 0.7;
+    margin-left: 5px;
     margin-right: 5px;
   }
   
@@ -436,20 +434,85 @@
     margin-top: 15px;
   }
   
-  .stake-actions > button {
-    height: 35px;
-    max-height: 35px;
+  /* Animation for infinite slider */
+@keyframes scroll {
+  0% { 
+    transform: translateX(0); 
   }
-  
-  .rewards-details {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 10px;
-    flex-wrap: wrap; 
-    gap: 10px; 
+  100% { 
+    transform: translateX(calc(-280px * 7));
   }
-  
+}
+
+/* Slider Styling */
+.slider {
+  width: 100%;
+  margin: auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.slider::before,
+.slider::after {
+  background: linear-gradient(to right, var(--bg) 0%, rgba(0,0,0,0) 100%);
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100%;
+  z-index: 2;
+}
+
+.slider::after {
+  right: 0;
+  top: 0;
+  background: linear-gradient(to left, var(--bg) 0%, rgba(0,0,0,0) 100%);
+}
+
+.slider::before {
+  left: 0;
+  top: 0;
+}
+
+.slide-track {
+  animation: scroll 35s linear infinite;
+  display: flex;
+  width: calc(280px * 14);
+  gap: 0;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.slide {
+  width: 250px;
+  flex-shrink: 0;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide a {
+  display: flex;
+  width: 100%;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.slide img {
+  width: 100%;
+  height: 60px;
+  object-fit: contain;
+  filter: brightness(1.2) contrast(1.1) saturate(0.8);
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.slide:hover img {
+  filter: brightness(1.4) contrast(1.2) saturate(1);
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
   
   .table-container {
     overflow-x: auto;
@@ -883,7 +946,6 @@
     align-self: flex-end;
   }
   
-  
   .node-stake-panel {
     background: rgba(59, 130, 246, 0.05);
     border-radius: 12px;
@@ -1273,4 +1335,3 @@
       align-items: flex-start;
     }
   }
-  

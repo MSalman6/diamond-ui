@@ -7,6 +7,7 @@ import { StakingProvider } from "@/contexts/StakingContext";
 import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ClientWrapper from "@/components/ClientWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,18 +34,20 @@ export default function RootLayout({
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <ThemeProvider>
-          <Web3Provider>
-            <StakingProvider>
-              <DAOProvider>
-                <Header />
-                {children}
-                <Footer />
-              </DAOProvider>
-            </StakingProvider>
-          </Web3Provider>
-        </ThemeProvider>
+      <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning={true}>
+        <ClientWrapper>
+          <ThemeProvider>
+            <Web3Provider>
+              <StakingProvider>
+                <DAOProvider>
+                  <Header />
+                  {children}
+                  <Footer />
+                </DAOProvider>
+              </StakingProvider>
+            </Web3Provider>
+          </ThemeProvider>
+        </ClientWrapper>
       </body>
     </html>
   );

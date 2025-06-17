@@ -1,4 +1,13 @@
 export const initializeTheme = () => {
+  // Ensure we're on the client side
+  if (typeof window === 'undefined') return;
+
+  // Wait for DOM to be fully loaded to avoid hydration issues
+  if (document.readyState !== 'complete') {
+    window.addEventListener('load', initializeTheme);
+    return;
+  }
+
   // Theme toggle functionality
   const themeToggle = document.getElementById("theme-toggle") as HTMLInputElement | null
   const htmlRoot = document.documentElement
@@ -45,14 +54,27 @@ export const initializeTheme = () => {
   const savedTheme = localStorage.getItem("theme")
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
 
-  // Set initial theme
-  if (savedTheme === "light") {
-    applyTheme("light")
-    if (themeToggle) themeToggle.checked = true
-  } else if (savedTheme === "dark" || prefersDark) {
-    applyTheme("dark")
-    if (themeToggle) themeToggle.checked = false
+  // Set initial theme without causing layout shift
+  const setInitialTheme = () => {
+    if (savedTheme === "light") {
+      applyTheme("light")
+      if (themeToggle) themeToggle.checked = true
+    } else if (savedTheme === "dark" || prefersDark) {
+      applyTheme("dark")
+      if (themeToggle) themeToggle.checked = false
+    } else {
+      // Default to dark theme
+      applyTheme("dark")
+      if (themeToggle) themeToggle.checked = false
+    }
   }
+
+  // Use multiple requestAnimationFrame to ensure theme is applied after hydration
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      setInitialTheme()
+    })
+  })
 
   // Toggle theme when checkbox changes
   if (themeToggle) {
@@ -72,7 +94,16 @@ export const initializeTheme = () => {
   // Apply theme function
   function applyTheme(themeName: "light" | "dark") {
     const theme = themes[themeName]
-    document.body.classList.toggle("light-theme", themeName === "light")
+    
+    // Use requestAnimationFrame to prevent hydration issues
+    requestAnimationFrame(() => {
+      try {
+        document.body.classList.toggle("light-theme", themeName === "light")
+      } catch (error) {
+        // Silently handle any errors from browser extensions
+        console.debug("Theme application encountered an extension conflict:", error)
+      }
+    })
 
     // Apply CSS variables
     for (const [property, value] of Object.entries(theme)) {
@@ -94,16 +125,6 @@ export const initializeTheme = () => {
     if (cosmicGrid) {
       cosmicGrid.style.backgroundImage = `linear-gradient(${theme["--cosmic-grid-color"]} 1px, transparent 1px), 
                                          linear-gradient(90deg, ${theme["--cosmic-grid-color"]} 1px, transparent 1px)`
-    }
-
-    // Update logo based on theme
-    const logoImg = document.querySelector(".logo-img") as HTMLImageElement | null
-    if (logoImg) {
-      if (themeName === "light") {
-        logoImg.src = "/logos/dmd-logo-dark.png"
-      } else {
-        logoImg.src = "/logos/dmd-logo.png"
-      }
     }
   }
 }

@@ -1214,9 +1214,8 @@ header .container {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--card-bg);
   backdrop-filter: blur(10px);
-  padding: 20px 0;
   z-index: 3;
   overflow: hidden;
 }

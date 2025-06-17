@@ -7,6 +7,7 @@ import Link from 'next/link';
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [logoSrc, setLogoSrc] = useState('/logos/dmd-logo.png');
   const navLinksRef = useRef<HTMLUListElement>(null);
   const mobileMenuBtnRef = useRef<HTMLDivElement>(null);
 
@@ -95,6 +96,31 @@ export default function Header() {
     };
   }, []);
 
+  // Theme detection and logo switching
+  useEffect(() => {
+    const updateLogo = () => {
+      const isLightTheme = document.body.classList.contains('light-theme');
+      setLogoSrc(isLightTheme ? '/logos/dmd-logo-dark.png' : '/logos/dmd-logo.png');
+    };
+
+    updateLogo();
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          updateLogo();
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <header>
       <div className="container">
@@ -102,7 +128,7 @@ export default function Header() {
           <Link href="/">
             <Image 
               className="logo-img" 
-              src="/logos/dmd-logo.png" 
+              src={logoSrc}
               alt="DMD Diamond Logo"
               width={150}
               height={0}
