@@ -1,35 +1,9 @@
 'use client';
 
 import './FAQs.css';
-import { useEffect } from 'react';
 import FAQ from '../../components/FAQ';
 
 export default function FAQsPage() {
-  // Initialize fade-in animations
-  useEffect(() => {
-    const fadeElements = document.querySelectorAll('.fade-in');
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, {
-      threshold: 0.1
-    });
-
-    fadeElements.forEach(element => {
-      observer.observe(element);
-    });
-
-    return () => {
-      fadeElements.forEach(element => {
-        observer.unobserve(element);
-      });
-    };
-  }, []);
-
   return (
     <div className="faqs-page">
       {/* Hero Section */}

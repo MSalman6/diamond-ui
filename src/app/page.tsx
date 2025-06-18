@@ -7,31 +7,6 @@ import { useEffect } from 'react';
 import FAQ from '../components/FAQ';
 
 export default function Home() {
-  // Initialize fade-in animations
-  useEffect(() => {
-    const fadeElements = document.querySelectorAll('.fade-in');
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, {
-      threshold: 0.1
-    });
-
-    fadeElements.forEach(element => {
-      observer.observe(element);
-    });
-
-    return () => {
-      fadeElements.forEach(element => {
-        observer.unobserve(element);
-      });
-    };
-  }, []);
-
   // Add Link functionality to Connect Wallet button
   useEffect(() => {
     const connectWalletBtn = document.getElementById('connect-wallet-btn');
