@@ -1800,12 +1800,20 @@ header .container {
   padding-left: 20px;
 }
 
+.pb0 {
+  padding-bottom: 0 !important;
+}
+
 .pb20 {
   padding-bottom: 20px;
 }
 
 .pl40 {
   padding-left: 40px;
+}
+
+.pt0 {
+  padding-top: 0px !important;
 }
 
 .pr20 {

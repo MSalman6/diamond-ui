@@ -1,6 +1,7 @@
 'use client';
 
 import "./page.css";
+import Link from "next/link";
 import Image from "next/image";
 import { useEffect } from 'react';
 import FAQ from '../components/FAQ';
@@ -467,7 +468,7 @@ export default function Home() {
             <h2 className="fade-in">Frequently Asked Questions</h2>
             <FAQ count={6} />
             <div className="faq-actions">
-              <a href="faqs.html" className="btn-primary">See all FAQs <i className="fas fa-arrow-right"></i></a>
+              <Link href="/faqs" className="btn-primary">See all FAQs <i className="fas fa-arrow-right"></i></Link>
             </div>
           </div>
         </section>
