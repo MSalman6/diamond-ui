@@ -54,3 +54,7 @@ test.html
 package-lock.json
 createProposals.js
 
+src/contracts/types/*
+src/contracts/abis/*
+!src/contracts/types/.gitkeep
+!src/contracts/abis/.gitkeep
