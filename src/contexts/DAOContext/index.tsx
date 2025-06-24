@@ -31,3 +31,5 @@ export const DAOProvider: React.FC<DAOProviderProps> = ({ children }) => {
     </DAOContext.Provider>
   );
 };
+
+export default DAOProvider;

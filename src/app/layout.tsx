@@ -2,11 +2,12 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { DAOProvider } from "@/contexts/DAOContext";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Web3Provider } from "@/contexts/Web3Context";
+import { WalletConnectProvider } from "@/contexts/WalletConnectContext";
 import { StakingProvider } from "@/contexts/StakingContext";
 import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { headers } from 'next/headers';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,11 +24,14 @@ export const metadata: Metadata = {
   description: "Decentralized platform for DMD operations, offering tools for validator management, staking, DAO governance, and personalized user profiles to promote trust and stability in the DMD ecosystem.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersObj = await headers();
+  const cookies = headersObj.get('cookie');
+
   return (
     <html lang="en">
       <head>
@@ -35,7 +39,7 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning={true}>
         <ThemeProvider>
-          <Web3Provider>
+          <WalletConnectProvider cookies={cookies}>
             <StakingProvider>
               <DAOProvider>
                 <Header />
@@ -43,7 +47,7 @@ export default function RootLayout({
                 <Footer />
               </DAOProvider>
             </StakingProvider>
-          </Web3Provider>
+          </WalletConnectProvider>
         </ThemeProvider>
       </body>
     </html>

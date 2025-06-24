@@ -31,3 +31,5 @@ export const StakingProvider: React.FC<StakingProviderProps> = ({ children }) =>
     </StakingContext.Provider>
   );
 };
+
+export default StakingProvider;
