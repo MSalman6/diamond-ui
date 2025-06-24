@@ -1,10 +1,10 @@
 'use client';
 
-import { createAppKit } from '@reown/appkit/react'
+import { useAppKit, createAppKit } from '@reown/appkit/react'
 import React, { type ReactNode, useEffect, useState } from 'react'
 import { wagmiAdapter, projectId, networks } from './config/wagmi'
-import { cookieToInitialState, WagmiProvider, type Config } from 'wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { cookieToInitialState, WagmiProvider, useAccount, useConnect, useDisconnect, type Config } from 'wagmi'
 
 // Set up queryClient
 const queryClient = new QueryClient()
@@ -131,5 +131,30 @@ export const WalletConnectProvider: React.FC<WalletConnectProviderProps> = ({
     </WagmiProvider>
   );
 };
+
+export const useWalletConnect = () => {
+  const { open, close } = useAppKit()
+  const { disconnect } = useDisconnect()
+  const { connect, connectors } = useConnect()
+  const { address, isConnected, isConnecting, isDisconnected } = useAccount()
+  
+
+  return {
+    // AppKit methods
+    open,
+    close,
+    
+    // Wagmi account info
+    address,
+    isConnected,
+    isConnecting,
+    isDisconnected,
+    
+    // Connection methods
+    connect,
+    disconnect,
+    connectors,
+  }
+}
 
 export default WalletConnectProvider;
