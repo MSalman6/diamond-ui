@@ -1,9 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { DAOProvider } from "@/contexts/DAOContext";
+import { DAOProvider } from "@/contexts/DAO";
 import { Geist, Geist_Mono } from "next/font/google";
-import { WalletConnectProvider } from "@/contexts/WalletConnectContext";
-import { StakingProvider } from "@/contexts/StakingContext";
+import { WalletConnectProvider } from "@/contexts/WalletConnect";
+import { StakingProvider } from "@/contexts/Staking";
 import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";

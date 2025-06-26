@@ -15,7 +15,7 @@ import {
   CertifierHbbft as JsonCertifierHbbft,
   ConnectivityTrackerHbbft as JsonConnectivityTrackerHbbft,
   DMDAggregator as JsonHbbtAggregator
-} from '../../contracts/abis';
+} from '@/contracts/abis';
 
 // Contract Types
 import { 
