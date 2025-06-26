@@ -5,6 +5,7 @@ import React, { type ReactNode, useEffect, useState } from 'react'
 import { wagmiAdapter, projectId, networks } from './config/wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { cookieToInitialState, WagmiProvider, useAccount, useConnect, useDisconnect, type Config } from 'wagmi'
+import Loader from '@/components/Loader';
 
 // Set up queryClient
 const queryClient = new QueryClient()
@@ -58,7 +59,6 @@ const initializeAppKit = () => {
     })
     
     appKitInitialized = true
-    console.log('✅ AppKit initialized successfully')
     return true
   } catch (error) {
     console.error('❌ Failed to initialize AppKit:', error)
@@ -112,12 +112,7 @@ export const WalletConnectProvider: React.FC<WalletConnectProviderProps> = ({
   // Don't render children until AppKit is ready
   if (!isAppKitReady) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-          <p className="text-gray-600">Initializing wallet connection...</p>
-        </div>
-      </div>
+      <Loader isLoading={true} loadingMessage={""}/>
     )
   }
 
