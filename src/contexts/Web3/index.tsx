@@ -1,3 +1,5 @@
+'use client';
+
 import Web3 from "web3";
 import BigNumber from "bignumber.js";
 import { toast } from 'react-toastify';

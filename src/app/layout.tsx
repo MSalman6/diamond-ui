@@ -8,6 +8,7 @@ import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { headers } from 'next/headers';
+import { Web3ContextProvider } from "@/contexts/Web3";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,13 +41,15 @@ export default async function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning={true}>
         <ThemeProvider>
           <WalletConnectProvider cookies={cookies}>
-            <StakingProvider>
-              <DAOProvider>
-                <Header />
-                {children}
-                <Footer />
-              </DAOProvider>
-            </StakingProvider>
+            <Web3ContextProvider>
+              <StakingProvider>
+                <DAOProvider>
+                  <Header />
+                  {children}
+                  <Footer />
+                </DAOProvider>
+              </StakingProvider>
+            </Web3ContextProvider>
           </WalletConnectProvider>
         </ThemeProvider>
       </body>

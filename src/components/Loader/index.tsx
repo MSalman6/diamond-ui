@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import styles from "./styles.module.css";
-import dmdLogoWithoutText from "/logos/dmd-logo.png";
+import styles from "./Loader.module.css";
 
 interface LoaderProps {
   loadingMessage?: string | null;
@@ -25,7 +24,7 @@ const Loader: React.FC<LoaderProps> = ({ loadingMessage, isLoading, size = 50 })
     <div className={isLoading ? styles.loaderActive : styles.loaderHidden}>
       <div className={styles.backdrop} />
       <img
-        src={dmdLogoWithoutText.src}
+        src={"/logos/dmd-logo.png"}
         alt="Loading"
         className={`${styles.image} ${styles.pulse}`}
         style={{ width: `${size}px`, height: `${size}px` }}
