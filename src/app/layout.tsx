@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { DAOProvider } from "@/contexts/DAO";
 import { Geist, Geist_Mono } from "next/font/google";
 import { WalletConnectProvider } from "@/contexts/WalletConnect";
-import { StakingProvider } from "@/contexts/Staking";
+import { StakingContextProvider } from "@/contexts/Staking";
 import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -42,13 +42,13 @@ export default async function RootLayout({
         <ThemeProvider>
           <WalletConnectProvider cookies={cookies}>
             <Web3ContextProvider>
-              <StakingProvider>
+              <StakingContextProvider>
                 <DAOProvider>
                   <Header />
                   {children}
                   <Footer />
                 </DAOProvider>
-              </StakingProvider>
+              </StakingContextProvider>
             </Web3ContextProvider>
           </WalletConnectProvider>
         </ThemeProvider>

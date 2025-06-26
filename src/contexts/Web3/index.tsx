@@ -88,12 +88,14 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     if (connector?.getProvider && isConnected && status === 'connected') {
       InitializeWagmiWallet(connector);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connector, isConnected, status]);
 
   useEffect(() => {
     console.log("[INFO] Initializing Web3 Context");
     initialize();
     handleCacheReset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -112,6 +114,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
         unwatch()
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wagmiConnector]);
 
   const initialize = async () => {

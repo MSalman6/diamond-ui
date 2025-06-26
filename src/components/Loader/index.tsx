@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import styles from "./Loader.module.css";
+import Image from "next/image";
 
 interface LoaderProps {
   loadingMessage?: string | null;
@@ -23,7 +24,9 @@ const Loader: React.FC<LoaderProps> = ({ loadingMessage, isLoading, size = 50 })
   return (
     <div className={isLoading ? styles.loaderActive : styles.loaderHidden}>
       <div className={styles.backdrop} />
-      <img
+      <Image
+        height={size}
+        width={size}
         src={"/logos/dmd-logo.png"}
         alt="Loading"
         className={`${styles.image} ${styles.pulse}`}

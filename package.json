@@ -19,13 +19,17 @@
     "@tanstack/react-query": "^5.81.2",
     "@typechain/web3-v1": "^6.0.7",
     "@walletconnect/web3-provider": "^1.8.0",
+    "axios": "^1.10.0",
+    "bignumber.js": "^9.3.0",
+    "ethereumjs-util": "^7.1.5",
     "next": "15.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-toastify": "^11.0.5",
     "typechain": "^8.3.2",
     "viem": "^2.31.4",
-    "wagmi": "^2.15.6"
+    "wagmi": "^2.15.6",
+    "web3": "^1.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -1,7 +1,9 @@
 import BigNumber from 'bignumber.js';
 import { KeyGenMode } from '../services/contractManager';
-// import { makeAutoObservable, observable } from 'mobx';
 
+export interface PoolCache {
+  [blockNumber: number]: Pool[]
+}
 export class Pool {
   public isUpdating: boolean = false;
   public isActive: boolean = false; // currently "active" pool
