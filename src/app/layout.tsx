@@ -9,6 +9,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { headers } from 'next/headers';
 import { Web3ContextProvider } from "@/contexts/Web3";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,6 +49,18 @@ export default async function RootLayout({
                   <Header />
                   {children}
                   <Footer />
+                  <ToastContainer
+                    position="bottom-right"
+                    autoClose={3000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="dark"
+                  />
                 </DAOProvider>
               </StakingContextProvider>
             </Web3ContextProvider>

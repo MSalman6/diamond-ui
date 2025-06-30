@@ -1,63 +1,243 @@
 'use client';
 
 import './Validators.css';
-import { useState } from 'react';
-import Validators from '../../components/Validators';
-import { Validator } from '../../components/Validators/types';
+import BigNumber from 'bignumber.js';
+import copy from 'copy-to-clipboard';
+import { toast } from 'react-toastify';
+import Validators from '@/components/Validators';
+import { Pool } from '../../contexts/types/models';
+import { useWeb3Context } from '../../contexts/Web3';
+import { useState, useEffect, useCallback } from 'react';
+import { useStakingContext } from '../../contexts/Staking';
+
+interface TableField {
+  key: string;
+  label: string;
+  sortAble: boolean;
+  updateAble: boolean;
+  hide: boolean;
+}
+
+const tableFieldsDefault: TableField[] = [
+  { key: "isActive", label: "Status", sortAble: true, updateAble: true, hide: false },
+  { key: "stakingAddress", label: "Wallet address", sortAble: false, updateAble: true, hide: false },
+  { key: "miningAddress", label: "Miner address", sortAble: false, updateAble: true, hide: true },
+  { key: "miningPublicKey", label: "Public Key", sortAble: false, updateAble: true, hide: true },
+  { key: "totalStake", label: "Total Stake", sortAble: true, updateAble: true, hide: false },
+  { key: "votingPower", label: "Voting Power", sortAble: true, updateAble: true, hide: false },
+  { key: "score", label: "Score", sortAble: true, updateAble: true, hide: false },
+  { key: "connectivityReport", label: "CR", sortAble: true, updateAble: true, hide: false },
+  { key: "myStake", label: "My Stake", sortAble: true, updateAble: false, hide: false },
+  { key: "stakeBtn", label: "", sortAble: false, updateAble: false, hide: false },
+  { key: "unstakeClaimBtn", label: "", sortAble: false, updateAble: false, hide: false },
+];
 
 export default function ValidatorsPage() {
+  const { userWallet } = useWeb3Context();
+  const { pools, stakingEpoch, claimOrderedUnstake } = useStakingContext();
+  
+  // State management
   const [showStakeModal, setShowStakeModal] = useState(false);
   const [showUnstakeModal, setShowUnstakeModal] = useState(false);
-  const [selectedValidator, setSelectedValidator] = useState<Validator | null>(null);
+  const [showCustomizeModal, setShowCustomizeModal] = useState(false);
+  const [selectedPool, setSelectedPool] = useState<Pool | null>(null);
   const [stakeAmount, setStakeAmount] = useState('');
   const [unstakeAmount, setUnstakeAmount] = useState('');
+  
+  // Table management
+  const [currentPage, setCurrentPage] = useState(0);
+  const [filter, setFilter] = useState<'default' | 'valid' | 'active' | 'invalid' | 'stakedOn'>('default');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: string } | null>(null);
+  const [tableFields, setTableFields] = useState<TableField[]>(tableFieldsDefault);
+  const [itemsPerPage] = useState(20);
 
-  const handleStake = (validator: Validator) => {
-    setSelectedValidator(validator);
+  // Load table fields from localStorage
+  useEffect(() => {
+    const storedTableFields = localStorage.getItem('validatorFieldsData');
+    if (storedTableFields) {
+      setTableFields(JSON.parse(storedTableFields));
+    } else {
+      localStorage.setItem('validatorFieldsData', JSON.stringify(tableFieldsDefault));
+    }
+  }, []);
+
+  // Update localStorage when table fields change
+  useEffect(() => {
+    localStorage.setItem('validatorFieldsData', JSON.stringify(tableFields));
+  }, [tableFields]);
+
+  // Handle filter changes
+  const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilter(event.target.value as typeof filter);
+    setCurrentPage(0);
+  };
+
+  // Handle search changes
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(0);
+  };
+
+  // Copy data to clipboard
+  const copyData = useCallback((e: React.MouseEvent<HTMLDivElement>, data: string, msg: string) => {
+    e.stopPropagation();
+    copy(data);
+    toast.success(msg);
+  }, []);
+
+  // Handle staking
+  const handleStake = (pool: Pool) => {
+    setSelectedPool(pool);
     setShowStakeModal(true);
   };
 
-  const handleUnstake = (validator: Validator) => {
-    setSelectedValidator(validator);
+  // Handle unstaking
+  const handleUnstake = (pool: Pool) => {
+    setSelectedPool(pool);
     setShowUnstakeModal(true);
   };
 
+  // Confirm stake action
   const confirmStake = () => {
-    if (selectedValidator && stakeAmount) {
-      // Handle stake logic here
-      console.log(`Staking ${stakeAmount} DMD to ${selectedValidator.walletAddress}`);
+    if (selectedPool && stakeAmount) {
+      console.log(`Staking ${stakeAmount} DMD to ${selectedPool.stakingAddress}`);
       setShowStakeModal(false);
       setStakeAmount('');
-      setSelectedValidator(null);
+      setSelectedPool(null);
     }
   };
 
+  // Confirm unstake action
   const confirmUnstake = () => {
-    if (selectedValidator && unstakeAmount) {
-      // Handle unstake logic here
-      console.log(`Unstaking ${unstakeAmount} DMD from ${selectedValidator.walletAddress}`);
+    if (selectedPool && unstakeAmount) {
+      console.log(`Unstaking ${unstakeAmount} DMD from ${selectedPool.stakingAddress}`);
       setShowUnstakeModal(false);
       setUnstakeAmount('');
-      setSelectedValidator(null);
+      setSelectedPool(null);
     }
   };
 
-  const getStatusBadgeClass = (status: string) => {
-    switch (status) {
-      case 'active': return 'status-active';
-      case 'valid': return 'status-valid';
-      case 'invalid': return 'status-invalid';
-      case 'jailed': return 'status-jailed';
-      default: return 'status-active';
-    }
+  // Get status badge class
+  const getStatusBadgeClass = (isActive: boolean, isToBeElected: boolean, isPendingValidator: boolean) => {
+    if (isActive) return 'status-active';
+    if (isToBeElected || isPendingValidator) return 'status-valid';
+    return 'status-invalid';
   };
 
+  // Close modals
   const closeModal = () => {
     setShowStakeModal(false);
     setShowUnstakeModal(false);
-    setSelectedValidator(null);
+    setShowCustomizeModal(false);
+    setSelectedPool(null);
     setStakeAmount('');
     setUnstakeAmount('');
+  };
+
+  // Filter and process pools
+  let poolsCopy = [...pools];
+
+  if (filter === 'valid') {
+    poolsCopy = poolsCopy.filter(pool => pool.isToBeElected && !pool.isActive);
+  } else if (filter === 'active') {
+    poolsCopy = poolsCopy.filter(pool => pool.isActive);
+  } else if (filter === 'invalid') {
+    poolsCopy = poolsCopy.filter(pool => !pool.isActive && !pool.isToBeElected);
+  } else if (filter === 'stakedOn') {
+    poolsCopy = poolsCopy.filter(pool => BigNumber(pool.myStake).isGreaterThan(0));
+  }
+
+  if (searchTerm.trim() !== '') {
+    poolsCopy = poolsCopy.filter(pool =>
+      pool.stakingAddress.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (pool.miningAddress && pool.miningAddress.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  }
+
+  // Apply sorting
+  if (sortConfig !== null) {
+    poolsCopy.sort((a: any, b: any) => {
+      let keyA, keyB;
+
+      if (sortConfig.key === 'myStake' || sortConfig.key === 'score' || sortConfig.key === 'connectivityReport') {
+        keyA = parseFloat(a[sortConfig.key] || '0');
+        keyB = parseFloat(b[sortConfig.key] || '0');
+      } else {
+        keyA = a[sortConfig.key];
+        keyB = b[sortConfig.key];
+      }
+
+      if (keyA < keyB) {
+        return sortConfig.direction === 'ascending' ? -1 : 1;
+      }
+      if (keyA > keyB) {
+        return sortConfig.direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
+  // Pagination
+  const pageCount = Math.ceil(poolsCopy.length / itemsPerPage);
+  const offset = currentPage * itemsPerPage;
+  const currentItems = poolsCopy.slice(offset, offset + itemsPerPage);
+
+  // Handle page changes
+  const handlePageClick = (pageIndex: number) => {
+    setCurrentPage(pageIndex);
+  };
+
+  // Handle sorting
+  const requestSort = (key: string) => {
+    let direction = 'ascending';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  // Get sort class names
+  const getClassNamesFor = (column: string) => {
+    if (!sortConfig) {
+      return;
+    }
+    return sortConfig.key === column ? sortConfig.direction : undefined;
+  };
+
+  // Get tooltip text
+  const getTooltipText = (key: string) => {
+    switch (key) {
+      case 'isActive':
+        return "Active candidate is part of the active set; Valid - is not part of the active set, but can be elected; Invalid - a candidate who is flagged unavailable on the blockchain or has not enough stake";
+      case 'totalStake':
+        return "Total delegated DMD (self-staked DMD + delegates' stake)";
+      case 'votingPower':
+        return "Value that approximates a node's influence in the DAO participation";
+      case 'score':
+        return "Combined score value, based on the results of generating the shared key, the stability of the validator connection and misbehaviour reports from other validators";
+      case 'connectivityReport':
+        return "Connectivity report value, based on how many other active validators did report bad connectivity towards that node";
+      default:
+        return "";
+    }
+  };
+
+  // Render page numbers
+  const renderPageNumbers = () => {
+    const pageNumbers: React.ReactElement[] = [];
+    for (let i = 0; i < pageCount; i++) {
+      pageNumbers.push(
+        <li
+          key={i}
+          className={currentPage === i ? 'active' : ''}
+          onClick={() => handlePageClick(i)}
+        >
+          {i + 1}
+        </li>
+      );
+    }
+    return pageNumbers;
   };
 
   return (
@@ -84,123 +264,7 @@ export default function ValidatorsPage() {
       </section>
 
       {/* Validators Component */}
-      <Validators onStake={handleStake} onUnstake={handleUnstake} />
-
-      {/* Stake Modal */}
-      {showStakeModal && selectedValidator && (
-        <div className="modal show" onClick={(e) => e.target === e.currentTarget && closeModal()}>
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3>Stake Coins</h3>
-              <button className="close-modal" onClick={closeModal}>
-                <i className="fas fa-times"></i>
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="validator-info">
-                <p><strong>Validator:</strong> {selectedValidator.walletAddress}</p>
-                <p>
-                  <strong>Status:</strong>{' '}
-                  <span className={`status-badge ${getStatusBadgeClass(selectedValidator.status)}`}>
-                    {selectedValidator.status.charAt(0).toUpperCase() + selectedValidator.status.slice(1)}
-                  </span>
-                </p>
-              </div>
-              <div className="stake-form">
-                <div className="form-group">
-                  <label htmlFor="stake-amount">Amount to Stake (DMD)</label>
-                  <input 
-                    type="number" 
-                    id="stake-amount"
-                    placeholder="Enter amount..."
-                    value={stakeAmount}
-                    onChange={(e) => setStakeAmount(e.target.value)}
-                  />
-                  <div className="balance-info">
-                    <span>Available: <strong>25,000 DMD</strong></span>
-                    <button 
-                      className="btn-max"
-                      onClick={() => setStakeAmount('25000')}
-                    >
-                      MAX
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button className="btn-secondary" onClick={closeModal}>
-                Cancel
-              </button>
-              <button className="btn-primary" onClick={confirmStake}>
-                Confirm Stake
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Unstake Modal */}
-      {showUnstakeModal && selectedValidator && (
-        <div className="modal show" onClick={(e) => e.target === e.currentTarget && closeModal()}>
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3>Unstake Coins</h3>
-              <button className="close-modal" onClick={closeModal}>
-                <i className="fas fa-times"></i>
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="validator-info">
-                <p><strong>Validator:</strong> {selectedValidator.walletAddress}</p>
-                <p>
-                  <strong>Status:</strong>{' '}
-                  <span className={`status-badge ${getStatusBadgeClass(selectedValidator.status)}`}>
-                    {selectedValidator.status.charAt(0).toUpperCase() + selectedValidator.status.slice(1)}
-                  </span>
-                </p>
-                <p><strong>Claim period:</strong> Next epoch</p>
-              </div>
-              <div className="stake-form">
-                <div className="form-group">
-                  <label htmlFor="unstake-amount">Amount to Unstake (DMD)</label>
-                  <input 
-                    type="number" 
-                    id="unstake-amount"
-                    placeholder="Enter amount..."
-                    value={unstakeAmount}
-                    onChange={(e) => setUnstakeAmount(e.target.value)}
-                  />
-                  <div className="balance-info">
-                    <span>Staked: <strong>{selectedValidator.myStake}</strong></span>
-                    <button 
-                      className="btn-max"
-                      onClick={() => {
-                        const amount = selectedValidator.myStake.replace(' DMD', '').replace(',', '');
-                        setUnstakeAmount(amount);
-                      }}
-                    >
-                      MAX
-                    </button>
-                  </div>
-                </div>
-                <div className="warning-message">
-                  <i className="fas fa-exclamation-triangle"></i>
-                  <p>Unstaked Coins will be claimable in next epoch</p>
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button className="btn-secondary" onClick={closeModal}>
-                Cancel
-              </button>
-              <button className="btn-primary" onClick={confirmUnstake}>
-                Confirm Unstake
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Validators/>
     </div>
   );
 }

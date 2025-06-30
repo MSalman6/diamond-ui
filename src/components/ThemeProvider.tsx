@@ -12,7 +12,13 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
   useEffect(() => {
     setIsClient(true);
-    initializeTheme();
+    
+    // Use a longer timeout to ensure DOM elements are fully rendered
+    const timeoutId = setTimeout(() => {
+      initializeTheme();
+    }, 200);
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   // Prevent hydration mismatch by hiding content until client-side rendering is complete
