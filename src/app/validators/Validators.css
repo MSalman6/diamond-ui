@@ -183,6 +183,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  height: 43px;
 }
 
 .btn-customize:hover {
@@ -519,9 +520,11 @@
   padding: 8px 15px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   cursor: pointer;
   transition: var(--transition);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: 36px;
 }
 
 .available-column:hover {
@@ -546,6 +549,8 @@
   margin-left: 8px;
   cursor: pointer;
   transition: var(--transition);
+  flex-shrink: 0;
+  line-height: 1;
 }
 
 .column-remove:hover {
@@ -1409,6 +1414,7 @@ body.light-theme .active-column:hover {
 body.light-theme .available-column {
   background: rgba(0, 0, 0, 0.03);
   border-color: rgba(0, 0, 0, 0.08);
+  justify-content: space-between;
 }
 
 body.light-theme .available-column:hover {
@@ -1422,8 +1428,32 @@ body.light-theme .available-column.selected {
 
 body.light-theme .column-remove {
   background: rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 body.light-theme .column-remove:hover {
   background: rgba(255, 0, 0, 0.2);
+  color: rgba(255, 0, 0, 0.8);
+}
+
+.available-column .column-name {
+  flex: 1;
+  margin-right: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.available-column.selected .column-name {
+  margin-right: 4px;
+}
+
+/* Ensure proper spacing for the X button */
+.available-column .column-remove {
+  margin-left: auto;
+  margin-right: 0;
 }

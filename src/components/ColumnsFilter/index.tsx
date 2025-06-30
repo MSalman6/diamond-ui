@@ -39,12 +39,16 @@ const ColumnsFilterModal: React.FC<ColumnsFilterModalProps> = ({
   const openModal = () => {
     setTempSelectedColumns(selectedColumns);
     setIsOpen(true);
+    // Prevent page shift by calculating scrollbar width and adding padding
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
   };
 
   const closeModal = () => {
     setIsOpen(false);
     document.body.style.overflow = 'unset';
+    document.body.style.paddingRight = '0px';
   };
 
   const handleColumnClick = (label: string) => {
@@ -141,6 +145,7 @@ const ColumnsFilterModal: React.FC<ColumnsFilterModalProps> = ({
   useEffect(() => {
     return () => {
       document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = '0px';
     };
   }, []);
 
