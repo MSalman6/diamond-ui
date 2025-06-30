@@ -1,4 +1,4 @@
 // Context exports
-export { DAOProvider, useDAO } from './DAO';
+export { DAOProvider, useDaoContext } from './DAO';
 export { WalletConnectProvider } from './WalletConnect';
 export { StakingContextProvider, useStakingContext } from './Staking';

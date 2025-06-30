@@ -2068,6 +2068,10 @@ footer {
   }
 }
 
+.Toastify {
+  padding: 0px !important;
+}
+
 .user-info-section,
 .validator-info-section {
   padding-top: 100px;

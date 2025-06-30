@@ -253,13 +253,13 @@
 }
 
 .status-active {
-  background: rgba(0, 210, 255, 0.15);
-  color: #00d2ff;
+  background: rgba(7, 244, 158, 0.15);
+  color: #07f49e;
 }
 
 .status-valid {
-  background: rgba(7, 244, 158, 0.15);
-  color: #07f49e;
+  background: rgba(0, 210, 255, 0.15);
+  color: #00d2ff;
 }
 
 .status-invalid {
@@ -537,7 +537,7 @@
 }
 
 .column-remove {
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   width: 18px;

@@ -3,16 +3,26 @@ import React, { useState } from 'react';
 interface UnstakeModalProps {
   buttonText: string;
   pool: any;
+  isOpen?: boolean;
+  onClose?: () => void;
   onUnstake?: (pool: any, amount: string) => void;
 }
 
-const UnstakeModal: React.FC<UnstakeModalProps> = ({ buttonText, pool, onUnstake }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const UnstakeModal: React.FC<UnstakeModalProps> = ({ buttonText, pool, isOpen: externalIsOpen, onClose: externalOnClose, onUnstake }) => {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [amount, setAmount] = useState('');
+
+  // Use external control if provided, otherwise use internal state
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+  const setIsOpen = externalOnClose !== undefined ? 
+    (open: boolean) => !open && externalOnClose() : 
+    setInternalIsOpen;
 
   const openModal = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsOpen(true);
+    if (externalOnClose === undefined) {
+      setInternalIsOpen(true);
+    }
   };
 
   const closeModal = () => {
@@ -31,12 +41,14 @@ const UnstakeModal: React.FC<UnstakeModalProps> = ({ buttonText, pool, onUnstake
 
   return (
     <>
-      <button 
-        className="primaryBtn" 
-        onClick={openModal}
-      >
-        {buttonText}
-      </button>
+      {externalOnClose === undefined && (
+        <button 
+          className="primaryBtn" 
+          onClick={openModal}
+        >
+          {buttonText}
+        </button>
+      )}
 
       {isOpen && (
         <div className="modal-overlay" onClick={closeModal}>

@@ -241,7 +241,7 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
           if (column.key === 'isActive') {
             return (
               <td key={colIndex}>
-                <span className={`status-badge ${pool?.isActive || (pool.isToBeElected || pool.isPendingValidator) ? 'status-active' : 'status-invalid'}`}>
+                <span className={`status-badge ${pool.isActive ? 'status-active' : (pool.isToBeElected || pool.isPendingValidator) ? 'status-valid' : 'status-invalid'}`}>
                   {typeof pool.isActive === 'boolean'
                     ? pool.isActive ? 'Active' : (pool.isToBeElected || pool.isPendingValidator) ? "Valid" : "Invalid"
                     : 'Loading...'}

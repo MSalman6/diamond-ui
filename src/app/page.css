@@ -56,7 +56,7 @@
   .validator-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 30px;
     flex-wrap: wrap; 
     gap: 20px; 
@@ -371,7 +371,7 @@
     color: #ef4444;
   }
   
-  
+
   .validator-stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

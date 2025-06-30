@@ -702,4 +702,4 @@ const useDaoContext = (): DaoContextProps => {
   return context;
 };
 
-export { DaoContextProvider as DAOProvider, useDaoContext as useDAO };
+export { DaoContextProvider as DAOProvider, useDaoContext };
