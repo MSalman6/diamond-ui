@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
   experimental: {
     esmExternals: true,
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

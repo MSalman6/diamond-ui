@@ -1,85 +1,387 @@
-import React, { useState } from 'react';
-import ValidatorsTable from './ValidatorsTable';
-import { mockValidators } from './validatorsData';
-import { Validator, VisibleColumns } from './types';
+import React, { useState, useEffect, useCallback } from 'react';
+import BigNumber from 'bignumber.js';
+import { useRouter } from 'next/navigation';
+import copy from 'copy-to-clipboard';
+import { toast } from 'react-toastify';
+import StakeModal from '../Modals/StakeModal';
+import UnstakeModal from '../Modals/UnstakeModal';
+import ColumnsFilterModal from '../ColumnsFilter';
+import { useWeb3Context } from '../../contexts/Web3';
+import { useStakingContext } from '../../contexts/Staking';
+import { truncateAddress } from '../../utils/common';
 
-interface ValidatorsProps {
-  onStake?: (validator: Validator) => void;
-  onUnstake?: (validator: Validator) => void;
+interface TableField {
+  key: string;
+  label: string;
+  sortAble: boolean;
+  updateAble: boolean;
+  hide: boolean;
 }
 
-export default function Validators({ onStake, onUnstake }: ValidatorsProps) {
-  const [validators] = useState<Validator[]>(mockValidators);
+const tableFieldsDefault: TableField[] = [
+  { key: "isActive", label: "Status", sortAble: true, updateAble: true, hide: false },
+  { key: "stakingAddress", label: "Wallet address", sortAble: false, updateAble: true, hide: false },
+  { key: "miningAddress", label: "Miner address", sortAble: false, updateAble: true, hide: true },
+  { key: "miningPublicKey", label: "Public Key", sortAble: false, updateAble: true, hide: true },
+  { key: "totalStake", label: "Total Stake", sortAble: true, updateAble: true, hide: false },
+  { key: "votingPower", label: "Voting Power", sortAble: true, updateAble: true, hide: false },
+  { key: "score", label: "Score", sortAble: true, updateAble: true, hide: false },
+  { key: "connectivityReport", label: "CR", sortAble: true, updateAble: true, hide: false },
+  { key: "myStake", label: "My Stake", sortAble: true, updateAble: false, hide: false },
+  { key: "stakeBtn", label: "", sortAble: false, updateAble: false, hide: false },
+  { key: "unstakeClaimBtn", label: "", sortAble: false, updateAble: false, hide: false },
+];
+
+interface ValidatorsProps {
+  itemsPerPage?: number;
+}
+
+export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
+  const { userWallet } = useWeb3Context();
+  const { pools, stakingEpoch, claimOrderedUnstake } = useStakingContext();
+  const router = useRouter();
+
+  // State management
+  const [currentPage, setCurrentPage] = useState(0);
+  const [filter, setFilter] = useState<'default' | 'valid' | 'active' | 'invalid' | 'stakedOn'>('default');
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [showCustomizeModal, setShowCustomizeModal] = useState(false);
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: string } | null>(null);
+  const [tableFields, setTableFields] = useState<TableField[]>(tableFieldsDefault);
 
-  // Visible columns state
-  const [visibleColumns, setVisibleColumns] = useState<VisibleColumns>({
-    status: true,
-    wallet: true,
-    miner: false,
-    publickey: false,
-    stake: true,
-    voting: true,
-    score: true,
-    cr: true,
-    mystake: true,
-    actions: true
-  });
+  // Load table fields from localStorage
+  useEffect(() => {
+    const storedTableFields = localStorage.getItem('validatorFieldsData');
+    if (storedTableFields) {
+      setTableFields(JSON.parse(storedTableFields));
+    } else {
+      localStorage.setItem('validatorFieldsData', JSON.stringify(tableFieldsDefault));
+    }
+  }, []);
 
-  // Filter validators based on search and status
-  const filteredValidators = validators.filter(validator => {
-    const matchesSearch = validator.walletAddress.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || validator.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  // Update localStorage when table fields change
+  useEffect(() => {
+    localStorage.setItem('validatorFieldsData', JSON.stringify(tableFields));
+  }, [tableFields]);
 
-  const handleStake = (validator: Validator) => {
-    onStake?.(validator);
+  // Handle filter changes
+  const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilter(event.target.value as typeof filter);
+    setCurrentPage(0);
   };
 
-  const handleUnstake = (validator: Validator) => {
-    onUnstake?.(validator);
+  // Handle search changes
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(0);
   };
 
+  // Copy data to clipboard
+  const copyData = useCallback((e: React.MouseEvent<HTMLDivElement>, data: string, msg: string) => {
+    e.stopPropagation();
+    copy(data);
+    toast.success(msg);
+  }, []);
+
+  // Filter and process pools
+  let poolsCopy = [...pools];
+
+  if (filter === 'valid') {
+    poolsCopy = poolsCopy.filter(pool => pool.isToBeElected && !pool.isActive);
+  } else if (filter === 'active') {
+    poolsCopy = poolsCopy.filter(pool => pool.isActive);
+  } else if (filter === 'invalid') {
+    poolsCopy = poolsCopy.filter(pool => !pool.isActive && !pool.isToBeElected);
+  } else if (filter === 'stakedOn') {
+    poolsCopy = poolsCopy.filter(pool => BigNumber(pool.myStake).isGreaterThan(0));
+  }
+
+  if (searchTerm.trim() !== '') {
+    poolsCopy = poolsCopy.filter(pool =>
+      pool.stakingAddress.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (pool.miningAddress && pool.miningAddress.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  }
+
+  // Apply sorting
+  if (sortConfig !== null) {
+    poolsCopy.sort((a: any, b: any) => {
+      let keyA, keyB;
+
+      if (sortConfig.key === 'myStake' || sortConfig.key === 'score' || sortConfig.key === 'connectivityReport') {
+        keyA = parseFloat(a[sortConfig.key] || '0');
+        keyB = parseFloat(b[sortConfig.key] || '0');
+      } else {
+        keyA = a[sortConfig.key];
+        keyB = b[sortConfig.key];
+      }
+
+      if (keyA < keyB) {
+        return sortConfig.direction === 'ascending' ? -1 : 1;
+      }
+      if (keyA > keyB) {
+        return sortConfig.direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
+  // Pagination
+  const pageCount = Math.ceil(poolsCopy.length / itemsPerPage);
+  const offset = currentPage * itemsPerPage;
+  const currentItems = poolsCopy.slice(offset, offset + itemsPerPage);
+
+  // Handle page changes
+  const handlePageClick = (pageIndex: number) => {
+    setCurrentPage(pageIndex);
+  };
+
+  // Handle sorting
+  const requestSort = (key: string) => {
+    let direction = 'ascending';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  // Handle row click navigation
+  const handleRowClick = (stakingAddress: string) => {
+    router.push(`/validators/${stakingAddress}`);
+  };
+
+  // Get sort class names
+  const getClassNamesFor = (column: string) => {
+    if (!sortConfig) {
+      return;
+    }
+    return sortConfig.key === column ? sortConfig.direction : undefined;
+  };
+
+  // Get tooltip text
+  const getTooltipText = (key: string) => {
+    switch (key) {
+      case 'isActive':
+        return "Active candidate is part of the active set; Valid - is not part of the active set, but can be elected; Invalid - a candidate who is flagged unavailable on the blockchain or has not enough stake";
+      case 'totalStake':
+        return "Total delegated DMD (self-staked DMD + delegates' stake)";
+      case 'votingPower':
+        return "Value that approximates a node's influence in the DAO participation";
+      case 'score':
+        return "Combined score value, based on the results of generating the shared key, the stability of the validator connection and misbehaviour reports from other validators";
+      case 'connectivityReport':
+        return "Connectivity report value, based on how many other active validators did report bad connectivity towards that node";
+      default:
+        return "";
+    }
+  };
+
+  // Render page numbers
+  const renderPageNumbers = () => {
+    const pageNumbers: React.ReactElement[] = [];
+    for (let i = 0; i < pageCount; i++) {
+      pageNumbers.push(
+        <li
+          key={i}
+          className={currentPage === i ? 'pagination-btn active' : 'pagination-btn'}
+          onClick={() => handlePageClick(i)}
+        >
+          {i + 1}
+        </li>
+      );
+    }
+    return pageNumbers;
+  };
+
+  // Render table headers
+  const renderHeaders = () => {
+    return (
+      <thead>
+        <tr>
+          {tableFields.filter(field => !field.hide).map((column, index) => {
+            // Hide wallet-specific columns when wallet is not connected
+            if ((column.key === 'myStake' || column.key === 'stakeBtn' || column.key === 'unstakeClaimBtn') && !userWallet.myAddr) {
+              return null;
+            }
+            return (
+              <th
+                key={index}
+                className={getClassNamesFor(column.key)}
+                onClick={() => column.sortAble && requestSort(column.key)}
+                style={{ cursor: column.sortAble ? 'pointer' : 'default' }}
+              >
+                {column.label}
+                {column.sortAble && column.key && column.key !== 'stakingAddress' && column.key !== 'stakeBtn' && column.key !== 'unstakeClaimBtn' && (
+                  <>
+                    <i className="fas fa-sort"></i>
+                  </>
+                )}
+              </th>
+            );
+          })}
+        </tr>
+      </thead>
+    );
+  };
+
+  // Render table rows
+  const renderRows = (currentItems: any[]) => {
+    return currentItems.map((pool, index) => (
+      <tr 
+        key={index} 
+        className="validators-table-row" 
+        onClick={() => handleRowClick(pool.stakingAddress)}
+        style={{ cursor: 'pointer' }}
+      >
+        {tableFields.filter(field => !field.hide).map((column, colIndex) => {
+          // Hide wallet-specific columns when wallet is not connected
+          if ((column.key === 'myStake' || column.key === 'stakeBtn' || column.key === 'unstakeClaimBtn') && !userWallet.myAddr) {
+            return null;
+          }
+          
+          if (column.key === 'isActive') {
+            return (
+              <td key={colIndex}>
+                <span className={`status-badge ${pool?.isActive || (pool.isToBeElected || pool.isPendingValidator) ? 'status-active' : 'status-invalid'}`}>
+                  {typeof pool.isActive === 'boolean'
+                    ? pool.isActive ? 'Active' : (pool.isToBeElected || pool.isPendingValidator) ? "Valid" : "Invalid"
+                    : 'Loading...'}
+                </span>
+              </td>
+            );
+          } else if (column.key === 'stakingAddress') {
+            return (
+              <td key={colIndex} className="wallet-address">
+                {pool.stakingAddress ? (
+                  <div onClick={(e) => copyData(e, pool.stakingAddress, "Copied staking address")}>
+                    {truncateAddress(pool.stakingAddress)}
+                  </div>
+                ) : (
+                  <div>Loading...</div>
+                )}
+              </td>
+            );
+          } else if (column.key === 'miningAddress') {
+            return (
+              <td key={colIndex} className="miner-address">
+                {pool.miningAddress ? (
+                  <div onClick={(e) => copyData(e, pool.miningAddress, "Copied mining address")}>
+                    {truncateAddress(pool.miningAddress)}
+                  </div>
+                ) : (
+                  <div>Loading...</div>
+                )}
+              </td>
+            );
+          } else if (column.key === 'miningPublicKey') {
+            return (
+              <td key={colIndex} className="public-key">
+                {pool.miningPublicKey ? (
+                  <div onClick={(e) => copyData(e, pool.miningPublicKey, "Copied public key")}>
+                    {truncateAddress(pool.miningPublicKey)}
+                  </div>
+                ) : (
+                  <div>Loading...</div>
+                )}
+              </td>
+            );
+          } else if (column.key === 'totalStake') {
+            return (
+              <td key={colIndex}>
+                {BigNumber(pool.totalStake ?? 0) ? BigNumber(BigNumber(pool.totalStake ?? 0)).dividedBy(10**18).toFixed(4) + " DMD" : 'Loading...'}
+              </td>
+            );
+          } else if (column.key === 'votingPower') {
+            return (
+              <td key={colIndex}>
+                {pool.votingPower && pool.votingPower.toString() !== 'NaN' && pool.votingPower.toString() !== 'Infinity'
+                  ? `${pool.votingPower.toString()} %`
+                  : 'Loading...'}
+              </td>
+            );
+          } else if (column.key === 'score') {
+            return (
+              <td key={colIndex}>
+                {pool.score !== undefined && pool.score !== null ? pool.score : 'Loading...'}
+              </td>
+            );
+          } else if (column.key === 'connectivityReport') {
+            return (
+              <td key={colIndex}>
+                <span className={`cr-value ${pool.isFaultyValidator ? 'cr-danger' : (Number(pool.connectivityReport) > 0 ? 'cr-warning' : 'cr-zero')}`}>
+                  {pool.connectivityReport !== undefined && pool.connectivityReport !== null ? pool.connectivityReport : 'Loading...'}
+                </span>
+              </td>
+            );
+          } else if (column.key === 'myStake') {
+            return (
+              <td key={colIndex}>
+                {BigNumber(pool.myStake) ? BigNumber(pool.myStake).dividedBy(10**18).toFixed(0) : 'Loading...'} DMD
+              </td>
+            );
+          } else if (column.key === 'stakeBtn') {
+            return (
+              <td key={colIndex} onClick={(e) => e.stopPropagation()}>
+                {(pool.isActive || pool.isToBeElected || pool.isPendingValidator) && BigNumber(pool.totalStake ?? 0).isLessThan(BigNumber(50000).multipliedBy(10**18)) && (
+                  <StakeModal buttonText="Stake" pool={pool} />
+                )}
+              </td>
+            );
+          } else if (column.key === 'unstakeClaimBtn') {
+            return (
+              <td key={colIndex} onClick={(e) => e.stopPropagation()}>
+                {BigNumber(pool.orderedWithdrawAmount).isGreaterThan(0) && BigNumber(pool.orderedWithdrawUnlockEpoch).isLessThanOrEqualTo(stakingEpoch) ? (
+                  <button className="btn-primary" onClick={(e) => {e.stopPropagation(); claimOrderedUnstake(pool)}}>Claim</button>
+                ) : (
+                  BigNumber(pool.myStake).isGreaterThan(0) && (
+                    <UnstakeModal buttonText="Unstake" pool={pool} />
+                  )
+                )}
+              </td>
+            );
+          } else {
+            return <td key={colIndex}></td>;
+          }
+        })}
+      </tr>
+    ));
+  };
   return (
     <>
       {/* Validators Metrics Section */}
       <section className="validators-metrics">
-      <div className="container">
-        <div className="metrics-grid">
-          <div className="metric-card fade-in">
-            <div className="metric-icon">
-              <i className="fas fa-users"></i>
+        <div className="container">
+          <div className="metrics-grid">
+            <div className="metric-card fade-in">
+              <div className="metric-icon">
+                <i className="fas fa-users"></i>
+              </div>
+              <h3>Total Validators</h3>
+              <p className="metric-value">{pools.length}</p>
             </div>
-            <h3>Total Validators</h3>
-            <p className="metric-value">150</p>
-          </div>
-          <div className="metric-card fade-in">
-            <div className="metric-icon">
-              <i className="fas fa-check-circle"></i>
+            <div className="metric-card fade-in">
+              <div className="metric-icon">
+                <i className="fas fa-check-circle"></i>
+              </div>
+              <h3>Active Validators</h3>
+              <p className="metric-value">{pools.filter((p) => p.isActive).length}</p>
             </div>
-            <h3>Active Validators</h3>
-            <p className="metric-value">142</p>
-          </div>
-          <div className="metric-card fade-in">
-            <div className="metric-icon">
-              <i className="fas fa-shield-alt"></i>
+            <div className="metric-card fade-in">
+              <div className="metric-icon">
+                <i className="fas fa-shield-alt"></i>
+              </div>
+              <h3>Valid Validators</h3>
+              <p className="metric-value">{pools.filter((p) => p.isToBeElected && !p.isActive).length}</p>
             </div>
-            <h3>Valid Validators</h3>
-            <p className="metric-value">138</p>
-          </div>
-          <div className="metric-card fade-in">
-            <div className="metric-icon">
-              <i className="fas fa-exclamation-triangle"></i>
+            <div className="metric-card fade-in">
+              <div className="metric-icon">
+                <i className="fas fa-exclamation-triangle"></i>
+              </div>
+              <h3>Invalid Validators</h3>
+              <p className="metric-value">{pools.filter((p) => !p.isActive && !p.isToBeElected).length}</p>
             </div>
-            <h3>Invalid Validators</h3>
-            <p className="metric-value">12</p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
       {/* Validators Table Section */}
       <section className="validators-table-section">
@@ -89,141 +391,74 @@ export default function Validators({ onStake, onUnstake }: ValidatorsProps) {
               <div className="search-container">
                 <input 
                   type="text" 
-                  placeholder="Search by wallet address..."
+                  placeholder="Search by address"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={handleSearchChange}
                 />
                 <button className="search-btn">
                   <i className="fas fa-search"></i>
                 </button>
               </div>
               <div className="filter-container">
-                <select 
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                >
-                  <option value="all">All Statuses</option>
-                  <option value="active">Active</option>
-                  <option value="valid">Valid</option>
-                  <option value="invalid">Invalid</option>
+                <select value={filter} onChange={handleFilterChange}>
+                  <option value="default">All</option>
+                  <option value="valid">Valid Candidates</option>
+                  <option value="active">Active Candidates</option>
+                  <option value="invalid">Invalid Candidates</option>
+                  {userWallet.myAddr && (
+                    <option value="stakedOn">Candidates I've staked on</option>
+                  )}
                 </select>
               </div>
             </div>
             <div className="customize-container">
-              <button 
-                className="btn-customize"
-                onClick={() => setShowCustomizeModal(true)}
-              >
-                <i className="fas fa-columns"></i> Customize Columns
-              </button>
+              <ColumnsFilterModal
+                buttonText="Customize"
+                tableFields={tableFields}
+                setTableFields={setTableFields}
+                defaultFields={tableFieldsDefault}
+              />
             </div>
           </div>
 
-          <ValidatorsTable 
-            validators={filteredValidators}
-            visibleColumns={visibleColumns}
-            onStake={handleStake}
-            onUnstake={handleUnstake}
-          />
-
-          <div className="pagination">
-            <button className="pagination-btn">
-              <i className="fas fa-chevron-left"></i>
-            </button>
-            <button className="pagination-btn active">1</button>
-            <button className="pagination-btn">2</button>
-            <button className="pagination-btn">3</button>
-            <span className="pagination-ellipsis">...</span>
-            <button className="pagination-btn">10</button>
-            <button className="pagination-btn">
-              <i className="fas fa-chevron-right"></i>
-            </button>
+          {/* Table */}
+          <div className="validators-table-container">
+            <table className="validators-table">
+              {renderHeaders()}
+              <tbody>
+                {renderRows(currentItems)}
+              </tbody>
+            </table>
           </div>
+
+          {/* Pagination */}
+          {poolsCopy.length > itemsPerPage && (
+            <div className="pagination">
+              <button 
+                className={`pagination-btn ${currentPage === 0 ? 'disabled' : ''}`}
+                onClick={() => {
+                  if (currentPage !== 0) {
+                    handlePageClick(currentPage - 1);
+                  }
+                }}
+              >
+                <i className="fas fa-chevron-left"></i>
+              </button>
+              {renderPageNumbers()}
+              <button 
+                className={`pagination-btn ${currentPage === pageCount - 1 ? 'disabled' : ''}`}
+                onClick={() => {
+                  if (currentPage !== pageCount - 1) {
+                    handlePageClick(currentPage + 1);
+                  }
+                }}
+              >
+                <i className="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          )}
         </div>
       </section>
-
-      {/* Customize Columns Modal */}
-      {showCustomizeModal && (
-        <div className="modal show" onClick={(e) => e.target === e.currentTarget && setShowCustomizeModal(false)}>
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3>Add, delete and sort columns just how you need it</h3>
-              <button className="close-modal" onClick={() => setShowCustomizeModal(false)}>
-                <i className="fas fa-times"></i>
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="columns-container">
-                <div className="columns-section">
-                  <div className="columns-section-title">CURRENT COLUMNS</div>
-                  <div className="active-columns">
-                    {Object.entries(visibleColumns)
-                      .filter(([, visible]) => visible)
-                      .map(([column], index) => (
-                        <div key={column} className="active-column" data-column={column}>
-                          <div className="column-number">{index + 1}</div>
-                          <div className="column-name">
-                            {column === 'wallet' ? 'Wallet address' :
-                             column === 'miner' ? 'Miner address' :
-                             column === 'publickey' ? 'Public Key' :
-                             column === 'stake' ? 'Total Stake' :
-                             column === 'voting' ? 'Voting Power' :
-                             column === 'mystake' ? 'My Stake' :
-                             column.charAt(0).toUpperCase() + column.slice(1)}
-                          </div>
-                          <div className="column-drag">
-                            <i className="fas fa-grip-lines"></i>
-                          </div>
-                        </div>
-                      ))
-                    }
-                  </div>
-                </div>
-                
-                <div className="columns-section">
-                  <div className="columns-section-title">AVAILABLE COLUMNS</div>
-                  <div className="available-columns">
-                    {Object.entries(visibleColumns).map(([column, visible]) => (
-                      <div 
-                        key={column} 
-                        className={`available-column ${visible ? 'selected' : ''}`}
-                        data-column={column}
-                        onClick={() => setVisibleColumns(prev => ({
-                          ...prev,
-                          [column]: !prev[column as keyof VisibleColumns]
-                        }))}
-                      >
-                        <div className="column-name">
-                          {column === 'wallet' ? 'Wallet address' :
-                           column === 'miner' ? 'Miner address' :
-                           column === 'publickey' ? 'Public Key' :
-                           column === 'stake' ? 'Total Stake' :
-                           column === 'voting' ? 'Voting Power' :
-                           column === 'mystake' ? 'My Stake' :
-                           column.charAt(0).toUpperCase() + column.slice(1)}
-                        </div>
-                        {visible && (
-                          <div className="column-remove">
-                            <i className="fas fa-times"></i>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button className="btn-cancel" onClick={() => setShowCustomizeModal(false)}>
-                Cancel
-              </button>
-              <button className="btn-apply" onClick={() => setShowCustomizeModal(false)}>
-                Apply Changes
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
