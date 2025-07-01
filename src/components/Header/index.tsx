@@ -1,16 +1,35 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useWeb3Context } from '@/contexts/Web3';
+import { truncateAddress } from '@/utils/common';
+import { useState, useEffect, useRef } from 'react';
+import { useWalletConnect } from '@/contexts/WalletConnect';
 
 export default function Header() {
+  const router = useRouter();
+  const { open: openWalletModal, address, isConnected } = useWalletConnect();
+  const { userWallet } = useWeb3Context();
+  
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [logoSrc, setLogoSrc] = useState('/logos/dmd-logo.png');
   const navLinksRef = useRef<HTMLUListElement>(null);
   const mobileMenuBtnRef = useRef<HTMLDivElement>(null);
 
+  // Handle wallet connect button click
+  const handleWalletConnect = () => {
+    if (isConnected && userWallet.myAddr) {
+      // If connected, redirect to profile page
+      router.push('/profile');
+    } else {
+      // If not connected, open wallet modal
+      openWalletModal();
+    }
+  };
+  
   // Toggle mobile menu
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(prev => {
@@ -149,6 +168,20 @@ export default function Header() {
               </Link>
             </li>
             
+            {isConnected && userWallet.myAddr && (
+              <li>
+                <Link href="/dao" onClick={handleRegularLinkClick}>
+                  DAO
+                </Link>
+              </li>
+            )}
+            
+            <li>
+              <Link href="/faqs" onClick={handleRegularLinkClick}>
+                FAQs
+              </Link>
+            </li>
+            
             <li className={`dropdown ${activeDropdown === 'ecosystem' ? 'active' : ''}`}>
               <a 
                 href="#" 
@@ -223,17 +256,19 @@ export default function Header() {
             </label>
           </div>
           
-          <div className="user-wallet-info" id="user-wallet-info" style={{display: "none"}}>
-            <div className="wallet-icon">
-              <div className="wallet-icon-inner"></div>
+          {isConnected && userWallet.myAddr ? (
+            <div className="user-wallet-info" onClick={handleWalletConnect} style={{ cursor: 'pointer' }}>
+              <div className="wallet-icon">
+                <div className="wallet-icon-inner"></div>
+              </div>
+              <div className="wallet-address">{truncateAddress(userWallet.myAddr)}</div>
+              <i className="fas fa-chevron-right"></i>
             </div>
-            <div className="wallet-address">0x7F...A3D2</div>
-            <i className="fas fa-chevron-down"></i>
-          </div>
-          
-          <div className="cta-button" id="connect-wallet-btn">
-            <i className="fas fa-wallet"></i> Connect Wallet
-          </div>
+          ) : (
+            <div className="cta-button" onClick={handleWalletConnect} style={{ cursor: 'pointer' }}>
+              <i className="fas fa-wallet"></i> Connect Wallet
+            </div>
+          )}
         </div>
         
         <div 

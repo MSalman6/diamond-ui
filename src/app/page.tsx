@@ -3,40 +3,9 @@
 import "./page.css";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect } from 'react';
 import FAQ from '../components/FAQ';
 
 export default function Home() {
-  // Add Link functionality to Connect Wallet button
-  useEffect(() => {
-    const connectWalletBtn = document.getElementById('connect-wallet-btn');
-    
-    if (connectWalletBtn) {
-      // Store original content and styles
-      const originalOnClick = connectWalletBtn.onclick;
-      
-      // Create a Link-like behavior by adding click handler
-      const handleWalletClick = (e: Event) => {
-        e.preventDefault();
-        window.location.href = '/profile';
-      };
-      
-      // Add the click handler
-      connectWalletBtn.addEventListener('click', handleWalletClick);
-      
-      // Cleanup function to remove the click handler when component unmounts or page changes
-      return () => {
-        if (connectWalletBtn) {
-          connectWalletBtn.removeEventListener('click', handleWalletClick);
-          // Restore original onclick if it existed
-          if (originalOnClick) {
-            connectWalletBtn.onclick = originalOnClick;
-          }
-        }
-      };
-    }
-  }, []);
-
   return (
     <div>
         {/* Unauthenticated View */}

@@ -1,33 +1,66 @@
 'use client'
 
 import '../page.css';
-import { useEffect } from 'react';
+import Link from 'next/link';
+import { useMemo } from 'react';
+import BigNumber from 'bignumber.js';
+import { truncateAddress } from '@/utils/common';
+import { useWeb3Context } from '@/contexts/Web3';
+import { useStakingContext } from '@/contexts/Staking';
+import { useWalletConnect } from '@/contexts/WalletConnect';
 
 export default function ProfilePage() {
-  useEffect(() => {
-    const button = document.getElementById("connect-wallet-btn");
-    const userView = document.getElementById("authenticated-user-view");
-    const validatorView = document.getElementById("authenticated-validator-view");
-  
-    const toggleViews = () => {
-      if (userView && validatorView) {
-        const isUserVisible = userView.style.display !== "none";
-        userView.style.display = isUserVisible ? "none" : "block";
-        validatorView.style.display = isUserVisible ? "block" : "none";
-      }
-    };
-  
-    button?.addEventListener("click", toggleViews);
-  
-    return () => {
-      button?.removeEventListener("click", toggleViews);
-    };
-  }, []);
+  const { userWallet } = useWeb3Context();
+  const { myPool, pools, totalDaoStake } = useStakingContext();
+
+  // Get validators that user has staked with (has myStake > 0)
+  const stakedValidators = useMemo(() => {
+    return pools.filter(pool => 
+      pool.myStake && 
+      BigNumber(pool.myStake).isGreaterThan(0) &&
+      pool.stakingAddress !== userWallet.myAddr
+    );
+  }, [pools, userWallet.myAddr]);
+
+  // Get top 5 validators by total stake and score
+  const topValidators = useMemo(() => {
+    const validatorsWithData = pools.filter(pool => 
+      pool.totalStake && 
+      BigNumber(pool.totalStake).isGreaterThan(0) && 
+      pool.score !== undefined && 
+      pool.score !== null
+    );
+    
+    // Sort by total stake (descending) and then by score (descending)
+    return validatorsWithData
+      .sort((a, b) => {
+        const stakeComparison = BigNumber(b.totalStake).minus(a.totalStake).toNumber();
+        if (stakeComparison !== 0) return stakeComparison;
+        return b.score - a.score;
+      })
+      .slice(0, 5);
+  }, [pools]);
+
+  // Calculate voting power as percentage of total DAO stake
+  const calculateVotingPower = (totalStake: BigNumber) => {
+    if (!totalDaoStake || totalDaoStake.isZero()) {
+      return '0.0';
+    }
+    return BigNumber(totalStake).dividedBy(totalDaoStake).multipliedBy(100).toFixed(1);
+  };
+
+  // Format DMD amounts with proper decimals and commas
+  const formatDMDAmount = (amount: BigNumber) => {
+    const dmdAmount = amount.dividedBy(1e18);
+    return dmdAmount.toFormat(0, BigNumber.ROUND_DOWN) + ' DMD';
+  };
+
+  const hasValidator = Boolean(myPool);
 
   return (
     <div>
         {/* Authenticated User View (Without Validator) */}
-        <div id="authenticated-user-view" style={{display: "block"}}>
+        <div id="authenticated-user-view" style={{display: hasValidator ? "none" : "block"}}>
           {/* User Information Section */}
           <section className="hero user-info-section">
             <div className="cosmic-grid"></div>
@@ -44,7 +77,7 @@ export default function ProfilePage() {
                         <div className="wallet-icon-inner"></div>
                       </div>
                       <div className="wallet-details">
-                        <h1>0x7F...A3D2</h1>
+                        <h1>{userWallet.myAddr && truncateAddress(userWallet.myAddr)}</h1>
                         <p>User Account</p>
                       </div>
                     </div>
@@ -119,34 +152,36 @@ export default function ProfilePage() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>
-                        <div className="validator-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #FF5E62, #FF9966)"}}></div>
-                          </div>
-                          <span>0x8A...B4F1</span>
-                        </div>
-                      </td>
-                      <td>25,430 DMD</td>
-                      <td>500 DMD</td>
-                      <td>12.5%</td>
-                      <td>98.2</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div className="validator-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #56CCF2, #2F80ED)"}}></div>
-                          </div>
-                          <span>0x3C...D9E7</span>
-                        </div>
-                      </td>
-                      <td>18,750 DMD</td>
-                      <td>750 DMD</td>
-                      <td>9.2%</td>
-                      <td>95.7</td>
-                    </tr>
+                    {stakedValidators.length > 0 ? (
+                      stakedValidators.map((validator, index) => (
+                        <tr key={validator.stakingAddress}>
+                          <td>
+                            <div className="validator-info">
+                              <div className="wallet-icon">
+                                <div className="wallet-icon-inner" style={{
+                                  background: `linear-gradient(45deg, ${
+                                    index % 3 === 0 ? '#FF5E62, #FF9966' :
+                                    index % 3 === 1 ? '#56CCF2, #2F80ED' :
+                                    '#6EE7B7, #3B82F6'
+                                  })`
+                                }}></div>
+                              </div>
+                              <span>{truncateAddress(validator.stakingAddress)}</span>
+                            </div>
+                          </td>
+                          <td>{validator.totalStake ? `${BigNumber(validator.totalStake).dividedBy(1e18).toFixed(0)} DMD` : '0 DMD'}</td>
+                          <td>{validator.myStake ? `${BigNumber(validator.myStake).dividedBy(1e18).toFixed(0)} DMD` : '0 DMD'}</td>
+                          <td>{calculateVotingPower(validator.totalStake || new BigNumber(0))}%</td>
+                          <td>{validator.score !== undefined && validator.score !== null ? Number(validator.score).toFixed(1) : 'N/A'}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={5} style={{ textAlign: 'center', padding: '2rem' }}>
+                          You haven't staked with any validators yet
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -168,57 +203,51 @@ export default function ProfilePage() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>
-                        <div className="validator-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #FF5E62, #FF9966)"}}></div>
+                    {topValidators.map((validator, index) => (
+                      <tr key={validator.stakingAddress} className={validator.stakingAddress === userWallet.myAddr ? "current-user" : ""}>
+                        <td>
+                          <div className="validator-info">
+                            <div className="wallet-icon">
+                              <div className="wallet-icon-inner" style={{
+                                background: `linear-gradient(45deg, ${
+                                  index % 3 === 0 ? '#FF5E62, #FF9966' :
+                                  index % 3 === 1 ? '#56CCF2, #2F80ED' :
+                                  '#6EE7B7, #3B82F6'
+                                })`
+                              }}></div>
+                            </div>
+                            <span>
+                              {validator.stakingAddress === userWallet.myAddr 
+                                ? `${truncateAddress(validator.stakingAddress)} (You)` 
+                                : truncateAddress(validator.stakingAddress)
+                              }
+                            </span>
                           </div>
-                          <span>0x8A...B4F1</span>
-                        </div>
-                      </td>
-                      <td>25,430 DMD</td>
-                      <td>12.5%</td>
-                      <td>98.2</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div className="validator-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #56CCF2, #2F80ED)"}}></div>
-                          </div>
-                          <span>0x3C...D9E7</span>
-                        </div>
-                      </td>
-                      <td>18,750 DMD</td>
-                      <td>9.2%</td>
-                      <td>95.7</td>
-                    </tr>
-                    <tr className="current-user">
-                      <td>
-                        <div className="validator-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #6EE7B7, #3B82F6)"}}></div>
-                          </div>
-                          <span>0x7F...A3D2 (You)</span>
-                        </div>
-                      </td>
-                      <td>15,750 DMD</td>
-                      <td>7.8%</td>
-                      <td>97.5</td>
-                    </tr>
+                        </td>
+                        <td>{validator.totalStake ? `${BigNumber(validator.totalStake).dividedBy(1e18).toFixed(0)} DMD` : '0 DMD'}</td>
+                        <td>{calculateVotingPower(BigNumber(validator.totalStake) || new BigNumber(0))}%</td>
+                        <td>{validator.score !== undefined && validator.score !== null ? Number(validator.score).toFixed(1) : 'N/A'}</td>
+                      </tr>
+                    ))}
+                    {topValidators.length === 0 && (
+                      <tr>
+                        <td colSpan={4} style={{ textAlign: 'center', padding: '2rem' }}>
+                          No validator data available
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
               <div className="validators-actions">
-                <a href="validators.html" className="btn-primary">See the list <i className="fas fa-arrow-right"></i></a>
+                <Link href="/validators" className="btn-primary">See the list <i className="fas fa-arrow-right"></i></Link>
               </div>
             </div>
           </section>
         </div>
 
         {/* Authenticated User View (With Validator) */}
-        <div id="authenticated-validator-view" style={{display: "none"}}>
+        <div id="authenticated-validator-view" style={{display: hasValidator ? "block" : "none"}}>
           {/* User/Validator Information Section */}
           <section className="hero validator-info-section">
             <div className="cosmic-grid"></div>
@@ -234,7 +263,7 @@ export default function ProfilePage() {
                       <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #6EE7B7, #3B82F6)"}}></div>
                     </div>
                     <div className="validator-details">
-                      <h1>0x7F...A3D2</h1>
+                      <h1>{userWallet.myAddr && truncateAddress(userWallet.myAddr)}</h1>
                       <span className="status-badge active">Active</span>
                     </div>
                   </div>
@@ -338,69 +367,6 @@ export default function ProfilePage() {
             </div>
           </section>
 
-          {/* Delegates Section */}
-          <section className="delegates-section">
-            <div className="container">
-              <h2>Delegates</h2>
-              <div className="table-container">
-                <table className="delegates-table">
-                  <thead>
-                    <tr>
-                      <th>Delegate</th>
-                      <th>Delegated Stake</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div className="delegate-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #FF5E62, #FF9966)"}}></div>
-                          </div>
-                          <span>0x8A...B4F1</span>
-                        </div>
-                      </td>
-                      <td>3,500 DMD</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div className="delegate-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #56CCF2, #2F80ED)"}}></div>
-                          </div>
-                          <span>0x3C...D9E7</span>
-                        </div>
-                      </td>
-                      <td>2,750 DMD</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div className="delegate-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #A17FE0, #5D26C1)"}}></div>
-                          </div>
-                          <span>0x5D...F2A8</span>
-                        </div>
-                      </td>
-                      <td>2,250 DMD</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div className="delegate-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #F97794, #623AA2)"}}></div>
-                          </div>
-                          <span>0x9B...C4D3</span>
-                        </div>
-                      </td>
-                      <td>1,500 DMD</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </section>
-
           {/* Staked With Section */}
           <section className="validators-staked">
             <div className="container">
@@ -417,34 +383,36 @@ export default function ProfilePage() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>
-                        <div className="validator-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #FF5E62, #FF9966)"}}></div>
-                          </div>
-                          <span>0x8A...B4F1</span>
-                        </div>
-                      </td>
-                      <td>25,430 DMD</td>
-                      <td>500 DMD</td>
-                      <td>12.5%</td>
-                      <td>98.2</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div className="validator-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #56CCF2, #2F80ED)"}}></div>
-                          </div>
-                          <span>0x3C...D9E7</span>
-                        </div>
-                      </td>
-                      <td>18,750 DMD</td>
-                      <td>250 DMD</td>
-                      <td>9.2%</td>
-                      <td>95.7</td>
-                    </tr>
+                    {stakedValidators.length > 0 ? (
+                      stakedValidators.map((validator, index) => (
+                        <tr key={validator.stakingAddress}>
+                          <td>
+                            <div className="validator-info">
+                              <div className="wallet-icon">
+                                <div className="wallet-icon-inner" style={{
+                                  background: `linear-gradient(45deg, ${
+                                    index % 3 === 0 ? '#FF5E62, #FF9966' :
+                                    index % 3 === 1 ? '#56CCF2, #2F80ED' :
+                                    '#6EE7B7, #3B82F6'
+                                  })`
+                                }}></div>
+                              </div>
+                              <span>{truncateAddress(validator.stakingAddress)}</span>
+                            </div>
+                          </td>
+                          <td>{validator.totalStake ? `${BigNumber(validator.totalStake).dividedBy(1e18).toFixed(0)} DMD` : '0 DMD'}</td>
+                          <td>{validator.myStake ? `${BigNumber(validator.myStake).dividedBy(1e18).toFixed(0)} DMD` : '0 DMD'}</td>
+                          <td>{calculateVotingPower(validator.totalStake || new BigNumber(0))}%</td>
+                          <td>{validator.score !== undefined && validator.score !== null ? Number(validator.score).toFixed(1) : 'N/A'}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={5} style={{ textAlign: 'center', padding: '2rem' }}>
+                          You haven't staked with any validators yet
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -466,50 +434,44 @@ export default function ProfilePage() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>
-                        <div className="validator-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #FF5E62, #FF9966)"}}></div>
+                    {topValidators.map((validator, index) => (
+                      <tr key={validator.stakingAddress} className={validator.stakingAddress === userWallet.myAddr ? "current-user" : ""}>
+                        <td>
+                          <div className="validator-info">
+                            <div className="wallet-icon">
+                              <div className="wallet-icon-inner" style={{
+                                background: `linear-gradient(45deg, ${
+                                  index % 3 === 0 ? '#FF5E62, #FF9966' :
+                                  index % 3 === 1 ? '#56CCF2, #2F80ED' :
+                                  '#6EE7B7, #3B82F6'
+                                })`
+                              }}></div>
+                            </div>
+                            <span>
+                              {validator.stakingAddress === userWallet.myAddr 
+                                ? `${truncateAddress(validator.stakingAddress)} (You)` 
+                                : truncateAddress(validator.stakingAddress)
+                              }
+                            </span>
                           </div>
-                          <span>0x8A...B4F1</span>
-                        </div>
-                      </td>
-                      <td>25,430 DMD</td>
-                      <td>12.5%</td>
-                      <td>98.2</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div className="validator-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #56CCF2, #2F80ED)"}}></div>
-                          </div>
-                          <span>0x3C...D9E7</span>
-                        </div>
-                      </td>
-                      <td>18,750 DMD</td>
-                      <td>9.2%</td>
-                      <td>95.7</td>
-                    </tr>
-                    <tr className="current-user">
-                      <td>
-                        <div className="validator-info">
-                          <div className="wallet-icon">
-                            <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #6EE7B7, #3B82F6)"}}></div>
-                          </div>
-                          <span>0x7F...A3D2 (You)</span>
-                        </div>
-                      </td>
-                      <td>15,750 DMD</td>
-                      <td>7.8%</td>
-                      <td>97.5</td>
-                    </tr>
+                        </td>
+                        <td>{validator.totalStake ? `${BigNumber(validator.totalStake).dividedBy(1e18).toFixed(0)} DMD` : '0 DMD'}</td>
+                        <td>{calculateVotingPower(validator.totalStake || new BigNumber(0))}%</td>
+                        <td>{validator.score !== undefined && validator.score !== null ? Number(validator.score).toFixed(1) : 'N/A'}</td>
+                      </tr>
+                    ))}
+                    {topValidators.length === 0 && (
+                      <tr>
+                        <td colSpan={4} style={{ textAlign: 'center', padding: '2rem' }}>
+                          No validator data available
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
               <div className="validators-actions">
-                <a href="validators.html" className="btn-primary">See the list <i className="fas fa-arrow-right"></i></a>
+                <Link href="/validators" className="btn-primary">See the list <i className="fas fa-arrow-right"></i></Link>
               </div>
             </div>
           </section>
