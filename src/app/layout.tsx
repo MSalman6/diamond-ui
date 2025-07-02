@@ -61,6 +61,7 @@ export default async function RootLayout({
                     pauseOnHover
                     theme="dark"
                   />
+                  <div id="modal-root"></div>
                 </DAOProvider>
               </StakingContextProvider>
             </Web3ContextProvider>

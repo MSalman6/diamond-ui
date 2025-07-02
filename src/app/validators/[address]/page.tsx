@@ -8,8 +8,8 @@ import { truncateAddress, timestampToDate } from '@/utils/common';
 import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { useDaoContext } from '@/contexts/DAO';
-import StakeModal from '@/components/Modals/StakeModal';
-import UnstakeModal from '@/components/Modals/UnstakeModal';
+import StakeModal from '@/components/Modals/Stake/StakeModal';
+import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 

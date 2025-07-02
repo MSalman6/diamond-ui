@@ -1,0 +1,230 @@
+/* StakeModal styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 480px;
+  padding: 32px;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+  margin: 20px;
+}
+
+.modalContent h2 {
+  color: var(--text);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+  text-align: center;
+  background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.modalClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.modalClose:hover {
+  background: var(--card-hover);
+  color: var(--text);
+  transform: scale(1.1);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form > span {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.formInput {
+  width: 100%;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: #00d2ff;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.1);
+}
+
+.formInput::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.formSubmit {
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  max-width: 150px;
+  align-self: center;
+}
+
+.stakeWarning {
+  color: #ff6b6b;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  padding: 12px;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+/* Light theme overrides */
+:global(body.light-theme) .modalOverlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+:global(body.light-theme) .modalContent {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+:global(body.light-theme) .modalContent h2 {
+  color: #1a202c;
+}
+
+:global(body.light-theme) .modalClose {
+  color: #718096;
+}
+
+:global(body.light-theme) .modalClose:hover {
+  background: #f7fafc;
+  color: #2d3748;
+}
+
+:global(body.light-theme) .form > span {
+  color: #4a5568;
+}
+
+:global(body.light-theme) .formInput {
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  color: #2d3748;
+}
+
+:global(body.light-theme) .formInput:focus {
+  background: #ffffff;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+:global(body.light-theme) .formInput::placeholder {
+  color: #718096;
+}
+
+:global(body.light-theme) .formSubmit {
+  background: linear-gradient(135deg, #3182ce, #63b3ed);
+}
+
+:global(body.light-theme) .formSubmit:hover {
+  box-shadow: 0 8px 25px rgba(49, 130, 206, 0.3);
+}
+
+:global(body.light-theme) .formSubmit:disabled {
+  background: #e2e8f0;
+  color: #a0aec0;
+}
+
+:global(body.light-theme) .stakeWarning {
+  color: #c53030;
+  background: rgba(197, 48, 48, 0.1);
+  border-color: rgba(197, 48, 48, 0.2);
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .modalContent {
+    margin: 10px;
+    padding: 24px;
+    max-width: 100%;
+  }
+  
+  .modalContent h2 {
+    font-size: 1.3rem;
+  }
+  
+  .formInput {
+    padding: 14px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .formSubmit {
+    padding: 14px 24px;
+  }
+}
