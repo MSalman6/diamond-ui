@@ -1,5 +1,6 @@
 'use client';
 
+import './Header.css';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -10,7 +11,7 @@ import { useWalletConnect } from '@/contexts/WalletConnect';
 
 export default function Header() {
   const router = useRouter();
-  const { open: openWalletModal, address, isConnected } = useWalletConnect();
+  const { open: openWalletModal, address, isConnected, disconnect } = useWalletConnect();
   const { userWallet } = useWeb3Context();
   
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -21,13 +22,33 @@ export default function Header() {
 
   // Handle wallet connect button click
   const handleWalletConnect = () => {
-    if (isConnected && userWallet.myAddr) {
-      // If connected, redirect to profile page
-      router.push('/profile');
-    } else {
+    if (!isConnected || !userWallet.myAddr) {
       // If not connected, open wallet modal
       openWalletModal();
     }
+  };
+
+  // Handle profile navigation
+  const handleProfileClick = () => {
+    // Only navigate to profile if wallet is connected
+    if (isConnected && userWallet.myAddr) {
+      router.push('/profile');
+      setActiveDropdown(null);
+    }
+  };
+
+  // Handle wallet disconnect
+  const handleDisconnect = () => {
+    disconnect();
+    setActiveDropdown(null);
+    router.push('/');
+  };
+
+  // Handle wallet dropdown toggle
+  const handleWalletDropdownToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setActiveDropdown(prev => prev === 'wallet' ? null : 'wallet');
   };
   
   // Toggle mobile menu
@@ -74,8 +95,15 @@ export default function Header() {
       
       // Close dropdown when clicking outside on mobile
       if (window.innerWidth <= 768) {
-        if (!target.closest('.dropdown') && !target.closest('.mobile-menu-btn')) {
+        if (!target.closest('.dropdown') && !target.closest('.mobile-menu-btn') && !target.closest('.user-wallet-info')) {
           setActiveDropdown(null);
+        }
+      } else {
+        // Close wallet dropdown when clicking outside on desktop
+        if (!target.closest('.user-wallet-info')) {
+          if (activeDropdown === 'wallet') {
+            setActiveDropdown(null);
+          }
         }
       }
     };
@@ -168,20 +196,6 @@ export default function Header() {
               </Link>
             </li>
             
-            {isConnected && userWallet.myAddr && (
-              <li>
-                <Link href="/dao" onClick={handleRegularLinkClick}>
-                  DAO
-                </Link>
-              </li>
-            )}
-            
-            <li>
-              <Link href="/faqs" onClick={handleRegularLinkClick}>
-                FAQs
-              </Link>
-            </li>
-            
             <li className={`dropdown ${activeDropdown === 'ecosystem' ? 'active' : ''}`}>
               <a 
                 href="#" 
@@ -257,12 +271,32 @@ export default function Header() {
           </div>
           
           {isConnected && userWallet.myAddr ? (
-            <div className="user-wallet-info" onClick={handleWalletConnect} style={{ cursor: 'pointer' }}>
-              <div className="wallet-icon">
-                <div className="wallet-icon-inner"></div>
+            <div className={`user-wallet-info dropdown ${activeDropdown === 'wallet' ? 'active' : ''}`} onClick={handleWalletDropdownToggle} style={{ cursor: 'pointer' }}>
+              <div className="dropdown-toggle">
+                <div className="wallet-icon">
+                  <div className="wallet-icon-inner"></div>
+                </div>
+                <div className="wallet-address">{truncateAddress(userWallet.myAddr)}</div>
+                <i className="fas fa-chevron-down wallet-address-dropdown"></i>
               </div>
-              <div className="wallet-address">{truncateAddress(userWallet.myAddr)}</div>
-              <i className="fas fa-chevron-right"></i>
+              <div className="dropdown-menu">
+                <div className="dropdown-content">
+                  <div className="dropdown-section">
+                    <ul>
+                      <li>
+                        <a href="#" onClick={(e) => { e.preventDefault(); handleProfileClick(); }}>
+                          <i className="fas fa-user"></i> Profile
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" onClick={(e) => { e.preventDefault(); handleDisconnect(); }}>
+                          <i className="fas fa-sign-out-alt"></i> Disconnect
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="cta-button" onClick={handleWalletConnect} style={{ cursor: 'pointer' }}>

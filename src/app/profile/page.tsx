@@ -2,7 +2,8 @@
 
 import '../page.css';
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import BigNumber from 'bignumber.js';
 import { truncateAddress } from '@/utils/common';
 import { useWeb3Context } from '@/contexts/Web3';
@@ -10,8 +11,10 @@ import { useStakingContext } from '@/contexts/Staking';
 import { useWalletConnect } from '@/contexts/WalletConnect';
 
 export default function ProfilePage() {
+  const router = useRouter();
   const { userWallet } = useWeb3Context();
   const { myPool, pools, totalDaoStake } = useStakingContext();
+  const { isConnected } = useWalletConnect();
 
   // Get validators that user has staked with (has myStake > 0)
   const stakedValidators = useMemo(() => {
@@ -40,6 +43,13 @@ export default function ProfilePage() {
       })
       .slice(0, 5);
   }, [pools]);
+
+  // Redirect to home if wallet is not connected
+  useEffect(() => {
+    if (!isConnected || !userWallet.myAddr) {
+      router.replace('/');
+    }
+  }, [isConnected, userWallet.myAddr, router]);
 
   // Calculate voting power as percentage of total DAO stake
   const calculateVotingPower = (totalStake: BigNumber) => {
