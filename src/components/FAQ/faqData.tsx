@@ -12,7 +12,7 @@ export const faqData: FAQItem[] = [
     question: "Who is a Validator?",
     answer: (
       <div>
-        <p>Blockchain validators or validator candidates are responsible for verifying and adding transactions to the blockchain. Users delegate their coins, or stake, to a validator. Validators receive 20% rewards from each Epoch they participate in as active validators, as a Validator operator reward. The rest of the Validator rewards (80%) are distributed proportionally based on the staked coins on that validator.</p>
+        <p>Blockchain validators or validator candidates are responsible for verifying and adding transactions to the blockchain. Users delegate their coins, or stake, to a validator. Validators receive 20% rewards from each Epoch, they participate as active validators as a Validator operator reward. The rest of the Validator rewards (80%) are distributed proportional based on staked coins on that validator.</p>
         <div className="heading">Validator candidates require:</div>
         <ul className="pl40 pr20">
           <li>Full node installation of the DMDv4 chain on a Linux server with the DMD version of Open Ethereum, which includes the DMDv4 extensions (HBBFT/POSDAO) and proper configuration.</li>
@@ -26,7 +26,7 @@ export const faqData: FAQItem[] = [
     )
   },
   {
-    question: "How do I start staking?",
+    question: "How do I participate in Staking?",
     answer: (
       <ol>
         <li><strong>Acquire DMD Tokens:</strong><br />
@@ -36,7 +36,7 @@ export const faqData: FAQItem[] = [
         <li><strong>Choose a Staking Method:</strong><br />
           You can choose from multiple staking options:
           <ul className="pl20 pr20">
-            <li><strong>Stake as a Validator:</strong> This requires running a full node and actively participating in network operations. It's more technical and requires at least 10,000 DMD. As a node operator, you also earn 20% of the validator rewards in addition to rewards proportional to your coin holdings.</li>
+            <li><strong>Stake as a Validator:</strong> This requires running a full node and actively participating in network operations. It’s more technical and requires at least 10000 DMD. But it also provides you 20% of the validator rewards for being a node operator. Additionally, you earn rewards proportional to your coin holdings.</li>
             <li><strong>Delegate to a Validator:</strong> If running a full node is not feasible, you can delegate your DMD to an existing validator. This is easier and still earns you rewards proportional to your coin holdings.</li>
           </ul>
         </li>
@@ -44,9 +44,21 @@ export const faqData: FAQItem[] = [
         <li><strong>Start Staking:</strong><br />
           <ul className="pl20 pr20">
             <li><strong>Access the Staking Interface:</strong> You can connect to our user-friendly interface with your wallet.</li>
-            <li><strong>Choose a Validator (if delegating):</strong> Research and choose a reliable validator to delegate your DMD. Look for validators with a good track record and solid reputation.</li>
+            <li><strong>Choose a Validator (if delegating):</strong> If you're delegating, research and choose a reliable validator to delegate your DMD. Look for validators with a good track record and a solid reputation.</li>
             <li><strong>Set the Amount:</strong> Decide how much DMD you want to stake or delegate.</li>
-            <li><strong>Confirm and Stake:</strong> Once you've chosen your validator and set the amount, confirm the transaction to start staking.</li>
+            <li><strong>Confirm and Stake:</strong> Once you’ve chosen your validator and set the amount, confirm the transaction to start staking.</li>
+          </ul>
+        </li>
+        <li><strong>Monitor Your Stake:</strong><br />
+          <ul className="pl20 pr20">
+            <li><strong>Track Rewards:</strong> After staking, you can monitor your rewards through your stake increase at the Epoch end.</li>
+            <li><strong>Auto restake:</strong> Every Epoch end all claimable rewards are accredited to the staked balance of the validator and his delegates. It means that there is no additional entity for reward storage, but your rewards are added to the stake and can be further unstaked if needed.</li>
+            <li><strong>Unstake if necessary:</strong> If you want to stop staking, you can usually unstake your DMD, but there are some exceptions, when you can’t unstake coins immediately so that you need to order them.</li>
+          </ul>
+        </li>
+        <li><strong>Order your rewards:</strong><br />
+          <ul className="pl20 pr20">
+            <li><strong>Order coins:</strong> Order flow takes place if some of the coins are not available to be unstaked at the moment, as they are part of the stake of the active validator. You need to order them after the available coins are withdrawn.</li>
           </ul>
         </li>
       </ol>
@@ -103,7 +115,7 @@ export const faqData: FAQItem[] = [
     question: "How can I unstake my DMD?",
     answer: (
       <div>
-        <p>If you want to remove your coins from a validator, you can use the 'Unstake' button on the Validator list or detailed page. Once you click on it, a pop-up will show up asking you which amount you would like to unstake. The flow is applicable to the validator candidate stake as well, when you want to withdraw rewards, the only limitation is that the minimum required stake amount (10000 DMD) is not available to be touched, you can return coins back only be removing the node.</p>
+        <p>If you want to remove your coins from a validator, you can use the 'Unstake' button on the Validator list or detailed page. Once you click on it, a pop-up will show up asking you which amount you would like to unstake. The flow is applicable to the validator candidate stake as well, when you want to withdraw rewards, the only limitation is that the minimum required stake amount (10000 DMD) is not available to be touched, you can return coins back only by removing the node.</p>
         <p className="pt0">'Unstake' button triggers the calculation of DMD you are able to unstake at the moment and the amount, which can be ordered. You need to unstake available coins first to proceed with the order flow. Click on the 'Unstake' button and approve the transaction in your wallet. If the validator is active or pending, the staker can only withdraw staked amount minus already ordered amount but no more than the amount staked during the current staking epoch.</p>
       </div>
     )
@@ -114,7 +126,7 @@ export const faqData: FAQItem[] = [
   },
   {
     question: "What does claiming DMD mean?",
-    answer: "To claim coins, please, click 'Claim' button near your stake amount in the validator candidates list. The button appears near your staked coins on the Epoch end and it means, that your previously ordered coins are ready to be unstaked."
+    answer: "To claim coins, please, click 'Claim' button near your stake amount in the validator candidates list. The button appears near your staked coins on the Epoch end, and it means, that your previously ordered coins are ready to be unstaked."
   },
   {
     question: "Removing a pool, how can I do it?",
@@ -143,7 +155,7 @@ export const faqData: FAQItem[] = [
   },
   {
     question: "What advantages does it offer to delegates compared to managing a node independently?",
-    answer: "The advantage for running an own node is that you earn 20% of validator rewards upfront before the rest of rewards are split proportional between coin owners on validator. The disadvantage is that you have to set up and maintain a complex linux node software and make sure it's 24/7 well reachable so you, as validator, get a good score and are more often part of an active set. The advantage for delegates is that you can take part even with below validator minimum stake of 10000 DMD just with at least 100 DMD. Other advantage for delegate if u see the validator you did delegate isn't perfectly maintained, you can just switch to another validator."
+    answer: "The advantage for running an own node is that you earn 20% of validator rewards upfront before the rest of rewards are split proportional between coin owners on validator. The disadvantage is that you have to set up and maintain a complex linux node software and make sure it's 24/7 well reachable so you, as validator, get a good score and are more often part of an active set. The advantage for delegates is that you can take part even with below validator minimum stake of 10000 DMD just with at least 100 DMD. Other advantage for delegate if you see the validator you did delegate isn't perfectly maintained, you can just switch to another validator."
   },
   {
     question: "Who can participate in DAO voting?",
@@ -162,7 +174,7 @@ export const faqData: FAQItem[] = [
     question: "Which proposal types exist?",
     answer: (
       <div>
-        <p>There are 3 proposal types supported by the DMD DAO community: open proposal, ecosystem parameters' changes, and contact upgrade.</p>
+        <p>There are 3 proposal types supported by the DMD DAO community: open proposal, ecosystem parameters’ changes, and contact upgrade.</p>
         <ol className="pt0">
           <li>
             <strong>Open Proposal:</strong>
@@ -170,7 +182,7 @@ export const faqData: FAQItem[] = [
           </li>
           <li>
             <strong>Ecosystem Parameters' Change Proposal:</strong>
-            <p className="pt0">The proposal type where members can propose, discuss, and vote on changes to the parameters that govern the DMD ecosystem. This proposal aims to enable members to suggest modifications to key parameters such as gas price, proposal fee, minimum block wait time, maximum block wait time (heartbeat) and other elements that impact the functioning of the DMD ecosystem. Ecosystem parameters' change proposal requires 1/3 of total DAO weight participation and 1/3 of exceeding yes votes.</p>
+            <p className="pt0">The proposal type where members can propose, discuss, and vote on changes to the parameters that govern the DMD ecosystem. This proposal aims to enable members to suggest modifications to key parameters such as gas price, proposal fee, minimum block wait time, maximum block wait time (heartbeat) and other elements that impact the functioning of the DMD ecosystem. Ecosystem parameters’ change proposal requires 1/3 of total DAO weight participation and 1/3 of exceeding yes votes.</p>
           </li>
           <li>
             <strong>Contract Upgrade Proposal:</strong>
@@ -181,15 +193,17 @@ export const faqData: FAQItem[] = [
     )
   },
   {
-    question: "How the voting process is organized and how the results are calculated?",
+    question: "How is the voting process organized, and how are the results calculated?",
     answer: (
       <div>
-        <p className="pb0">The voting starts as soon as the Voting phase starts straight after the Proposal phase. The voting process is available only for validator candidates. The other community members participate in the voting process indirectly by staking on top of a validator candidate, who makes the right decisions from their perspective. There are 2 options available for voting: to vote for the decision or against it. It is possible to change the decision during the Voting phase. The voting results are calculated based on 2 main indexes:</p>
+        <p className="pb0">The voting starts as soon as the Voting phase starts straight after the Proposal phase. The voting process is available only for validator candidates. The other community members participate in the voting process indirectly by staking on top of a validator candidate, who makes the right decisions from their perspective.
+          There are 2 options available for voting: to vote for the decision or against it. It is possible to change the decision during the Voting phase.
+          The voting results are calculated based on 2 main indexes:</p>
         <ul className="pl40 pr20">
           <li>Exceeding Yes answers %</li>
           <li>Participation %</li>
         </ul>
-        <p className="pb0">Every validator candidate has his own Voting power(%). It depends on the weight of his stake inside the whole DAO DMD possession. It means that for every decision it is possible to calculate the % of total DAO weight, who answered 'yes' and the % of total DAO weight, who answered 'no'. The difference between the % is the 'Exceeding Yes answers'. For every proposal type, we have a minimum required Exceeding Yes answers value, which is mandatory to be reached so that the proposal is accepted:</p>
+        <p className="pb0">Every validator candidate has his own Voting power(%). It depends on the weight of his stake inside the whole DAO DMD possession. It means that for every decision it is possible to calculate the % of total DAO weight, who answered ‘yes’ and the % of total DAO weight, who answered ‘no’. The difference between the % is the ‘Exceeding Yes answers’. For every proposal type, we have a minimum required Exceeding Yes answers value, which is mandatory to be reached so that the proposal is accepted:</p>
         <ul className="pl40 pr20">
           <li>Open proposal - ⅓ of total DMD possession</li>
           <li>Ecosystem parameters' change - ⅓ of total DMD possession</li>
@@ -201,14 +215,16 @@ export const faqData: FAQItem[] = [
           <li>Ecosystem parameters' change - ⅓ of total DMD possession</li>
           <li>Contract upgrade - 1/2 of total DMD possession</li>
         </ul>
-        <p className="pb0">If the two conditions are accomplished when the Voting phase is finished, the decision is considered as accepted, after that it requires finalization. If not - the decision is not accepted by the community, but it still needs to be finalized.</p>
+        <p className="pb0">If the two conditions are accomplished when the Voting phase is finished, the decision is considered as accepted, after that it requires finalization.
+          If not - the decision is not accepted by the community, but it still needs to be finalized.
+        </p>
         <p>Example of calculations are <a href="https://github.com/DMDcoin/whitepaper/wiki/G.-Decentralized-Autonomous-Organization#g24-voting-process" target="_blank" rel="noopener noreferrer">here</a></p>
       </div>
     )
   },
   {
     question: "Can I change my decision regarding the proposal?",
-    answer: "Every validator candidate can change the decision on the voting he has previously participated in. It can be possible if the discussion about the topic changes direction and the vote needs to be changed according to the new ideas or facts. The decision can only be changed to the opposite, not dismissed. Delegates should monitor their validator voting behavior and to switch to a validator that doesn't change his opinion at the last minute. We encourage validators to make decisions early and stick with them, in order to attract further delegates who search for predictable voting results. Validators are encouraged to vote early in order to display their opinion by voting for an option in a proposal. Delegates are encouraged to stake their funds on active validators that vote according to their preference."
+    answer: "Every validator candidate can change the decision on the voting he has previously participated in. It can be possible if the discussion about the topic changes direction and the vote needs to be changed according to the new ideas or facts. The decision can only be changed to the opposite, not dismissed. Delegates should monitor their validator voting behavior and switch to a validator that doesn't change his opinion at the last minute. We encourage validators to make decisions early and stick with them in order to attract further delegates who search for predictable voting results. Validators are encouraged to vote early in order to display their opinion by voting for an option in a proposal. Delegates are encouraged to stake their funds on active validators that vote according to their preference."
   },
   {
     question: "What is proposal finalization?",
@@ -216,7 +232,7 @@ export const faqData: FAQItem[] = [
   },
   {
     question: "What is proposal execution?",
-    answer: "Every accepted proposal needs to be executed so that the decision taken is exercised. Execution can be made during the new DAO phase (following the phase, when the proposal was created and finalized), and it is possible to create new proposals and vote on them in parallel. So there is a timeframe of 28 days for the proposal execution (the period of the next proposal+voting phase). Once the period is over, the proposals can not be executed. Contract upgrades can be finalized as all other proposals, but the execution must be done by the person, who proposed it."
+    answer: "Every accepted proposal needs to be executed so that the decision taken is exercised. Execution can be made during the new DAO phase (following the phase, when the proposal was created), and it is possible to create new proposals and vote on them in parallel. So there is a timeframe of 28 days for the proposal execution (the period of the next proposal+voting phase). Once the period is over, the proposals can not be executed. Contract upgrades can be finalized as all other proposals, but the execution must be done by the person, who proposed it."
   },
   {
     question: "What is node operator share?",
