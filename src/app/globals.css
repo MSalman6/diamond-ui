@@ -287,6 +287,8 @@ section h2 {
   border: none;
   cursor: pointer;
   text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-primary::after {
