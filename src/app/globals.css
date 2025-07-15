@@ -1251,6 +1251,33 @@ header .container {
   transform: scale(1.1);
 }
 
+.smart-contracts-container {
+  padding: 40px 80px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  position: relative;
+}
+
+.smart-contracts-images {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.smart-contracts-image-background {
+  width: 100%;
+  position: absolute;
+  z-index: 100;
+}
+
+.smart-contracts-image {
+  top: -70px;
+  position: absolute;
+  z-index: 101;
+}
+
 .section-header,
 .design-content,
 .smart-contracts-content,
@@ -1316,7 +1343,7 @@ header .container {
   padding: 30px;
   text-align: center;
   transition: var(--transition);
-  border: 1px solid var(--border-color);
+  border: 1px solid #0E316A;
   backdrop-filter: blur(10px);
   transition: background-color 0.5s ease, border-color 0.5s ease;
 }
@@ -1331,7 +1358,7 @@ header .container {
 }
 
 .feature-card:hover .feature-icon,
-.participate-card:hover .participate-icon {
+.participate-card:hover {
   transform: scale(1.1) rotate(4deg);
 }
 
@@ -1350,6 +1377,50 @@ header .container {
 .feature-card h3 {
   font-size: 1.5rem;
   margin-bottom: 15px;
+}
+
+.feature-card .ellipse-left {
+  position: absolute;
+  top: 0px;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -100;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.feature-card .ellipse-right {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -100;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.community-stat .ellipse-bottom {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -100;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.ellipse-bottom-left {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -100;
+  border-radius: inherit;
+  overflow: hidden;
 }
 
 .design-section {
@@ -1584,11 +1655,12 @@ header .container {
 }
 
 .community-stat {
+  position: relative;
+  border: 1px solid #0E316A;
   background: var(--card-bg);
   border-radius: 8px;
   padding: 30px;
   transition: var(--transition);
-  border: 1px solid var(--border-color);
   transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
