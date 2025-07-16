@@ -47,7 +47,7 @@
   padding: 25px;
   text-align: center;
   transition: var(--transition);
-  border: 1px solid var(--border-color);
+  border: 1px solid #0E316A;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -66,28 +66,25 @@
   opacity: 0.9;
 }
 
+.metric-card .metric-content {
+  text-align: start;
+  align-self: flex-start;
+}
+
 .metric-card .metric-value {
-  font-size: 2.5rem;
+  font-size: 4rem;
   font-weight: 700;
-  background: linear-gradient(90deg, #00d2ff, #3a7bd5);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 0;
+  margin-bottom: -15px;
 }
 
 .metric-icon {
-  font-size: 2rem;
   margin-bottom: 15px;
-  color: var(--text-white);
   opacity: 0.8;
-  background: rgba(255, 255, 255, 0.05);
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: var(--transition);
+  align-self: flex-end;
 }
 
 .metric-card:hover .metric-icon {

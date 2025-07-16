@@ -260,10 +260,9 @@ export default function Home() {
               </div>
               <div className="smart-contracts-images">
                 <Image className="smart-contracts-image" src="/images/vectors/3d-logo.png" alt="" width={500} height={500} />
-                <Image className="smart-contracts-image-background" src="/images/vectors/3d-logo-background.png" alt="" width={500} height={500} />
               </div>
             </div>
-            <Image className="ellipse-bottom-left" src="/images/vectors/ellipse-bottom-left.png" alt="" width={0} height={0} />
+            <Image className="ellipse-bottom-left" src="/images/vectors/ellipse-bottom-center-left.png" alt="" width={0} height={0} />
           </div>
         </section>
 

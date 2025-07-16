@@ -1255,8 +1255,9 @@ header .container {
   padding: 40px 80px;
   border-radius: 20px;
   border: 1px solid var(--border-color);
-  overflow: hidden;
   position: relative;
+  background: url('/images/vectors/3d-logo-background.png') no-repeat right bottom;
+  background-size: contain;
 }
 
 .smart-contracts-images {
@@ -1275,7 +1276,7 @@ header .container {
 .smart-contracts-image {
   top: -70px;
   position: absolute;
-  z-index: 101;
+  z-index: -1;
 }
 
 .section-header,
@@ -1401,7 +1402,7 @@ header .container {
   overflow: hidden;
 }
 
-.community-stat .ellipse-bottom {
+.ellipse-bottom {
   position: absolute;
   bottom: 0px;
   left: 0;
@@ -2014,6 +2015,42 @@ footer {
   .big-stat {
     align-items: flex-start;
   }
+
+  .smart-contracts-container {
+    padding: 30px 40px;
+    background-size: cover;
+    background-position: right center;
+  }
+
+  .smart-contracts-image {
+    top: -60px;
+    right: 20px;
+    transform: scale(0.99);
+  }
+
+  .smart-contracts-content {
+    max-width: 70%;
+  }
+
+  .smart-contracts-content h2 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 1034px) {
+  .smart-contracts-image {
+    top: -60px;
+    right: 0px;
+    transform: scale(0.9);
+  }
+
+  .smart-contracts-content {
+    max-width: 70%;
+  }
+
+  .smart-contracts-content h2 {
+    font-size: 2.5rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -2033,44 +2070,29 @@ footer {
   .proposal-hero-content {
     margin-top: 40px;
   }
-}
 
-@media (max-width: 992px) {
-  section {
-    padding: 80px 0;
+  .smart-contracts-container {
+    padding: 20px 30px;
+    background-size: cover;
+    background-position: right center;
   }
 
-  section h2 {
-    font-size: 2.5rem;
+  .smart-contracts-images {
+    display: none;
   }
 
-  .hero-content h1 {
-    font-size: 3.5rem;
+  .smart-contracts-image-background,
+  .smart-contracts-image {
+    display: none;
   }
 
-  .news-card {
-    grid-template-columns: 1fr;
+  .smart-contracts-content {
+    max-width: 100%;
+    text-align: center;
   }
 
-  .news-image {
-    min-height: 300px;
-  }
-
-  .diamond-1::before,
-  .diamond-blue::before {
-    width: 60px;
-    height: 60px;
-  }
-
-  .diamond-2::before,
-  .diamond-purple::before {
-    width: 40px;
-    height: 40px;
-  }
-
-  .diamond-3::before {
-    width: 50px;
-    height: 50px;
+  .smart-contracts-content h2 {
+    font-size: 2rem;
   }
 }
 
@@ -2137,6 +2159,14 @@ footer {
 
   .theme-toggle-icon {
     font-size: 12px;
+  }
+
+  .smart-contracts-container {
+    padding: 15px 20px;
+  }
+
+  .smart-contracts-content h2 {
+    font-size: 1.8rem;
   }
 }
 

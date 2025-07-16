@@ -9,6 +9,7 @@ import ColumnsFilterModal from '../ColumnsFilter';
 import { useWeb3Context } from '../../contexts/Web3';
 import { useStakingContext } from '../../contexts/Staking';
 import { truncateAddress } from '../../utils/common';
+import Image from 'next/image';
 
 interface TableField {
   key: string;
@@ -353,31 +354,43 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
           <div className="metrics-grid">
             <div className="metric-card fade-in">
               <div className="metric-icon">
-                <i className="fas fa-users"></i>
+                <Image src="/images/vectors/top-validators.png" alt="" width={100} height={100} />
               </div>
-              <h3>Total Validators</h3>
-              <p className="metric-value">{pools.length}</p>
+              <div className='metric-content'>
+                <p className="metric-value">{pools.length}</p>
+                <h3>Total Validators</h3>
+              </div>
+              <Image className="ellipse-bottom" src="/images/vectors/ellipse-bottom.png" alt="" width={0} height={0} />
             </div>
             <div className="metric-card fade-in">
               <div className="metric-icon">
-                <i className="fas fa-check-circle"></i>
+                <Image src="/images/vectors/active-validators.png" alt="" width={100} height={100} />
               </div>
-              <h3>Active Validators</h3>
-              <p className="metric-value">{pools.filter((p) => p.isActive).length}</p>
+              <div className='metric-content'>
+                <p className="metric-value">{pools.filter((p) => p.isActive).length}</p>
+                <h3>Active Validators</h3>
+              </div>
+              <Image className="ellipse-bottom" src="/images/vectors/ellipse-bottom.png" alt="" width={0} height={0} />
             </div>
             <div className="metric-card fade-in">
               <div className="metric-icon">
-                <i className="fas fa-shield-alt"></i>
+                <Image src="/images/vectors/valid-validators.png" alt="" width={100} height={100} />
               </div>
-              <h3>Valid Validators</h3>
-              <p className="metric-value">{pools.filter((p) => p.isToBeElected && !p.isActive).length}</p>
+              <div className='metric-content'>
+                <p className="metric-value">{pools.filter((p) => p.isToBeElected && !p.isActive).length}</p>
+                <h3>Valid Validators</h3>
+              </div>
+              <Image className="ellipse-bottom" src="/images/vectors/ellipse-bottom.png" alt="" width={0} height={0} />
             </div>
             <div className="metric-card fade-in">
               <div className="metric-icon">
-                <i className="fas fa-exclamation-triangle"></i>
+                <Image src="/images/vectors/invalid-validators.png" alt="" width={100} height={100} />
               </div>
-              <h3>Invalid Validators</h3>
-              <p className="metric-value">{pools.filter((p) => !p.isActive && !p.isToBeElected).length}</p>
+              <div className='metric-content'>
+                <p className="metric-value">{pools.filter((p) => !p.isActive && !p.isToBeElected).length}</p>
+                <h3>Invalid Validators</h3>
+              </div>
+              <Image className="ellipse-bottom" src="/images/vectors/ellipse-bottom.png" alt="" width={0} height={0} />
             </div>
           </div>
         </div>
