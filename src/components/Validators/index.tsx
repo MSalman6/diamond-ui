@@ -8,7 +8,9 @@ import UnstakeModal from '../Modals/Unstake/UnstakeModal';
 import ColumnsFilterModal from '../ColumnsFilter';
 import { useWeb3Context } from '../../contexts/Web3';
 import { useStakingContext } from '../../contexts/Staking';
+import { useTheme } from '../../hooks';
 import { truncateAddress } from '../../utils/common';
+import { getThemeImagePath } from '../../utils/imageUtils';
 import Image from 'next/image';
 
 interface TableField {
@@ -41,6 +43,12 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
   const { userWallet } = useWeb3Context();
   const { pools, stakingEpoch, claimOrderedUnstake } = useStakingContext();
   const router = useRouter();
+  const theme = useTheme();
+
+  // Helper function to get theme-appropriate image paths
+  const getImagePath = (filename: string) => {
+    return getThemeImagePath(filename, theme);
+  };
 
   // State management
   const [currentPage, setCurrentPage] = useState(0);
@@ -354,43 +362,43 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
           <div className="metrics-grid">
             <div className="metric-card fade-in">
               <div className="metric-icon">
-                <Image src="/images/vectors/top-validators.png" alt="" width={100} height={100} />
+                <Image src={getImagePath("top-validators.png")} alt="" width={100} height={100} />
               </div>
               <div className='metric-content'>
                 <p className="metric-value">{pools.length}</p>
                 <h3>Total Validators</h3>
               </div>
-              <Image className="ellipse-bottom" src="/images/vectors/ellipse-bottom.png" alt="" width={0} height={0} />
+              <Image className="ellipse-bottom" src={getImagePath("ellipse-bottom.png")} alt="" width={0} height={0} />
             </div>
             <div className="metric-card fade-in">
               <div className="metric-icon">
-                <Image src="/images/vectors/active-validators.png" alt="" width={100} height={100} />
+                <Image src={getImagePath("active-validators.png")} alt="" width={100} height={100} />
               </div>
               <div className='metric-content'>
                 <p className="metric-value">{pools.filter((p) => p.isActive).length}</p>
                 <h3>Active Validators</h3>
               </div>
-              <Image className="ellipse-bottom" src="/images/vectors/ellipse-bottom.png" alt="" width={0} height={0} />
+              <Image className="ellipse-bottom" src={getImagePath("ellipse-bottom.png")} alt="" width={0} height={0} />
             </div>
             <div className="metric-card fade-in">
               <div className="metric-icon">
-                <Image src="/images/vectors/valid-validators.png" alt="" width={100} height={100} />
+                <Image src={getImagePath("valid-validators.png")} alt="" width={100} height={100} />
               </div>
               <div className='metric-content'>
                 <p className="metric-value">{pools.filter((p) => p.isToBeElected && !p.isActive).length}</p>
                 <h3>Valid Validators</h3>
               </div>
-              <Image className="ellipse-bottom" src="/images/vectors/ellipse-bottom.png" alt="" width={0} height={0} />
+              <Image className="ellipse-bottom" src={getImagePath("ellipse-bottom.png")} alt="" width={0} height={0} />
             </div>
             <div className="metric-card fade-in">
               <div className="metric-icon">
-                <Image src="/images/vectors/invalid-validators.png" alt="" width={100} height={100} />
+                <Image src={getImagePath("invalid-validators.png")} alt="" width={100} height={100} />
               </div>
               <div className='metric-content'>
                 <p className="metric-value">{pools.filter((p) => !p.isActive && !p.isToBeElected).length}</p>
                 <h3>Invalid Validators</h3>
               </div>
-              <Image className="ellipse-bottom" src="/images/vectors/ellipse-bottom.png" alt="" width={0} height={0} />
+              <Image className="ellipse-bottom" src={getImagePath("ellipse-bottom.png")} alt="" width={0} height={0} />
             </div>
           </div>
         </div>

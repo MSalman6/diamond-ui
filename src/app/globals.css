@@ -1256,7 +1256,7 @@ header .container {
   border-radius: 20px;
   border: 1px solid var(--border-color);
   position: relative;
-  background: url('/images/vectors/3d-logo-background.png') no-repeat right bottom;
+  background: url('/images/vectors/dark-theme/3d-logo-background.png') no-repeat right bottom;
   background-size: contain;
 }
 
@@ -2356,6 +2356,28 @@ body.light-theme .stats-card:hover,
 body.light-theme .combined-stake-card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   border-color: rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .smart-contracts-container {
+  background: url('/images/vectors/light-theme/3d-logo-background.png') no-repeat right bottom;
+  background-size: contain;
+}
+
+body.light-theme .feature-card {
+  border: 1px solid #ffffff;
+}
+
+body.light-theme .community-stat {
+  border: 1px solid #ffffff;
+}
+
+body.light-theme .participate-card {
+  border: 1px solid #ffffff;
+}
+
+body.light-theme .smart-contracts-container .btn-primary {
+  background: #ffffff;
+  color: #000000;
 }
 
 body.light-theme .stake-card h3,

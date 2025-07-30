@@ -4,8 +4,17 @@ import "./page.css";
 import Link from "next/link";
 import Image from "next/image";
 import FAQ from '../components/FAQ';
+import { useTheme } from '../hooks';
+import { getThemeImagePath } from '../utils/imageUtils';
 
 export default function Home() {
+  const theme = useTheme();
+
+  // Helper function to get theme-appropriate image paths
+  const getImagePath = (filename: string) => {
+    return getThemeImagePath(filename, theme);
+  };
+
   return (
     <div>
         {/* Unauthenticated View */}
@@ -172,27 +181,27 @@ export default function Home() {
             <div className="features-grid">
               <div className="feature-card fade-in">
                 <div className="feature-icon">
-                  <Image src="/images/vectors/decentralized.png" alt="Decentralized" width={70} height={70} />
+                  <Image src={getImagePath("decentralized.png")} alt="Decentralized" width={70} height={70} />
                 </div>
                 <h3>Decentralized</h3>
-                <Image className="ellipse-left" src="/images/vectors/ellipse-left.png" alt="ellipse-left" width={0} height={0} />
-                <Image className="ellipse-right" src="/images/vectors/ellipse-right.png" alt="ellipse-right" width={0} height={0} />
+                <Image className="ellipse-left" src={getImagePath("ellipse-left.png")} alt="ellipse-left" width={0} height={0} />
+                <Image className="ellipse-right" src={getImagePath("ellipse-right.png")} alt="ellipse-right" width={0} height={0} />
               </div>
               <div className="feature-card fade-in">
                 <div className="feature-icon">
-                  <Image src="/images/vectors/secure.png" alt="Secure" width={70} height={70} />
+                  <Image src={getImagePath("secure.png")} alt="Secure" width={70} height={70} />
                 </div>
                 <h3>Secure</h3>
-                <Image className="ellipse-left" src="/images/vectors/ellipse-left.png" alt="ellipse-left" width={0} height={0} />
-                <Image className="ellipse-right" src="/images/vectors/ellipse-right.png" alt="ellipse-right" width={0} height={0} />
+                <Image className="ellipse-left" src={getImagePath("ellipse-left.png")} alt="ellipse-left" width={0} height={0} />
+                <Image className="ellipse-right" src={getImagePath("ellipse-right.png")} alt="ellipse-right" width={0} height={0} />
               </div>
               <div className="feature-card fade-in">
                 <div className="feature-icon">
-                  <Image src="/images/vectors/scalable.png" alt="Scalable" width={70} height={70} />
+                  <Image src={getImagePath("scalable.png")} alt="Scalable" width={70} height={70} />
                 </div>
                 <h3>Scalable</h3>
-                <Image className="ellipse-left" src="/images/vectors/ellipse-left.png" alt="ellipse-left" width={0} height={0} />
-                <Image className="ellipse-right" src="/images/vectors/ellipse-right.png" alt="ellipse-right" width={0} height={0} />
+                <Image className="ellipse-left" src={getImagePath("ellipse-left.png")} alt="ellipse-left" width={0} height={0} />
+                <Image className="ellipse-right" src={getImagePath("ellipse-right.png")} alt="ellipse-right" width={0} height={0} />
               </div>
             </div>
           </div>
@@ -259,10 +268,10 @@ export default function Home() {
                 <a href="validators.html" className="btn-primary">Start Staking <i className="fas fa-arrow-right"></i></a>
               </div>
               <div className="smart-contracts-images">
-                <Image className="smart-contracts-image" src="/images/vectors/3d-logo.png" alt="" width={500} height={500} />
+                <Image className="smart-contracts-image" src={getImagePath("3d-logo.png")} alt="" width={500} height={500} />
               </div>
             </div>
-            <Image className="ellipse-bottom-left" src="/images/vectors/ellipse-bottom-center-left.png" alt="" width={0} height={0} />
+            <Image className="ellipse-bottom-left" src={getImagePath("ellipse-bottom-center-left.png")} alt="" width={0} height={0} />
           </div>
         </section>
 
@@ -344,28 +353,28 @@ export default function Home() {
 
             <div className="community-stats">
               <div className="community-stat">
-                <Image src="/images/vectors/community-size.png" alt="" width={70} height={70} />
+                <Image src={getImagePath("community-size.png")} alt="" width={70} height={70} />
                 <h3>Community Size</h3>
                 <p>1,700+ members</p>
-                <Image className="ellipse-bottom" src="/images/vectors/ellipse-bottom.png" alt="" width={0} height={0} />
+                <Image className="ellipse-bottom" src={getImagePath("ellipse-bottom.png")} alt="" width={0} height={0} />
               </div>
               <div className="community-stat">
-                <Image src="/images/vectors/core-team.png" alt="" width={70} height={70} />
+                <Image src={getImagePath("core-team.png")} alt="" width={70} height={70} />
                 <h3>Core team</h3>
                 <p>10+ active developers</p>
-                <Image className="ellipse-bottom" src="/images/vectors/ellipse-bottom.png" alt="" width={0} height={0} />
+                <Image className="ellipse-bottom" src={getImagePath("ellipse-bottom.png")} alt="" width={0} height={0} />
               </div>
               <div className="community-stat">
-                <Image src="/images/vectors/projects.png" alt="" width={70} height={70} />
+                <Image src={getImagePath("projects.png")} alt="" width={70} height={70} />
                 <h3>Projects Built</h3>
                 <p>5+ on top of DMD chain</p>
-                <Image className="ellipse-bottom" src="/images/vectors/ellipse-bottom.png" alt="" width={0} height={0} />
+                <Image className="ellipse-bottom" src={getImagePath("ellipse-bottom.png")} alt="" width={0} height={0} />
               </div>
               <div className="community-stat">
-                <Image src="/images/vectors/reach.png" alt="" width={70} height={70} />
+                <Image src={getImagePath("reach.png")} alt="" width={70} height={70} />
                 <h3>Global Reach</h3>
                 <p>50+ countries</p>
-                <Image className="ellipse-bottom" src="/images/vectors/ellipse-bottom.png" alt="" width={0} height={0} />
+                <Image className="ellipse-bottom" src={getImagePath("ellipse-bottom.png")} alt="" width={0} height={0} />
               </div>
             </div>
           </div>
@@ -394,27 +403,27 @@ export default function Home() {
             <div className="participate-grid">
               <div className="participate-card fade-in">
                 <div className="participate-icon">
-                  <Image src="/images/vectors/staking.png" alt="" width={70} height={70} />
+                  <Image src={getImagePath("staking.png")} alt="" width={70} height={70} />
                 </div>
                 <h3>Seamless Staking Experience</h3>
                 <p>Begin your journey by connecting your cryptocurrency wallet and explore the variety of staking options available. Our intuitive UI ensures a smooth and straightforward staking process.</p>
-                <Image className="ellipse-bottom-left" src="/images/vectors/ellipse-bottom-left.png" alt="" width={0} height={0} />
+                <Image className="ellipse-bottom-left" src={getImagePath("ellipse-bottom-left.png")} alt="" width={0} height={0} />
               </div>
               <div className="participate-card fade-in">
                 <div className="participate-icon">
-                  <Image src="/images/vectors/analytics.png" alt="" width={70} height={70} />
+                  <Image src={getImagePath("analytics.png")} alt="" width={70} height={70} />
                 </div>
                 <h3>Real-Time Analytics</h3>
                 <p>Stay informed with transparent data on staking pools, performance, and rewards. Our platform provides you with the insights needed to make the best staking decisions.</p>
-                <Image className="ellipse-bottom-left" src="/images/vectors/ellipse-bottom-left.png" alt="" width={0} height={0} />
+                <Image className="ellipse-bottom-left" src={getImagePath("ellipse-bottom-left.png")} alt="" width={0} height={0} />
               </div>
               <div className="participate-card fade-in">
                 <div className="participate-icon">
-                  <Image src="/images/vectors/rewards.png" alt="" width={70} height={70} />
+                  <Image src={getImagePath("rewards.png")} alt="" width={70} height={70} />
                 </div>
                 <h3>Earn Rewards</h3>
                 <p>By staking your DMD coins, you actively participate in transaction validation, securing the blockchain, and in return, receive additional DMD as rewards.</p>
-                <Image className="ellipse-bottom-left" src="/images/vectors/ellipse-bottom-left.png" alt="" width={0} height={0} />
+                <Image className="ellipse-bottom-left" src={getImagePath("ellipse-bottom-left.png")} alt="" width={0} height={0} />
               </div>
             </div>
           </div>
