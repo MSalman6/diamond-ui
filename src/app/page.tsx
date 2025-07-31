@@ -10,7 +10,6 @@ import { getThemeImagePath } from '../utils/imageUtils';
 export default function Home() {
   const theme = useTheme();
 
-  // Helper function to get theme-appropriate image paths
   const getImagePath = (filename: string) => {
     return getThemeImagePath(filename, theme);
   };

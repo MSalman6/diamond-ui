@@ -1,5 +1,5 @@
 export interface FAQItem {
-  question: string;
+  question: stri            <li><strong>Stake as a Validator:</strong> This requires running a full node and actively participating in network operations. It's more technical and requires at least 10000 DMD. But it also provides you with at least 20% of the validator rewards for being a node operator. Additionally, you earn rewards proportional to your coin holdings.</li>g;
   answer: string | React.ReactNode;
 }
 
@@ -12,11 +12,11 @@ export const faqData: FAQItem[] = [
     question: "Who Is A Validator?",
     answer: (
       <div>
-        <p className="pb0">Blockchain validators (or validator candidates) are responsible for verifying transactions and adding them to the blockchain. Users can delegate their coins (stake) to a validator to support their participation in the network.</p>
-        <p className="pb0">Validators earn rewards for their work during each Epoch:</p>
+        <p>Blockchain validators (or validator candidates) are responsible for verifying transactions and adding them to the blockchain. Users can delegate their coins (stake) to a validator to support their participation in the network.</p>
+        <p>Validators earn rewards for their work during each Epoch:</p>
         <ul className="pl40 pr20">
           <li>20% of the rewards are paid directly to the validator as an operator reward.</li>
-          <li className="pb20">The remaining 80% of the rewards are distributed proportionally to all stakers on that validator, including the validator's own stake. This means validator operators earn twice: once from the upfront 20% and again from their share of the 80% pool based on their staked coins.</li>
+          <li>The remaining 80% of the rewards are distributed proportionally to all stakers on that validator, including the validator's own stake. This means validator operators earn twice: once from the upfront 20% and again from their share of the 80% pool based on their staked coins.</li>
         </ul>
         <div className="heading">Validator candidates require:</div>
         <ul className="pl40 pr20">
@@ -34,36 +34,34 @@ export const faqData: FAQItem[] = [
     question: "How do I participate in Staking?",
     answer: (
       <ol>
-        <li><strong>Acquire DMD Tokens</strong><br />
+        <li><strong>Acquire DMD Tokens:</strong><br />
           You can buy DMD tokens from supported cryptocurrency exchanges.
         </li>
         <br />
-        <li><strong>Choose a Staking Method</strong><br />
+        <li><strong>Choose a Staking Method:</strong><br />
           You can choose from multiple staking options:
           <ul className="pl20 pr20">
-            <li><strong>Stake as a Validator:</strong> This requires running a full node and actively participating in network operations. It's more technical and requires at least 10000 DMD. But it also provides you with at least 20% of the validator rewards for being a node operator. Additionally, you earn rewards proportional to your coin holdings.</li>
+            <li><strong>Stake as a Validator:</strong> This requires running a full node and actively participating in network operations. It’s more technical and requires at least 10000 DMD. But it also provides you 20% of the validator rewards for being a node operator. Additionally, you earn rewards proportional to your coin holdings.</li>
             <li><strong>Delegate to a Validator:</strong> If running a full node is not feasible, you can delegate your DMD to an existing validator. This is easier and still earns you rewards proportional to your coin holdings.</li>
           </ul>
         </li>
         <br />
-        <li><strong>Start Staking</strong><br />
+        <li><strong>Start Staking:</strong><br />
           <ul className="pl20 pr20">
             <li><strong>Access the Staking Interface:</strong> You can connect to our user-friendly interface with your wallet.</li>
             <li><strong>Choose a Validator (if delegating):</strong> If you're delegating, research and choose a reliable validator to delegate your DMD. Look for validators with a good track record and a solid reputation.</li>
             <li><strong>Set the Amount:</strong> Decide how much DMD you want to stake or delegate.</li>
-            <li><strong>Confirm and Stake:</strong> Once you've chosen your validator and set the amount, confirm the transaction to start staking.</li>
+            <li><strong>Confirm and Stake:</strong> Once you’ve chosen your validator and set the amount, confirm the transaction to start staking.</li>
           </ul>
         </li>
-        <br />
-        <li><strong>Monitor Your Stake</strong><br />
+        <li><strong>Monitor Your Stake:</strong><br />
           <ul className="pl20 pr20">
             <li><strong>Track Rewards:</strong> After staking, you can monitor your rewards through your stake increase at the Epoch end.</li>
-            <li><strong>Auto-restake:</strong> Every Epoch end all claimable rewards are accredited to the staked balance of the validator and his delegates. It means that there is no additional entity for reward storage, but your rewards are added to the stake and can be further unstaked if needed.</li>
-            <li><strong>Unstake if Necessary:</strong> If you want to stop staking, you can usually unstake your DMD, but there are some exceptions, when you can't unstake coins immediately so that you need to order them.</li>
+            <li><strong>Auto restake:</strong> Every Epoch end all claimable rewards are accredited to the staked balance of the validator and his delegates. It means that there is no additional entity for reward storage, but your rewards are added to the stake and can be further unstaked if needed.</li>
+            <li><strong>Unstake if necessary:</strong> If you want to stop staking, you can usually unstake your DMD, but there are some exceptions, when you can’t unstake coins immediately so that you need to order them.</li>
           </ul>
         </li>
-        <br />
-        <li><strong>Order Your Rewards</strong><br />
+        <li><strong>Order your rewards:</strong><br />
           <ul className="pl20 pr20">
             <li><strong>Order coins:</strong> Order flow takes place if some of the coins are not available to be unstaked at the moment, as they are part of the stake of the active validator. You need to order them after the available coins are withdrawn.</li>
           </ul>
@@ -72,7 +70,7 @@ export const faqData: FAQItem[] = [
     )
   },
   {
-    question: "I have some DMD. Which validator should I delegate it to?",
+    question: "I have some DMD. Which validator should I delegate to?",
     answer: (
       <div>
         <p>Choosing a validator for delegating your DMD is an important decision that can affect your staking rewards and the security of your coins. Here are some steps and considerations to help you choose the right validator:</p>
@@ -92,14 +90,7 @@ export const faqData: FAQItem[] = [
     question: "What about rewards from staking?",
     answer: (
       <div>
-        <p>Each Epoch cycle (12 hours) distributes rewards equal to 1/6000 of all coins in the Delta Pot and Reinsert Pot combined.</p>
-        <ul className="pl40 pr20">
-          <li><strong>Step 1:</strong> A 10% share of the total Epoch rewards is first allocated to the DAO Governance pot.</li>
-          <li><strong>Step 2:</strong> The remaining rewards are split equally among all validators in the active set. For example, if there are 25 active validators, each validator receives 1/25 of the adjusted Epoch rewards.</li>
-          <li><strong>Step 3:</strong> From each validator's share, an upfront 20% is allocated directly to the node operator (validator owner) as compensation for setting up and maintaining the validator node.</li>
-          <li><strong>Step 4:</strong> The remaining 80% is then distributed proportionally among all coin holders staked on that validator, including the validator's own stake. This means validator owners earn both the 20% operator share and their proportional share of the 80% pool.</li>
-        </ul>
-        <p className="pb0">If an Epoch is shorter than 12 hours, rewards are reduced proportionally. Longer Epochs do not increase rewards.</p>
+        <p>The rewards per epoch cycle (12 hours) are always 1/6000 of all coins in delta pot and reinsert pot combined. Upfront, the DAO Governance share is taken (10%). The rest of the epoch rewards are split between all validators of the actual active set, and then once again between the participants (coin owners) on each validator. So if there are 25 validators in the active set, each validator gets 1/25 of this epoch rewards. Before this validator reward is split between coin owners on that validator proportional, a 20% share of rewards is removed and accounted to the node operator (validator owner) for the effort to set up and maintain the validator node.</p>
         <p className="pt0">More calculation examples <a target="_blank" href="https://github.com/DMDcoin/whitepaper/wiki/D.-The-DMD-Diamond-Blockchain's-Solutions#d625-validator-reward" rel="noopener noreferrer">here</a></p>
       </div>
     )
@@ -109,12 +100,19 @@ export const faqData: FAQItem[] = [
     answer: "POSDAO whitepaper refers to validators and all dPOS staker on top of him as a mining pool. DMD Diamond prefers the terminology validator candidate or just pool because no mining is conducted in the DMD network and the word mining is misleading. Any user who meets the conditions and wants to be a validator candidate needs to create a pool and stake his coins. To do it, you need to connect your wallet to Diamond UI, go to your personal profile and click the 'Create a pool' button. The button will be available if your balance contains at least 10000 DMD."
   },
   {
-    question: "How I can delegate my coins?",
+    question: "How can I delegate my coins?",
     answer: (
       <div>
-        <p className="pb0">To delegate tokens to your desired validator, click the 'Stake' button near the validator you wish to delegate on the Validator candidates list page. You can also delegate from the Validator candidate detailed page.</p>
-        <p className="pb0">A form will appear, showing the validator and a field to enter the amount to lock in staking mode. Enter the amount of tokens you wish to lock and click 'Stake'. Please note, that the minimum required amount for delegation is 100 DMD. A wallet popup will appear, asking for approval for the transaction. Click 'Approve' to finalize the lock in staking mode. After the transaction is completed, a popup will indicate that the tokens were successfully locked. Click 'Done' to continue.</p>
-        <p>Your tokens are now delegated to the selected validator. You can now see the delegated amount next to the validator in the validator list. If you choose the active validator to stake on top, the coins locked will become active and earn rewards for you in the next Epoch only.</p>
+        <p>To delegate tokens to your desired validator, follow these steps:</p>
+        <ol className="pt0">
+          <li>Click the 'Stake' button near the validator you wish to delegate on the Validator candidates list page. You can also delegate from the Validator candidate detailed page.</li>
+          <li>A form will appear, showing the validator and a field to enter the amount to lock in staking mode. Enter the amount of tokens you wish to lock.</li>
+          <li>Please note that the minimum required amount for delegation is 100 DMD.</li>
+          <li>A wallet popup will appear, asking for approval for the transaction. Click 'Approve' to finalize the lock in staking mode.</li>
+          <li>After the transaction is completed, a popup will indicate that the tokens were successfully locked. Click 'Done' to continue.</li>
+          <li>Your tokens are now delegated to the selected validator. You can see the delegated amount next to the validator in the validator list.</li>
+          <li>If you choose the active validator to stake on top, the coins locked will become active and earn rewards for you in the next Epoch only.</li>
+        </ol>
       </div>
     )
   },
@@ -123,8 +121,7 @@ export const faqData: FAQItem[] = [
     answer: (
       <div>
         <p>If you want to remove your coins from a validator, you can use the 'Unstake' button on the Validator list or detailed page. Once you click on it, a pop-up will show up asking you which amount you would like to unstake. The flow is applicable to the validator candidate stake as well, when you want to withdraw rewards, the only limitation is that the minimum required stake amount (10000 DMD) is not available to be touched, you can return coins back only by removing the node.</p>
-        <p className="pt0">'Unstake' button triggers the calculation of DMD you are able to unstake at the moment and the amount, which can be ordered. You need to unstake available coins first to proceed with the order flow. Click on the 'Unstake' button and approve the transaction in your wallet.</p>
-        <p className="pt0">If the validator is active or pending, the staker can only withdraw staked amount minus already ordered amount but no more than the amount staked during the current staking epoch.</p>
+        <p className="pt0">'Unstake' button triggers the calculation of DMD you are able to unstake at the moment and the amount, which can be ordered. You need to unstake available coins first to proceed with the order flow. Click on the 'Unstake' button and approve the transaction in your wallet. If the validator is active or pending, the staker can only withdraw staked amount minus already ordered amount but no more than the amount staked during the current staking epoch.</p>
       </div>
     )
   },
@@ -154,9 +151,9 @@ export const faqData: FAQItem[] = [
       <div>
         <p>Diamond UI has 3 statuses of validator candidates:</p>
         <ul className="pl40 pr20 pb20">
-          <li><strong>Active candidate</strong> is part of the active set;</li>
-          <li><strong>Valid</strong> - is not part of the active set, but can be elected;</li>
-          <li><strong>Invalid</strong> - a candidate who is flagged unavailable on the blockchain or has not enough stake.</li>
+          <li>Active candidate is part of the active set</li>
+          <li>Valid - is not part of the active set, but can be elected</li>
+          <li>Invalid - a candidate who is flagged unavailable on the blockchain or has not enough stake.</li>
         </ul>
       </div>
     )
@@ -179,73 +176,54 @@ export const faqData: FAQItem[] = [
     )
   },
   {
-    question: "Which proposal types exist in the DMD DAO?",
+    question: "Which proposal types exist?",
     answer: (
       <div>
-        <p>The DMD DAO supports three main proposal types, each designed for different purposes and requiring different approval thresholds:</p>
-        <div className="pt0 pb20">
-          <strong className="heading">Open Proposal</strong>
-          <p className="pt0 pb0">Open Proposals enable DAO members to share ideas, request funding, and collaborate on initiatives. They encourage community participation by allowing members to suggest projects or actions and optionally request funds to be sent to Externally Owned Accounts (EOAs).</p>
-          <ul className="pl40 pr20">
-            <li>Approval threshold:</li>
-            <li className="ml20">Participation: At least 1/3 of total DAO weight</li>
-            <li className="ml20">Votes: At least 1/3 "yes" votes exceeding "no" votes</li>
-          </ul>
-        </div>
-        <div className="pt0 pb20">
-          <strong className="heading">Ecosystem Parameter Change Proposal</strong>
-          <p className="pt0 pb0">This proposal type allows members to suggest changes to key parameters governing the DMD ecosystem, such as gas price, proposal fees, block time limits, and more. Changes are limited to predefined ranges for security and stability.</p>
-          <ul className="pl40 pr20">
-            <li>Approval threshold:</li>
-            <li className="ml20">Participation: At least 1/3 of total DAO weight</li>
-            <li className="ml20">Votes: At least 1/3 "yes" votes exceeding "no" votes</li>
-          </ul>
-        </div>
-        <div className="pt0 pb20">
-          <strong className="heading">Contract Upgrade Proposal</strong>
-          <p className="pt0 pb0">Used for upgrading smart contracts managed by the DAO. These proposals often involve technical changes, security improvements, or adjustments to support new features. "Low Majority Fill" proposals (for topping up the Low Majority Contract) are a subtype of Contract Upgrade proposals.</p>
-          <ul className="pl40 pr20">
-            <li>Approval threshold:</li>
-            <li className="ml20">Participation: At least 1/2 of total DAO weight</li>
-            <li className="ml20">Votes: At least 1/2 "yes" votes exceeding "no" votes</li>
-          </ul>
-        </div>
+        <p>There are 3 proposal types supported by the DMD DAO community: open proposal, ecosystem parameters’ changes, and contact upgrade.</p>
+        <ol className="pt0">
+          <li>
+            <strong>Open Proposal:</strong>
+            <p className="pt0">The open proposal invites members of the decentralized autonomous organization to contribute their ideas and expertise towards a common goal. The proposal aims to foster collaboration and innovation within the DAO community by encouraging members to share their thoughts, suggestions, and feedback on various projects and initiatives. Open proposal can include one or several transactions that are executed in the event that the proposal is accepted. Open proposal requires 1/3 of total DAO weight participation and 1/3 of exceeding yes votes.</p>
+          </li>
+          <li>
+            <strong>Ecosystem Parameters' Change Proposal:</strong>
+            <p className="pt0">The proposal type where members can propose, discuss, and vote on changes to the parameters that govern the DMD ecosystem. This proposal aims to enable members to suggest modifications to key parameters such as gas price, proposal fee, minimum block wait time, maximum block wait time (heartbeat) and other elements that impact the functioning of the DMD ecosystem. Ecosystem parameters’ change proposal requires 1/3 of total DAO weight participation and 1/3 of exceeding yes votes.</p>
+          </li>
+          <li>
+            <strong>Contract Upgrade Proposal:</strong>
+            <p className="pt0">The proposal can engage in discussions about potential upgrades, share technical expertise, and propose changes to enhance the functionality, security, and efficiency of the smart contracts. By submitting proposals and participating in transparent voting processes, members can collectively decide on which upgrades should be implemented and ensure that the DMD's smart contracts remain up-to-date and aligned with the evolving needs of the community. Contract upgrade proposal can include one or several transactions which are executed in the event that the proposal is accepted. Contract upgrade proposal requires 1/2 of total DAO weight participation and 1/2 of exceeding yes votes.</p>
+          </li>
+        </ol>
       </div>
     )
   },
   {
-    question: "How is the voting process organized, and how are results calculated?",
+    question: "How is the voting process organized, and how are the results calculated?",
     answer: (
       <div>
-        <p>The voting process begins immediately after the Proposal Phase ends and is only open to validator candidates. Community members participate indirectly by staking their coins on validators, who vote on their behalf.</p>
-        <div className="pt0 pb20">
-          <strong className="heading">Voting process:</strong>
-          <ul className="pl40 pr20">
-            <li>Validators can vote "Yes" or "No" on a proposal and can change their vote at any time during the Voting Phase.</li>
-            <li>Voting power is proportional to each validator's stake relative to the total DAO DMD supply.</li>
-          </ul>
-        </div>
-        <div className="pt0">
-          <strong className="heading">Result calculation:</strong>
-          <p className="pt0 pb0">Two conditions must be met for a proposal to pass:</p>
-          <ol className="pl40 pr20 pt0">
-            <li><strong>Participation Threshold (% of total DAO weight):</strong>
-              <ul className="pl20 pr20">
-                <li>Open Proposal: 1/3</li>
-                <li>Ecosystem Parameter Change: 1/3</li>
-                <li>Contract Upgrade: 1/2</li>
-              </ul>
-            </li>
-            <li><strong>Exceeding Yes Votes (% of total DAO weight):</strong>
-              <ul className="pl20 pr20">
-                <li>Open Proposal: 1/3</li>
-                <li>Ecosystem Parameter Change: 1/3</li>
-                <li>Contract Upgrade: 1/2</li>
-              </ul>
-            </li>
-          </ol>
-        </div>
-        <p className="pt0">If both conditions are met by the end of the Voting Phase, the proposal is accepted and moves to finalization. If not, the proposal is rejected but still finalized on-chain to complete the process. For detailed examples of voting calculations, see <a href="https://github.com/DMDcoin/whitepaper/wiki/G.-Decentralized-Autonomous-Organization#g24-voting-process" target="_blank" rel="noopener noreferrer">here</a></p>
+        <p className="pb0">The voting starts as soon as the Voting phase starts straight after the Proposal phase. The voting process is available only for validator candidates. The other community members participate in the voting process indirectly by staking on top of a validator candidate, who makes the right decisions from their perspective.
+          There are 2 options available for voting: to vote for the decision or against it. It is possible to change the decision during the Voting phase.
+          The voting results are calculated based on 2 main indexes:</p>
+        <ul className="pl40 pr20">
+          <li>Exceeding Yes answers %</li>
+          <li>Participation %</li>
+        </ul>
+        <p className="pb0">Every validator candidate has his own Voting power(%). It depends on the weight of his stake inside the whole DAO DMD possession. It means that for every decision it is possible to calculate the % of total DAO weight, who answered ‘yes’ and the % of total DAO weight, who answered ‘no’. The difference between the % is the ‘Exceeding Yes answers’. For every proposal type, we have a minimum required Exceeding Yes answers value, which is mandatory to be reached so that the proposal is accepted:</p>
+        <ul className="pl40 pr20">
+          <li>Open proposal - ⅓ of total DMD possession</li>
+          <li>Ecosystem parameters' change - ⅓ of total DMD possession</li>
+          <li>Contract upgrade - 1/2 of total DMD possession</li>
+        </ul>
+        <p className="pb0">In regard to participation %, it means that there is a mandatory % of participants for every proposal, which needs to be reached so that the proposal can be accepted. It is based on the Voting weight(%) of every particular validator candidate. The % depends on the proposal type as well:</p>
+        <ul className="pl40 pr20">
+          <li>Open proposal - ⅓ of total DMD possession</li>
+          <li>Ecosystem parameters' change - ⅓ of total DMD possession</li>
+          <li>Contract upgrade - 1/2 of total DMD possession</li>
+        </ul>
+        <p className="pb0">If the two conditions are accomplished when the Voting phase is finished, the decision is considered as accepted, after that it requires finalization.
+          If not - the decision is not accepted by the community, but it still needs to be finalized.
+        </p>
+        <p>Example of calculations are <a href="https://github.com/DMDcoin/whitepaper/wiki/G.-Decentralized-Autonomous-Organization#g24-voting-process" target="_blank" rel="noopener noreferrer">here</a></p>
       </div>
     )
   },
@@ -274,12 +252,11 @@ export const faqData: FAQItem[] = [
     question: "What is Connectivity Report (CR)?",
     answer: (
       <div>
-        <p>The Connectivity Report provides a metric for each node in the Validators list, indicating its network performance and connection stability.</p>
-        <p className="pb0 pt0">Display Rules:</p>
+        <p>The Connectivity Report provides a metric for each node in the Validators list, indicating its network performance and connection stability. Display Rules:</p>
         <ul className="pl40 pr20 pb20">
-          <li><strong>0:</strong> Displayed in black, indicating no reported issues.</li>
-          <li><strong>&gt;0:</strong> Displayed in orange, signalling reported connectivity issues.</li>
-          <li><strong>Faulty Validator:</strong> If a validator is flagged as faulty by a majority (two-thirds) of active validators, its value is displayed in bold red.</li>
+          <li>Displayed in black, indicating no reported issues.</li>
+          <li>Displayed in <span style={{ color: 'orange' }}>orange</span>, signalling reported connectivity issues.</li>
+          <li><strong>Faulty Validator:</strong> If a validator is flagged as faulty by a majority (two-thirds) of active validators, its value is displayed in bold <span style={{ color: 'red', fontWeight: 'bold' }}>red</span>.</li>
         </ul>
       </div>
     )

@@ -2,7 +2,7 @@ import { defineChain } from '@reown/appkit/networks'
 import { cookieStorage, createStorage } from '@wagmi/core'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 
-export const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID || ''
+export const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID || '2cceb4f25f1cb889b967ea3c40bfd7cd'
 
 export const networks = [
     defineChain({

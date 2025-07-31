@@ -45,7 +45,6 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
   const router = useRouter();
   const theme = useTheme();
 
-  // Helper function to get theme-appropriate image paths
   const getImagePath = (filename: string) => {
     return getThemeImagePath(filename, theme);
   };

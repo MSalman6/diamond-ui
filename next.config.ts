@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   env: {
-    NEXT_PUBLIC_WC_PROJECT_ID: process.env.NEXT_PUBLIC_WC_PROJECT_ID,
+    NEXT_PUBLIC_WC_PROJECT_ID: process.env.NEXT_PUBLIC_WC_PROJECT_ID || '2cceb4f25f1cb889b967ea3c40bfd7cd',
   },
   experimental: {
     esmExternals: true,

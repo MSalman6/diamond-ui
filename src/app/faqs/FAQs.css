@@ -25,10 +25,7 @@
   font-size: 3.5rem;
   font-weight: 700;
   margin-bottom: 20px;
-  background: #0f172a;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text);
   line-height: 1.2;
 }
 
