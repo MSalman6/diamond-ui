@@ -38,7 +38,7 @@ export default function FAQsPage() {
               <a href="https://github.com/DMDcoin/whitepaper/wiki/A.-Home" target="_blank" rel="noopener noreferrer" className="btn-primary">
                 Read Documentation <i className="fas fa-external-link-alt"></i>
               </a>
-              <a href="#" className="btn-secondary">
+              <a href="https://discord.com/channels/1267133854154756178/1267151457346392065" target='_blank' className="btn-secondary">
                 Join Community <i className="fas fa-users"></i>
               </a>
             </div>
