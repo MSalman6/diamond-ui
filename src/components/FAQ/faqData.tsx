@@ -12,11 +12,11 @@ export const faqData: FAQItem[] = [
     question: "Who Is A Validator?",
     answer: (
       <div>
-        <p className="pb0">Blockchain validators (or validator candidates) are responsible for verifying transactions and adding them to the blockchain. Users can delegate their coins (stake) to a validator to support their participation in the network.</p>
-        <p className="pb0">Validators earn rewards for their work during each Epoch:</p>
+        <p>Blockchain validators (or validator candidates) are responsible for verifying transactions and adding them to the blockchain. Users can delegate their coins (stake) to a validator to support their participation in the network.</p>
+        <p>Validators earn rewards for their work during each Epoch:</p>
         <ul className="pl40 pr20">
           <li>20% of the rewards are paid directly to the validator as an operator reward.</li>
-          <li className="pb20">The remaining 80% of the rewards are distributed proportionally to all stakers on that validator, including the validator's own stake. This means validator operators earn twice: once from the upfront 20% and again from their share of the 80% pool based on their staked coins.</li>
+          <li>The remaining 80% of the rewards are distributed proportionally to all stakers on that validator, including the validator's own stake. This means validator operators earn twice: once from the upfront 20% and again from their share of the 80% pool based on their staked coins.</li>
         </ul>
         <div className="heading">Validator candidates require:</div>
         <ul className="pl40 pr20">
@@ -54,7 +54,6 @@ export const faqData: FAQItem[] = [
             <li><strong>Confirm and Stake:</strong> Once you've chosen your validator and set the amount, confirm the transaction to start staking.</li>
           </ul>
         </li>
-        <br />
         <li><strong>Monitor Your Stake</strong><br />
           <ul className="pl20 pr20">
             <li><strong>Track Rewards:</strong> After staking, you can monitor your rewards through your stake increase at the Epoch end.</li>
@@ -62,7 +61,6 @@ export const faqData: FAQItem[] = [
             <li><strong>Unstake if Necessary:</strong> If you want to stop staking, you can usually unstake your DMD, but there are some exceptions, when you can't unstake coins immediately so that you need to order them.</li>
           </ul>
         </li>
-        <br />
         <li><strong>Order Your Rewards</strong><br />
           <ul className="pl20 pr20">
             <li><strong>Order coins:</strong> Order flow takes place if some of the coins are not available to be unstaked at the moment, as they are part of the stake of the active validator. You need to order them after the available coins are withdrawn.</li>
@@ -99,7 +97,7 @@ export const faqData: FAQItem[] = [
           <li><strong>Step 3:</strong> From each validator's share, an upfront 20% is allocated directly to the node operator (validator owner) as compensation for setting up and maintaining the validator node.</li>
           <li><strong>Step 4:</strong> The remaining 80% is then distributed proportionally among all coin holders staked on that validator, including the validator's own stake. This means validator owners earn both the 20% operator share and their proportional share of the 80% pool.</li>
         </ul>
-        <p className="pb0">If an Epoch is shorter than 12 hours, rewards are reduced proportionally. Longer Epochs do not increase rewards.</p>
+        <p>If an Epoch is shorter than 12 hours, rewards are reduced proportionally. Longer Epochs do not increase rewards.</p>
         <p className="pt0">More calculation examples <a target="_blank" href="https://github.com/DMDcoin/whitepaper/wiki/D.-The-DMD-Diamond-Blockchain's-Solutions#d625-validator-reward" rel="noopener noreferrer">here</a></p>
       </div>
     )
@@ -112,8 +110,8 @@ export const faqData: FAQItem[] = [
     question: "How I can delegate my coins?",
     answer: (
       <div>
-        <p className="pb0">To delegate tokens to your desired validator, click the 'Stake' button near the validator you wish to delegate on the Validator candidates list page. You can also delegate from the Validator candidate detailed page.</p>
-        <p className="pb0">A form will appear, showing the validator and a field to enter the amount to lock in staking mode. Enter the amount of tokens you wish to lock and click 'Stake'. Please note, that the minimum required amount for delegation is 100 DMD. A wallet popup will appear, asking for approval for the transaction. Click 'Approve' to finalize the lock in staking mode. After the transaction is completed, a popup will indicate that the tokens were successfully locked. Click 'Done' to continue.</p>
+        <p>To delegate tokens to your desired validator, click the 'Stake' button near the validator you wish to delegate on the Validator candidates list page. You can also delegate from the Validator candidate detailed page.</p>
+        <p>A form will appear, showing the validator and a field to enter the amount to lock in staking mode. Enter the amount of tokens you wish to lock and click 'Stake'. Please note, that the minimum required amount for delegation is 100 DMD. A wallet popup will appear, asking for approval for the transaction. Click 'Approve' to finalize the lock in staking mode. After the transaction is completed, a popup will indicate that the tokens were successfully locked. Click 'Done' to continue.</p>
         <p>Your tokens are now delegated to the selected validator. You can now see the delegated amount next to the validator in the validator list. If you choose the active validator to stake on top, the coins locked will become active and earn rewards for you in the next Epoch only.</p>
       </div>
     )
@@ -183,27 +181,27 @@ export const faqData: FAQItem[] = [
     answer: (
       <div>
         <p>The DMD DAO supports three main proposal types, each designed for different purposes and requiring different approval thresholds:</p>
-        <div className="pt0 pb20">
-          <strong className="heading">Open Proposal</strong>
-          <p className="pt0 pb0">Open Proposals enable DAO members to share ideas, request funding, and collaborate on initiatives. They encourage community participation by allowing members to suggest projects or actions and optionally request funds to be sent to Externally Owned Accounts (EOAs).</p>
+        <div className="pt0">
+          <strong>Open Proposal</strong>
+          <p className="pt0">Open Proposals enable DAO members to share ideas, request funding, and collaborate on initiatives. They encourage community participation by allowing members to suggest projects or actions and optionally request funds to be sent to Externally Owned Accounts (EOAs).</p>
           <ul className="pl40 pr20">
             <li>Approval threshold:</li>
             <li className="ml20">Participation: At least 1/3 of total DAO weight</li>
             <li className="ml20">Votes: At least 1/3 "yes" votes exceeding "no" votes</li>
           </ul>
         </div>
-        <div className="pt0 pb20">
-          <strong className="heading">Ecosystem Parameter Change Proposal</strong>
-          <p className="pt0 pb0">This proposal type allows members to suggest changes to key parameters governing the DMD ecosystem, such as gas price, proposal fees, block time limits, and more. Changes are limited to predefined ranges for security and stability.</p>
+        <div className="pt0">
+          <strong>Ecosystem Parameter Change Proposal</strong>
+          <p className="pt0">This proposal type allows members to suggest changes to key parameters governing the DMD ecosystem, such as gas price, proposal fees, block time limits, and more. Changes are limited to predefined ranges for security and stability.</p>
           <ul className="pl40 pr20">
             <li>Approval threshold:</li>
             <li className="ml20">Participation: At least 1/3 of total DAO weight</li>
             <li className="ml20">Votes: At least 1/3 "yes" votes exceeding "no" votes</li>
           </ul>
         </div>
-        <div className="pt0 pb20">
-          <strong className="heading">Contract Upgrade Proposal</strong>
-          <p className="pt0 pb0">Used for upgrading smart contracts managed by the DAO. These proposals often involve technical changes, security improvements, or adjustments to support new features. "Low Majority Fill" proposals (for topping up the Low Majority Contract) are a subtype of Contract Upgrade proposals.</p>
+        <div className="pt0">
+          <strong>Contract Upgrade Proposal</strong>
+          <p className="pt0">Used for upgrading smart contracts managed by the DAO. These proposals often involve technical changes, security improvements, or adjustments to support new features. "Low Majority Fill" proposals (for topping up the Low Majority Contract) are a subtype of Contract Upgrade proposals.</p>
           <ul className="pl40 pr20">
             <li>Approval threshold:</li>
             <li className="ml20">Participation: At least 1/2 of total DAO weight</li>
@@ -218,17 +216,17 @@ export const faqData: FAQItem[] = [
     answer: (
       <div>
         <p>The voting process begins immediately after the Proposal Phase ends and is only open to validator candidates. Community members participate indirectly by staking their coins on validators, who vote on their behalf.</p>
-        <div className="pt0 pb20">
-          <strong className="heading">Voting process:</strong>
+        <div className="pt0">
+          <strong>Voting process:</strong>
           <ul className="pl40 pr20">
             <li>Validators can vote "Yes" or "No" on a proposal and can change their vote at any time during the Voting Phase.</li>
             <li>Voting power is proportional to each validator's stake relative to the total DAO DMD supply.</li>
           </ul>
         </div>
         <div className="pt0">
-          <strong className="heading">Result calculation:</strong>
-          <p className="pt0 pb0">Two conditions must be met for a proposal to pass:</p>
-          <ol className="pl40 pr20 pt0">
+          <strong>Result calculation:</strong>
+          <p className="pt0">Two conditions must be met for a proposal to pass:</p>
+          <ol className="pl40 pr20">
             <li><strong>Participation Threshold (% of total DAO weight):</strong>
               <ul className="pl20 pr20">
                 <li>Open Proposal: 1/3</li>
@@ -245,7 +243,7 @@ export const faqData: FAQItem[] = [
             </li>
           </ol>
         </div>
-        <p className="pt0">If both conditions are met by the end of the Voting Phase, the proposal is accepted and moves to finalization. If not, the proposal is rejected but still finalized on-chain to complete the process. For detailed examples of voting calculations, see <a href="https://github.com/DMDcoin/whitepaper/wiki/G.-Decentralized-Autonomous-Organization#g24-voting-process" target="_blank" rel="noopener noreferrer">here</a></p>
+        <p>If both conditions are met by the end of the Voting Phase, the proposal is accepted and moves to finalization. If not, the proposal is rejected but still finalized on-chain to complete the process. For detailed examples of voting calculations, see <a href="https://github.com/DMDcoin/whitepaper/wiki/G.-Decentralized-Autonomous-Organization#g24-voting-process" target="_blank" rel="noopener noreferrer">here</a></p>
       </div>
     )
   },
@@ -275,7 +273,7 @@ export const faqData: FAQItem[] = [
     answer: (
       <div>
         <p>The Connectivity Report provides a metric for each node in the Validators list, indicating its network performance and connection stability.</p>
-        <p className="pb0 pt0">Display Rules:</p>
+        <p>Display Rules:</p>
         <ul className="pl40 pr20 pb20">
           <li><strong>0:</strong> Displayed in black, indicating no reported issues.</li>
           <li><strong>&gt;0:</strong> Displayed in orange, signalling reported connectivity issues.</li>
