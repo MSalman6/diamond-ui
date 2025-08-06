@@ -1,0 +1,555 @@
+.wiki-page {
+  min-height: 100vh;
+  background: var(--bg);
+  position: relative;
+}
+
+.wiki-hero {
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  padding: 120px 0 80px;
+}
+
+.wiki-hero-content {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.wiki-hero-content h1 {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 30px;
+  color: var(--text);
+  line-height: 1.1;
+  background: linear-gradient(135deg, #ffffff, #e0e7ff, #c7d2fe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.wiki-hero-content p {
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0 auto;
+}
+
+/* Wiki Content Section */
+.wiki-content {
+  padding: 40px 0 80px;
+  background: var(--bg);
+  position: relative;
+}
+
+.wiki-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.wiki-section {
+  margin-bottom: 50px;
+  position: relative;
+}
+
+.wiki-section:last-child {
+  margin-bottom: 0;
+}
+
+/* Key Statistics Cards - Prominent Display */
+.wiki-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin: 25px 0;
+  padding: 0;
+}
+
+.stat-card {
+  background: rgba(99, 102, 241, 0.08);
+  border-radius: 12px;
+  padding: 25px 20px;
+  text-align: center;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  position: relative;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #6366f1, #06b6d4);
+  border-radius: 12px 12px 0 0;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Remove card styling and create clean section headers */
+.wiki-section h2 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: var(--text);
+  line-height: 1.2;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.wiki-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, #06b6d4);
+  border-radius: 2px;
+}
+
+.wiki-section h3 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  margin-top: 25px;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.wiki-section h4 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.wiki-section p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 18px;
+  color: var(--text-secondary);
+  max-width: 100%;
+}
+
+.wiki-section strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Clean technology subsections */
+.tech-subsection {
+  margin-bottom: 30px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+.tech-subsection:last-child {
+  margin-bottom: 0;
+}
+
+.tech-subsection h3 {
+  color: #06b6d4;
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+  margin-top: 20px;
+}
+
+/* Enhanced Features Grid - Convert to Diamond Bullet Points */
+.features-list {
+  margin-top: 25px;
+  padding: 0;
+  list-style: none;
+}
+
+.features-list li {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  position: relative;
+  padding-left: 40px;
+}
+
+.features-list li::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  color: #06b6d4;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.feature-content h4 {
+  margin: 0 0 6px 0;
+  font-size: 1.2rem;
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.feature-content p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* Remove old features grid styling */
+.features-grid {
+  display: none;
+}
+
+.feature-item {
+  display: none;
+}
+
+.feature-icon {
+  display: none;
+}
+
+/* Clean DMD Uses List with Diamond Bullets */
+.dmd-uses {
+  margin: 25px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dmd-uses li {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 18px;
+  position: relative;
+  padding-left: 40px;
+  line-height: 1.7;
+}
+
+.dmd-uses li::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  color: #06b6d4;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.dmd-uses li strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.dmd-uses li {
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding-left: 40px;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  transition: none;
+  transform: none;
+}
+
+.dmd-uses li:hover {
+  background: none;
+  transform: none;
+}
+
+.market-info {
+  padding: 25px 0px;
+  margin-top: 25px;
+  position: relative;
+}
+
+.market-info::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #6366f1, #06b6d4);
+  border-radius: 12px 12px 0 0;
+}
+
+.market-info p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* Clean References Section with Diamond Bullets */
+.references-list ul {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.references-list li {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  position: relative;
+  padding-left: 40px;
+  background: none;
+  border: none;
+  border-radius: 0;
+  transition: none;
+}
+
+.references-list li::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  color: #06b6d4;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.references-list li:hover {
+  background: none;
+  transform: none;
+}
+
+.references-list a {
+  color: #06b6d4;
+  text-decoration: none;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color var(--transition-speed);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.references-list a:hover {
+  color: #0891b2;
+  text-decoration: underline;
+}
+
+.references-list i {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  transition: all var(--transition-speed);
+}
+
+.references-list a:hover i {
+  opacity: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .wiki-hero {
+    padding: 100px 0 50px;
+    min-height: 400px;
+  }
+  
+  .wiki-hero-content h1 {
+    font-size: 2.8rem;
+  }
+  
+  .wiki-hero-content p {
+    font-size: 1.1rem;
+    padding: 0 20px;
+  }
+  
+  .wiki-container {
+    padding: 0 15px;
+  }
+  
+  .wiki-section {
+    margin-bottom: 35px;
+  }
+  
+  .wiki-section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+  }
+  
+  .wiki-section h3 {
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+  }
+  
+  .wiki-section h4 {
+    font-size: 1.2rem;
+  }
+  
+  .wiki-stats {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+  }
+  
+  .stat-card {
+    padding: 18px 15px;
+  }
+  
+  .stat-value {
+    font-size: 1.6rem;
+  }
+  
+  .features-list li,
+  .dmd-uses li,
+  .references-list li {
+    padding-left: 30px;
+    margin-bottom: 15px;
+  }
+  
+  .features-list li::before,
+  .dmd-uses li::before,
+  .references-list li::before {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .wiki-hero-content h1 {
+    font-size: 2.2rem;
+  }
+  
+  .wiki-hero-content p {
+    font-size: 1rem;
+    padding: 0 15px;
+  }
+  
+  .wiki-container {
+    padding: 0 10px;
+  }
+  
+  .wiki-section {
+    margin-bottom: 30px;
+  }
+  
+  .wiki-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 18px;
+  }
+  
+  .wiki-section h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+  }
+  
+  .wiki-stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin: 18px 0;
+  }
+  
+  .stat-card {
+    padding: 16px 12px;
+  }
+  
+  .stat-value {
+    font-size: 1.4rem;
+  }
+  
+  .market-info {
+    padding: 20px 18px;
+  }
+  
+  .features-list li,
+  .dmd-uses li,
+  .references-list li {
+    padding-left: 25px;
+    margin-bottom: 12px;
+  }
+  
+  .feature-content h4 {
+    font-size: 1.1rem;
+  }
+  
+  .feature-content p,
+  .dmd-uses li,
+  .references-list a {
+    font-size: 0.95rem;
+  }
+}
+
+/* Light Theme Support */
+body.light-theme .wiki-page {
+  background: #f8fafc;
+}
+
+body.light-theme .wiki-content {
+  background: #ffffff;
+}
+
+body.light-theme .wiki-hero-content h1 {
+  background: linear-gradient(135deg, #1e293b, #475569, #64748b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+body.light-theme .wiki-card {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .wiki-card:hover {
+  background: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .tech-subsection {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+body.light-theme .feature-item {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+body.light-theme .feature-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .dmd-uses li {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+body.light-theme .market-info {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+body.light-theme .references-list li {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+body.light-theme .references-list li:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
