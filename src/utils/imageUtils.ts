@@ -7,10 +7,5 @@ export const getThemeImagePath = (filename: string, theme: 'light' | 'dark') => 
   const basePath = '/images/vectors';
   const fullPath = `${basePath}/${themeFolder}/${filename}`;
   
-  console.log('Theme image path utility:', {
-    input: { filename, theme },
-    computed: { safeTheme, themeFolder, basePath, fullPath }
-  });
-  
   return fullPath;
 };

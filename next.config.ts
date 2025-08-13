@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Enable source maps for debugging in production
+  productionBrowserSourceMaps: true,
   webpack: (config) => {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;

@@ -97,9 +97,6 @@ export default function ValidatorDetails() {
     });
   };
 
-  // Use the address parameter in the component
-  console.log('Validator address:', address);
-
   // Loading state
   if (!address) {
     return <div>Loading...</div>;
