@@ -8,6 +8,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 
+// Set environment variables to disable analytics before any SDK initialization
+if (typeof window !== 'undefined') {
+    (window as any).COINBASE_ANALYTICS_ENABLED = false;
+    (window as any).WC_ANALYTICS_ENABLED = false;
+    (window as any).DISABLE_ANALYTICS = true;
+}
+
 const supportedWalletIds = [
     "c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96", // metamask
     "163d2cf19babf05eb8962e9748f9ebe613ed52ebf9c8107c9a0f104bfcf161b3", // brave
@@ -33,6 +40,12 @@ const appKit = createWeb3Modal({
         "--w3m-color-mix-strength": 20,
     },
     allWallets: "HIDE",
+    metadata: {
+        name: "Diamond DMD",
+        description: "Diamond DMD",
+        url: "https://dmd-ui.vercel.app/",
+        icons: ["/favicon.ico"],
+    },
 });
 
 interface WalletConnectContextProps { 

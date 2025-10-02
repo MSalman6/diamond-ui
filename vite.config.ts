@@ -27,6 +27,10 @@ export default defineConfig(({ mode }) => {
         define: {
             'process.env': env, // Pass all env variables to process.env
             global: 'globalThis',
+            // Disable analytics globally
+            'process.env.COINBASE_ANALYTICS_ENABLED': 'false',
+            'process.env.WC_ANALYTICS_ENABLED': 'false',
+            'process.env.DISABLE_ANALYTICS': 'true',
         },
         server: {
             port: env.VITE_APP_PORT ? parseInt(env.VITE_APP_PORT) : 3000, // Default to 3000 if not set

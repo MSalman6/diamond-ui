@@ -194,7 +194,20 @@ const Web3ContextProvider: React.FC<ContextProviderProps> = ({ children }) => {
       (provider.isCoinbaseWallet) || 
       (provider.providerInfo && provider.providerInfo.type === 'coinbasewallet');
 
-      // Check if it's specifically a Coinbase Smart Wallet (keys.coinbase.com)
+      // Disable analytics for Coinbase Wallet
+      if (isCoinbaseWallet && provider.currentProvider) {
+        try {
+          if (provider.currentProvider._analytics) {
+            provider.currentProvider._analytics.enabled = false;
+          }
+          if (provider.currentProvider.analytics) {
+            provider.currentProvider.analytics.enabled = false;
+          }
+          provider.currentProvider.enableAnalytics = false;
+          provider.currentProvider.disableAnalytics = true;
+        } catch (e) {}
+      }
+
       const isCoinbaseSmartWallet = isCoinbaseWallet && provider.currentProvider.connectionType !== "extension_connection_type";
 
       if (isCoinbaseSmartWallet) {
