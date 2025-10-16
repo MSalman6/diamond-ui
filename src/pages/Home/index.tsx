@@ -5,19 +5,15 @@ import { useWeb3Context } from "../../contexts/Web3Context";
 import getStartedImg from "../../assets/images/home/getStarted.svg"
 import { useStakingContext } from "../../contexts/StakingContext";
 import CreateValidatorModal from "../../components/Modals/CreateValidatorModal";
-import { Pool } from "../../contexts/StakingContext/models/model";
 import UnstakeModal from "../../components/Modals/UnstakeModal";
 import BigNumber from "bignumber.js";
 import { useNavigate } from "react-router-dom";
 import StakeModal from "../../components/Modals/StakeModal";
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
-import p2bLogo from "../../assets/images/home/logo_p2pb2b.png";
-import xeggexLogo from "../../assets/images/home/logo_xegex.png";
 import bitmartLogo from "../../assets/images/home/logo_bitmart.png";
 import blockserveLogo from "../../assets/images/home/logo_blockserv.png";
 import RemoveValidatorModal from "../../components/Modals/RemoveValidatorModal";
 import DaoPhaseBanner from "../../components/DaoPhaseBanner";
-import ScoreHistoryModal from "../../components/Modals/ScoreHistoryModal";
 import { useWalletConnectContext } from "../../contexts/WalletConnect";
 import UpdatePoolOperatorModal from "../../components/Modals/UpdatePoolOperator";
 import { useDaoContext } from "../../contexts/DaoContext";
@@ -457,9 +453,7 @@ const Home: React.FC<HomeProps> = ({}) => {
                         <h2 className="heading-3 heading-left">DMD Ecosystem Partners</h2>
                         <div className={styles.clientsWrapper + " clients-wrapper"}>
 
-                            <img src={p2bLogo} height="39" loading="lazy" alt="p2b logo" className="clients-image" />
                             <img src={bitmartLogo} height="39" loading="lazy" alt="bitmart logo" className="clients-image" />
-                            <img src={xeggexLogo} height="39" loading="lazy" alt="blockserve logo" className="clients-image" />
                             <img src={blockserveLogo} height="39" loading="lazy" alt="blockserve logo" className="clients-image" />
                         </div>
                     </div>
