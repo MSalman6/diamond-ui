@@ -20,6 +20,8 @@ import UpdatePoolOperatorModal from "../../components/Modals/UpdatePoolOperator"
 import { useDaoContext } from "../../contexts/DaoContext";
 import copy from "copy-to-clipboard";
 import { toast } from "react-toastify";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons';
 
 interface HomeProps {}
 
@@ -464,64 +466,179 @@ const Home: React.FC<HomeProps> = ({}) => {
                     <div className="container-8">
                         <h2 className="heading-3 heading-left">Meet Our Team</h2>
                         <div className="w-layout-blockcontainer container w-container">
+                            <h3 className={styles.teamSectionHeading}>DMD Diamond Association</h3>
                             <ul className={styles.teamList}>
                                 <li className={styles.teamMember}>
                                     <div className={styles.teamMemberHeader}>
-                                        <span className={styles.teamMemberName}>Aleksander Mesor</span>
-                                        <span className={styles.teamMemberTitle}>The Mentor</span>
-                                    </div>
-                                    <p className={styles.teamMemberDescription}>
-                                        Leading the Diamond DMD Foundation for more than 7 years, Aleksander brings unmatched dedication and passion to the project, as well as experience in operations, leadership, and communications.
-                                    </p>
-                                </li>
-                                
-                                <li className={styles.teamMember}>
-                                    <div className={styles.teamMemberHeader}>
                                         <span className={styles.teamMemberName}>Helmut Siedl</span>
-                                        <span className={styles.teamMemberTitle}>The Visionary</span>
+                                        <span className={styles.teamMemberTitle}>The Visionary - Chairman</span>
+                                        <span className={styles.teamMemberLinks}>
+                                            <a href="https://www.linkedin.com/in/helmut-siedl-58646092/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                                                <FontAwesomeIcon icon={faLinkedin} size="lg" />
+                                            </a>
+                                        </span>
                                     </div>
                                     <p className={styles.teamMemberDescription}>
-                                        Leading the vision and research on the mechanics and technology of the coin, Helmut brings impeccable attention to detail and deep research skills for assessing and adopting the best technology for the DMD project. Helmut has been deeply involved in the blockchain space for more than 7 years and is a co-founder of the lab10 and a founder of Blockserv Blockchain Services, leading technology initiatives that create a freer society.
-                                    </p>
-                                </li>
-                                
-                                <li className={styles.teamMember}>
-                                    <div className={styles.teamMemberHeader}>
-                                        <span className={styles.teamMemberName}>Thomas Haller</span>
-                                        <span className={styles.teamMemberTitle}>The Lead Developer</span>
-                                    </div>
-                                    <p className={styles.teamMemberDescription}>
-                                        Bringing deep experience in software development and blockchain, Thomas provides technical guidance for the implementation of the DMD technology.
+                                        Leading the vision and research on the mechanics and technology of the DMD Diamond blockchain, Helmut brings more than 12 years (since 2013) of experience in the blockchain space. He combines strategic foresight with deep technical research to guide the project's evolution. Helmut is also a co-founder of lab10 collective and founder of Blockserv Blockchain Services, driving forward technological initiatives that promote freedom, transparency, and decentralization.
                                     </p>
                                 </li>
                                 
                                 <li className={styles.teamMember}>
                                     <div className={styles.teamMemberHeader}>
                                         <span className={styles.teamMemberName}>Dieter Biernat</span>
-                                        <span className={styles.teamMemberTitle}>The Website Expert</span>
+                                        <span className={styles.teamMemberTitle}>The Web & Digital Expert - Vice-Chairman</span>
+                                        <span className={styles.teamMemberLinks}>
+                                            <a href="http://www.linkedin.com/in/perfectnet" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                                                <FontAwesomeIcon icon={faLinkedin} size="lg" />
+                                            </a>
+                                        </span>
                                     </div>
                                     <p className={styles.teamMemberDescription}>
-                                        In charge of the blockchain's website and online-marketing.
+                                        Responsible for DMD's online presence, Dieter oversees the official website, digital communications, and online marketing. His focus is on ensuring that the DMD community and ecosystem are represented with clarity, consistency, and reach across platforms.
+                                    </p>
+                                </li>
+                                
+                                <li className={styles.teamMember}>
+                                    <div className={styles.teamMemberHeader}>
+                                        <span className={styles.teamMemberName}>Lukas Kurzmann</span>
+                                        <span className={styles.teamMemberTitle}>Association Board Member</span>
+                                        <span className={styles.teamMemberLinks}>
+                                            <a href="https://www.linkedin.com/in/lukas-kurzmann/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                                                <FontAwesomeIcon icon={faLinkedin} size="lg" />
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <p className={styles.teamMemberDescription}>
+                                        Actively involved in the DMD Diamond Association, Lukas contributes to organizational development and supports the strategic direction of the ecosystem. With a strong background in web development and multichain architectures, he supports the developer team by sharing insights on scalable design, decentralized integration, and modern web technologies.
+                                    </p>
+                                </li>
+                            </ul>
+                            
+                            <h3 className={styles.teamSectionHeading}>Team Members</h3>
+                            <ul className={styles.teamList}>
+                                <li className={styles.teamMember}>
+                                    <div className={styles.teamMemberHeader}>
+                                        <span className={styles.teamMemberName}>Thomas Haller</span>
+                                        <span className={styles.teamMemberTitle}>Lead Developer</span>
+                                    </div>
+                                    <p className={styles.teamMemberDescription}>
+                                        Thomas is the core developer behind the DMD Diamond blockchain, leading the node software, infrastructure, smart contracts and protocol implementation. With extensive experience in software engineering and blockchain systems, he ensures the reliability, performance, and security of DMD's network. Thomas plays a central role in maintaining and evolving the consensus logic, validator infrastructure, and the overall technical architecture that powers the DMD ecosystem.
+                                    </p>
+                                </li>
+                                
+                                <li className={styles.teamMember}>
+                                    <div className={styles.teamMemberHeader}>
+                                        <span className={styles.teamMemberName}>David Forstenlechner</span>
+                                        <span className={styles.teamMemberTitle}>HBBFT Protocol Expert</span>
+                                    </div>
+                                    <p className={styles.teamMemberDescription}>
+                                        David brings over 15 years of software development experience and contributes to the continuous optimization of DMD's consensus and protocol research.
+                                    </p>
+                                </li>
+                                
+                                <li className={styles.teamMember}>
+                                    <div className={styles.teamMemberHeader}>
+                                        <span className={styles.teamMemberName}>Leila Salieva</span>
+                                        <span className={styles.teamMemberTitle}>Communications & Outreach</span>
+                                        <span className={styles.teamMemberLinks}>
+                                            <a href="https://www.linkedin.com/in/leylas/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                                                <FontAwesomeIcon icon={faLinkedin} size="lg" />
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <p className={styles.teamMemberDescription}>
+                                        Leila supports community engagement and external communications, ensuring that DMD's initiatives are clearly conveyed to both newcomers and long-term supporters.
+                                    </p>
+                                </li>
+                                
+                                <li className={styles.teamMember}>
+                                    <div className={styles.teamMemberHeader}>
+                                        <span className={styles.teamMemberName}>Krystsina Naletska</span>
+                                        <span className={styles.teamMemberTitle}>Operations, Coordination & Technical Analysis</span>
+                                        <span className={styles.teamMemberLinks}>
+                                            <a href="https://www.linkedin.com/in/krystsina-naletska/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                                                <FontAwesomeIcon icon={faLinkedin} size="lg" />
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <p className={styles.teamMemberDescription}>
+                                        Krystsina oversees organizational processes, documentation, and requirements engineering, ensuring that development and business goals remain aligned. With a strong technical background in software ecosystems and system analysis, she bridges communication between developers, designers, and stakeholders — supporting technical documentation, feature validation, and process optimization to ensure high-quality delivery across the DMD Diamond ecosystem.
+                                    </p>
+                                </li>
+                                
+                                <li className={styles.teamMember}>
+                                    <div className={styles.teamMemberHeader}>
+                                        <span className={styles.teamMemberName}>Axel Müller</span>
+                                        <span className={styles.teamMemberTitle}>Smart Contract & Blockchain Developer</span>
+                                        <span className={styles.teamMemberLinks}>
+                                            <a href="https://github.com/axel-muller" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                                                <FontAwesomeIcon icon={faGithub} size="lg" />
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <p className={styles.teamMemberDescription}>
+                                        Axel is an experienced smart contract developer with deep expertise in blockchain architecture and protocol design. His contributions focus on designing, auditing, and optimizing smart contracts for security, efficiency, and scalability. With a strong background in decentralized application development and protocol-level engineering, Axel plays a key role in advancing DMD Diamond's on-chain logic and ecosystem tooling.
+                                    </p>
+                                </li>
+                                
+                                <li className={styles.teamMember}>
+                                    <div className={styles.teamMemberHeader}>
+                                        <span className={styles.teamMemberName}>Salman Shahzada</span>
+                                        <span className={styles.teamMemberTitle}>Full-Stack Web3 Developer</span>
+                                        <span className={styles.teamMemberLinks}>
+                                            <a href="https://www.linkedin.com/in/salman-shahzada/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                                                <FontAwesomeIcon icon={faLinkedin} size="lg" />
+                                            </a>
+                                            <a href="https://www.github.com/MSalman6" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                                                <FontAwesomeIcon icon={faGithub} size="lg" />
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <p className={styles.teamMemberDescription}>
+                                        Salman is a versatile Web3 developer skilled across the entire stack — from designing and deploying smart contracts to building robust backends and intuitive frontends. He plays a key role in creating seamless user experiences while bridging DMD's blockchain infrastructure with its web applications.
                                     </p>
                                 </li>
                                 
                                 <li className={styles.teamMember}>
                                     <div className={styles.teamMemberHeader}>
                                         <span className={styles.teamMemberName}>Braineeq</span>
-                                        <span className={styles.teamMemberTitle}>Social Media, Community Interactions, and Content Creator</span>
+                                        <span className={styles.teamMemberTitle}>Content & Community</span>
                                     </div>
                                     <p className={styles.teamMemberDescription}>
-                                        Braineeq brings many years of experience in content writing and community management in the blockchain ecosystem, hence blowing the trumpet of the DMD diamond blockchain and its use cases to the whole world.
+                                        A long-time contributor with many years in blockchain content creation and community management, Braineeq ensures that DMD's message reaches a global audience through education, engagement, and storytelling.
+                                    </p>
+                                </li>
+                            </ul>
+                            
+                            <h3 className={styles.teamSectionHeading}>Honored Members</h3>
+                            <ul className={styles.teamList}>
+                                <li className={styles.teamMember}>
+                                    <div className={styles.teamMemberHeader}>
+                                        <span className={styles.teamMemberName}>Aleksander Mesor</span>
+                                        <span className={styles.teamMemberTitle}>Early Mentor</span>
+                                    </div>
+                                    <p className={styles.teamMemberDescription}>
+                                        Spearhead of community takeover together with Helmut at the end of 2013 reviving an abandoned project. Highly active during DMD's first years, Aleksander helped guide the community and contributed to the foundation's early structure and vision.
                                     </p>
                                 </li>
                                 
                                 <li className={styles.teamMember}>
                                     <div className={styles.teamMemberHeader}>
-                                        <span className={styles.teamMemberName}>Dr. David Forstenlechner</span>
-                                        <span className={styles.teamMemberTitle}>The HBBFT Protocol Expert</span>
+                                        <span className={styles.teamMemberName}>Chris (Limexdev)</span>
+                                        <span className={styles.teamMemberTitle}>Early Contributor</span>
                                     </div>
                                     <p className={styles.teamMemberDescription}>
-                                        David brings more than 15 years of software development experience to the project as a contributor.
+                                        Contributed to the development and technical operations in the early stages of DMD Diamond (mainly v3).
+                                    </p>
+                                </li>
+                                
+                                <li className={styles.teamMember}>
+                                    <div className={styles.teamMemberHeader}>
+                                        <span className={styles.teamMemberName}>Danbi</span>
+                                        <span className={styles.teamMemberTitle}>Early Contributor</span>
+                                    </div>
+                                    <p className={styles.teamMemberDescription}>
+                                        Contributed to the development and technical operations in the early stages of DMD Diamond (mainly v2). He helped foster engagement and adoption during the foundational years.
                                     </p>
                                 </li>
                             </ul>
