@@ -64,12 +64,23 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
     });
   }
 
-  const handleWithdrawStake = async (e: FormEvent) => {
+  const handleWithdrawStake = async (e: FormEvent, useMaxAmount: boolean = false) => {
     e.preventDefault();
     if (!ensureWalletConnection()) return;
 
-    if (unstakeAmount.isLessThanOrEqualTo(0)) return toast.warn("Cannot unstake 0 DMD 💎");
-    const amountInWei = web3.utils.toWei(unstakeAmount.toString());
+    // Determine the amount to use
+    let amountToUse = unstakeAmount;
+    if (useMaxAmount) {
+      // Use the maximum available amount
+      const maxAmount = canBeUnstakedAmount.isGreaterThan(0) 
+        ? (ownPool ? BigNumber.maximum(0, canBeUnstakedAmount.minus(candidateMinStake)) : canBeUnstakedAmount)
+        : (ownPool ? BigNumber.maximum(0, canBeOrderedAmount.minus(candidateMinStake)) : canBeOrderedAmount);
+      
+      amountToUse = maxAmount.dividedBy(10 ** 18);
+    }
+
+    if (amountToUse.isLessThanOrEqualTo(0)) return toast.warn("Cannot unstake 0 DMD 💎");
+    const amountInWei = web3.utils.toWei(amountToUse.toString());
     
     if (canBeUnstakedAmount.isZero()) {
       const remainingStake = canBeOrderedAmount.minus(amountInWei);
@@ -97,7 +108,7 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
       }
     }    
 
-    unstake(pool, new BigNumber(unstakeAmount)).then((success: boolean) => {
+    unstake(pool, new BigNumber(amountToUse)).then((success: boolean) => {
       if (success) {
         setPools((pools) => {
           const updatedPools = pools.map((p) => {
@@ -210,13 +221,28 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                   )
               )}
 
-              <button className={styles.formSubmit} type="submit" disabled={
-                canBeUnstakedAmount.isZero()
-                ? BigNumber.maximum(0, canBeOrderedAmount.dividedBy(10 ** 18)).toNumber() >= 1 ? false : true
-                : BigNumber.maximum(0, canBeUnstakedAmount.dividedBy(10 ** 18)).toNumber() >= 1 ? false : true
-              }>
-                {canBeUnstakedAmount.isGreaterThan(0) && canBeOrderedAmount.isGreaterThan(0) ? "Unstake" : canBeOrderedAmount.isGreaterThan(0) ? "Order" : "Unstake"}
-              </button>
+              <div className={styles.buttonContainer}>
+                <button className={styles.formSubmit} type="submit" disabled={
+                  canBeUnstakedAmount.isZero()
+                  ? BigNumber.maximum(0, canBeOrderedAmount.dividedBy(10 ** 18)).toNumber() >= 1 ? false : true
+                  : BigNumber.maximum(0, canBeUnstakedAmount.dividedBy(10 ** 18)).toNumber() >= 1 ? false : true
+                }>
+                  {canBeUnstakedAmount.isGreaterThan(0) && canBeOrderedAmount.isGreaterThan(0) ? "Unstake" : canBeOrderedAmount.isGreaterThan(0) ? "Order" : "Unstake"}
+                </button>
+                
+                <button 
+                  className={styles.unstakeAllBtn} 
+                  type="button"
+                  onClick={(e) => handleWithdrawStake(e, true)}
+                  disabled={
+                    canBeUnstakedAmount.isZero()
+                    ? BigNumber.maximum(0, canBeOrderedAmount.dividedBy(10 ** 18)).toNumber() >= 1 ? false : true
+                    : BigNumber.maximum(0, canBeUnstakedAmount.dividedBy(10 ** 18)).toNumber() >= 1 ? false : true
+                  }
+                >
+                  {canBeUnstakedAmount.isGreaterThan(0) && canBeOrderedAmount.isGreaterThan(0) ? "Unstake All" : canBeOrderedAmount.isGreaterThan(0) ? "Order All" : "Unstake All"}
+                </button>
+              </div>
             </form>
           </div>
         </div>
