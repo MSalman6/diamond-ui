@@ -154,8 +154,6 @@ export interface DiamondDao extends BaseContract {
 
     MAX_NEW_PROPOSALS(): NonPayableTransactionObject<string>;
 
-    QUORUM_PRECISION(): NonPayableTransactionObject<string>;
-
     cancel(
       proposalId: number | string | BN,
       reason: string
@@ -264,6 +262,8 @@ export interface DiamondDao extends BaseContract {
       _stakingHbbft: string,
       _reinsertPot: string,
       _txPermission: string,
+      _bonusScore: string,
+      _lowMajorityDao: string,
       _createProposalFee: number | string | BN,
       _startTimestamp: number | string | BN
     ): NonPayableTransactionObject<void>;
@@ -276,6 +276,8 @@ export interface DiamondDao extends BaseContract {
     ): NonPayableTransactionObject<boolean>;
 
     lastDaoPhaseCount(): NonPayableTransactionObject<string>;
+
+    lowMajorityDao(): NonPayableTransactionObject<string>;
 
     owner(): NonPayableTransactionObject<string>;
 
@@ -310,7 +312,8 @@ export interface DiamondDao extends BaseContract {
       calldatas: (string | number[])[],
       title: string,
       description: string,
-      discussionUrl: string
+      discussionUrl: string,
+      majority: number | string | BN
     ): PayableTransactionObject<void>;
 
     quorumReached(

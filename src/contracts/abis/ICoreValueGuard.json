@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ICoreValueGuard",
-  "sourceName": "contracts/DiamondDao.sol",
+  "sourceName": "contracts/interfaces/ICoreValueGuard.sol",
   "abi": [
     {
       "inputs": [

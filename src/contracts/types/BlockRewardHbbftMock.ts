@@ -48,20 +48,8 @@ export type SetChangeableParameter = ContractEventLog<{
   1: string;
   2: string[];
 }>;
-export type SetConnectivityTracker = ContractEventLog<{
-  _connectivityTracker: string;
-  0: string;
-}>;
-export type SetDeltaPotPayoutFraction = ContractEventLog<{
-  _fraction: string;
-  0: string;
-}>;
 export type SetGovernancePotShareNominator = ContractEventLog<{
   value: string;
-  0: string;
-}>;
-export type SetReinsertPotPayoutFraction = ContractEventLog<{
-  _fraction: string;
   0: string;
 }>;
 
@@ -76,8 +64,6 @@ export interface BlockRewardHbbftMock extends BaseContract {
     VALIDATOR_FIXED_REWARD_PERCENT(): NonPayableTransactionObject<string>;
 
     addToDeltaPot(): PayableTransactionObject<void>;
-
-    addToReinsertPot(): PayableTransactionObject<void>;
 
     connectivityTracker(): NonPayableTransactionObject<string>;
 
@@ -167,14 +153,6 @@ export interface BlockRewardHbbftMock extends BaseContract {
       _shareNominator: number | string | BN
     ): NonPayableTransactionObject<void>;
 
-    setReinsertPotPayoutFraction(
-      _value: number | string | BN
-    ): NonPayableTransactionObject<void>;
-
-    setdeltaPotPayoutFraction(
-      _value: number | string | BN
-    ): NonPayableTransactionObject<void>;
-
     transferOwnership(newOwner: string): NonPayableTransactionObject<void>;
 
     validatorMinRewardPercent(
@@ -224,34 +202,12 @@ export interface BlockRewardHbbftMock extends BaseContract {
       cb?: Callback<SetChangeableParameter>
     ): EventEmitter;
 
-    SetConnectivityTracker(cb?: Callback<SetConnectivityTracker>): EventEmitter;
-    SetConnectivityTracker(
-      options?: EventOptions,
-      cb?: Callback<SetConnectivityTracker>
-    ): EventEmitter;
-
-    SetDeltaPotPayoutFraction(
-      cb?: Callback<SetDeltaPotPayoutFraction>
-    ): EventEmitter;
-    SetDeltaPotPayoutFraction(
-      options?: EventOptions,
-      cb?: Callback<SetDeltaPotPayoutFraction>
-    ): EventEmitter;
-
     SetGovernancePotShareNominator(
       cb?: Callback<SetGovernancePotShareNominator>
     ): EventEmitter;
     SetGovernancePotShareNominator(
       options?: EventOptions,
       cb?: Callback<SetGovernancePotShareNominator>
-    ): EventEmitter;
-
-    SetReinsertPotPayoutFraction(
-      cb?: Callback<SetReinsertPotPayoutFraction>
-    ): EventEmitter;
-    SetReinsertPotPayoutFraction(
-      options?: EventOptions,
-      cb?: Callback<SetReinsertPotPayoutFraction>
     ): EventEmitter;
 
     allEvents(options?: EventOptions, cb?: Callback<EventLog>): EventEmitter;
@@ -309,26 +265,6 @@ export interface BlockRewardHbbftMock extends BaseContract {
   ): void;
 
   once(
-    event: "SetConnectivityTracker",
-    cb: Callback<SetConnectivityTracker>
-  ): void;
-  once(
-    event: "SetConnectivityTracker",
-    options: EventOptions,
-    cb: Callback<SetConnectivityTracker>
-  ): void;
-
-  once(
-    event: "SetDeltaPotPayoutFraction",
-    cb: Callback<SetDeltaPotPayoutFraction>
-  ): void;
-  once(
-    event: "SetDeltaPotPayoutFraction",
-    options: EventOptions,
-    cb: Callback<SetDeltaPotPayoutFraction>
-  ): void;
-
-  once(
     event: "SetGovernancePotShareNominator",
     cb: Callback<SetGovernancePotShareNominator>
   ): void;
@@ -336,15 +272,5 @@ export interface BlockRewardHbbftMock extends BaseContract {
     event: "SetGovernancePotShareNominator",
     options: EventOptions,
     cb: Callback<SetGovernancePotShareNominator>
-  ): void;
-
-  once(
-    event: "SetReinsertPotPayoutFraction",
-    cb: Callback<SetReinsertPotPayoutFraction>
-  ): void;
-  once(
-    event: "SetReinsertPotPayoutFraction",
-    options: EventOptions,
-    cb: Callback<SetReinsertPotPayoutFraction>
   ): void;
 }

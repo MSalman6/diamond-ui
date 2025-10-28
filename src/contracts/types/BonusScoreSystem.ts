@@ -31,16 +31,20 @@ export type OwnershipTransferred = ContractEventLog<{
   0: string;
   1: string;
 }>;
-export type SetConnectivityTrackerContract = ContractEventLog<{
-  _connectivityTracker: string;
+export type RemoveChangeableParameter = ContractEventLog<{
+  funcSelector: string;
   0: string;
 }>;
-export type SetStakingContract = ContractEventLog<{
-  _staking: string;
+export type SetChangeableParameter = ContractEventLog<{
+  setter: string;
+  getter: string;
+  params: string[];
   0: string;
+  1: string;
+  2: string[];
 }>;
-export type SetValidatorSetContract = ContractEventLog<{
-  _validatorSet: string;
+export type SetStandByFactor = ContractEventLog<{
+  standByFactor: string;
   0: string;
 }>;
 export type UpdateScoringFactor = ContractEventLog<{
@@ -72,13 +76,19 @@ export interface BonusScoreSystem extends BaseContract {
 
     DEFAULT_NO_STAND_BY_FACTOR(): NonPayableTransactionObject<string>;
 
-    DEFAULT_STAND_BY_FACTOR(): NonPayableTransactionObject<string>;
-
     MAX_SCORE(): NonPayableTransactionObject<string>;
 
     MIN_SCORE(): NonPayableTransactionObject<string>;
 
     connectivityTracker(): NonPayableTransactionObject<string>;
+
+    getAllowedParamsRange(
+      _selector: string
+    ): NonPayableTransactionObject<[string, string[]]>;
+
+    getAllowedParamsRangeWithSelector(
+      _selector: string | number[]
+    ): NonPayableTransactionObject<[string, string[]]>;
 
     getScoringFactorValue(
       factor: number | string | BN
@@ -97,6 +107,11 @@ export interface BonusScoreSystem extends BaseContract {
       _stakingHbbft: string
     ): NonPayableTransactionObject<void>;
 
+    isWithinAllowedRange(
+      funcSelector: string | number[],
+      newVal: number | string | BN
+    ): NonPayableTransactionObject<boolean>;
+
     owner(): NonPayableTransactionObject<string>;
 
     penaliseBadPerformance(
@@ -111,6 +126,10 @@ export interface BonusScoreSystem extends BaseContract {
       unavailableSince: number | string | BN
     ): NonPayableTransactionObject<void>;
 
+    removeAllowedChangeableParameter(
+      funcSelector: string | number[]
+    ): NonPayableTransactionObject<void>;
+
     renounceOwnership(): NonPayableTransactionObject<void>;
 
     rewardStandBy(
@@ -118,24 +137,21 @@ export interface BonusScoreSystem extends BaseContract {
       availableSince: number | string | BN
     ): NonPayableTransactionObject<void>;
 
-    setConnectivityTrackerContract(
-      _address: string
+    setAllowedChangeableParameter(
+      setter: string | number[],
+      getter: string | number[],
+      params: (number | string | BN)[]
     ): NonPayableTransactionObject<void>;
 
-    setStakingContract(_staking: string): NonPayableTransactionObject<void>;
-
-    setValidatorSetContract(
-      _validatorSet: string
+    setStandByFactor(
+      _standByFactor: number | string | BN
     ): NonPayableTransactionObject<void>;
 
     stakingHbbft(): NonPayableTransactionObject<string>;
 
-    transferOwnership(newOwner: string): NonPayableTransactionObject<void>;
+    standByFactor(): NonPayableTransactionObject<string>;
 
-    updateScoringFactor(
-      factor: number | string | BN,
-      value: number | string | BN
-    ): NonPayableTransactionObject<void>;
+    transferOwnership(newOwner: string): NonPayableTransactionObject<void>;
 
     validatorSetHbbft(): NonPayableTransactionObject<string>;
   };
@@ -152,26 +168,24 @@ export interface BonusScoreSystem extends BaseContract {
       cb?: Callback<OwnershipTransferred>
     ): EventEmitter;
 
-    SetConnectivityTrackerContract(
-      cb?: Callback<SetConnectivityTrackerContract>
+    RemoveChangeableParameter(
+      cb?: Callback<RemoveChangeableParameter>
     ): EventEmitter;
-    SetConnectivityTrackerContract(
+    RemoveChangeableParameter(
       options?: EventOptions,
-      cb?: Callback<SetConnectivityTrackerContract>
+      cb?: Callback<RemoveChangeableParameter>
     ): EventEmitter;
 
-    SetStakingContract(cb?: Callback<SetStakingContract>): EventEmitter;
-    SetStakingContract(
+    SetChangeableParameter(cb?: Callback<SetChangeableParameter>): EventEmitter;
+    SetChangeableParameter(
       options?: EventOptions,
-      cb?: Callback<SetStakingContract>
+      cb?: Callback<SetChangeableParameter>
     ): EventEmitter;
 
-    SetValidatorSetContract(
-      cb?: Callback<SetValidatorSetContract>
-    ): EventEmitter;
-    SetValidatorSetContract(
+    SetStandByFactor(cb?: Callback<SetStandByFactor>): EventEmitter;
+    SetStandByFactor(
       options?: EventOptions,
-      cb?: Callback<SetValidatorSetContract>
+      cb?: Callback<SetStandByFactor>
     ): EventEmitter;
 
     UpdateScoringFactor(cb?: Callback<UpdateScoringFactor>): EventEmitter;
@@ -204,30 +218,30 @@ export interface BonusScoreSystem extends BaseContract {
   ): void;
 
   once(
-    event: "SetConnectivityTrackerContract",
-    cb: Callback<SetConnectivityTrackerContract>
+    event: "RemoveChangeableParameter",
+    cb: Callback<RemoveChangeableParameter>
   ): void;
   once(
-    event: "SetConnectivityTrackerContract",
+    event: "RemoveChangeableParameter",
     options: EventOptions,
-    cb: Callback<SetConnectivityTrackerContract>
-  ): void;
-
-  once(event: "SetStakingContract", cb: Callback<SetStakingContract>): void;
-  once(
-    event: "SetStakingContract",
-    options: EventOptions,
-    cb: Callback<SetStakingContract>
+    cb: Callback<RemoveChangeableParameter>
   ): void;
 
   once(
-    event: "SetValidatorSetContract",
-    cb: Callback<SetValidatorSetContract>
+    event: "SetChangeableParameter",
+    cb: Callback<SetChangeableParameter>
   ): void;
   once(
-    event: "SetValidatorSetContract",
+    event: "SetChangeableParameter",
     options: EventOptions,
-    cb: Callback<SetValidatorSetContract>
+    cb: Callback<SetChangeableParameter>
+  ): void;
+
+  once(event: "SetStandByFactor", cb: Callback<SetStandByFactor>): void;
+  once(
+    event: "SetStandByFactor",
+    options: EventOptions,
+    cb: Callback<SetStandByFactor>
   ): void;
 
   once(event: "UpdateScoringFactor", cb: Callback<UpdateScoringFactor>): void;

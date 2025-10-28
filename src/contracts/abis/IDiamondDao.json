@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IDiamondDao",
-  "sourceName": "contracts/DiamondDao.sol",
+  "sourceName": "contracts/interfaces/IDiamondDao.sol",
   "abi": [
     {
       "inputs": [
@@ -38,11 +38,6 @@
     {
       "inputs": [],
       "name": "InsufficientFunds",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "InvalidArgument",
       "type": "error"
     },
     {
@@ -85,11 +80,6 @@
         }
       ],
       "name": "NotProposer",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "OnlyGovernance",
       "type": "error"
     },
     {
@@ -729,6 +719,11 @@
           "internalType": "string",
           "name": "discussionUrl",
           "type": "string"
+        },
+        {
+          "internalType": "enum OpenProposalMajority",
+          "name": "majority",
+          "type": "uint8"
         }
       ],
       "name": "propose",

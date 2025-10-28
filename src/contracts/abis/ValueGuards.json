@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ValueGuards",
-  "sourceName": "contracts/DiamondDao.sol",
+  "sourceName": "contracts/lib/ValueGuards.sol",
   "abi": [
     {
       "inputs": [],

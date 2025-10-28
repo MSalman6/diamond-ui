@@ -103,10 +103,6 @@ export type RestakeReward = ContractEventLog<{
   2: string;
   3: string;
 }>;
-export type SetBonusScoreContract = ContractEventLog<{
-  _address: string;
-  0: string;
-}>;
 export type SetChangeableParameter = ContractEventLog<{
   setter: string;
   getter: string;
@@ -154,6 +150,8 @@ export interface StakingHbbft extends BaseContract {
 
     abandonedAndRemoved(arg0: string): NonPayableTransactionObject<boolean>;
 
+    actualEpochEndTime(): NonPayableTransactionObject<string>;
+
     addPool(
       _miningAddress: string,
       _nodeOperatorAddress: string,
@@ -161,8 +159,6 @@ export interface StakingHbbft extends BaseContract {
       _publicKey: string | number[],
       _ip: string | number[]
     ): PayableTransactionObject<void>;
-
-    areStakeAndWithdrawAllowed(): NonPayableTransactionObject<boolean>;
 
     bonusScoreContract(): NonPayableTransactionObject<string>;
 
@@ -175,6 +171,10 @@ export interface StakingHbbft extends BaseContract {
     currentKeyGenExtraTimeWindow(): NonPayableTransactionObject<string>;
 
     delegatorMinStake(): NonPayableTransactionObject<string>;
+
+    earlyEpochEndTime(): NonPayableTransactionObject<string>;
+
+    earlyEpochEndTriggerTime(): NonPayableTransactionObject<string>;
 
     getAllowedParamsRange(
       _selector: string
@@ -261,6 +261,10 @@ export interface StakingHbbft extends BaseContract {
       _stakingAddress: string
     ): NonPayableTransactionObject<void>;
 
+    notifyEarlyEpochEnd(
+      timestamp: number | string | BN
+    ): NonPayableTransactionObject<void>;
+
     notifyKeyGenFailed(): NonPayableTransactionObject<void>;
 
     notifyNetworkOfftimeDetected(
@@ -340,10 +344,6 @@ export interface StakingHbbft extends BaseContract {
       params: (number | string | BN)[]
     ): NonPayableTransactionObject<void>;
 
-    setBonusScoreContract(
-      _bonusScoreContract: string
-    ): NonPayableTransactionObject<void>;
-
     setDelegatorMinStake(
       _minStake: number | string | BN
     ): NonPayableTransactionObject<void>;
@@ -361,14 +361,6 @@ export interface StakingHbbft extends BaseContract {
 
     setStakingEpochStartTime(
       _timestamp: number | string | BN
-    ): NonPayableTransactionObject<void>;
-
-    setStakingFixedEpochDuration(
-      _value: number | string | BN
-    ): NonPayableTransactionObject<void>;
-
-    setStakingTransitionTimeframeLength(
-      _value: number | string | BN
     ): NonPayableTransactionObject<void>;
 
     setValidatorInternetAddress(
@@ -430,6 +422,8 @@ export interface StakingHbbft extends BaseContract {
       mining: string,
       validatorScore: number | string | BN
     ): NonPayableTransactionObject<void>;
+
+    updateStakingTransitionTimeframeLength(): NonPayableTransactionObject<void>;
 
     validatorSetContract(): NonPayableTransactionObject<string>;
 
@@ -498,12 +492,6 @@ export interface StakingHbbft extends BaseContract {
     RestakeReward(
       options?: EventOptions,
       cb?: Callback<RestakeReward>
-    ): EventEmitter;
-
-    SetBonusScoreContract(cb?: Callback<SetBonusScoreContract>): EventEmitter;
-    SetBonusScoreContract(
-      options?: EventOptions,
-      cb?: Callback<SetBonusScoreContract>
     ): EventEmitter;
 
     SetChangeableParameter(cb?: Callback<SetChangeableParameter>): EventEmitter;
@@ -613,16 +601,6 @@ export interface StakingHbbft extends BaseContract {
     event: "RestakeReward",
     options: EventOptions,
     cb: Callback<RestakeReward>
-  ): void;
-
-  once(
-    event: "SetBonusScoreContract",
-    cb: Callback<SetBonusScoreContract>
-  ): void;
-  once(
-    event: "SetBonusScoreContract",
-    options: EventOptions,
-    cb: Callback<SetBonusScoreContract>
   ): void;
 
   once(
