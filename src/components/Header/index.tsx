@@ -256,6 +256,12 @@ export default function Header() {
                 </div>
               </div>
             </li>
+
+            <li>
+              <Link href="/dao" onClick={handleRegularLinkClick}>
+                Dao
+              </Link>
+            </li>
           </ul>
         </nav>
         
