@@ -44,6 +44,8 @@ interface Web3ContextProps {
   userWallet: UserWallet;
   contractsManager: ContractsState;
   web3Initialized: boolean;
+  gasPriceWei?: string;
+  gasPriceGwei?: string;
 
   setUserWallet: (newUserWallet: UserWallet) => void;
   setContractsManager: (newContractsManager: ContractsState) => void;
@@ -63,6 +65,8 @@ const Web3ContextProvider: React.FC<ContextProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
   const [web3Initialized, setWeb3Initialized] = useState<boolean>(false);
+  const [gasPriceWei, setGasPriceWei] = useState<string>('');
+  const [gasPriceGwei, setGasPriceGwei] = useState<string>('');
 
   // Initialize Web3 with CustomHttpProvider
   const chainId = import.meta.env.VITE_APP_CHAINID || 37373;
@@ -117,6 +121,25 @@ const Web3ContextProvider: React.FC<ContextProviderProps> = ({ children }) => {
   const initialize = async () => {
     if (!web3Initialized) {
       await initialzeContracts(initialContracts);
+      // fetch gas price once after initializing contracts/provider
+      try {
+        const gp = await web3.eth.getGasPrice();
+        if (gp) {
+          setGasPriceWei(gp.toString());
+          try {
+            // convert to gwei for convenience
+            const g = web3.utils.fromWei(gp.toString(), 'gwei');
+            setGasPriceGwei(g.toString());
+          } catch (e) {
+            setGasPriceGwei('');
+          }
+        }
+      } catch (err) {
+        console.warn('[WARN] Could not fetch gas price from RPC, falling back to 1 gwei', err);
+        setGasPriceWei('1000000000');
+        setGasPriceGwei('1');
+      }
+
       setWeb3Initialized(true);
     }
   }
@@ -274,6 +297,8 @@ const Web3ContextProvider: React.FC<ContextProviderProps> = ({ children }) => {
     userWallet,
     web3Initialized,
     contractsManager,
+    gasPriceWei,
+    gasPriceGwei,
 
     // state functions
     setUserWallet: (newUserWallet: UserWallet) => setUserWallet(newUserWallet),  // Set the new userWallet state
