@@ -276,7 +276,7 @@ const ValidatorsTable: React.FC<ValidatorsTableProps> = ({ itemsPerPage = 100 })
                         );
                     } else if (column.key === 'myStake' && userWallet.myAddr) {
                         return (
-                            <td key={colIndex}>{userWallet.myAddr && BigNumber(pool.myStake) ? BigNumber(pool.myStake).dividedBy(10**18).toFixed(0) : (<div className={styles.loader}></div>)} DMD</td>
+                            <td key={colIndex}>{userWallet.myAddr && BigNumber(pool.myStake) ? BigNumber(pool.myStake).dividedBy(10**18).toFixed(4) : (<div className={styles.loader}></div>)} DMD</td>
                         );
                     } else if (column.key === 'stakeBtn' && userWallet.myAddr) {
                         return (

@@ -58,6 +58,7 @@ const StakingContextProvider: React.FC<ContextProviderProps> = ({children}) => {
     getUpdatedBalance,
     userWallet,
     web3,
+    gasPriceWei,
   } = useWeb3Context();
   
   const [showAllPools, setShowAllPools] = useState<boolean>(false);
@@ -67,10 +68,17 @@ const StakingContextProvider: React.FC<ContextProviderProps> = ({children}) => {
   const [stakingInitialized, setStakingInitialized] = useState<boolean>(false);
   const [defaultTxOpts, setDefaultTxOpts] = useState<{from: string; gasPrice: string; gasLimit: string; value: string;}>({
     from: '',
-    gasPrice: '1000000000',
+    gasPrice: gasPriceWei || '1000000000',
     gasLimit: '8000000',
     value: '0'
   });
+
+  // update defaultTxOpts when gasPriceWei becomes available/changes
+  useEffect(() => {
+    if (gasPriceWei) {
+      setDefaultTxOpts(prev => ({ ...prev, gasPrice: gasPriceWei }));
+    }
+  }, [gasPriceWei]);
 
   const [myPool, setMyPool] = useState<Pool | undefined>(undefined);
   const [pools, setPools] = useState<Pool[]>(Array.from({ length: 10 }, () => (new Pool(""))));

@@ -95,6 +95,42 @@ input:focus {
   background-color: #0056b3;
 }
 
+.buttonContainer {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.unstakeAllBtn {
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  align-self: center;
+  border-radius: 4px;
+  padding: 10px 15px;
+  margin-top: 10px;
+  background-color: #0056b3;
+  white-space: nowrap;
+}
+
+.unstakeAllBtn:hover {
+  background-color: #007bff;
+}
+
+.unstakeAllBtn:disabled,
+.formSubmit:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.unstakeAllBtn:disabled:hover,
+.formSubmit:disabled:hover {
+  background-color: #6c757d;
+}
+
 .unstakeWarning {
   color: red;
   margin: 10px 0;
