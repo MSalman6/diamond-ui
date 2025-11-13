@@ -1,3 +1,5 @@
+import BigNumber from "bignumber.js";
+
 export interface Proposal {
   title: string;
   proposer: string;
@@ -10,9 +12,11 @@ export interface Proposal {
   id: string;
   timestamp: string;
   daoPhaseCount: string;
+  rawProposalType: string;
   proposalType: string;
   participation: string;
   exceedingYes: string;
+  totalStakeSnapshot: string;
 }
 
 export interface TotalVotingStats {

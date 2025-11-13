@@ -1,13 +1,12 @@
-'use client';
-
-import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
-import { useWeb3Context } from "@/contexts/Web3";
-import { timestampToDate } from '../../utils/common';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { useWeb3Context } from "@/contexts/Web3";
 import { DaoPhase, Proposal, TotalVotingStats, Vote } from "@/contexts/types/dao";
-
+import BigNumber from 'bignumber.js';
+import { getFunctionSelector, timestampToDate } from '../../utils/common';
+import { useStakingContext } from '@/contexts/Staking';
 BigNumber.config({ EXPONENTIAL_AT: 1e+9 });
+
 interface DaoContextProps {
   daoPhase: any,
   daoPhaseCount: string;
@@ -17,7 +16,10 @@ interface DaoContextProps {
   allDaoProposals: Proposal[];
   governancePotBalance: BigNumber;
   claimingContractBalance: BigNumber;
+  lowMajorityContractBalance: BigNumber;
+  lowMajorityContractAddress: string;
   notEnoughGovernanceFunds: boolean;
+  notEnoughLowMajorityFunds: boolean;
 
   initialize: () => Promise<void>;
   setActiveProposals: (proposals: Proposal[]) => void;
@@ -32,18 +34,20 @@ interface DaoContextProps {
   getHistoricProposals: () => Promise<void>;
   finalizeProposal: (proposalId: string) => Promise<string>;
   getCachedProposals: () => Proposal[];
-  getProposalDetails: (proposalId: string) => Promise<Proposal | undefined>;
+  getProposalDetails: (proposalId: string) => Promise<Proposal>;
   setProposalsState: (proposals: Proposal[]) => Promise<void>;
   getHistoricProposalsEvents: () => Promise<Array<string>>;
   getMyVote: (proposalId: string, myAddr: string) => Promise<Vote>;
   executeProposal: (proposalId: string) => Promise<string>;
   getDaoPotBalanceChange: (blocksAgo: number) => Promise<{ changePercentage: string, direction: string }>;
+  getProposalThreshold: (proposalType: string, proposal?: any) => number;
 }
 
 const DaoContext = createContext<DaoContextProps | undefined>(undefined);
 
-const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) => {
   const web3Context = useWeb3Context();
+  const stakingContext = useStakingContext();
   
   const [daoPhaseCount, setDaoPhaseCount] = useState("1");
   const [proposalFee, setProposalFee] = useState<string>('0');
@@ -53,8 +57,11 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [activeProposals, setActiveProposals] = useState<Proposal[]>([]);
   const [allDaoProposals, setAllDaoProposals] = useState<Proposal[]>([]);
   const [notEnoughGovernanceFunds, setNotEnoughGovernanceFunds] = useState<boolean>(false);
+  const [notEnoughLowMajorityFunds, setNotEnoughLowMajorityFunds] = useState<boolean>(false);
   const [governancePotBalance, setGovernancePotBalance] = useState<BigNumber>(BigNumber('0'));
   const [claimingContractBalance, setClaimingContractBalance] = useState<BigNumber>(BigNumber('0'));
+  const [lowMajorityContractBalance, setLowMajorityContractBalance] = useState<BigNumber>(BigNumber('0'));
+  const [lowMajorityContractAddress, setLowMajorityContractAddress] = useState<string>(process.env.NEXT_PUBLICLOW_MAJORITY_CONTRACT_ADDRESS || "0xf30214ee3Be547E2E5AaaF9B9b6bea26f1Beca37");
   const [daoPhase, setDaoPhase] = useState<DaoPhase>({ daoEpoch: '', end: '', phase: '', start: '' });
 
   useEffect(() => {
@@ -63,6 +70,20 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       initialize();
     }
   }, [web3Context.userWallet, web3Context.web3Initialized]);
+
+  // Refresh proposal types when lowMajorityContractBalance is loaded
+  useEffect(() => {
+    if (daoInitialized && !lowMajorityContractBalance.isEqualTo(0) && activeProposals.length > 0) {
+      getActiveProposals();
+    }
+  }, [lowMajorityContractBalance, daoInitialized]);
+
+  // Recalculate warnings when balances change
+  useEffect(() => {
+    if (daoInitialized && activeProposals.length > 0) {
+      calculateFundingWarnings(activeProposals);
+    }
+  }, [governancePotBalance, lowMajorityContractBalance, activeProposals.length]);
 
   const initialize = async () => {
     if (daoInitialized) return;
@@ -80,11 +101,14 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const phaseCount = await web3Context.contractsManager.daoContract.methods.daoPhaseCount().call();
     setDaoPhaseCount(phaseCount);
 
-    const governancePot = await web3Context.web3.eth.getBalance(web3Context.contractsManager.daoContract.options.address);
+    const governancePot =  await web3Context.contractsManager.daoContract.methods.governancePot().call();
     setGovernancePotBalance(BigNumber(governancePot).dividedBy(1e18));
 
-    const claimingPot = await web3Context.web3.eth.getBalance(process.env.NEXT_PUBLIC_CLAIMING_CONTRACT_ADDRESS || "0xe0E6787A55049A90aAa4335D0Ff14fAD26B8e88e");
+    const claimingPot = await web3Context.web3.eth.getBalance(process.env.NEXT_PUBLICCLAIMING_CONTRACT_ADDRESS || "0xe0E6787A55049A90aAa4335D0Ff14fAD26B8e88e");
     setClaimingContractBalance(BigNumber(claimingPot).dividedBy(1e18));
+
+    const lowMajorityPot = await web3Context.web3.eth.getBalance(lowMajorityContractAddress);
+    setLowMajorityContractBalance(BigNumber(lowMajorityPot).dividedBy(1e18));
 
     subscribeToEvents();
   }
@@ -99,17 +123,91 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   }
 
-  const getProposalTypeString = (proposalType: string) => {
-    switch (proposalType) {
+  const getProposalTypeFromContract = (contractProposalType: string) => {
+    switch (contractProposalType) {
       case '0':
-        return 'Open';
+        return {
+          type: 'OPEN_LOW_MAJORITY',
+          displayName: 'Open Low Majority',
+          threshold: 0.33
+        };
       case '1':
-        return 'Contract upgrade';
+        return {
+          type: 'CONTRACT_UPGRADE',
+          displayName: 'Contract Upgrade',
+          threshold: 0.50
+        };
       case '2':
-        return 'Ecosystem Parameter Change';
+        return {
+          type: 'ECOSYSTEM_PARAMETER_CHANGE',
+          displayName: 'Ecosystem Parameter Change',
+          threshold: 0.33
+        };
+      case '3':
+        return {
+          type: 'OPEN_HIGH_MAJORITY',
+          displayName: 'Open High Majority',
+          threshold: 0.50
+        };
       default:
-        return 'Unknown';
+        return {
+          type: 'UNKNOWN',
+          displayName: 'Unknown',
+          threshold: 0.33
+        };
     }
+  }
+
+  const determineMajorityType = (targets: string[], values: string[]): 'Low Majority' | 'High Majority' => {
+    // Check if it's a contract fill (targeting low majority contract)
+    if (targets.some((target: string) =>
+      target.toLowerCase() === lowMajorityContractAddress.toLowerCase())) {
+      return 'High Majority';
+    }
+    
+    // Calculate total requested amount for regular open proposals
+    const totalRequestedAmount = values ? values.reduce((sum: BigNumber, value: string) => {
+      return sum.plus(BigNumber(value || '0').dividedBy(1e18));
+    }, BigNumber(0)) : BigNumber(0);
+    
+    // Check if amount exceeds low majority contract balance
+    const isHighMajority = totalRequestedAmount.isGreaterThan(lowMajorityContractBalance);
+    
+    return isHighMajority ? 'High Majority' : 'Low Majority';
+  }
+
+  const getProposalTypeString = (contractProposalType: string, proposal?: any) => {
+    const contractType = getProposalTypeFromContract(contractProposalType);
+    
+    // For Open proposals, we might want to add additional context
+    if (contractType.type === 'OPEN_LOW_MAJORITY' || contractType.type === 'OPEN_HIGH_MAJORITY') {
+      const values = proposal?.values || [];
+      const targets = proposal?.targets || [];
+      
+      // Check if it's a contract fill (targeting low majority contract)
+      if (targets.some((target: string) =>
+        target.toLowerCase() === lowMajorityContractAddress.toLowerCase())) {
+        return 'Contract Fill';
+      }
+      
+      // Check if it involves payout
+      const totalRequestedAmount = values.reduce((sum: BigNumber, value: string) => {
+        return sum.plus(BigNumber(value || '0').dividedBy(1e18));
+      }, BigNumber(0));
+      
+      if (totalRequestedAmount.isGreaterThan(0)) {
+        return 'Open Payout';
+      }
+      
+      return 'Open';
+    }
+    
+    return contractType.displayName;
+  }
+
+  const getProposalThreshold = (contractProposalType: string): number => {
+    const contractType = getProposalTypeFromContract(contractProposalType);
+    return contractType.threshold * 100; // Return as percentage
   }
 
   const getStateString = (stateValue: string) => {
@@ -181,7 +279,29 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return cachedProposals;
   }
 
-  const getProposalDetails = async (proposalId: string): Promise<Proposal | undefined> => {
+  const updateProposalsWithSameEpochSnapshot = async (daoEpoch: string, snapshotValue: string) => {
+    try {
+      const storedProposals = getCachedProposals();
+      const proposalsToUpdate = storedProposals.filter(
+        proposal => proposal.daoPhaseCount === daoEpoch && 
+        (!proposal.totalStakeSnapshot || proposal.totalStakeSnapshot === "0")
+      );
+
+      if (proposalsToUpdate.length > 0) {
+        // Update totalStakeSnapshot for all proposals with the same daoEpoch
+        const updatedProposals = proposalsToUpdate.map(proposal => ({
+          ...proposal,
+          totalStakeSnapshot: snapshotValue
+        }));
+
+        await setProposalsState(updatedProposals);
+      }
+    } catch (error) {
+      console.error('Error updating proposals with same epoch snapshot:', error);
+    }
+  }
+
+  const getProposalDetails = async (proposalId: string): Promise<Proposal> => {
     // Retrieve allDaoProposals from localStorage
     let updatedData: Proposal | undefined = getCachedProposals().find((proposal) => proposal.id === proposalId);
     let proposalDetails;
@@ -192,40 +312,68 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     if (!updatedData) updatedData = initializeProposal(proposalId);
 
     try {
-      if (updatedData && (!updatedData.proposer || !['1', '5', '6'].includes(updatedData.state))) {
-        proposalDetails = await web3Context.contractsManager.daoContract.methods.getProposal(proposalId).call();
-        updatedData = {
-          ...updatedData,
-          ...proposalDetails,
-          values: proposalDetails?.[4],
-          daoPhaseCount: proposalDetails?.[9] || "1",
-          proposalType: getProposalTypeString(proposalDetails?.[11] || "3"),
-        };
-      }
-
-      if (updatedData && !updatedData.timestamp) {
+    if (updatedData && (!updatedData.proposer || !['1', '5', '6'].includes(updatedData.state))) {
+      proposalDetails = await web3Context.contractsManager.daoContract.methods.getProposal(proposalId).call();
+      const rawType = proposalDetails?.[11] || "3";
+      updatedData = {
+        ...updatedData,
+        ...proposalDetails,
+        values: proposalDetails?.[4],
+        daoPhaseCount: proposalDetails?.[9] || "1",
+        rawProposalType: rawType,
+        proposalType: getProposalTypeString(rawType, { values: proposalDetails?.[4], targets: proposalDetails?.[3] }),
+      };
+      } if (updatedData && !updatedData.timestamp) {
         proposalTimestamp = await getProposalTimestamp(proposalId);
         updatedData.timestamp = proposalTimestamp.toString();
       }
-    } catch (error) {
-      console.error("Error fetching proposal details:", error);
-      return undefined;
-    }
-
-    if (!updatedData) {
-      console.error("Failed to initialize proposal data");
-      return undefined;
-    }
+    } catch (error) {}
 
     const votingStats = await getProposalVotingStats(proposalId);
-    const totalDaoStake = await web3Context.contractsManager.stContract?.methods.totalStakedAmount().call() || "0";
+    
+    // Get or calculate totalStakeSnapshot
+    let totalStakeForCalculation = "0";
+    if (updatedData) {
+      // Check if we need to fetch/update the snapshot
+      if (!updatedData.totalStakeSnapshot || updatedData.totalStakeSnapshot === "0") {
+        try {
+          const daoEpoch = updatedData.daoPhaseCount || "1";
+          const snapshotValue = await web3Context.contractsManager.daoContract?.methods.daoEpochTotalStakeSnapshot(daoEpoch).call() || "0";
+          
+          if (snapshotValue !== "0") {
+            // Update this proposal with the snapshot
+            updatedData.totalStakeSnapshot = snapshotValue;
+            totalStakeForCalculation = snapshotValue;
+            
+            // Update all proposals with the same daoEpoch in localStorage
+            await updateProposalsWithSameEpochSnapshot(daoEpoch, snapshotValue);
+          } else {
+            // Fallback to current totalStake if snapshot not available
+            totalStakeForCalculation = await web3Context.contractsManager.stContract?.methods.totalStakedAmount().call() || "0";
+            updatedData.totalStakeSnapshot = "0"; // Keep as 0 to indicate snapshot not yet available
+          }
+        } catch (error) {
+          // Fallback to current totalStake on error
+          totalStakeForCalculation = await web3Context.contractsManager.stContract?.methods.totalStakedAmount().call() || "0";
+          updatedData.totalStakeSnapshot = "0";
+        }
+      } else {
+        // Use cached snapshot value
+        totalStakeForCalculation = updatedData.totalStakeSnapshot;
+      }
+    } else {
+      // For new proposals, use current totalStake
+      totalStakeForCalculation = await web3Context.contractsManager.stContract?.methods.totalStakedAmount().call() || "0";
+    }
 
-    updatedData.id = proposalId;
-    updatedData.votes = proposalVotes;
-    updatedData.exceedingYes = BigNumber(votingStats.positive).minus(votingStats.negative).dividedBy(totalDaoStake).multipliedBy(100).toFixed(4);
-    updatedData.participation = BigNumber(votingStats.total).dividedBy(totalDaoStake).multipliedBy(100).toFixed(4);
+    if (updatedData) {
+      updatedData["id"] = proposalId;
+      updatedData["votes"] = proposalVotes;
+      updatedData['exceedingYes'] = BigNumber.max(0, BigNumber(votingStats.positive).minus(votingStats.negative)).dividedBy(totalStakeForCalculation).multipliedBy(100).toFixed(4)
+      updatedData['participation'] = BigNumber(votingStats.total).dividedBy(totalStakeForCalculation).multipliedBy(100).toFixed(4)
+    }
 
-    return updatedData;
+    return updatedData || initializeProposal(proposalId);
   }
 
   const initializeProposal = (
@@ -248,9 +396,11 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       id: proposalId,
       timestamp: '',
       daoPhaseCount: '',
+      rawProposalType: '',
       proposalType: '',
       participation: '0',
-      exceedingYes: '0'
+      exceedingYes: '0',
+      totalStakeSnapshot: '0'
     };
   }
 
@@ -281,14 +431,12 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       const activeProposalsCopy = [...proposalDetails];
 
       updatedProposals.forEach(proposal => {
-        if (proposal) { // Check if proposal is not undefined
-          const storedProposalIndex = activeProposalsCopy.findIndex(p => p.id === proposal.id);
+        const storedProposalIndex = activeProposalsCopy.findIndex(p => p.id === proposal.id);
 
-          if (storedProposalIndex === -1) {
-            activeProposalsCopy.push(proposal);
-          } else {
-            activeProposalsCopy[storedProposalIndex] = proposal;
-          }
+        if (storedProposalIndex === -1) {
+          activeProposalsCopy.push(proposal as any);
+        } else {
+          activeProposalsCopy[storedProposalIndex] = proposal as any;
         }
       });
 
@@ -296,6 +444,38 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       proposalDetails = activeProposalsCopy;
     }
     console.log("[INFO] All active proposals fetched and updated");
+    
+    // Calculate warning states after all proposals are loaded
+    calculateFundingWarnings(proposalDetails);
+  }
+
+  const calculateFundingWarnings = (proposals: Proposal[]) => {
+    let totalHighMajorityRequested = BigNumber(0);
+    let totalLowMajorityRequested = BigNumber(0);
+
+    proposals.forEach(proposal => {
+      // Only consider active/created proposals that have values (funding requests)
+      if (proposal.state === "0" && proposal.values && proposal.values.length > 0) {
+        // Calculate total requested amount
+        const proposalAmount = proposal.values.reduce((sum: BigNumber, value: string) => {
+          return sum.plus(BigNumber(value || '0').dividedBy(1e18));
+        }, BigNumber(0));
+
+        // Determine proposal majority
+        if (proposal.rawProposalType === "3") {// High Majority proposals
+          totalHighMajorityRequested = totalHighMajorityRequested.plus(proposalAmount);
+        } else if (proposal.rawProposalType === "0") { // Low Majority proposals 
+          totalLowMajorityRequested = totalLowMajorityRequested.plus(proposalAmount);
+        }
+      }
+    });
+
+    // Update warning flags
+    const highMajorityExceeds = totalHighMajorityRequested.isGreaterThan(governancePotBalance);
+    const lowMajorityExceeds = totalLowMajorityRequested.isGreaterThan(lowMajorityContractBalance);
+
+    setNotEnoughGovernanceFunds(highMajorityExceeds);
+    setNotEnoughLowMajorityFunds(lowMajorityExceeds);
   }
 
   const getProposalVotingStats = (proposalId: string): Promise<TotalVotingStats> => {
@@ -348,13 +528,23 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
         try {
           web3Context.showLoader(true, "Creating proposal 💎");
+          
+          let proposalTypeEnum = 0;
+          if (type === 'open') {
+            const majorityType = determineMajorityType(targets, values);
+            proposalTypeEnum = majorityType === 'High Majority' ? 1 : 0;
+          } else if (type === 'low-majority-fill') {
+            proposalTypeEnum = 1;
+          }
+
           await web3Context.contractsManager.daoContract.methods.propose(
             targets,
             values,
             callDatas,
             title,
             description,
-            discussionUrl
+            discussionUrl,
+            proposalTypeEnum
           ).send({from: web3Context.userWallet.myAddr, value: proposalFee});
           const proposalId = await web3Context.contractsManager.daoContract.methods.hashProposal(
             targets, values, callDatas, description
@@ -365,7 +555,6 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         } catch(err: any) {
           console.log(err);
           web3Context.showLoader(false, "");
-          console.log(err)
           handleErrorMsg(err, "Proposal creation failed");
           reject("");
         }
@@ -392,18 +581,31 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const castVote = async (proposalId: number, vote: number, reason: string) => {
+    console.log("[INFO] Casting vote", proposalId, vote, reason);
     return new Promise<void>(async (resolve, reject) => {
       if (!web3Context.ensureWalletConnection()) return reject("Wallet not connected");
       
       web3Context.showLoader(true, `Casting vote 💎`);
       try {
-        if (reason.length > 0) {
-          await web3Context.contractsManager.daoContract.methods.voteWithReason(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr});
+        // Check if user has already voted on this proposal
+        const existingVote = await getMyVote(proposalId.toString(), web3Context.userWallet.myAddr);
+        const hasVotedBefore = Number(existingVote.timestamp) > 0;
+
+        if (hasVotedBefore) {
+          // User has voted before - use changeVote function
+          await web3Context.contractsManager.daoContract.methods.changeVote(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr});
+          toast.success(`Vote Changed 💎`);
         } else {
-          await web3Context.contractsManager.daoContract.methods.vote(proposalId, vote).send({from: web3Context.userWallet.myAddr});
+          // First-time voting - use vote or voteWithReason
+          if (reason.length > 0) {
+            await web3Context.contractsManager.daoContract.methods.voteWithReason(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr});
+          } else {
+            await web3Context.contractsManager.daoContract.methods.vote(proposalId, vote).send({from: web3Context.userWallet.myAddr});
+          }
+          toast.success(`Vote Casted 💎`);
         }
+        
         web3Context.showLoader(false, "");
-        toast.success(`Vote Casted 💎`);
         resolve();
       } catch(err: any) {
         console.log(err);
@@ -468,9 +670,9 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   }
 
   const getHistoricProposalsEvents = async (): Promise<Array<string>> => {
-    const allProposals: Array<any> = [];
+    let allProposals: Array<any> = [];
     const storedProposalsString = localStorage.getItem('allDaoProposals');
-    const storedProposals: Proposal[] = storedProposalsString ? JSON.parse(storedProposalsString) : [];
+    let storedProposals: Proposal[] = storedProposalsString ? JSON.parse(storedProposalsString) : [];
 
     const stats = await web3Context.contractsManager.daoContract.methods.statistic().call();
     if (storedProposals.length >= Number(stats?.total)) {
@@ -542,8 +744,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
       // Update local storage and state with the details of the current chunk of proposals
       const updatedProposals = await Promise.all(chunkProposalDetails);
-      const validProposals = updatedProposals.filter((proposal): proposal is Proposal => proposal !== undefined);
-      setProposalsState(validProposals);
+      setProposalsState(updatedProposals);
     }
 
     console.log("[INFO] All historic proposals fetched and updated");
@@ -569,6 +770,12 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
     localStorage.setItem('allDaoProposals', JSON.stringify(updatedStoredProposals));
     setAllDaoProposals(updatedStoredProposals);
+    
+    // Update warning states when proposals are updated
+    const activeProposals = updatedStoredProposals.filter(p => 
+      Number(p.daoPhaseCount) === Number(daoPhaseCount) && p.state !== "1" // Not dismissed
+    );
+    calculateFundingWarnings(activeProposals);
   };
 
   const finalizeProposal = async (proposalId: string) => {
@@ -579,9 +786,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         try {
           await web3Context.contractsManager.daoContract.methods.finalize(proposalId).send({ from: web3Context.userWallet.myAddr });
           const proposalUpdated = await getProposalDetails(proposalId);
-          if (proposalUpdated) {
-            await setProposalsState([proposalUpdated]);
-          }
+          await setProposalsState([proposalUpdated]);
           web3Context.showLoader(false, "");
           toast.success("Proposal Finalized 💎");
           resolve("success");
@@ -604,19 +809,14 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return new Promise<string>(async (resolve, reject) => {
         if (!web3Context.ensureWalletConnection()) return resolve("");
         let proposalDetails = await getProposalDetails(proposalId);
-        if (!proposalDetails) {
-          toast.error("Failed to get proposal details");
-          return resolve("failed");
-        }
-        if (proposalDetails.proposalType == 'Contract upgrade' && proposalDetails.proposer !== web3Context.userWallet.myAddr) return toast.warn("Only proposer can execute the proposal");
+        if (proposalDetails.proposalType == 'Contract Upgrade' &&  proposalDetails.proposer !== web3Context.userWallet.myAddr) return toast.warn("Only proposer can execute the proposal");
 
         web3Context.showLoader(true, "Executing proposal 💎");
         try {
           await web3Context.contractsManager.daoContract.methods.execute(proposalId).send({ from: web3Context.userWallet.myAddr });
           proposalDetails = await getProposalDetails(proposalId);
-          if (proposalDetails) {
-            await setProposalsState([proposalDetails]);
-          }
+          await setProposalsState([proposalDetails]);
+          await postProposalExecutionUpdates(proposalId); // Update parameters if ECP
           web3Context.showLoader(false, "");
           toast.success("Proposal Executed 💎");
           resolve("success");
@@ -629,9 +829,86 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     });
   }
 
-  const getGovernanceFundsEnough = async () => {
-    const balance = await web3Context.web3.eth.getBalance(web3Context.contractsManager.daoContract.options.address);
-    const openProposalsRequiredBalance = new BigNumber(proposalFee).multipliedBy(activeProposals.length);
+  const decodeEcosystemParameterCalldata = (calldata: string) => {
+    try {
+      // Remove '0x' prefix and get function selector (first 4 bytes)
+      const functionSelector = calldata.slice(0, 10);
+
+      // Map of function selectors to their corresponding parameter update methods
+      const selectorToParameterMap: { [key: string]: { contractType: string, method: string, updateFunction: () => Promise<void> } } = {
+        [getFunctionSelector('setCreateProposalFee(uint256)')]: {
+          contractType: 'dao',
+          method: 'createProposalFee',
+          updateFunction: async () => {
+            const pFee = await web3Context.contractsManager.daoContract.methods.createProposalFee().call();
+            setProposalFee(pFee);
+            console.log(`[INFO] Updated createProposalFee to ${pFee}`);
+          }
+        },
+        [getFunctionSelector('setDelegatorMinStake(uint256)')]: {
+          contractType: 'staking',
+          method: 'delegatorMinStake',
+          updateFunction: async () => {
+            stakingContext.retrieveGlobalValues();
+            console.log(`[INFO] Updated delegatorMinStake`);
+          }
+        },
+        [getFunctionSelector('setStandByFactor(uint256)')]: {
+          contractType: 'bonus-score-system',
+          method: 'standByFactor',
+          updateFunction: async () => {
+            console.log(`[INFO] Updated standByFactor`);
+          }
+        },
+      };
+
+      const parameterInfo = selectorToParameterMap[functionSelector];
+      if (parameterInfo) {
+        console.log(`[INFO] Detected ${parameterInfo.method} parameter change on ${parameterInfo.contractType} contract`);
+        return parameterInfo;
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Error decoding ecosystem parameter calldata:', error);
+      return null;
+    }
+  };
+
+  const postProposalExecutionUpdates = async (proposalId: string) => {
+    const proposalDetails = await getProposalDetails(proposalId);
+
+    if (proposalDetails.proposalType === 'Ecosystem Parameter Change') {
+      // Decode calldata to determine which specific parameter was changed
+      if (proposalDetails.calldatas && proposalDetails.calldatas.length > 0) {
+        const calldata = proposalDetails.calldatas[0];
+        
+        const parameterInfo = decodeEcosystemParameterCalldata(calldata);
+        
+        if (parameterInfo) {
+          try {
+            await parameterInfo.updateFunction();
+            console.log(`[INFO] Successfully updated ${parameterInfo.method}`);
+            return;
+          } catch (error) {
+            console.error(`Error updating ${parameterInfo.method}:`, error);
+          }
+        }
+      }
+    }
+
+    const pFee = await web3Context.contractsManager.daoContract.methods.createProposalFee().call();
+    setProposalFee(pFee);
+
+    // Refresh balances
+    const governancePot =  await web3Context.contractsManager.daoContract.methods.governancePot().call();
+    setGovernancePotBalance(BigNumber(governancePot).dividedBy(1e18));
+
+    const claimingPot = await web3Context.web3.eth.getBalance(process.env.NEXT_PUBLICCLAIMING_CONTRACT_ADDRESS || "0xe0E6787A55049A90aAa4335D0Ff14fAD26B8e88e");
+    setClaimingContractBalance(BigNumber(claimingPot).dividedBy(1e18));
+
+    const lowMajorityPot = await web3Context.web3.eth.getBalance(lowMajorityContractAddress);
+    setLowMajorityContractBalance(BigNumber(lowMajorityPot).dividedBy(1e18));
   }
 
   const getDaoPotBalanceChange = async (blocksAgo: number) => {
@@ -661,7 +938,10 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     allDaoProposals,
     governancePotBalance,
     claimingContractBalance,
+    lowMajorityContractBalance,
+    lowMajorityContractAddress,
     notEnoughGovernanceFunds,
+    notEnoughLowMajorityFunds,
 
     // functions
     initialize,
@@ -682,7 +962,8 @@ const DaoContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     getMyVote,
     setActiveProposals,
     executeProposal,
-    getDaoPotBalanceChange
+    getDaoPotBalanceChange,
+    getProposalThreshold
   };
 
   return (
@@ -702,4 +983,4 @@ const useDaoContext = (): DaoContextProps => {
   return context;
 };
 
-export { DaoContextProvider as DAOProvider, useDaoContext };
+export { DaoContextProvider, useDaoContext };
