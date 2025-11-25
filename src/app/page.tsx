@@ -58,33 +58,23 @@ export default function Home() {
                     </a>
                   </div>
                   <div className="slide">
-                    <a href="https://p2pb2b.com" target="_blank" rel="noopener noreferrer">
-                      <Image src="/images/partners/logo_p2pb2b.png" height="100" width="250" alt="P2PB2B" />
+                    <a href="https://biconomy.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_biconomy.svg" height="100" width="250" alt="Biconomy" />
                     </a>
                   </div>
                   <div className="slide">
-                    <a href="https://xegex.com" target="_blank" rel="noopener noreferrer">
-                      <Image src="/images/partners/logo_xegex.png" height="100" width="250" alt="Xegex" />
+                    <a href="https://mexc.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_mexc.svg" height="100" width="250" alt="Mexc" />
                     </a>
                   </div>
                   <div className="slide">
-                    <a href="https://www.bitmart.com" target="_blank" rel="noopener noreferrer">
-                      <Image src="/images/partners/logo_bitmart.png" height="100" width="250" alt="BitMart" />
+                    <a href="https://perfectnet.at" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_perfectnet.svg" height="100" width="250" alt="PerfectNet" />
                     </a>
                   </div>
                   <div className="slide">
-                    <a href="https://blockserv.com" target="_blank" rel="noopener noreferrer">
-                      <Image src="/images/partners/logo_blockserv.png" height="100" width="250" alt="BlockServ" />
-                    </a>
-                  </div>
-                  <div className="slide">
-                    <a href="https://p2pb2b.com" target="_blank" rel="noopener noreferrer">
-                      <Image src="/images/partners/logo_p2pb2b.png" height="100" width="250" alt="P2PB2B" />
-                    </a>
-                  </div>
-                  <div className="slide">
-                    <a href="https://xegex.com" target="_blank" rel="noopener noreferrer">
-                      <Image src="/images/partners/logo_xegex.png" height="100" width="250" alt="Xegex" />
+                    <a href="https://herotech.io" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_herotech.png" height="100" width="250" alt="HeroTech" />
                     </a>
                   </div>
                   <div className="slide">
@@ -98,13 +88,23 @@ export default function Home() {
                     </a>
                   </div>
                   <div className="slide">
-                    <a href="https://p2pb2b.com" target="_blank" rel="noopener noreferrer">
-                      <Image src="/images/partners/logo_p2pb2b.png" height="100" width="250" alt="P2PB2B" />
+                    <a href="https://biconomy.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_biconomy.svg" height="100" width="250" alt="Biconomy" />
                     </a>
                   </div>
                   <div className="slide">
-                    <a href="https://xegex.com" target="_blank" rel="noopener noreferrer">
-                      <Image src="/images/partners/logo_xegex.png" height="100" width="250" alt="Xegex" />
+                    <a href="https://mexc.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_mexc.svg" height="100" width="250" alt="Mexc" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://perfectnet.at" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_perfectnet.svg" height="100" width="250" alt="PerfectNet" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://herotech.io" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_herotech.png" height="100" width="250" alt="HeroTech" />
                     </a>
                   </div>
                   <div className="slide">
@@ -115,6 +115,56 @@ export default function Home() {
                   <div className="slide">
                     <a href="https://blockserv.com" target="_blank" rel="noopener noreferrer">
                       <Image src="/images/partners/logo_blockserv.png" height="100" width="250" alt="BlockServ" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://biconomy.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_biconomy.svg" height="100" width="250" alt="Biconomy" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://mexc.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_mexc.svg" height="100" width="250" alt="Mexc" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://perfectnet.at" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_perfectnet.svg" height="100" width="250" alt="PerfectNet" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://herotech.io" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_herotech.png" height="100" width="250" alt="HeroTech" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://www.bitmart.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_bitmart.png" height="100" width="250" alt="BitMart" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://blockserv.at" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_blockserv.png" height="100" width="250" alt="BlockServ" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://biconomy.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_biconomy.svg" height="100" width="250" alt="Biconomy" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://mexc.com" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_mexc.svg" height="100" width="250" alt="Mexc" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://perfectnet.at" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_perfectnet.svg" height="100" width="250" alt="PerfectNet" />
+                    </a>
+                  </div>
+                  <div className="slide">
+                    <a href="https://herotech.io" target="_blank" rel="noopener noreferrer">
+                      <Image src="/images/partners/logo_herotech.png" height="100" width="250" alt="HeroTech" />
                     </a>
                   </div>
                 </div>
