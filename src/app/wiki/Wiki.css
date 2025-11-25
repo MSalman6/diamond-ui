@@ -243,6 +243,10 @@
   list-style: none;
 }
 
+.dmd-uses > li > span {
+  margin-left: 5px
+}
+
 .dmd-uses li {
   display: flex;
   align-items: flex-start;

@@ -175,20 +175,20 @@ export default function WikiPage() {
               </p>
               <ul className="dmd-uses">
                 <li>
-                  <strong>Medium of Exchange:</strong> Facilitating instant, cross-border transactions with minimal fees.
+                  <strong>Medium of Exchange:</strong> <span>Facilitating instant, cross-border transactions with minimal fees.</span>
                 </li>
                 <li>
-                  <strong>Governance:</strong> Enabling coin holders to vote on protocol changes via the DAO.
+                  <strong>Governance:</strong> <span>Enabling coin holders to vote on protocol changes via the DAO.</span>
                 </li>
                 <li>
-                  <strong>Staking:</strong> Allowing users to secure the network and earn rewards.
+                  <strong>Staking:</strong> <span>Allowing users to secure the network and earn rewards.</span>
                 </li>
               </ul>
               <div className="market-info">
                 <p>
                   As of July 2025, DMD has a market capitalization of approximately $7.7–$9.5 million USD, 
                   with a circulating supply of 3.9 million coins. It is traded on centralized exchanges such as 
-                  BitMart and P2PB2B.
+                  BitMart and MEXC.
                 </p>
               </div>
             </div>
@@ -198,7 +198,7 @@ export default function WikiPage() {
               <h2>Mainnet and Beta Testing</h2>
               <p>
                 The DMD v4 mainnet is slated for launch by the end of 2025, following an open beta phase that 
-                began on December 9, 2024. The beta invites developers and enthusiasts to test features like 
+                began on December 9, 2024. The mainnet invites developers and enthusiasts to test features like 
                 instant block finality and EVM compatibility, with community feedback shaping the final release.
               </p>
             </div>
