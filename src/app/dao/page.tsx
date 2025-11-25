@@ -1,20 +1,24 @@
 "use client";
 
 import "./dao.css";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, startTransition } from "react";
 import { useFadeInAnimation } from "@/hooks/useFadeInAnimation";
+import { useRouter } from 'next/navigation';
+import { useDaoContext } from '@/contexts/DAO';
+import { useWeb3Context } from '@/contexts/Web3';
+import { timestampToDate, truncateAddress } from '@/utils/common';
 
 type ProposalType = "protocol" | "treasury" | "parameter" | "community" | "open";
 
 type Proposal = {
   id: string;
-  date: string; // ISO-ish date
+  date: string;
   creator: string;
   creatorColor?: string;
   title: string;
   type: ProposalType | string;
-  participation: number; // percentage (0-100)
-  exceeding: number; // percent change (positive/negative)
+  participation: number;
+  exceeding: number;
   voted: boolean;
   status: string;
   actionsNeeded?: boolean;
@@ -38,10 +42,11 @@ const initialProposals: Proposal[] = [
 export default function DaoPage() {
   useFadeInAnimation();
 
-  const [proposals] = useState<Proposal[]>(initialProposals);
-  const [activeTab, setActiveTab] = useState<"current" | "actions">("current");
+  const [localProposals] = useState<Proposal[]>(initialProposals);
+  const [activeTab, setActiveTab] = useState<'currentPhase' | 'actionsNeeded'>('currentPhase');
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<string>("all");
+  const [filterQuery, setFilterQuery] = useState<string>('');
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
 
@@ -52,9 +57,62 @@ export default function DaoPage() {
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(null);
   const [selectedVote, setSelectedVote] = useState<"Yes" | "No" | "Abstain" | null>(null);
 
-  // Filter/sort/search derived list
+  // Contexts
+  const router = useRouter();
+  const daoContext = useDaoContext();
+  const web3Context = useWeb3Context();
+
+  // When web3 is ready, fetch DAO proposals
+  useEffect(() => {
+    try {
+      if (!daoContext.activeProposals.length && web3Context.web3Initialized) {
+        web3Context.showLoader(true, "");
+        daoContext.getActiveProposals().then(() => { daoContext.getHistoricProposals(); web3Context.showLoader(false, ""); }).catch(() => web3Context.showLoader(false, ""));
+      }
+    } catch (err) {}
+  }, [web3Context.web3Initialized]);
+
+  const daoMappedProposals = useMemo(() => {
+    const src = activeTab === 'currentPhase'
+      ? daoContext.activeProposals.filter((proposal: any) => proposal.state !== "3")
+      : daoContext.allDaoProposals.filter((proposal: any) => (
+          proposal.state === "3" || (proposal.state === "4" && daoContext.daoPhase.daoEpoch == Number(proposal.daoPhaseCount) + 1)
+        ));
+
+    if (!src || !src.length) return null;
+
+    return src.map((p: any) => {
+      const mapped: Proposal = {
+        id: p.id,
+        date: (p.timestamp ? timestampToDate(p.timestamp) : new Date().toISOString().slice(0,10)),
+        creator: truncateAddress(p.proposer || p.proposerAddress || ""),
+        creatorColor: undefined,
+        title: p.title || (p.description ? String(p.description).split('\n')[0] : ""),
+        type: (p.proposalType || p.rawProposalType || 'open').toLowerCase(),
+        participation: Number(p.participation) || 0,
+        exceeding: Number(p.exceedingYes) || 0,
+        voted: false,
+        status: daoContext.getStateString ? daoContext.getStateString(p.state) : (p.state || 'Unknown'),
+        actionsNeeded: (p.state === "3") || (p.state === "4" && daoContext.daoPhase && daoContext.daoPhase.daoEpoch === String(Number(p.daoPhaseCount) + 1))
+      };
+      return mapped;
+    });
+  }, [daoContext.activeProposals, daoContext.allDaoProposals, activeTab, daoContext.daoPhase, daoContext.daoPhaseCount]);
+
+  // Filter/sort/search derived list (prefer DAO data when present, otherwise fallback to local)
   const displayedProposals = useMemo(() => {
-    let list = proposals.filter((p) => (activeTab === "current" ? !p.actionsNeeded : !!p.actionsNeeded));
+    let list: Proposal[] = daoMappedProposals && daoMappedProposals.length ? daoMappedProposals : localProposals;
+
+    if (filterQuery) {
+      if (filterQuery === 'unfinalized') {
+        list = list.filter((p) => p.status === (daoContext.getStateString ? daoContext.getStateString('3') : '3'));
+      } else if (filterQuery === 'myProposals') {
+        const myAddr = web3Context.userWallet?.myAddr?.toLowerCase();
+        if (myAddr) {
+          list = list.filter((p: any) => (p.creator && String(p.creator).toLowerCase().includes(myAddr)) || (p.id && String(p.id).toLowerCase().includes(myAddr)) );
+        }
+      }
+    }
 
     if (search.trim()) {
       const q = search.toLowerCase();
@@ -62,13 +120,13 @@ export default function DaoPage() {
     }
 
     if (filter !== "all") {
-      list = list.filter((p) => p.type === filter);
+      list = list.filter((p) => String(p.type).toLowerCase().includes(filter.toLowerCase()));
     }
 
     if (sortField) {
       list = [...list].sort((a, b) => {
-        let A: any = (a as any)[sortField];
-        let B: any = (b as any)[sortField];
+        let A: any = (a as any)[sortField as keyof Proposal];
+        let B: any = (b as any)[sortField as keyof Proposal];
         if (sortField === "date") {
           A = new Date(a.date).getTime();
           B = new Date(b.date).getTime();
@@ -80,7 +138,13 @@ export default function DaoPage() {
     }
 
     return list;
-  }, [proposals, activeTab, search, filter, sortField, sortAsc]);
+  }, [daoMappedProposals, localProposals, filterQuery, search, filter, sortField, sortAsc, web3Context.userWallet, daoContext]);
+
+  const handleDetailsClick = (proposalId: string) => {
+    startTransition(() => {
+      router.push(`/dao/details/${proposalId}`);
+    });
+  }
 
   useEffect(() => {
     function update() {
@@ -164,6 +228,9 @@ export default function DaoPage() {
           </div>
         </div>
       </section>
+
+      <div className="container">
+      </div>
 
       {/* Stats */}
       <section className="governance-stats">
@@ -291,6 +358,13 @@ export default function DaoPage() {
                 <button className="search-btn"><i className="fas fa-search" /></button>
               </div>
               <div className="filter-container">
+                <select id="scope-filter" value={filterQuery} onChange={(e) => setFilterQuery(e.target.value)}>
+                  <option value="">All</option>
+                  <option value="myProposals">My proposals</option>
+                  <option value="unfinalized">Unfinalized</option>
+                </select>
+              </div>
+              <div className="filter-container">
                 <select id="proposal-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
                   <option value="all">All Types</option>
                   <option value="treasury">Treasury</option>
@@ -303,11 +377,23 @@ export default function DaoPage() {
           </div>
 
           <div className="proposals-tabs">
-            <button className={`tab-btn ${activeTab === "current" ? "active" : ""}`} data-tab="current" onClick={() => setActiveTab("current")}>Proposals of the current DAO phase</button>
-            <button className={`tab-btn ${activeTab === "actions" ? "active" : ""}`} data-tab="actions" onClick={() => setActiveTab("actions")}>Actions needed</button>
+            <button className={`tab-btn ${activeTab === "currentPhase" ? "active" : ""}`} data-tab="current" onClick={() => setActiveTab("currentPhase")}>Proposals of the current DAO phase</button>
+            <button className={`tab-btn ${activeTab === "actionsNeeded" ? "active" : ""}`} data-tab="actions" onClick={() => setActiveTab("actionsNeeded")}>Actions needed
+            {daoContext.allDaoProposals && daoContext.allDaoProposals.filter(proposal => 
+                  proposal.state === "3" || 
+                  (proposal.state === "4" && daoContext.daoPhase.daoEpoch == Number(proposal.daoPhaseCount) + 1)
+                ).length > 0 && (
+                <span className="actionsNeededBadge">
+                  {daoContext.allDaoProposals.filter(proposal => 
+                    proposal.state === "3" || 
+                    (proposal.state === "4" && daoContext.daoPhase.daoEpoch == Number(proposal.daoPhaseCount) + 1)
+                  ).length}
+                </span>
+                )}
+            </button>
           </div>
 
-          <div className={`proposals-tab-content ${activeTab === "current" ? "active" : ""}`} id="current-tab">
+          <div className={`proposals-tab-content ${activeTab === "currentPhase" ? "active" : ""}`} id="current-tab">
             <div className="proposals-table-container">
               <table className="proposals-table">
                 <thead>
@@ -324,7 +410,7 @@ export default function DaoPage() {
                 </thead>
                 <tbody>
                   {displayedProposals.map((p) => (
-                    <tr key={p.id}>
+                    <tr key={p.id} onClick={() => handleDetailsClick(p.id)} style={{ cursor: 'pointer' }}>
                       <td>{p.date}</td>
                       <td>
                         <div className="creator-address">
@@ -354,7 +440,7 @@ export default function DaoPage() {
             </div>
           </div>
 
-          <div className={`proposals-tab-content ${activeTab === "actions" ? "active" : ""}`} id="actions-tab">
+          <div className={`proposals-tab-content ${activeTab === "actionsNeeded" ? "active" : ""}`} id="actions-tab">
             <div className="proposals-table-container">
               <table className="proposals-table">
                 <thead>
@@ -391,7 +477,7 @@ export default function DaoPage() {
                       </td>
                       <td><span className={`exceeding-value ${p.exceeding >= 0 ? "positive" : "negative"}`}>{p.exceeding >= 0 ? `+${p.exceeding}%` : `${p.exceeding}%`}</span></td>
                       <td>
-                        <button className="btn-vote" onClick={() => openVoteModal(p)}>
+                        <button className="btn-vote" onClick={(e) => { e.stopPropagation(); openVoteModal(p); }}>
                           <i className="fas fa-vote-yea" /> Vote
                         </button>
                       </td>
