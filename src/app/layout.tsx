@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { DAOProvider } from "@/contexts/DAO";
+import { DaoContextProvider } from "@/contexts/DAO";
 import { Geist, Geist_Mono } from "next/font/google";
 import { WalletConnectProvider } from "@/contexts/WalletConnect";
 import { StakingContextProvider } from "@/contexts/Staking";
@@ -45,7 +45,7 @@ export default async function RootLayout({
           <WalletConnectProvider cookies={cookies}>
             <Web3ContextProvider>
               <StakingContextProvider>
-                <DAOProvider>
+                <DaoContextProvider>
                   <Header />
                   {children}
                   <Footer />
@@ -62,7 +62,7 @@ export default async function RootLayout({
                     theme="dark"
                   />
                   <div id="modal-root"></div>
-                </DAOProvider>
+                </DaoContextProvider>
               </StakingContextProvider>
             </Web3ContextProvider>
           </WalletConnectProvider>

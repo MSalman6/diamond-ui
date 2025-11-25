@@ -1,3 +1,5 @@
+'use client';
+
 import { toast } from 'react-toastify';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useWeb3Context } from "@/contexts/Web3";
