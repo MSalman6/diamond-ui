@@ -5,17 +5,11 @@ import Image from "next/image";
 interface LoaderProps {
   loadingMessage?: string | null;
   isLoading?: boolean;
-  size?: number;
 }
 
-const Loader: React.FC<LoaderProps> = ({ loadingMessage, isLoading, size = 50 }) => {
+const Loader: React.FC<LoaderProps> = ({ loadingMessage, isLoading }) => {
   useEffect(() => {
-    if (isLoading) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    
+    document.body.style.overflow = isLoading ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
@@ -24,14 +18,18 @@ const Loader: React.FC<LoaderProps> = ({ loadingMessage, isLoading, size = 50 })
   return (
     <div className={isLoading ? styles.loaderActive : styles.loaderHidden}>
       <div className={styles.backdrop} />
-      <Image
-        height={size}
-        width={size}
-        src={"/logos/dmd-logo.png"}
-        alt="Loading"
-        className={`${styles.image} ${styles.pulse}`}
-        style={{ width: `${size}px`, height: `${size}px` }}
-      />
+
+      <div
+        className={styles.imageWrapper}
+      >
+        <Image
+          src="/logos/dmd-logo-vector.svg"
+          alt="Loading"
+          fill
+          className={`${styles.image} ${styles.pulse}`}
+        />
+      </div>
+
       <p className={styles.loadingMsg}>{loadingMessage}</p>
     </div>
   );
