@@ -252,7 +252,7 @@ export default function ValidatorDetails() {
   <div className="container">
     <div className="section-title">
       <h2>Delegates</h2>
-      <p>Users who have delegated their tokens to this validator</p>
+      <p>Users who have delegated their coins to this validator</p>
     </div>
     <div className="delegates-table-container">
       <table className="delegates-table">
