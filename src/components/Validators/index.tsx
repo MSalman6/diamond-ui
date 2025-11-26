@@ -323,7 +323,7 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
           } else if (column.key === 'myStake') {
             return (
               <td key={colIndex}>
-                {BigNumber(pool.myStake) ? BigNumber(pool.myStake).dividedBy(10**18).toFixed(0) : 'Loading...'} DMD
+                {BigNumber(pool.myStake) ? BigNumber(pool.myStake).dividedBy(10**18).toFixed(4) : 'Loading...'} DMD
               </td>
             );
           } else if (column.key === 'stakeBtn') {
