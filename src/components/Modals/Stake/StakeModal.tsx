@@ -4,6 +4,7 @@ import { useWeb3Context } from "@/contexts/Web3";
 import { useStakingContext } from "@/contexts/Staking";
 import { Pool } from "@/contexts/types/models";
 import React, { useState, useEffect, useRef, FormEvent } from "react";
+import { toast } from 'react-toastify';
 import ReactDOM from "react-dom";
 
 interface ModalProps {
@@ -14,7 +15,7 @@ interface ModalProps {
 const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [stakeAmount, setStakeAmount] = useState(0);
+  const [stakeAmount, setStakeAmount] = useState<string>('');
   const { stake, setPools } = useStakingContext();
   const { updateWalletBalance, ensureWalletConnection, userWallet } = useWeb3Context();
   const [maxStakeAmount, setMaxStakeAmount] = useState(0);
@@ -23,11 +24,26 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
   const closeModal = () => setIsOpen(false);
 
   useEffect(() => {
-    const maxUserBalance = userWallet.myBalance;
-    const maxPoolStake = BigNumber(50000 * 10 ** 18).minus(pool.totalStake);
-    const mStakeAmount = maxUserBalance.isGreaterThan(maxPoolStake) ? maxPoolStake : maxUserBalance;
-    setMaxStakeAmount(Number(mStakeAmount.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)));
-  }, [pool, userWallet.myAddr]);
+    try {
+      const maxUserBalance = userWallet.myBalance || new BigNumber(0); // in wei
+      const maxPoolTotalWei = new BigNumber(50000).multipliedBy(10 ** 18);
+      const remainingPoolWei = maxPoolTotalWei.minus(pool.totalStake || new BigNumber(0));
+      const mStakeAmountWei = maxUserBalance.isGreaterThan(remainingPoolWei) ? remainingPoolWei : maxUserBalance;
+      const mStakeAmountDmd = mStakeAmountWei.dividedBy(10 ** 18);
+      setMaxStakeAmount(Number(mStakeAmountDmd.toFixed(4, BigNumber.ROUND_DOWN)));
+    } catch (err) {
+      setMaxStakeAmount(0);
+    }
+  }, [pool, userWallet.myAddr, userWallet.myBalance]);
+
+  const calculateMaxStakeable = (): BigNumber => {
+    const walletBalanceWei = userWallet.myBalance || new BigNumber(0);
+    const walletBalanceDmd = walletBalanceWei.dividedBy(10 ** 18);
+    const currentValidatorStakeDmd = (pool.totalStake || new BigNumber(0)).dividedBy(10 ** 18);
+    const remaining = new BigNumber(50000).minus(currentValidatorStakeDmd);
+    if (remaining.isLessThanOrEqualTo(0)) return new BigNumber(0);
+    return walletBalanceDmd.isGreaterThan(remaining) ? remaining.decimalPlaces(18, BigNumber.ROUND_DOWN) : walletBalanceDmd.decimalPlaces(18, BigNumber.ROUND_DOWN);
+  }
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -57,8 +73,35 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
     e.preventDefault();
     if (!ensureWalletConnection()) return;
 
+    if (!stakeAmount || stakeAmount === '') {
+      toast.warn('Please enter a valid stake amount');
+      return;
+    }
+
     stake(pool, new BigNumber(stakeAmount)).then((success: boolean) => {
       updateWalletBalance();
+      closeModal();
+    });
+  };
+
+  const handleStakeMax = async (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    if (!ensureWalletConnection()) return;
+
+    const maxAmount = calculateMaxStakeable();
+    if (maxAmount.isLessThanOrEqualTo(0)) {
+      if ((userWallet.myBalance || new BigNumber(0)).isZero()) {
+        toast.warn('Wallet balance is zero. Nothing to stake.');
+      } else {
+        toast.warn('Validator already has maximum stake (50,000 DMD) or no stakeable amount available.');
+      }
+      return;
+    }
+
+    setStakeAmount(maxAmount.toString(10));
+
+    stake(pool, new BigNumber(maxAmount)).then((success: boolean) => {
+      if (success) updateWalletBalance();
       closeModal();
     });
   };
@@ -89,7 +132,7 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                 value={stakeAmount || ''}
                 className={styles.formInput}
                 placeholder="Enter the amount to stake"
-                onChange={(e) => setStakeAmount(e.target.value === '' ? 0 : Number(e.target.value))}
+                onChange={(e) => setStakeAmount(e.target.value)}
               />
 
               {
@@ -100,9 +143,20 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                 )
               }
 
-              <button className={"btn-primary " + styles.formSubmit} type="submit">
-                Stake
-              </button>
+              <div className={styles.formActions}>
+                <button
+                  className={"btn-primary " + styles.formSubmit}
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); handleStakeMax(e); }}
+                  disabled={calculateMaxStakeable().isLessThanOrEqualTo(0) || (userWallet.myBalance || new BigNumber(0)).isZero()}
+                >
+                  Stake Max
+                </button>
+
+                <button className={"btn-primary " + styles.formSubmit} type="submit">
+                  Stake
+                </button>
+              </div>
             </form>
           </div>
         </div>,

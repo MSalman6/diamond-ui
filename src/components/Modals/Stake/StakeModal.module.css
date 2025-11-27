@@ -132,6 +132,14 @@
   align-self: center;
 }
 
+.formActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .stakeWarning {
   color: #ff6b6b;
   font-size: 13px;
@@ -226,5 +234,9 @@
   
   .formSubmit {
     padding: 14px 24px;
+  }
+
+  .formActions {
+    gap: 10px;
   }
 }
