@@ -197,9 +197,7 @@ export default function WikiPage() {
             <div className="wiki-section fade-in">
               <h2>Mainnet and Beta Testing</h2>
               <p>
-                The DMD v4 mainnet is slated for launch by the end of 2025, following an open beta phase that 
-                began on December 9, 2024. The mainnet invites developers and enthusiasts to test features like 
-                instant block finality and EVM compatibility, with community feedback shaping the final release.
+                The DMD v4 mainnet officially launched in October 2025, following an open beta phase that began on December, 2024. During the beta, developers and enthusiasts explored features like instant block finality and EVM compatibility, with active community participation throughout the process.
               </p>
             </div>
 
