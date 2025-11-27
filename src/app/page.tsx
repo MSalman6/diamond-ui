@@ -6,12 +6,23 @@ import Image from "next/image";
 import FAQ from '../components/FAQ';
 import { useTheme } from '../hooks';
 import { getThemeImagePath } from '../utils/imageUtils';
+import { useWalletConnect } from "@/contexts/WalletConnect";
+import { useWeb3Context } from "@/contexts/Web3";
 
 export default function Home() {
   const theme = useTheme();
+  const { userWallet } = useWeb3Context();
+  const { open: openWalletModal, isConnected } = useWalletConnect();
 
   const getImagePath = (filename: string) => {
     return getThemeImagePath(filename, theme);
+  };
+
+  const handleWalletConnect = () => {
+    if (!isConnected || !userWallet.myAddr) {
+      // If not connected, open wallet modal
+      openWalletModal();
+    }
   };
 
   return (
@@ -32,7 +43,12 @@ export default function Home() {
                   Welcome to the DMD Diamond Staking Platform – your gateway to earning rewards while contributing to the security and functionality of the DMD network. Embark on your staking adventure with us and unlock the full potential of your digital assets.
                 </p>
                 <div className="hero-buttons">
-                  <a href="#" className="btn-primary" id="connect-wallet-btn">Connect wallet <i className="fas fa-arrow-right"></i></a>
+                  {
+                    isConnected && userWallet.myAddr ?
+                      <Link href="/validators" className="btn-primary" id="stake-now-btn">Stake Now <i className="fas fa-arrow-right"></i></Link>
+                    :
+                      <a href="#" onClick={handleWalletConnect} className="btn-primary" id="connect-wallet-btn">Connect wallet <i className="fas fa-arrow-right"></i></a>
+                  }
                   <a href="https://github.com/DMDcoin/whitepaper/wiki/A.-Home" target="_blank" className="btn-secondary">GitHub Wiki <i className="fas fa-arrow-right"></i></a>
                 </div>
               </div>
