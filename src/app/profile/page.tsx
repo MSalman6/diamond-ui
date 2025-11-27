@@ -281,6 +281,7 @@ export default function ProfilePage() {
                   <div className="validator-score">
                     <div className="score-label">Score</div>
                     <div className="score-value">97.5</div>
+                    <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
                   </div>
                 </div>
                 
