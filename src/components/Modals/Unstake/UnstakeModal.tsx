@@ -208,9 +208,12 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                 ) : (
                   pool.isActive && canBeOrderedAmount.isGreaterThan(0) && (
                     <p className={styles.unstakeWarning}>
-                      Please note, that this node is a part of current Epoch
-                      validators set. We will prepare the coins, but you need to
-                      claim them by clicking 'Claim' as soon as the Epoch ends
+                      Note: This node is currently part of the active validator
+                      set for this Epoch, so unstaking is not immediately
+                      possible. However, you can place an unstake order now. The
+                      coins will be prepared and frozen in the contract, and
+                      you’ll be able to claim them by clicking ‘Claim’ once the
+                      Epoch ends.
                     </p>
                   )
               )}
