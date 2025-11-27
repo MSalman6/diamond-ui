@@ -67,11 +67,15 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
 
   const handleWithdrawStake = async (e: FormEvent) => {
     e.preventDefault();
+    await performUnstake(Number(unstakeAmount));
+  }
+
+  const performUnstake = async (amountNumber: number) => {
     if (!ensureWalletConnection()) return;
 
-    if (BigNumber(unstakeAmount).isLessThanOrEqualTo(0)) return toast.warn("Cannot unstake 0 DMD 💎");
-    const amountInWei = web3.utils.toWei(unstakeAmount.toString());
-    
+    if (BigNumber(amountNumber).isLessThanOrEqualTo(0)) return toast.warn("Cannot unstake 0 DMD 💎");
+    const amountInWei = web3.utils.toWei(amountNumber.toString());
+
     if (canBeUnstakedAmount.isZero()) {
       const remainingStake = canBeOrderedAmount.minus(amountInWei);
 
@@ -96,9 +100,9 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
       ) {
         return toast.warn(`Unstake amount is invalid. You must unstake the full amount or leave at least the minimum stake of ${(ownPool ? candidateMinStake : delegatorMinStake).dividedBy(10 ** 18).toString()} DMD.`);
       }
-    }    
+    }
 
-    unstake(pool, new BigNumber(unstakeAmount)).then((success: boolean) => {
+    unstake(pool, new BigNumber(amountNumber)).then((success: boolean) => {
       if (success) {
         setPools((pools) => {
           const updatedPools = pools.map((p) => {
@@ -217,6 +221,26 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                 : BigNumber.maximum(0, canBeUnstakedAmount.dividedBy(10 ** 18)).toNumber() >= 1 ? false : true
               }>
                 {canBeUnstakedAmount.isGreaterThan(0) && canBeOrderedAmount.isGreaterThan(0) ? "Unstake" : canBeOrderedAmount.isGreaterThan(0) ? "Order" : "Unstake"}
+              </button>
+              
+              <button
+                type="button"
+                className={"btn-secondary " + styles.allButton}
+                onClick={async (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const confirmed = confirm("Are you sure you want to unstake ALL available DMD?");
+                  if (!confirmed) return;
+
+                  // Determine available amount (in wei) and convert to DMD for performUnstake
+                  const amountDmd = canBeUnstakedAmount.isGreaterThan(0)
+                    ? canBeUnstakedAmount.dividedBy(10 ** 18).toNumber()
+                    : canBeOrderedAmount.dividedBy(10 ** 18).toNumber();
+
+                  await performUnstake(amountDmd);
+                }}
+              >
+                Unstake All
               </button>
             </form>
           </div>

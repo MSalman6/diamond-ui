@@ -139,6 +139,13 @@
   align-self: center;
 }
 
+.allButton {
+  max-width: 150px;
+  align-self: center;
+  margin-left: 8px;
+  padding: 10px 16px;
+}
+
 .unstakeWarning {
   color: #ffa726;
   font-size: 13px;
