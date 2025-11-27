@@ -16,7 +16,7 @@ interface ModalProps {
 const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [unstakeAmount, setUnstakeAmount] = useState<BigNumber>(new BigNumber(0));
+  const [unstakeAmount, setUnstakeAmount] = useState(0);
   const [ownPool, setOwnPool] = useState<boolean>(false);
   const { userWallet, web3, contractsManager, ensureWalletConnection } = useWeb3Context();
   const [canBeOrderedAmount, setCanBeOrderedAmount] = useState<BigNumber>(new BigNumber(0));
@@ -69,7 +69,7 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
     e.preventDefault();
     if (!ensureWalletConnection()) return;
 
-    if (unstakeAmount.isLessThanOrEqualTo(0)) return toast.warn("Cannot unstake 0 DMD 💎");
+    if (BigNumber(unstakeAmount).isLessThanOrEqualTo(0)) return toast.warn("Cannot unstake 0 DMD 💎");
     const amountInWei = web3.utils.toWei(unstakeAmount.toString());
     
     if (canBeUnstakedAmount.isZero()) {
@@ -177,10 +177,10 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                 }
                 type="number"
                 step="any"
-                value={unstakeAmount.toString()}
+                value={unstakeAmount || ''}
                 className={styles.formInput}
                 placeholder="Enter the amount to unstake"
-                onChange={(e) => setUnstakeAmount(new BigNumber(e.target.value))}
+                onChange={(e) => setUnstakeAmount(e.target.value === '' ? 0 : Number(e.target.value))}
               />
 
               {

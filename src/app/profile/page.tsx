@@ -9,6 +9,7 @@ import { truncateAddress } from '@/utils/common';
 import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { useWalletConnect } from '@/contexts/WalletConnect';
+import { toast } from 'react-toastify';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -65,7 +66,7 @@ export default function ProfilePage() {
     return dmdAmount.toFormat(0, BigNumber.ROUND_DOWN) + ' DMD';
   };
 
-  const hasValidator = Boolean(myPool);
+  const hasValidator = true;
 
   return (
     <div>
@@ -108,7 +109,7 @@ export default function ProfilePage() {
                           <button className="btn-secondary btn-sm">Unstake</button>
                         </div>
                         <div>
-                          <button className="btn-secondary btn-sm">History</button>
+                          <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
                           <button className="btn-primary btn-sm" id="create-pool-btn">Create pool</button>
                         </div>        
                       </div>
@@ -124,7 +125,7 @@ export default function ProfilePage() {
                         <div className="stat-note">from staking on 1 validator</div>
                       </div>
                       <div className="stat-actions">
-                        <button className="btn-secondary btn-sm">History</button>
+                        <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
                       </div>
                     </div>
                     
@@ -300,7 +301,7 @@ export default function ProfilePage() {
             <div className="stake-actions">
               <button className="btn-primary btn-sm">Stake</button>
               <button className="btn-secondary btn-sm">Unstake</button>
-              <button className="btn-secondary btn-sm">History</button>
+              <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
               <button className="btn-secondary btn-sm">Remove pool</button>
             </div>
           </div>
@@ -311,7 +312,7 @@ export default function ProfilePage() {
               <span className="stake-value highlight">7,000 DMD</span>
             </div>
             <div className="stake-change positive">+5 DMD since 01.01.24</div>
-            <button className="btn-secondary btn-sm">History</button>
+            <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
           </div>
         </div>
         
@@ -337,7 +338,7 @@ export default function ProfilePage() {
           <div className="stat-label">Monthly rewards <i className="fas fa-info-circle info-icon" title=""></i></div>
           <div className="stat-value highlight">100 DMD</div>
           <div className="stat-note">Earned per 1000DMD = 5,88DMD</div>
-          <button className="btn-secondary btn-sm">History</button>
+          <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
         </div>
 
         <div className="stat-card">
@@ -369,7 +370,7 @@ export default function ProfilePage() {
               </div>
               <span className="proposals-info">Proposals created: 10</span>
             </div>
-            <button className="btn-secondary btn-sm">History</button>
+            <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
           </div>
         </div>
       </div>

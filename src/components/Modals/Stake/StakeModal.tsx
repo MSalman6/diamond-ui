@@ -78,23 +78,24 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
             <h2>Stake DMD</h2>
 
             <form className={styles.form} onSubmit={handleStake}>
-                <span>
-                  Please enter the amount you want to stake (Available {userWallet.myBalance.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD)
-                </span>
+              <span>
+                Please enter the amount you want to stake (Available {userWallet.myBalance.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD)
+              </span>
+
               <input
                 min={1}
                 max={maxStakeAmount}
                 type="number"
-                value={stakeAmount}
+                value={stakeAmount || ''}
                 className={styles.formInput}
                 placeholder="Enter the amount to stake"
-                onChange={(e) => setStakeAmount(Number(e.target.value))}
+                onChange={(e) => setStakeAmount(e.target.value === '' ? 0 : Number(e.target.value))}
               />
 
               {
                 pool.isActive && (
                   <span className={styles.stakeWarning}>
-                    Please note that these coins will become active in the next epoch, as the validator candidate is part of an active set. You can unstake them at any time before they become active
+                    Note: These coins will become active in the next epoch, as the validator candidate is part of the current active set. You may unstake at any time before activation if you change your mind.
                   </span>
                 )
               }
