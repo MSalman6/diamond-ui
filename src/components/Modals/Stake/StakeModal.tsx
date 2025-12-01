@@ -84,7 +84,7 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
     });
   };
 
-  const handleStakeMax = async (e?: React.MouseEvent) => {
+  const handleFillMax = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
     if (!ensureWalletConnection()) return;
 
@@ -99,12 +99,7 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
     }
 
     setStakeAmount(maxAmount.toString(10));
-
-    stake(pool, new BigNumber(maxAmount)).then((success: boolean) => {
-      if (success) updateWalletBalance();
-      closeModal();
-    });
-  };
+  }
 
   return (
     <>
@@ -121,19 +116,33 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
             <h2>Stake DMD</h2>
 
             <form className={styles.form} onSubmit={handleStake}>
-              <span>
-                Please enter the amount you want to stake (Available {userWallet.myBalance.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD)
+              <span className={styles.spanLeft}>
+                Please enter the amount you want to stake
               </span>
 
-              <input
-                min={1}
-                max={maxStakeAmount}
-                type="number"
-                value={stakeAmount || ''}
-                className={styles.formInput}
-                placeholder="Enter the amount to stake"
-                onChange={(e) => setStakeAmount(e.target.value)}
-              />
+              <div className={styles.inputWrapper}>
+                <input
+                  min={1}
+                  max={calculateMaxStakeable().toString(10)}
+              step="any"
+              type="number"
+              value={stakeAmount || ''}
+              className={styles.formInput}
+              placeholder="Enter the amount to stake"
+              onChange={(e) => setStakeAmount(e.target.value)}
+                />
+
+                <button
+                  type="button"
+                  className={styles.maxButton}
+                  onClick={(e) => { e.stopPropagation(); handleFillMax(e); }}
+                  aria-label="Fill max amount"
+                >
+                  max
+                </button>
+              </div>
+
+              <span className={styles.spanLeft}>Available {userWallet.myBalance.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</span>
 
               {
                 pool.isActive && (
@@ -144,15 +153,6 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
               }
 
               <div className={styles.formActions}>
-                <button
-                  className={"btn-primary " + styles.formSubmit}
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); handleStakeMax(e); }}
-                  disabled={calculateMaxStakeable().isLessThanOrEqualTo(0) || (userWallet.myBalance || new BigNumber(0)).isZero()}
-                >
-                  Stake Max
-                </button>
-
                 <button className={"btn-primary " + styles.formSubmit} type="submit">
                   Stake
                 </button>
