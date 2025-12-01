@@ -10,6 +10,8 @@ import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { useWalletConnect } from '@/contexts/WalletConnect';
 import { toast } from 'react-toastify';
+import StakeModal from '@/components/Modals/Stake/StakeModal';
+import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -66,7 +68,7 @@ export default function ProfilePage() {
     return dmdAmount.toFormat(0, BigNumber.ROUND_DOWN) + ' DMD';
   };
 
-  const hasValidator = true;
+  const hasValidator = Boolean(myPool);
 
   return (
     <div>
@@ -105,12 +107,12 @@ export default function ProfilePage() {
                       </div>
                       <div className="stat-actions">
                         <div>
-                          <button className="btn-primary btn-sm">Stake</button>
-                          <button className="btn-secondary btn-sm">Unstake</button>
+                          <Link href="/validators" className="btn-primary btn-sm">Stake / Unstake</Link>
+                          <button className="btn-secondary btn-sm" id="create-pool-btn">Create pool</button>
+
                         </div>
                         <div>
                           <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
-                          <button className="btn-primary btn-sm" id="create-pool-btn">Create pool</button>
                         </div>        
                       </div>
                     </div>
@@ -300,10 +302,16 @@ export default function ProfilePage() {
             <div className="stake-change positive">+5 DMD since 01.01.24</div>
             <div className="stake-note">Connectivity reports: 0</div>
             <div className="stake-actions">
-              <button className="btn-primary btn-sm">Stake</button>
-              <button className="btn-secondary btn-sm">Unstake</button>
-              <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
-              <button className="btn-secondary btn-sm">Remove pool</button>
+              {
+                myPool && (
+                  <>
+                    <StakeModal buttonText="Stake" pool={myPool} />
+                    <UnstakeModal buttonText="Unstake" pool={myPool} />
+                    <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
+                    <button className="btn-secondary btn-sm">Remove pool</button>
+                  </>
+                )
+              }
             </div>
           </div>
           
