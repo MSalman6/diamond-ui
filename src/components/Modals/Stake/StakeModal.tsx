@@ -101,13 +101,17 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
     setStakeAmount(maxAmount.toString(10));
   }
 
-  // Determine whether the Stake button should be disabled.
-  // The staking contract requires that (pool.myStake + stakeAmount) >= delegatorMinStake (all in wei).
+  // Determine whether the Stake button should be disabled based on minimum and maximum stake rules.
   const stakeAmountWei = stakeAmount && stakeAmount !== '' ? new BigNumber(stakeAmount).multipliedBy(new BigNumber(10).pow(18)) : new BigNumber(0);
   const poolMyStakeWei = pool.myStake || new BigNumber(0);
+  const poolTotalStakeWei = pool.totalStake || new BigNumber(0);
+  const poolMaxCapWei = new BigNumber(50000).multipliedBy(new BigNumber(10).pow(18));
   const minDelegatorStakeWei = delegatorMinStake || new BigNumber(0);
   const isBelowDelegatorMin = poolMyStakeWei.plus(stakeAmountWei).isLessThan(minDelegatorStakeWei);
-  const isStakeButtonDisabled = !stakeAmount || stakeAmount === '' || new BigNumber(stakeAmount).isLessThanOrEqualTo(0) || isBelowDelegatorMin;
+  const isAbovePoolMax = poolTotalStakeWei.plus(stakeAmountWei).isGreaterThan(poolMaxCapWei);
+  const remainingToPoolMaxWei = poolMaxCapWei.minus(poolTotalStakeWei).isGreaterThan(0) ? poolMaxCapWei.minus(poolTotalStakeWei) : new BigNumber(0);
+  const remainingToPoolMaxDmd = remainingToPoolMaxWei.dividedBy(new BigNumber(10).pow(18)).toFixed(4, BigNumber.ROUND_DOWN);
+  const isStakeButtonDisabled = !stakeAmount || stakeAmount === '' || new BigNumber(stakeAmount).isLessThanOrEqualTo(0) || isBelowDelegatorMin || isAbovePoolMax;
   const minDelegatorStakeDmd = minDelegatorStakeWei.dividedBy(new BigNumber(10).pow(18)).toFixed(4, BigNumber.ROUND_DOWN);
 
   return (
@@ -153,11 +157,15 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
 
               <span className={styles.spanLeft}>Available {userWallet.myBalance.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</span>
 
-              {isBelowDelegatorMin && (
+              {isAbovePoolMax ? (
                 <span className={styles.disabledNotice}>
-                  The entered amount is below the minimum required to stake ({minDelegatorStakeDmd} DMD).
+                  The entered amount would make the validator exceed 50,000 DMD. You can stake up to {remainingToPoolMaxDmd} DMD.
                 </span>
-              )}
+              ) : isBelowDelegatorMin ? (
+                <span className={styles.disabledNotice}>
+                  The entered amount is below the minimum required to stake {minDelegatorStakeDmd} DMD.
+                </span>
+              ) : null}
 
               {
                 pool.isActive && (
@@ -172,7 +180,7 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                   className={"btn-primary " + styles.formSubmit}
                   type="submit"
                   disabled={isStakeButtonDisabled}
-                  title={isStakeButtonDisabled && isBelowDelegatorMin ? `Minimum total stake per delegator is ${minDelegatorStakeDmd} DMD` : undefined}
+                  title={isStakeButtonDisabled ? (isAbovePoolMax ? `Validator cap reached: you can stake up to ${remainingToPoolMaxDmd} DMD` : isBelowDelegatorMin ? `Minimum total stake per delegator is ${minDelegatorStakeDmd} DMD` : undefined) : undefined}
                 >
                   Stake
                 </button>
