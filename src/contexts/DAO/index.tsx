@@ -115,14 +115,49 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     subscribeToEvents();
   }
 
-  const handleErrorMsg = (err: Error, alternateMsg: string) => {
-    if (err.message && !err.message.includes("EVM") && (err.message.includes("MetaMask") || err.message.includes("Transaction"))) {
-      toast.error(err.message);
-    } else if (err.message && err.message.includes("BigNumber") || err.message.toLowerCase().includes("invalid")) {
-      toast.error("Invalid input, please check the values and try again.");
-    } else {
-      toast.error(alternateMsg);
+  const handleErrorMsg = (err: any, alternateMsg: string) => {
+    let errorMessage = alternateMsg;
+
+    // Check for user rejection
+    if (err.code === 4001 || err.message?.includes('User denied') || err.message?.includes('User rejected')) {
+      toast.info('User denied transactionn signature.');
+      return;
     }
+
+    // Try to extract meaningful error from various MetaMask error structures
+    if (err.message) {
+      // Check for execution reverted errors with reason
+      const revertMatch = err.message.match(/execution reverted: (.+?)(?:\n|$)/);
+      if (revertMatch) {
+        errorMessage = revertMatch[1];
+      }
+
+      // Check for internal JSON-RPC error
+      else if (err.data?.message) {
+        errorMessage = err.data.message;
+      }
+
+      // Check for cause chain
+      else if (err.cause?.message) {
+        errorMessage = err.cause.message;
+      }
+
+      // Use the main message if it's user-friendly
+      else if (!err.message.includes('Internal JSON-RPC error') && 
+                !err.message.includes('EVM') &&
+                err.message.length < 200) {
+        errorMessage = err.message;
+      }
+    }
+
+    // Clean up common prefixes/suffixes
+    errorMessage = errorMessage
+      .replace(/^execution reverted:?\s*/i, '')
+      .replace(/^err:\s*/i, '')
+      .trim();
+
+    toast.error(errorMessage);
+    console.error('Tx error details:', { message: err.message, cause: err.cause, data: err.data, stack: err.stack });
   }
 
   const getProposalTypeFromContract = (contractProposalType: string) => {
