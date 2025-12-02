@@ -169,6 +169,27 @@
   align-self: center;
 }
 
+.formSubmit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  box-shadow: none;
+  transform: none;
+}
+
+.disabledNotice {
+  color: #e53e3e;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  padding: 10px 12px;
+  background: rgba(229, 62, 62, 0.06);
+  border: 1px solid rgba(229, 62, 62, 0.12);
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
 .formActions {
   display: flex;
   gap: 12px;

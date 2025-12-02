@@ -16,7 +16,7 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const [stakeAmount, setStakeAmount] = useState<string>('');
-  const { stake, setPools } = useStakingContext();
+  const { stake, setPools, delegatorMinStake } = useStakingContext();
   const { updateWalletBalance, ensureWalletConnection, userWallet } = useWeb3Context();
   const [maxStakeAmount, setMaxStakeAmount] = useState(0);
 
@@ -101,6 +101,15 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
     setStakeAmount(maxAmount.toString(10));
   }
 
+  // Determine whether the Stake button should be disabled.
+  // The staking contract requires that (pool.myStake + stakeAmount) >= delegatorMinStake (all in wei).
+  const stakeAmountWei = stakeAmount && stakeAmount !== '' ? new BigNumber(stakeAmount).multipliedBy(new BigNumber(10).pow(18)) : new BigNumber(0);
+  const poolMyStakeWei = pool.myStake || new BigNumber(0);
+  const minDelegatorStakeWei = delegatorMinStake || new BigNumber(0);
+  const isBelowDelegatorMin = poolMyStakeWei.plus(stakeAmountWei).isLessThan(minDelegatorStakeWei);
+  const isStakeButtonDisabled = !stakeAmount || stakeAmount === '' || new BigNumber(stakeAmount).isLessThanOrEqualTo(0) || isBelowDelegatorMin;
+  const minDelegatorStakeDmd = minDelegatorStakeWei.dividedBy(new BigNumber(10).pow(18)).toFixed(4, BigNumber.ROUND_DOWN);
+
   return (
     <>
       <button className="btn-stake" onClick={(e) => { e.stopPropagation(); openModal(); }}>
@@ -144,6 +153,12 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
 
               <span className={styles.spanLeft}>Available {userWallet.myBalance.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</span>
 
+              {isBelowDelegatorMin && (
+                <span className={styles.disabledNotice}>
+                  The entered amount is below the minimum required to stake ({minDelegatorStakeDmd} DMD).
+                </span>
+              )}
+
               {
                 pool.isActive && (
                   <span className={styles.stakeWarning}>
@@ -153,7 +168,12 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
               }
 
               <div className={styles.formActions}>
-                <button className={"btn-primary " + styles.formSubmit} type="submit">
+                <button
+                  className={"btn-primary " + styles.formSubmit}
+                  type="submit"
+                  disabled={isStakeButtonDisabled}
+                  title={isStakeButtonDisabled && isBelowDelegatorMin ? `Minimum total stake per delegator is ${minDelegatorStakeDmd} DMD` : undefined}
+                >
                   Stake
                 </button>
               </div>
