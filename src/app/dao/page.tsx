@@ -2,6 +2,7 @@
 
 import "./dao.css";
 import React, { useEffect, useMemo, useState, startTransition } from "react";
+import BigNumber from 'bignumber.js';
 import { useFadeInAnimation } from "@/hooks/useFadeInAnimation";
 import { useRouter } from 'next/navigation';
 import { useDaoContext } from '@/contexts/DAO';
@@ -21,6 +22,7 @@ type Proposal = {
   exceeding: number;
   voted: boolean;
   status: string;
+  totalStakeSnapshot?: string;
   actionsNeeded?: boolean;
 };
 
@@ -91,6 +93,7 @@ export default function DaoPage() {
         type: (p.proposalType || p.rawProposalType || 'open').toLowerCase(),
         participation: Number(p.participation) || 0,
         exceeding: Number(p.exceedingYes) || 0,
+        totalStakeSnapshot: p.totalStakeSnapshot || p.totalStakeSnapshot || '0',
         voted: false,
         status: daoContext.getStateString ? daoContext.getStateString(p.state) : (p.state || 'Unknown'),
         actionsNeeded: (p.state === "3") || (p.state === "4" && daoContext.daoPhase && daoContext.daoPhase.daoEpoch === String(Number(p.daoPhaseCount) + 1))
@@ -425,7 +428,16 @@ export default function DaoPage() {
                       <td>
                         <div className="participation-bar">
                           <div className="participation-progress" style={{ width: `${p.participation}%` }} />
-                          <span className="participation-value">{p.participation}%</span>
+                          {(() => {
+                            try {
+                              const snap = (p as any).totalStakeSnapshot;
+                              if (snap && snap !== '0') {
+                                const tokens = BigNumber(snap).multipliedBy(Number(p.participation)).dividedBy(100).dividedBy(1e18).toFixed(2);
+                                return <span className="participation-value">{p.participation}% • {tokens} DMD</span>;
+                              }
+                            } catch (e) {console.log("EREREOEREOORER", e);}
+                            return <span className="participation-value">{p.participation}%</span>;
+                          })()}
                         </div>
                       </td>
                       <td><span className={`exceeding-value ${p.exceeding >= 0 ? "positive" : "negative"}`}>{p.exceeding >= 0 ? `+${p.exceeding}%` : `${p.exceeding}%`}</span></td>
@@ -472,7 +484,16 @@ export default function DaoPage() {
                       <td>
                         <div className="participation-bar">
                           <div className="participation-progress" style={{ width: `${p.participation}%` }} />
-                          <span className="participation-value">{p.participation}%</span>
+                          {(() => {
+                            try {
+                              const snap = (p as any).totalStakeSnapshot;
+                              if (snap && snap !== '0') {
+                                const tokens = BigNumber(snap).multipliedBy(Number(p.participation)).dividedBy(100).dividedBy(1e18).toFixed(2);
+                                return <span className="participation-value">{p.participation}% • {tokens} DMD</span>;
+                              }
+                            } catch (e) {}
+                            return <span className="participation-value">{p.participation}%</span>;
+                          })()}
                         </div>
                       </td>
                       <td><span className={`exceeding-value ${p.exceeding >= 0 ? "positive" : "negative"}`}>{p.exceeding >= 0 ? `+${p.exceeding}%` : `${p.exceeding}%`}</span></td>

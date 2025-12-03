@@ -912,7 +912,7 @@
   height: 8px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
-  overflow: hidden;
+  overflow: visible;
   width: 100%;
   max-width: 120px;
   position: relative;
@@ -937,16 +937,19 @@
 
 .participation-value {
   position: absolute;
-  right: -30px;
-  top: -4px;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.85rem;
+  color: var(--text);
+  font-weight: 600;
+  white-space: nowrap;
   transition: color 0.5s ease;
 }
 
 
 .light-theme .participation-value {
-  color: #666;
+  color: #333;
 }
 
 .exceeding-value {
