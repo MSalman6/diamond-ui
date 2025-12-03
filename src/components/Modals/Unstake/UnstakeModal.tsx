@@ -156,18 +156,6 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
 
             <form className={styles.form} onSubmit={handleWithdrawStake}>
 
-              {canBeUnstakedAmount.isZero() ? (
-                <span>
-                  Amount you can order:{" "}
-                  {ownPool ? BigNumber.maximum(0, canBeOrderedAmount.minus(candidateMinStake).dividedBy(10 ** 18)).toString() : BigNumber.maximum(0, canBeOrderedAmount.dividedBy(10 ** 18)).toString()} DMD
-                </span>
-              ) : (
-                <span>
-                  Amount you can unstake:{" "}
-                  {ownPool ? BigNumber.maximum(0, canBeUnstakedAmount.minus(candidateMinStake).dividedBy(10 ** 18)).toString() : BigNumber.maximum(0, canBeUnstakedAmount.dividedBy(10 ** 18)).toString()} DMD
-                </span>
-              )}
-
               <input
                 min={
                   canBeUnstakedAmount.isZero()
@@ -186,6 +174,18 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                 placeholder="Enter the amount to unstake"
                 onChange={(e) => setUnstakeAmount(e.target.value === '' ? 0 : Number(e.target.value))}
               />
+
+              {canBeUnstakedAmount.isZero() ? (
+                <span className={styles.spanLeft}>
+                  Amount you can order:{" "}
+                  {ownPool ? BigNumber.maximum(0, canBeOrderedAmount.minus(candidateMinStake).dividedBy(10 ** 18)).toString() : BigNumber.maximum(0, canBeOrderedAmount.dividedBy(10 ** 18)).toString()} DMD
+                </span>
+              ) : (
+                <span className={styles.spanLeft}>
+                  Amount you can unstake:{" "}
+                  {ownPool ? BigNumber.maximum(0, canBeUnstakedAmount.minus(candidateMinStake).dividedBy(10 ** 18)).toString() : BigNumber.maximum(0, canBeUnstakedAmount.dividedBy(10 ** 18)).toString()} DMD
+                </span>
+              )}
 
               {
                 !canBeUnstakedAmount.isZero() && (<span>Amount you can order: {ownPool ? BigNumber.maximum(0, canBeOrderedAmount.minus(candidateMinStake).dividedBy(10 ** 18)).toString() : BigNumber.maximum(0, canBeOrderedAmount.dividedBy(10 ** 18)).toString()} DMD</span>)

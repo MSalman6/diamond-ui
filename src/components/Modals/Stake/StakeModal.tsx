@@ -107,7 +107,7 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
   const poolTotalStakeWei = pool.totalStake || new BigNumber(0);
   const poolMaxCapWei = new BigNumber(50000).multipliedBy(new BigNumber(10).pow(18));
   const minDelegatorStakeWei = delegatorMinStake || new BigNumber(0);
-  const isBelowDelegatorMin = poolMyStakeWei.plus(stakeAmountWei).isLessThan(minDelegatorStakeWei);
+  const isBelowDelegatorMin = new BigNumber(poolMyStakeWei).plus(stakeAmountWei).isLessThan(minDelegatorStakeWei);
   const isAbovePoolMax = poolTotalStakeWei.plus(stakeAmountWei).isGreaterThan(poolMaxCapWei);
   const remainingToPoolMaxWei = poolMaxCapWei.minus(poolTotalStakeWei).isGreaterThan(0) ? poolMaxCapWei.minus(poolTotalStakeWei) : new BigNumber(0);
   const remainingToPoolMaxDmd = remainingToPoolMaxWei.dividedBy(new BigNumber(10).pow(18)).toFixed(4, BigNumber.ROUND_DOWN);

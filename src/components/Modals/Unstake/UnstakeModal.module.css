@@ -162,6 +162,11 @@
   margin: 0 !important;
 }
 
+.spanLeft {
+  align-self: flex-start;
+  padding: 0px !important;
+}
+
 /* Light theme overrides */
 :global(body.light-theme) .modalOverlay {
   background: rgba(0, 0, 0, 0.6);
