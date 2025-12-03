@@ -308,11 +308,11 @@ export default function DaoPage() {
                 </div>
                 <div className="pot-distribution">
                   <div className="distribution-item">
-                    <span className="distribution-label">Community:</span>
-                    <span className="distribution-value">300,000 DMD</span>
-                    <div className="distribution-bar">
+                    <span className="distribution-label">Low majority pot</span>
+                    <span className="distribution-value">{daoContext.lowMajorityContractBalance.toFixed(2)} DMD</span>
+                    {/* <div className="distribution-bar">
                       <div className="distribution-progress community" style={{ width: `40%` }} />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
