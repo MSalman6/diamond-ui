@@ -108,11 +108,11 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
   const poolMaxCapWei = new BigNumber(50000).multipliedBy(new BigNumber(10).pow(18));
   const minDelegatorStakeWei = delegatorMinStake || new BigNumber(0);
   const isBelowDelegatorMin = new BigNumber(poolMyStakeWei).plus(stakeAmountWei).isLessThan(minDelegatorStakeWei);
-  const isAbovePoolMax = poolTotalStakeWei.plus(stakeAmountWei).isGreaterThan(poolMaxCapWei);
-  const remainingToPoolMaxWei = poolMaxCapWei.minus(poolTotalStakeWei).isGreaterThan(0) ? poolMaxCapWei.minus(poolTotalStakeWei) : new BigNumber(0);
-  const remainingToPoolMaxDmd = remainingToPoolMaxWei.dividedBy(new BigNumber(10).pow(18)).toFixed(4, BigNumber.ROUND_DOWN);
+  const isAbovePoolMax = new BigNumber(poolTotalStakeWei).plus(stakeAmountWei).isGreaterThan(poolMaxCapWei);
+  const remainingToPoolMaxWei = new BigNumber(poolMaxCapWei).minus(poolTotalStakeWei).isGreaterThan(0) ? poolMaxCapWei.minus(poolTotalStakeWei) : new BigNumber(0);
+  const remainingToPoolMaxDmd = new BigNumber(remainingToPoolMaxWei).dividedBy(new BigNumber(10).pow(18)).toFixed(4, BigNumber.ROUND_DOWN);
   const isStakeButtonDisabled = !stakeAmount || stakeAmount === '' || new BigNumber(stakeAmount).isLessThanOrEqualTo(0) || isBelowDelegatorMin || isAbovePoolMax;
-  const minDelegatorStakeDmd = minDelegatorStakeWei.dividedBy(new BigNumber(10).pow(18)).toFixed(4, BigNumber.ROUND_DOWN);
+  const minDelegatorStakeDmd = new BigNumber(minDelegatorStakeWei).dividedBy(new BigNumber(10).pow(18)).toFixed(4, BigNumber.ROUND_DOWN);
 
   return (
     <>

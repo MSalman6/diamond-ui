@@ -323,7 +323,12 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
           } else if (column.key === 'myStake') {
             return (
               <td key={colIndex}>
-                {BigNumber(pool.myStake) ? BigNumber(pool.myStake).dividedBy(10**18).toFixed(4) : 'Loading...'} DMD
+                <div>
+                  {BigNumber(pool.myStake) ? BigNumber(pool.myStake).dividedBy(10**18).toFixed(4) : 'Loading...'} DMD
+                </div>
+                {BigNumber(pool.orderedWithdrawAmount).isGreaterThan(0) && (
+                  <div className="ordered-amount">Ordered: {BigNumber(pool.orderedWithdrawAmount).dividedBy(10**18).toFixed(4)} DMD</div>
+                )}
               </td>
             );
           } else if (column.key === 'stakeBtn') {
