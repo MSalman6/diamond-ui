@@ -226,25 +226,27 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                 {canBeUnstakedAmount.isGreaterThan(0) && canBeOrderedAmount.isGreaterThan(0) ? "Unstake" : canBeOrderedAmount.isGreaterThan(0) ? "Order" : "Unstake"}
               </button>
               
-              <button
-                type="button"
-                className={"btn-secondary " + styles.allButton}
-                onClick={async (e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const confirmed = confirm("Are you sure you want to unstake ALL available DMD?");
-                  if (!confirmed) return;
+              {!pool.isActive && (
+                <button
+                  type="button"
+                  className={"btn-secondary " + styles.allButton}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const confirmed = confirm("Are you sure you want to unstake ALL available DMD?");
+                    if (!confirmed) return;
 
-                  // Determine available amount (in wei) and convert to DMD for performUnstake
-                  const amountDmd = canBeUnstakedAmount.isGreaterThan(0)
-                    ? canBeUnstakedAmount.dividedBy(10 ** 18).toNumber()
-                    : canBeOrderedAmount.dividedBy(10 ** 18).toNumber();
+                    // Determine available amount (in wei) and convert to DMD for performUnstake
+                    const amountDmd = canBeUnstakedAmount.isGreaterThan(0)
+                      ? canBeUnstakedAmount.dividedBy(10 ** 18).toNumber()
+                      : canBeOrderedAmount.dividedBy(10 ** 18).toNumber();
 
-                  await performUnstake(amountDmd);
-                }}
-              >
-                Unstake All
-              </button>
+                    await performUnstake(amountDmd);
+                  }}
+                >
+                  Unstake All
+                </button>
+              )}
             </form>
           </div>
         </div>,
