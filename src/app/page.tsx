@@ -456,6 +456,16 @@ export default function Home() {
                 <a href="#" className="btn-small">Learn more</a>
               </div>
               <div className="news-image">
+                <div className="news-image-inner">
+                  <Image
+                    src={getImagePath(theme === 'light' ? 'welcome-banner-light.svg' : 'welcome-banner-dark.svg')}
+                    alt="Welcome to DMD"
+                    fill
+                    className="news-banner"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 60vw, 40vw"
+                    priority={false}
+                  />
+                </div>
               </div>
             </div>
           </div>
