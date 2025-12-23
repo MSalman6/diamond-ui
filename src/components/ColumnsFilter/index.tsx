@@ -117,6 +117,47 @@ const ColumnsFilterModal: React.FC<ColumnsFilterModalProps> = ({
     closeModal();
   };
 
+  const handleResetToDefault = () => {
+    const updatedTableFields = [...tableFields];
+    const defaultUpdateableFields = defaultFields.filter((f) => f.updateAble && f.label);
+
+    const defaultIndexOf = (field: TableField) => {
+      const idx = defaultUpdateableFields.findIndex((d) => d.key === field.key || d.label === field.label);
+      return idx === -1 ? Number.MAX_SAFE_INTEGER : idx;
+    };
+
+    updatedTableFields.forEach((field) => {
+      if (field.updateAble && field.label) {
+        const def = defaultUpdateableFields.find((d) => d.key === field.key || d.label === field.label);
+        if (def) {
+          field.hide = def.hide;
+        }
+      }
+    });
+
+    // Sort updateable fields using the default order
+    const updateableFields = updatedTableFields.filter((f) => f.updateAble && f.label);
+    updateableFields.sort((a, b) => defaultIndexOf(a) - defaultIndexOf(b));
+
+    let updateableIndex = 0;
+    const finalTableFields = updatedTableFields.map((field) => {
+      if (field.updateAble && field.label) {
+        return updateableFields[updateableIndex++];
+      }
+      return field;
+    });
+
+    setTableFields(finalTableFields);
+
+    // Update selected columns to match defaults
+    const newSelected = defaultUpdateableFields.filter((f) => !f.hide).map((f) => f.label);
+    setSelectedColumns(newSelected);
+    setTempSelectedColumns(newSelected);
+
+    // Close modal after saving
+    closeModal();
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -159,10 +200,11 @@ const ColumnsFilterModal: React.FC<ColumnsFilterModalProps> = ({
         <div className={`modal ${isOpen ? 'show' : ''}`}>
           <div className="modal-content" ref={modalRef}>
             <div className="modal-header">
-              <h3>Add, delete and sort columns just how you need it</h3>
+              <h3>Customize your table view</h3>
               <button className="close-modal" onClick={closeModal}>
                 ×
               </button>
+              <span>Select, reorder, and manage columns to fit your workflow</span>
             </div>
             <div className="modal-body">
               <div className="columns-container">
@@ -217,8 +259,8 @@ const ColumnsFilterModal: React.FC<ColumnsFilterModalProps> = ({
               </div>
             </div>
             <div className="modal-footer">
-              <button className="btn-cancel" onClick={closeModal}>
-                Cancel
+              <button className="btn-reset btn-secondary" onClick={handleResetToDefault}>
+                Reset to Default
               </button>
               <button className="btn-apply" onClick={handleColumnsChange}>
                 Apply Changes

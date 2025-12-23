@@ -407,6 +407,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.modal-header > span {
+  flex-basis: 100%;
+  display: block;
+  margin-top: 8px;
 }
 
 .modal-header h3 {
@@ -587,6 +595,10 @@
   background: #0060df;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 112, 243, 0.3);
+}
+
+.btn-reset {
+  border: 1px solid black;
 }
 
 @keyframes modalFadeIn {
