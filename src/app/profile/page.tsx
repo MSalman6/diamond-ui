@@ -15,6 +15,7 @@ import { useStakingContext } from '@/contexts/Staking';
 import { useWalletConnect } from '@/contexts/WalletConnect';
 import StakeModal from '@/components/Modals/Stake/StakeModal';
 import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
+import CreatePoolModal from '@/components/Modals/CreatePool/CreatePoolModal';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -71,8 +72,7 @@ export default function ProfilePage() {
     return dmdAmount.toFormat(0, BigNumber.ROUND_DOWN) + ' DMD';
   };
 
-  // const hasValidator = Boolean(myPool);
-  const hasValidator = true;
+  const hasValidator = Boolean(myPool);
 
   const copyData = (data: string) => {
     copy(data);
@@ -117,7 +117,8 @@ export default function ProfilePage() {
                       <div className="stat-actions">
                         <div>
                           <Link href="/validators" className="btn-primary btn-sm">Stake / Unstake</Link>
-                          <button className="btn-secondary btn-sm" id="create-pool-btn">Create pool</button>
+                          {/* Create Pool modal trigger - replaced static button with component */}
+                          <CreatePoolModal buttonText="Create pool" />
 
                         </div>
                         <div>
