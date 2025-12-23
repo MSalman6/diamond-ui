@@ -16,6 +16,7 @@ import { useWalletConnect } from '@/contexts/WalletConnect';
 import StakeModal from '@/components/Modals/Stake/StakeModal';
 import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
 import CreatePoolModal from '@/components/Modals/CreatePool/CreatePoolModal';
+import UpdatePoolOperatorModal from '@/components/Modals/UpdatePoolOperator/UpdatePoolOperatorModal';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -117,9 +118,7 @@ export default function ProfilePage() {
                       <div className="stat-actions">
                         <div>
                           <Link href="/validators" className="btn-primary btn-sm">Stake / Unstake</Link>
-                          {/* Create Pool modal trigger - replaced static button with component */}
                           <CreatePoolModal buttonText="Create pool" />
-
                         </div>
                         <div>
                           <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
@@ -402,7 +401,7 @@ export default function ProfilePage() {
               <i className="fas fa-copy"></i>
             </button>
           </div>
-          <button className="btn-primary btn-sm" id="edit-reward-btn">Edit</button>
+          {myPool && <UpdatePoolOperatorModal buttonText="Edit" pool={myPool} />}
         </div>
       </div>
                 
