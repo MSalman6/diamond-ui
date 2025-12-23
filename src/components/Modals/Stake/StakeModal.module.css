@@ -248,7 +248,7 @@
 }
 
 :global(body.light-theme) .maxButton {
-  color: #e53e3e;
+  color: grey;
 }
 
 :global(body.light-theme) .maxButton:hover {
