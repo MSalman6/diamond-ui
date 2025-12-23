@@ -577,7 +577,7 @@ header .container {
 
   .nav-links {
     position: fixed;
-    top: 70px;
+    top: 100px;
     left: 0;
     width: 100%;
     height: calc(100vh - 70px);
@@ -3023,7 +3023,6 @@ body.light-theme .validator-dashboard p {
   color: #4a5568;
 }
 
-/* Light theme dropdown styles */
 body.light-theme .dropdown-menu {
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -3046,4 +3045,44 @@ body.light-theme .dropdown-section ul li a {
 
 body.light-theme .dropdown-section ul li a:hover {
   color: #2d3748;
+}
+
+@media (max-width: 768px) {
+  body.light-theme .nav-links {
+    background: #ffffff;
+    backdrop-filter: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  body.light-theme .nav-links a {
+    color: #1f2937;
+    opacity: 0.95;
+  }
+
+  body.light-theme .nav-links a:hover {
+    color: #111827;
+    opacity: 1;
+  }
+
+  body.light-theme .dropdown-menu {
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 8px 20px rgba(16, 24, 40, 0.06);
+    backdrop-filter: none;
+  }
+
+  body.light-theme .dropdown-menu::before {
+    background: rgba(255, 255, 255, 0.98);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    border-left: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  body.light-theme .dropdown-section ul li a {
+    color: #1f2937;
+  }
+
+  body.light-theme .mobile-menu-btn.active .fa-times {
+    color: #1f2937;
+  }
 }
