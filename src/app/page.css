@@ -52,7 +52,7 @@
     width: 100%;
     padding: 120px 0 40px; 
   }
-  
+
   .validator-header {
     display: flex;
     justify-content: space-between;
@@ -92,6 +92,13 @@
     font-size: 0.9rem;
     opacity: 0.7;
     margin-bottom: 5px;
+  }
+
+  .score-info {
+    gap: .7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .score-value {
@@ -770,6 +777,10 @@
     margin: 0;
     opacity: 0.9;
   }
+
+  .stat-header > * > i {
+    cursor: pointer;
+  }
   
   .stat-value-container {
     margin-bottom: 20px;
@@ -1037,6 +1048,14 @@
     font-size: 0.85rem;
     margin-bottom: 8px;
     font-weight: 500;
+  }
+
+  .cr-count {
+    flex-basis: 100%;
+    margin-top: 8px;
+    text-align: right;
+    font-size: 0.85rem;
+    opacity: 0.85;
   }
   
   .stake-item .stake-note {

@@ -1,0 +1,58 @@
+.info-tooltip-portal {
+  background: rgba(22, 22, 26, 0.92);
+  color: #fff;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  max-width: 420px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.45);
+  font-size: 0.95rem;
+  line-height: 1.45;
+  display: none;
+  z-index: 9999;
+}
+
+.info-tooltip-portal.visible {
+  display: block;
+}
+
+.info-tooltip-portal .info-tooltip-content p {
+  margin: 0 0 0.6rem 0;
+}
+
+.info-tooltip-portal .info-tooltip-content ul {
+  margin: 0 0 0.6rem 1rem;
+}
+
+.info-tooltip-portal .info-tooltip-content .tooltip-title {
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+/* arrow */
+.info-tooltip-arrow {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(22, 22, 26, 0.92);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -7px; /* will flip when placement is top */
+}
+
+.info-tooltip-portal.top .info-tooltip-arrow {
+  border-top: none;
+  border-bottom: 8px solid rgba(22,22,26,0.92);
+  top: auto;
+  bottom: -7px;
+}
+
+.info-tooltip-trigger {
+  display: inline-flex;
+  align-items: center;
+}
+
+.info-tooltip-portal .tooltip-title {
+  color: #fff;
+}

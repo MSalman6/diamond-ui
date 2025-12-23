@@ -1,16 +1,18 @@
- 'use client'
+'use client'
 
 import '../page.css';
-import './scrollbars.css';
+import './Profile.css';
 import Link from 'next/link';
+import BigNumber from 'bignumber.js';
+import copy from 'copy-to-clipboard';
+import { toast } from 'react-toastify';
 import { useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import BigNumber from 'bignumber.js';
 import { truncateAddress } from '@/utils/common';
 import { useWeb3Context } from '@/contexts/Web3';
+import InfoTooltip from '@/components/InfoTooltip';
 import { useStakingContext } from '@/contexts/Staking';
 import { useWalletConnect } from '@/contexts/WalletConnect';
-import { toast } from 'react-toastify';
 import StakeModal from '@/components/Modals/Stake/StakeModal';
 import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
 
@@ -69,7 +71,13 @@ export default function ProfilePage() {
     return dmdAmount.toFormat(0, BigNumber.ROUND_DOWN) + ' DMD';
   };
 
-  const hasValidator = Boolean(myPool);
+  // const hasValidator = Boolean(myPool);
+  const hasValidator = true;
+
+  const copyData = (data: string) => {
+    copy(data);
+    toast.success("Copied to clipboard");
+  };
 
   return (
     <div>
@@ -100,11 +108,11 @@ export default function ProfilePage() {
                   <div className="user-stats-grid">
                     <div className="stat-section">
                       <div className="stat-header">
-                        <h3>My delegated stake <i className="fas fa-info-circle info-icon" title=""></i></h3>
+                        <h3>My delegated stake <InfoTooltip content={<div><p>The total amount of DMD you've staked to validators. This amount remains under your control and can be unstaked at any time unless locked in an active Epoch.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
                       </div>
                       <div className="stat-value-container">
                         <div className="stat-value highlight">100.6267 DMD</div>
-                        <div className="stat-change positive">+5 DMD since 01.01.24</div>
+                        <div className="stat-change positive">+5 DMD since epoch 22</div>
                       </div>
                       <div className="stat-actions">
                         <div>
@@ -120,11 +128,11 @@ export default function ProfilePage() {
                     
                     <div className="stat-section">
                       <div className="stat-header">
-                        <h3>Monthly rewards <i className="fas fa-info-circle info-icon" title=""></i></h3>
+                        <h3>Estimated monthly rewards <InfoTooltip content={<div><p>Estimated rewards earned from your active staked over the last 30 days. This value depends on performance and uptime of the validators you've staked with.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
                       </div>
                       <div className="stat-value-container">
                         <div className="stat-value highlight">100 DMD</div>
-                        <div className="stat-change positive">+5 DMD since 01.01.24</div>
+                        <div className="stat-change positive">+5 DMD since epoch 22</div>
                         <div className="stat-note">from staking on 1 validator</div>
                       </div>
                       <div className="stat-actions">
@@ -134,7 +142,7 @@ export default function ProfilePage() {
                     
                     <div className="stat-section">
                       <div className="stat-header">
-                        <h3>DAO participation <i className="fas fa-info-circle info-icon" title=""></i></h3>
+                        <h3>DAO participation <InfoTooltip content={<div><p>Displays the number of governance proposals you have created. As a delegator, your stake indirectly contributes to DAO voting power - but only the validator decides how to vote.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
                       </div>
                       <div className="stat-value-container">
                         <div className="stat-value highlight">2 proposals created</div>
@@ -283,25 +291,43 @@ export default function ProfilePage() {
                   </div>
                   <div className="validator-score">
                     <div className="score-label">Score</div>
-                    <div className="score-value">97.5</div>
+                    <div className="score-info">
+                      <div className="score-value">97.5</div>
+                      <InfoTooltip
+                        placement="bottom"
+                        content={
+                          <div>
+                            <p>The Bonus Score measures your validator's performance and uptime.</p>
+                            <ul>
+                              <li>Staying online and ready increases your score.</li>
+                              <li>Downtime, missed key operations, or unavailability decrease it.</li>
+                            </ul>
+                            <p>Your selection chance for the next epoch is based on <strong>Stake × Bonus Score</strong>.</p>
+                            <p>Scores range from <strong>1 to 1000</strong>.</p>
+                          </div>
+                        }
+                      >
+                        <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                      </InfoTooltip>
+                    </div>
                     <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
                   </div>
                 </div>
                 
                 <div className="combined-stake-card">
         <div className="stake-card-header">
-          <h3>My Stake Overview <i className="fas fa-info-circle info-icon" title=""></i></h3>
+          <h3>Validator Pool Overview <InfoTooltip content={<div><p>Summary of your total stake, combining your own validator stake and all delegations received.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
           <div className="total-stake-value highlight">17,000 DMD</div>
+          <div className="cr-count">Connectivity reports: 0</div>
         </div>
         
         <div className="stake-breakdown">
           <div className="stake-item">
             <div className="stake-item-header">
-              <span className="stake-label">My pool stake <i className="fas fa-info-circle info-icon" title=""></i></span>
+              <span className="stake-label">My validator stake <InfoTooltip content={<div><p>The amount of DMD you've personally staked as a validator in your own pool.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
               <span className="stake-value highlight">10,100 DMD</span>
             </div>
-            <div className="stake-change positive">+5 DMD since 01.01.24</div>
-            <div className="stake-note">Connectivity reports: 0</div>
+            <div className="stake-change positive">+5 DMD since epoch 22</div>
             <div className="stake-actions">
               {
                 myPool && (
@@ -318,22 +344,26 @@ export default function ProfilePage() {
           
           <div className="stake-item">
             <div className="stake-item-header">
-              <span className="stake-label">My delegated stake <i className="fas fa-info-circle info-icon" title=""></i></span>
+              <span className="stake-label">Delegated stake to my pool <InfoTooltip content={<div><p>The amount of DMD delegated to your pool by other users (excluding your own stake).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
               <span className="stake-value highlight">7,000 DMD</span>
             </div>
-            <div className="stake-change positive">+5 DMD since 01.01.24</div>
+            <div className="stake-change positive">+5 DMD since epoch 22</div>
             <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
           </div>
         </div>
         
         <div className="stake-distribution-section">
           <div className="distribution-header">
-            <span className="distribution-label">Stake Distribution <i className="fas fa-info-circle info-icon" title=""></i></span>
+            <span className="distribution-label">Stake Distribution <InfoTooltip content={<div><p>Visual breakdown showing the ratio between your own stake and delegated stake in your validator pool.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
           </div>
           <div className="stake-distribution">
             <div className="stake-bar">
-              <div className="own-stake" style={{width: "59%"}} data-tooltip="59% own stake"></div>
-              <div className="delegated-stake" style={{width: "41%"}} data-tooltip="41% delegated"></div>
+              <InfoTooltip placement="top" content={<div><p>59% own stake</p></div>}>
+                <div className="own-stake" style={{width: "59%"}} />
+              </InfoTooltip>
+              <InfoTooltip placement="top" content={<div><p>41% delegated</p></div>}>
+                <div className="delegated-stake" style={{width: "41%"}} />
+              </InfoTooltip>
             </div>
             <div className="stake-labels">
               <span className="own-stake-label">59% own stake</span>
@@ -345,29 +375,39 @@ export default function ProfilePage() {
 
                 <div className="validator-stats-row">
         <div className="stat-card">
-          <div className="stat-label">Monthly rewards <i className="fas fa-info-circle info-icon" title=""></i></div>
+          <div className="stat-label">Estimated monthly rewards <InfoTooltip content={<div><p>Estimated DMD rewards earned this month based on your validator pool total stake.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
           <div className="stat-value highlight">100 DMD</div>
-          <div className="stat-note">Earned per 1000DMD = 5,88DMD</div>
-          <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
+          <div className="stat-note">Earned per 1000DMD = 5,88DMD <InfoTooltip content={<div><p>Rewards earned per 1000 DMD staked in the last 30 days.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+          <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">Rewards history</button>
         </div>
 
         <div className="stat-card">
-          <div className="stat-label">Delegated stake to my pool <i className="fas fa-info-circle info-icon" title=""></i></div>
+          <div className="stat-label">My outgoing delegations <InfoTooltip content={<div><p>Amount of DMD you've delegated to other validators from your account (if any).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
           <div className="stat-value highlight">100 DMD</div>
-          <div className="stat-change positive">+5 DMD since 01.01.24</div>
+          <div className="stat-change positive">+5 DMD since epoch 22</div>
         </div>
 
         <div className="stat-card">
-          <div className="stat-label">Node operator shared reward <i className="fas fa-info-circle info-icon" title=""></i></div>
+          <div className="stat-label">Node operator shared reward <InfoTooltip content={<div><strong>The portion of the validator's 20% reward that is shared with a separate node operator.</strong> <p>Useful when a node owner delegates technical operation to someone else but keeps ownership and voting rights. Configurable per pool (from 0.01% to 20%).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
           <div className="stat-value highlight">9%</div>
-          <div className="stat-note">0x9f515...62F94</div>
+          <div className="stat-note copy-address-container">
+            0x9f515...62F94{" "}
+            <button
+              className="btnIcon"
+              id="copy-address"
+              title="Copy Address"
+              onClick={() => copyData("0x9f515...62F94")}
+            >
+              <i className="fas fa-copy"></i>
+            </button>
+          </div>
           <button className="btn-primary btn-sm" id="edit-reward-btn">Edit</button>
         </div>
       </div>
                 
                 <div className="node-stake-panel">
         <div className="node-stake-header">
-          <h3>Voting power <i className="fas fa-info-circle info-icon" title=""></i></h3>
+          <h3>Voting power <InfoTooltip content={<div><p>Voting power is the share of total DAO stake that your validator pool represents (your own stake + delegated stake).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
           <div className="node-stake-value highlight">12%</div>
         </div>
         
@@ -376,7 +416,7 @@ export default function ProfilePage() {
             <div className="voting-power">
               <div>
                 <span className="info-value negative">-0.01%</span>
-                <span className="info-label">since 01.01.24</span>
+                <span className="info-label">since epoch 22</span>
               </div>
               <span className="proposals-info">Proposals created: 10</span>
             </div>
