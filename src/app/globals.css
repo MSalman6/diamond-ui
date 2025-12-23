@@ -2818,7 +2818,7 @@ body.light-theme .btn-secondary.btn-sm:hover {
 body.light-theme .table-container {
   border: 2px solid #e2e8f0;
   border-radius: 12px;
-  overflow: hidden;
+  overflow: auto;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 

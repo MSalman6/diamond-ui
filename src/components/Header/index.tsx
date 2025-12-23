@@ -259,7 +259,7 @@ export default function Header() {
 
             <li>
               <Link href="/dao" onClick={handleRegularLinkClick}>
-                Dao
+                DAO
               </Link>
             </li>
           </ul>

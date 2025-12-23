@@ -1,6 +1,7 @@
-'use client'
+ 'use client'
 
 import '../page.css';
+import './scrollbars.css';
 import Link from 'next/link';
 import { useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
