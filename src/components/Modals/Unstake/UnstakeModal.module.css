@@ -130,6 +130,43 @@
   opacity: 0.8;
 }
 
+.inputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.inputWrapper input[type=number]::-webkit-outer-spin-button,
+.inputWrapper input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.inputWrapper input[type=number] {
+  appearance: textfield;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.maxButton {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 700;
+  padding: 6px 8px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.maxButton:hover {
+  background: var(--card-hover);
+  color: var(--text);
+}
+
 .formSubmit {
   color: black;
   font-weight: bold;
@@ -222,6 +259,15 @@
 
 :global(body.light-theme) .formInput::placeholder {
   color: #718096;
+}
+
+:global(body.light-theme) .maxButton {
+  color: #e53e3e;
+}
+
+:global(body.light-theme) .maxButton:hover {
+  background: rgba(226, 232, 240, 0.6);
+  color: #2d3748;
 }
 
 :global(body.light-theme) .formSubmit {

@@ -16,7 +16,7 @@ interface ModalProps {
 const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [unstakeAmount, setUnstakeAmount] = useState(0);
+  const [unstakeAmount, setUnstakeAmount] = useState<string>('');
   const [ownPool, setOwnPool] = useState<boolean>(false);
   const { userWallet, web3, contractsManager, ensureWalletConnection } = useWeb3Context();
   const [canBeOrderedAmount, setCanBeOrderedAmount] = useState<BigNumber>(new BigNumber(0));
@@ -178,24 +178,55 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                 </span>
               )}
 
-              <input
-                min={
-                  canBeUnstakedAmount.isZero()
-                    ? BigNumber.maximum(0, BigNumber.minimum(1, canBeOrderedAmount.dividedBy(10 ** 18))).toString()
-                    : BigNumber.maximum(0, BigNumber.minimum(1, canBeUnstakedAmount.dividedBy(10 ** 18))).toString()
-                }
-                max={
-                  ownPool ? 
-                  canBeUnstakedAmount.isGreaterThan(0) ? BigNumber.maximum(0, Number(canBeUnstakedAmount.minus(candidateMinStake).dividedBy(10**18))).toString() : BigNumber.maximum(0, Number(canBeOrderedAmount.minus(candidateMinStake).dividedBy(10**18))).toString()
-                  : canBeUnstakedAmount.isGreaterThan(0) ? canBeUnstakedAmount.dividedBy(10**18).toString() : canBeOrderedAmount.dividedBy(10**18).toString()
-                }
-                type="number"
-                step="any"
-                value={unstakeAmount || ''}
-                className={styles.formInput}
-                placeholder="Enter the amount to unstake"
-                onChange={(e) => setUnstakeAmount(e.target.value === '' ? 0 : Number(e.target.value))}
-              />
+              <div className={styles.inputWrapper}>
+                <input
+                  min={
+                    canBeUnstakedAmount.isZero()
+                      ? BigNumber.maximum(0, BigNumber.minimum(1, canBeOrderedAmount.dividedBy(10 ** 18))).toString()
+                      : BigNumber.maximum(0, BigNumber.minimum(1, canBeUnstakedAmount.dividedBy(10 ** 18))).toString()
+                  }
+                  max={
+                    ownPool ? 
+                    canBeUnstakedAmount.isGreaterThan(0) ? BigNumber.maximum(0, Number(canBeUnstakedAmount.minus(candidateMinStake).dividedBy(10**18))).toString() : BigNumber.maximum(0, Number(canBeOrderedAmount.minus(candidateMinStake).dividedBy(10**18))).toString()
+                    : canBeUnstakedAmount.isGreaterThan(0) ? canBeUnstakedAmount.dividedBy(10**18).toString() : canBeOrderedAmount.dividedBy(10**18).toString()
+                  }
+                  type="number"
+                  step="any"
+                  value={unstakeAmount || ''}
+                  className={styles.formInput}
+                  placeholder="Enter the amount to unstake"
+                  onChange={(e) => setUnstakeAmount(e.target.value)}
+                />
+
+                <button
+                  type="button"
+                  className={styles.maxButton}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    let amountWei: BigNumber;
+
+                    if (canBeUnstakedAmount.isZero()) {
+                      // When nothing can be unstaked immediately (order)
+                      amountWei = ownPool
+                        ? BigNumber.maximum(0, canBeOrderedAmount.minus(candidateMinStake))
+                        : canBeOrderedAmount;
+                    } else {
+                      // When some can be unstaked immediately
+                      amountWei = ownPool
+                        ? BigNumber.maximum(0, canBeUnstakedAmount.minus(candidateMinStake))
+                        : canBeUnstakedAmount;
+                    }
+
+                    const amountDmdBn = amountWei.dividedBy(10 ** 18).decimalPlaces(18, BigNumber.ROUND_DOWN);
+                    setUnstakeAmount(amountDmdBn.toString(10));
+                  }}
+                  aria-label="Fill max amount"
+                >
+                  max
+                </button>
+              </div>
 
               {pool.isActive && canBeUnstakedAmount.isGreaterThan(0) &&
                 canBeOrderedAmount.isGreaterThan(0) ? (
@@ -225,28 +256,6 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
               }>
                 {canBeUnstakedAmount.isGreaterThan(0) && canBeOrderedAmount.isGreaterThan(0) ? "Unstake" : canBeOrderedAmount.isGreaterThan(0) ? "Order" : "Unstake"}
               </button>
-              
-              {!pool.isActive && (
-                <button
-                  type="button"
-                  className={"btn-secondary " + styles.allButton}
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const confirmed = confirm("Are you sure you want to unstake ALL available DMD?");
-                    if (!confirmed) return;
-
-                    // Determine available amount (in wei) and convert to DMD for performUnstake
-                    const amountDmd = canBeUnstakedAmount.isGreaterThan(0)
-                      ? canBeUnstakedAmount.dividedBy(10 ** 18).toNumber()
-                      : canBeOrderedAmount.dividedBy(10 ** 18).toNumber();
-
-                    await performUnstake(amountDmd);
-                  }}
-                >
-                  Unstake All
-                </button>
-              )}
             </form>
           </div>
         </div>,
