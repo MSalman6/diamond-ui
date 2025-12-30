@@ -2,6 +2,7 @@
 
 import "./dao.css";
 import React, { useEffect, useMemo, useState, startTransition } from "react";
+import Link from 'next/link';
 import BigNumber from 'bignumber.js';
 import { useFadeInAnimation } from "@/hooks/useFadeInAnimation";
 import { useRouter } from 'next/navigation';
@@ -266,9 +267,9 @@ export default function DaoPage() {
                     <span className="countdown-label">Seconds</span>
                   </div>
                 </div>
-                <button className="btn-primary create-proposal-btn">
+                <Link href="/dao/create" className="btn-primary create-proposal-btn">
                   <i className="fas fa-plus-circle" /> Create Proposal
-                </button>
+                </Link>
               </div>
             </div>
 

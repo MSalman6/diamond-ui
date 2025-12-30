@@ -1,0 +1,312 @@
+.sectionContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.proposalTypeContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.createDaoHeading {
+  font-size: 38px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.proposalType {
+  height: 40px;
+  padding: 5px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--card-bg);
+  font-size: 16px;
+  color: var(--text);
+  padding-right: 36px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.proposalType:focus,
+.proposalType:active {
+  border-color: #007bff;
+  outline: none;
+}
+
+.proposalTypeContainer > label {
+  font-size: 16px;
+}
+
+.propsalForm {
+  gap: 0.5rem;
+  display: flex;
+  max-width: 600px;
+  width: 100%;
+  margin-top: 24px;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.formInput {
+  width: 100%;
+  height: 42px;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+.propsalForm > div {
+  gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.addRemoveTransaction {
+  gap: 0.5rem;
+  display: flex;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.epcSelect {
+  width: 100%;
+  height: 42px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--card-bg);
+  font-size: 16px;
+  color: var(--text);
+  padding-right: 36px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.epcSelect:focus,
+.epcSelect:active {
+  border-color: #007bff;
+  outline: none;
+}
+
+:global(#proposalType), :global(#epcContractName) {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+:global(#proposalType option), :global(#epcContractName option) {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+:global(#proposalType option:hover), :global(#epcContractName option:hover) {
+  background: var(--card-hover);
+  color: var(--text);
+}
+
+:global(body.light-theme #proposalType), :global(body.light-theme #epcContractName) {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+:global(body.light-theme #proposalType option), :global(body.light-theme #epcContractName option) {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+:global(body.dark-theme #proposalType), :global(body.dark-theme #epcContractName) {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+}
+
+:global(body.dark-theme #proposalType option), :global(body.dark-theme #epcContractName option) {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+}
+
+:global(body.dark-theme #proposalType option:hover), :global(body.dark-theme #epcContractName option:hover) {
+  background: var(--card-hover) !important;
+  color: var(--text) !important;
+}
+
+:global(input[type="range"]) {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+}
+
+:global(input[type="range"]::-webkit-slider-thumb) {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f24726;
+  cursor: pointer;
+  margin-top: -3.5px;
+}
+
+:global(input[type="range"]::-webkit-slider-runnable-track) {
+  width: 100%;
+  height: 3px;
+  cursor: pointer;
+  background: var(--border-color);
+}
+
+:global(form button) {
+  cursor: pointer;
+  align-self: center;
+  padding: 8px 14px;
+  border: 1px solid var(--diamond-1-color);
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 6px;
+  background-color: transparent;
+  margin-top: 20px;
+  display: inline-block;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+}
+
+:global(form button:hover) {
+  background: var(--card-hover);
+  color: var(--text);
+}
+
+:global(form button .active) {
+  background-color: #0145b2;
+  color: white;
+  border: none;
+}
+
+:global(form button .disabled) {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.epcSelectContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.warningText {
+  color: var(--text);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.warningBox {
+  background-color: rgba(255,107,107,0.06);
+  border: 1px solid #ff6b6b;
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+.warningBox p {
+  margin: 8px 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #d63031;
+  font-weight: 500;
+}
+
+.exceedsBalanceContainer {
+  background-color: rgba(255,107,107,0.04) !important;
+}
+
+.exceedsBalanceContainer .balanceInfo h4 {
+  color: #d63031;
+}
+
+.fillContractButton {
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s;
+}
+
+.fillContractButton:hover {
+  background-color: #e74c3c;
+}
+
+.balanceInfoContainer {
+  gap: 0rem !important;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  background-color: var(--card-bg);
+  margin-bottom: 16px;
+}
+
+.balanceInfo h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.balanceInfo p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.infoBox {
+  background-color: rgba(0,210,255,0.06);
+  border: 1px solid rgba(0,210,255,0.14);
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.infoBox p {
+  margin: 8px 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.switchButton {
+  background-color: var(--diamond-1-color);
+  color: var(--text);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s;
+}
+
+.switchButton:hover {
+  filter: brightness(0.95);
+}
+
+.switchButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(1,69,178,0.12);
+}

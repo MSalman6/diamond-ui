@@ -149,7 +149,7 @@ export default function ProfilePage() {
                         <div className="stat-note">Total voting power of the Staked With: 1.33%</div>
                       </div>
                       <div className="stat-actions">
-                        <a href="dao.html" className="btn-primary btn-sm">Go to DAO</a>
+                        <Link href="/dao" className="btn-primary btn-sm">Go to DAO</Link>
                       </div>
                     </div>
                   </div>
