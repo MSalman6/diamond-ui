@@ -8,6 +8,7 @@ import { useFadeInAnimation } from "@/hooks/useFadeInAnimation";
 import { useRouter } from 'next/navigation';
 import { useDaoContext } from '@/contexts/DAO';
 import { useWeb3Context } from '@/contexts/Web3';
+import { useStakingContext } from '@/contexts/Staking';
 import { timestampToDate, truncateAddress } from '@/utils/common';
 
 type ProposalType = "protocol" | "treasury" | "parameter" | "community" | "open";
@@ -64,6 +65,7 @@ export default function DaoPage() {
   const router = useRouter();
   const daoContext = useDaoContext();
   const web3Context = useWeb3Context();
+  const stakingContext = useStakingContext();
 
   // When web3 is ready, fetch DAO proposals
   useEffect(() => {
@@ -82,7 +84,7 @@ export default function DaoPage() {
           proposal.state === "3" || (proposal.state === "4" && daoContext.daoPhase.daoEpoch == Number(proposal.daoPhaseCount) + 1)
         ));
 
-    if (!src || !src.length) return null;
+    if (!src || !src.length) return [];
 
     return src.map((p: any) => {
       const mapped: Proposal = {
@@ -105,7 +107,16 @@ export default function DaoPage() {
 
   // Filter/sort/search derived list (prefer DAO data when present, otherwise fallback to local)
   const displayedProposals = useMemo(() => {
-    let list: Proposal[] = daoMappedProposals && daoMappedProposals.length ? daoMappedProposals : localProposals;
+    let list: Proposal[];
+    const daoHasAny = (daoContext.activeProposals && daoContext.activeProposals.length > 0) || (daoContext.allDaoProposals && daoContext.allDaoProposals.length > 0);
+
+    if (daoMappedProposals && daoMappedProposals.length) {
+      list = daoMappedProposals;
+    } else if (daoContext.daoInitialized || daoHasAny) {
+      list = [];
+    } else {
+      list = localProposals;
+    }
 
     if (filterQuery) {
       if (filterQuery === 'unfinalized') {
@@ -152,24 +163,25 @@ export default function DaoPage() {
 
   useEffect(() => {
     function update() {
-      const now = new Date();
-      const end = new Date(now);
-      end.setDate(end.getDate() + 2);
-      end.setHours(end.getHours() + 18);
-      end.setMinutes(end.getMinutes() + 45);
-      end.setSeconds(end.getSeconds() + 32);
-      const diff = Math.max(0, end.getTime() - now.getTime());
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      setCountdown({ days: String(days).padStart(2, "0"), hours: String(hours).padStart(2, "0"), minutes: String(minutes).padStart(2, "0"), seconds: String(seconds).padStart(2, "0") });
+      try {
+        const endSeconds = daoContext?.daoPhase?.end ? Number(daoContext.daoPhase.end) : 0;
+        const endMs = endSeconds ? endSeconds * 1000 : 0;
+        const nowMs = Date.now();
+        const diff = endMs ? Math.max(0, endMs - nowMs) : 0;
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        setCountdown({ days: String(days).padStart(2, "0"), hours: String(hours).padStart(2, "0"), minutes: String(minutes).padStart(2, "0"), seconds: String(seconds).padStart(2, "0") });
+      } catch (e) {}
     }
 
     update();
     const id = window.setInterval(update, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [daoContext?.daoPhase?.end]);
 
   // Sorting toggle handler
   function onSort(field: string) {
@@ -248,7 +260,7 @@ export default function DaoPage() {
                 </div>
               </div>
               <div className="stat-content">
-                <p className="stat-value">Proposal Phase 61</p>
+                <p className="stat-value">{(daoContext?.daoPhase && daoContext.daoPhase.daoEpoch) ? `Proposal Phase ${daoContext.daoPhase.daoEpoch}` : 'Proposal Phase 61'}</p>
                 <div className="countdown-timer">
                   <div className="countdown-item">
                     <span className="countdown-value">{countdown.days}</span>
@@ -273,30 +285,32 @@ export default function DaoPage() {
               </div>
             </div>
 
-            <div className="stat-card voting-power-card">
-              <div className="stat-header">
-                <h3>Voting Power</h3>
-                <div className="stat-icon">
-                  <i className="fas fa-vote-yea" />
-                </div>
-              </div>
-              <div className="stat-content">
-                <p className="stat-value">4.2%</p>
-                <div className="stat-details">
-                  <div className="detail-item">
-                    <span className="detail-label">Pool Stake:</span>
-                    <span className="detail-value">1,250,000 DMD</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Total Stake:</span>
-                    <span className="detail-value">29,750,000 DMD</span>
+            {stakingContext?.myPool ? (
+              <div className="stat-card voting-power-card">
+                <div className="stat-header">
+                  <h3>Voting Power</h3>
+                  <div className="stat-icon">
+                    <i className="fas fa-vote-yea" />
                   </div>
                 </div>
-                <div className="voting-power-bar">
-                  <div className="power-progress" style={{ width: `4.2%` }} />
+                <div className="stat-content">
+                  <p className="stat-value">{stakingContext.myPool.votingPower ? `${stakingContext.myPool.votingPower.toFixed(2)}%` : '0%'}</p>
+                  <div className="stat-details">
+                    <div className="detail-item">
+                      <span className="detail-label">Pool Stake:</span>
+                      <span className="detail-value">{stakingContext.myPool.ownStake ? stakingContext.myPool.ownStake.dividedBy(1e18).toFixed(2) + ' DMD' : '0 DMD'}</span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">Total Stake:</span>
+                      <span className="detail-value">{stakingContext.totalDaoStake ? stakingContext.totalDaoStake.dividedBy(1e18).toFixed(2) + ' DMD' : '0 DMD'}</span>
+                    </div>
+                  </div>
+                  <div className="voting-power-bar">
+                    <div className="power-progress" style={{ width: `${stakingContext.myPool.votingPower ? stakingContext.myPool.votingPower.toFixed(2) : 0}%` }} />
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : null}
 
             <div className="stat-card governance-pot-card">
               <div className="stat-header">
@@ -306,14 +320,14 @@ export default function DaoPage() {
                 </div>
               </div>
               <div className="stat-content">
-                <p className="stat-value">750,000 DMD</p>
+                <p className="stat-value">{daoContext.governancePotBalance ? `${daoContext.governancePotBalance.toFixed(2)} DMD` : '0 DMD'}</p>
                 <div className="stat-trend positive">
                   <i className="fas fa-arrow-up" /> 3.5% this month
                 </div>
                 <div className="pot-distribution">
                   <div className="distribution-item">
                     <span className="distribution-label">Low majority pot</span>
-                    <span className="distribution-value">{daoContext.lowMajorityContractBalance.toFixed(2)} DMD</span>
+                    <span className="distribution-value">{daoContext.lowMajorityContractBalance ? `${daoContext.lowMajorityContractBalance.toFixed(2)} DMD` : '0 DMD'}</span>
                     {/* <div className="distribution-bar">
                       <div className="distribution-progress community" style={{ width: `40%` }} />
                     </div> */}
@@ -330,20 +344,20 @@ export default function DaoPage() {
                 </div>
               </div>
               <div className="stat-content">
-                <p className="stat-value">248</p>
+                <p className="stat-value">{daoContext.allDaoProposals ? daoContext.allDaoProposals.length : 0}</p>
                 <div className="proposals-breakdown">
                   <div className="breakdown-item">
                     <span className="breakdown-dot passed" />
                     <span className="breakdown-label">Passed:</span>
-                    <span className="breakdown-value">186</span>
+                    <span className="breakdown-value">{daoContext.allDaoProposals ? daoContext.allDaoProposals.filter(p => p.state === '4' || p.state === '6').length : 0}</span>
                   </div>
                   <div className="breakdown-item">
                     <span className="breakdown-dot rejected" />
                     <span className="breakdown-label">Rejected:</span>
-                    <span className="breakdown-value">62</span>
+                    <span className="breakdown-value">{daoContext.allDaoProposals ? daoContext.allDaoProposals.filter(p => p.state === '5').length : 0}</span>
                   </div>
                 </div>
-                <button className="btn-outline view-history-btn">
+                <button className="btn-outline view-history-btn" onClick={() => router.push('/dao/historic')}>
                   <i className="fas fa-external-link-alt" /> View History
                 </button>
               </div>
