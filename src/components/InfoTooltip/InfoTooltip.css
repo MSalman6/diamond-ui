@@ -1,14 +1,14 @@
 .info-tooltip-portal {
-  background: rgba(22, 22, 26, 0.92);
-  color: #fff;
+  background: var(--tooltip-bg, rgba(22, 22, 26, 0.95));
+  color: var(--tooltip-color, #ffffff);
   border-radius: 10px;
   padding: 1rem 1.1rem;
   max-width: 420px;
   box-shadow: 0 12px 36px rgba(0,0,0,0.45);
+  z-index: 10050;
   font-size: 0.95rem;
   line-height: 1.45;
   display: none;
-  z-index: 9999;
 }
 
 .info-tooltip-portal.visible {
@@ -34,7 +34,7 @@
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 8px solid rgba(22, 22, 26, 0.92);
+  border-top: 8px solid var(--tooltip-bg, rgba(22, 22, 26, 0.95));
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -43,7 +43,7 @@
 
 .info-tooltip-portal.top .info-tooltip-arrow {
   border-top: none;
-  border-bottom: 8px solid rgba(22,22,26,0.92);
+  border-bottom: 8px solid var(--tooltip-bg, rgba(22,22,26,0.95));
   top: auto;
   bottom: -7px;
 }
@@ -54,5 +54,10 @@
 }
 
 .info-tooltip-portal .tooltip-title {
-  color: #fff;
+  color: var(--tooltip-color);
+}
+
+body.light-theme .info-tooltip-portal {
+  box-shadow: 0 8px 24px rgba(18,24,38,0.06);
+  border: 1px solid rgba(18,24,38,0.04);
 }
