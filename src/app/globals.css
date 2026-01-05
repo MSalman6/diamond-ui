@@ -333,6 +333,109 @@ section h2 {
   transition: var(--transition-speed);
   border: none;
   cursor: pointer;
+
+/* Moved from src/app/dao/create/Create.module.css to satisfy CSS module purity rules */
+#proposalType,
+#epcContractName {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+#proposalType option,
+#epcContractName option {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+#proposalType option:hover,
+#epcContractName option:hover {
+  background: var(--card-hover);
+  color: var(--text);
+}
+
+body.light-theme #proposalType,
+body.light-theme #epcContractName {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+body.light-theme #proposalType option,
+body.light-theme #epcContractName option {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+body.dark-theme #proposalType,
+body.dark-theme #epcContractName {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+}
+
+body.dark-theme #proposalType option,
+body.dark-theme #epcContractName option {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+}
+
+body.dark-theme #proposalType option:hover,
+body.dark-theme #epcContractName option:hover {
+  background: var(--card-hover) !important;
+  color: var(--text) !important;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f24726;
+  cursor: pointer;
+  margin-top: -3.5px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 3px;
+  cursor: pointer;
+  background: var(--border-color);
+}
+
+form button {
+  cursor: pointer;
+  align-self: center;
+  padding: 8px 14px;
+  border: 1px solid var(--diamond-1-color);
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 6px;
+  background-color: transparent;
+  margin-top: 20px;
+  display: inline-block;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+}
+
+form button:hover {
+  background: var(--card-hover);
+  color: var(--text);
+}
+
+form button .active {
+  background-color: #0145b2;
+  color: white;
+  border: none;
+}
+
+form button .disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
   text-align: center;
 }
 
