@@ -224,7 +224,7 @@ export default function Header() {
               </div>
             </li>
             
-            <li className={`dropdown ${activeDropdown === 'thirdparty' ? 'active' : ''}`}>
+            {/* <li className={`dropdown ${activeDropdown === 'thirdparty' ? 'active' : ''}`}>
               <a 
                 href="#" 
                 className="dropdown-toggle"
@@ -255,7 +255,7 @@ export default function Header() {
                   </div>
                 </div>
               </div>
-            </li>
+            </li> */}
 
             <li>
               <Link href="/dao" onClick={handleRegularLinkClick}>
