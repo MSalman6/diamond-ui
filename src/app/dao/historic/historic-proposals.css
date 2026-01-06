@@ -275,6 +275,11 @@
 
 .proposal-title {
   font-weight: 500;
+  max-width: 200px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .proposal-type {
@@ -311,10 +316,9 @@
 }
 
 .participation-bar {
-  height: 8px;
+  height: 10px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
-  overflow: hidden;
   width: 100%;
   max-width: 120px;
   position: relative;
@@ -329,7 +333,7 @@
 
 .participation-value {
   position: absolute;
-  right: -30px;
+  right: -25px;
   top: -4px;
   font-size: 0.8rem;
   color: var(--text-secondary);
