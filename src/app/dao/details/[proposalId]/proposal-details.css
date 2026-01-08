@@ -1029,7 +1029,7 @@
   color: var(--text);
 }
 
-/* Type Selector (for demo purposes) */
+/* Type Selector */
 .proposal-type-selector {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
@@ -1310,8 +1310,6 @@
     grid-template-columns: 1fr;
   }
 }
-
-/* Add light theme styles at the end of the file */
 
 /* Light Theme Styles for Proposal Details */
 body.light-theme .proposal-hero {
