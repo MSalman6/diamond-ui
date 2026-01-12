@@ -155,7 +155,7 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                 </button>
               </div>
 
-              <span className={styles.spanLeft}>Available {userWallet.myBalance.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</span>
+              <span className={styles.spanLeft}>Your wallet balance: {userWallet.myBalance.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</span>
 
               {stakeAmount && stakeAmount !== '' && isAbovePoolMax ? (
                 <span className={styles.disabledNotice}>
