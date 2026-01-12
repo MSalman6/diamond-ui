@@ -157,11 +157,11 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
 
               <span className={styles.spanLeft}>Available {userWallet.myBalance.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</span>
 
-              {isAbovePoolMax ? (
+              {stakeAmount && stakeAmount !== '' && isAbovePoolMax ? (
                 <span className={styles.disabledNotice}>
                   The entered amount would make the validator exceed 50,000 DMD. You can stake up to {remainingToPoolMaxDmd} DMD.
                 </span>
-              ) : isBelowDelegatorMin ? (
+              ) : stakeAmount && stakeAmount !== '' && isBelowDelegatorMin ? (
                 <span className={styles.disabledNotice}>
                   The entered amount is below the minimum required to stake {minDelegatorStakeDmd} DMD.
                 </span>

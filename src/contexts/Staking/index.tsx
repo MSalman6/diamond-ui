@@ -123,7 +123,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
 
     // Check for user rejection
     if (err.code === 4001 || err.message?.includes('User denied') || err.message?.includes('User rejected')) {
-      toast.info('User denied transactionn signature.');
+      toast.info('User denied transaction signature.');
       return;
     }
 
