@@ -201,9 +201,6 @@ const ColumnsFilterModal: React.FC<ColumnsFilterModalProps> = ({
           <div className="modal-content" ref={modalRef}>
             <div className="modal-header">
               <h3>Customize your table view</h3>
-              <button className="close-modal" onClick={closeModal}>
-                ×
-              </button>
               <span>Select, reorder, and manage columns to fit your workflow</span>
             </div>
             <div className="modal-body">

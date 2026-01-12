@@ -409,6 +409,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
+  text-align: center;
 }
 
 .modal-header > span {
@@ -418,6 +419,7 @@
 }
 
 .modal-header h3 {
+  width: 100%;
   margin: 0;
   font-size: 1.3rem;
   color: #0070f3;
