@@ -67,10 +67,10 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
 
   const handleWithdrawStake = async (e: FormEvent) => {
     e.preventDefault();
-    await performUnstake(Number(unstakeAmount));
+    await performUnstake(unstakeAmount);
   }
 
-  const performUnstake = async (amountNumber: number) => {
+  const performUnstake = async (amountNumber: string) => {
     if (!ensureWalletConnection()) return;
 
     if (BigNumber(amountNumber).isLessThanOrEqualTo(0)) return toast.warn("Cannot unstake 0 DMD 💎");
@@ -158,7 +158,7 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
 
               {canBeUnstakedAmount.isZero() ? (
                 <span className={styles.zeroPadding} data-tooltip="This amount is currently locked in an active Epoch and cannot be unstaked right now. You can pre-order an unstake, and it will become claimable after the Epoch ends.">
-                  Locked (can be ordered after this Epoch):{" "}
+                  Locked :{" "}
                   {ownPool ? BigNumber.maximum(0, canBeOrderedAmount.minus(candidateMinStake).dividedBy(10 ** 18)).toString() : BigNumber.maximum(0, canBeOrderedAmount.dividedBy(10 ** 18)).toString()} DMD
                 </span>
               ) : (
@@ -194,7 +194,13 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                   step="any"
                   value={unstakeAmount || ''}
                   className={styles.formInput}
-                  placeholder="Enter the amount to unstake"
+                  placeholder={
+                    canBeUnstakedAmount.isGreaterThan(0)
+                      ? "Enter the amount to unstake"
+                      : canBeOrderedAmount.isGreaterThan(0)
+                      ? "Enter the amount to order unstake"
+                      : "Enter the amount to unstake"
+                  }
                   onChange={(e) => setUnstakeAmount(e.target.value)}
                 />
 
