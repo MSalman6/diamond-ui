@@ -171,7 +171,7 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                   </span>
                 )
               ) : (
-                <span className={styles.zeroPadding} data-tooltip="This is the amount of DMD that can be unstaked and claimed immediately because it is not currently active in an Epoch. “Locked (can be ordered after this Epoch)”">
+                <span className={styles.zeroPadding} data-tooltip="This is the amount of DMD that can be unstaked and claimed immediately because it is not currently active in an Epoch.">
                   Available for immediate unstaking: {availableUnstakableDmd.toString()} DMD
                 </span>
               )}
