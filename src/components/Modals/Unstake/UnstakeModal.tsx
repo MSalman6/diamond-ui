@@ -140,6 +140,14 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
     }
   };
 
+  const lockedAmountDmd = ownPool
+    ? BigNumber.maximum(0, canBeOrderedAmount.minus(candidateMinStake)).dividedBy(10 ** 18)
+    : BigNumber.maximum(0, canBeOrderedAmount.dividedBy(10 ** 18));
+
+  const availableUnstakableDmd = ownPool
+    ? BigNumber.maximum(0, canBeUnstakedAmount.minus(candidateMinStake)).dividedBy(10 ** 18)
+    : BigNumber.maximum(0, canBeUnstakedAmount.dividedBy(10 ** 18));
+
   return (
     <>
       <button className="btn-unstake" onClick={(e) => { e.stopPropagation(); openModal(); }}>
@@ -157,19 +165,21 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
             <form className={styles.form} onSubmit={handleWithdrawStake}>
 
               {canBeUnstakedAmount.isZero() ? (
-                <span className={styles.zeroPadding} data-tooltip="This amount is currently locked in an active Epoch and cannot be unstaked right now. You can pre-order an unstake, and it will become claimable after the Epoch ends.">
-                  Locked :{" "}
-                  {ownPool ? BigNumber.maximum(0, canBeOrderedAmount.minus(candidateMinStake).dividedBy(10 ** 18)).toString() : BigNumber.maximum(0, canBeOrderedAmount.dividedBy(10 ** 18)).toString()} DMD
-                </span>
+                lockedAmountDmd.isGreaterThan(0) && (
+                  <span className={styles.zeroPadding} data-tooltip="This amount is currently locked in an active Epoch and cannot be unstaked right now. You can pre-order an unstake, and it will become claimable after the Epoch ends.">
+                    Locked : {lockedAmountDmd.toString()} DMD
+                  </span>
+                )
               ) : (
                 <span className={styles.zeroPadding} data-tooltip="This is the amount of DMD that can be unstaked and claimed immediately because it is not currently active in an Epoch. “Locked (can be ordered after this Epoch)”">
-                  Available for immediate unstaking:{" "}
-                  {ownPool ? BigNumber.maximum(0, canBeUnstakedAmount.minus(candidateMinStake).dividedBy(10 ** 18)).toString() : BigNumber.maximum(0, canBeUnstakedAmount.dividedBy(10 ** 18)).toString()} DMD
+                  Available for immediate unstaking: {availableUnstakableDmd.toString()} DMD
                 </span>
               )}
 
               {
-                !canBeUnstakedAmount.isZero() && (<span className={styles.zeroPadding} data-tooltip="This amount is currently locked in an active Epoch and cannot be unstaked right now. You can pre-order an unstake, and it will become claimable after the Epoch ends.">Locked (can be ordered after this Epoch): {ownPool ? BigNumber.maximum(0, canBeOrderedAmount.minus(candidateMinStake).dividedBy(10 ** 18)).toString() : BigNumber.maximum(0, canBeOrderedAmount.dividedBy(10 ** 18)).toString()} DMD</span>)
+                !canBeUnstakedAmount.isZero() && lockedAmountDmd.isGreaterThan(0) && (
+                  <span className={styles.zeroPadding} data-tooltip="This amount is currently locked in an active Epoch and cannot be unstaked right now. You can pre-order an unstake, and it will become claimable after the Epoch ends.">Locked: {lockedAmountDmd.toString()} DMD</span>
+                )
               }
 
               {pool.orderedWithdrawAmount.isGreaterThan(0) && (
