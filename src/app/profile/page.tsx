@@ -117,7 +117,7 @@ export default function ProfilePage() {
                       </div>
                       <div className="stat-actions">
                         <div>
-                          <Link href="/validators" className="btn-primary btn-sm">Stake / Unstake</Link>
+                          <Link href="/validators?filter=stakedOn" className="btn-primary btn-sm">Stake / Unstake</Link>
                           <CreatePoolModal buttonText="Create pool" />
                         </div>
                         <div>

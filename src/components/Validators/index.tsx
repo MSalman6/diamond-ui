@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import BigNumber from 'bignumber.js';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import StakeModal from '../Modals/Stake/StakeModal';
@@ -65,6 +65,20 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
       localStorage.setItem('validatorFieldsData', JSON.stringify(tableFieldsDefault));
     }
   }, []);
+
+  // Apply filter from URL search params (e.g. ?filter=stakedOn)
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    try {
+      const param = searchParams?.get('filter');
+      if (param && ['default', 'valid', 'active', 'invalid', 'stakedOn'].includes(param)) {
+        setFilter(param as 'default' | 'valid' | 'active' | 'invalid' | 'stakedOn');
+        setCurrentPage(0);
+      }
+    } catch (e) {
+      // ignore malformed params
+    }
+  }, [searchParams]);
 
   // Update localStorage when table fields change
   useEffect(() => {
