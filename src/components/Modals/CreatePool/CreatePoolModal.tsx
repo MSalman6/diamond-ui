@@ -6,6 +6,7 @@ import { useStakingContext } from "@/contexts/Staking";
 import React, { useState, useEffect, useRef, FormEvent } from "react";
 import ReactDOM from "react-dom";
 import { isValidAddress } from "@/utils/common";
+import InfoTooltip from "@/components/InfoTooltip";
 
 interface ModalProps {
   buttonText: string;
@@ -95,31 +96,76 @@ const CreatePoolModal: React.FC<ModalProps> = ({ buttonText }) => {
             <h2>Create a pool</h2>
 
             <form className={styles.form} onSubmit={handleCreatePool}>
-              <span>Please stake at least 10,000 DMD coins (50,000 max) to become a validator candidate.</span>
+              <span>Stake between 10,000 and 50,000 DMD to register as a validator candidate. You can operate the node yourself or assign a separate node operator.</span>
 
-              <input
-                type="text"
-                minLength={130}
-                maxLength={130}
-                name="publicKey"
-                className={styles.formInput}
-                onChange={(e) => setPublicKey(e.currentTarget.value)}
-                placeholder="Public key"
-                required
-              />
+              <label className={styles.fieldLabel}>
+                <span>
+                  Validator Public Key
+                  <InfoTooltip
+                    id="validator-public-key-tooltip"
+                    placement="top"
+                    content={
+                      <>
+                        <p>Public key used to register your validator.</p>
+                        <p>Must match the key configured in your node setup.</p>
+                      </>
+                    }
+                  >
+                    <span className={styles.infoIcon}>i</span>
+                  </InfoTooltip>
+                </span>
+                <input
+                  type="text"
+                  minLength={130}
+                  maxLength={130}
+                  name="publicKey"
+                  className={styles.formInput}
+                  onChange={(e) => setPublicKey(e.currentTarget.value)}
+                  placeholder="Public key"
+                  required
+                />
+              </label>
 
-              <input
-                min={10000}
-                max={50000}
-                type="number"
-                value={stakeAmount}
-                className={styles.formInput}
-                placeholder="Enter the amount of DMD to stake"
-                onChange={(e) => setStakeAmount(Number(e.target.value))}
-              />
+              <label className={styles.fieldLabel}>
+                <span>
+                  Stake Amount (DMD)
+                  <InfoTooltip
+                    id="stake-amount-tooltip"
+                    placement="top"
+                    content={
+                      <>
+                        <p>Must be between 10,000 and 50,000 DMD.</p>
+                      </>
+                    }
+                  >
+                    <span className={styles.infoIcon}>i</span>
+                  </InfoTooltip>
+                </span>
+                <input
+                  min={10000}
+                  max={50000}
+                  type="number"
+                  value={stakeAmount}
+                  className={styles.formInput}
+                  placeholder="Enter the amount of DMD to stake"
+                  onChange={(e) => setStakeAmount(Number(e.target.value))}
+                />
+              </label>
 
               <div className={styles.checkboxWrapper}>
-                <span>Do you want to share the pool rewards with a node operator?</span>
+                <span>Assign a node operator to share your validator rewards?
+                  <InfoTooltip
+                    id="stake-amount-tooltip"
+                    placement="top"
+                    content={
+                      <>
+                        <p>Optionally assign a trusted node operator who runs the validator software. You can share a portion of your 20% validator reward with them.</p>
+                      </>
+                    }
+                  >
+                    <span className={styles.infoIcon}>i</span>
+                  </InfoTooltip>
+                </span>
                 <input
                   type="checkbox"
                   checked={isDifferentNodeOperator}
@@ -131,37 +177,79 @@ const CreatePoolModal: React.FC<ModalProps> = ({ buttonText }) => {
                 <>
                   <span>Please provide a node operator address to share the rewards and the %, which is forwarded to the address. Check the FAQs to learn more.</span>
 
-                  <input
-                    type="text"
-                    minLength={42}
-                    maxLength={42}
-                    name="nodeOperatorAddress"
-                    className={styles.formInput}
-                    value={nodeOperatorAddress}
-                    onChange={(e) => setNodeOperatorAddress(e.target.value)}
-                    placeholder="Node operator address"
-                    required={isDifferentNodeOperator}
-                  />
+                  <label className={styles.fieldLabel}>
+                    <span>
+                      Node Operator Address
+                      <InfoTooltip
+                        id="create-pool-node-operator-address-tooltip"
+                        placement="top"
+                        content={
+                          <>
+                            <p>Wallet address of the person or service operating your validator node.</p>
+                            <p>
+                              A share of your node owner rewards will be sent to this address each Epoch. Only native
+                              (EOA) addresses are supported.
+                            </p>
+                          </>
+                        }
+                      >
+                        <span className={styles.infoIcon}>i</span>
+                      </InfoTooltip>
+                    </span>
 
-                  <div className={styles.inputWrapper}>
                     <input
-                      type="number"
-                      min={0}
-                      max={20}
-                      step={0.01}
-                      name="nodeOperatorShare"
+                      type="text"
+                      minLength={42}
+                      maxLength={42}
+                      name="nodeOperatorAddress"
                       className={styles.formInput}
-                      value={nodeOperatorShare ? nodeOperatorShare.dividedBy(100).toString() : ""}
-                      onChange={(e) => {
-                        const percentage = parseFloat(e.target.value);
-                        const scaledValue = isNaN(percentage) ? null : new BigNumber(percentage * 100);
-                        setNodeOperatorShare(scaledValue);
-                      }}
-                      placeholder="Node operator share percentage"
+                      value={nodeOperatorAddress}
+                      onChange={(e) => setNodeOperatorAddress(e.target.value)}
+                      placeholder="Node operator address"
                       required={isDifferentNodeOperator}
                     />
-                    <span className={styles.percentageSign}>%</span>
-                  </div>
+                  </label>
+
+                  <label className={styles.fieldLabel}>
+                    <span>
+                      Node Operator Share Percentage
+                      <InfoTooltip
+                        id="create-pool-node-operator-share-tooltip"
+                        placement="top"
+                        content={
+                          <>
+                            <p>Percentage of your 20% node owner reward to share with the operator.</p>
+                            <p>
+                              Enter a value between 0.01% and 20%. The selected share is forwarded automatically at the
+                              end of each Epoch.
+                            </p>
+                          </>
+                        }
+                      >
+                        <span className={styles.infoIcon}>i</span>
+                      </InfoTooltip>
+                    </span>
+
+                    <div className={styles.inputWrapper}>
+                      <input
+                        type="number"
+                        min={0}
+                        max={20}
+                        step={0.01}
+                        name="nodeOperatorShare"
+                        className={styles.formInput}
+                        value={nodeOperatorShare ? nodeOperatorShare.dividedBy(100).toString() : ""}
+                        onChange={(e) => {
+                          const percentage = parseFloat(e.target.value);
+                          const scaledValue = isNaN(percentage) ? null : new BigNumber(percentage * 100);
+                          setNodeOperatorShare(scaledValue);
+                        }}
+                        placeholder="Node operator share percentage"
+                        required={isDifferentNodeOperator}
+                      />
+                      <span className={styles.percentageSign}>%</span>
+                    </div>
+                  </label>
                 </>
               )}
 
