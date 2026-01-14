@@ -170,14 +170,12 @@ body.light-theme {
   margin-bottom: 0.35rem;
 }
 
-/* Inline (in-flow) tooltip variant — renders in document flow so it's not hidden under fixed navbars */
 .info-tooltip-inline {
-  /* reset positioning so it occupies space instead of overlaying */
   position: static !important;
   transform: none !important;
   bottom: auto !important;
   left: auto !important;
-  display: none; /* default hidden; shown on hover */
+  display: none;
   margin-top: 0.6rem;
 }
 
@@ -186,8 +184,22 @@ body.light-theme {
   display: block;
 }
 
-/* Slight visual adjustment so inline tooltip looks like a block and remains compact */
 .info-tooltip-inline {
   box-shadow: none;
   border: 1px solid rgba(255,255,255,0.04);
+}
+
+.stat-action-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.stat-action-group > * {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 35px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }

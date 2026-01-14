@@ -116,7 +116,7 @@ export default function ProfilePage() {
                         <div className="stat-change positive">+5 DMD since epoch 22</div>
                       </div>
                       <div className="stat-actions">
-                        <div>
+                        <div className="stat-action-group">
                           <Link href="/validators?filter=stakedOn" className="btn-primary btn-sm">Stake / Unstake</Link>
                           <CreatePoolModal buttonText="Create pool" />
                         </div>

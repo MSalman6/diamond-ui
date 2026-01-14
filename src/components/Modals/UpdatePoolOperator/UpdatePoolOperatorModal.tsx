@@ -4,9 +4,10 @@ import styles from "./UpdatePoolOperatorModal.module.css";
 import { isValidAddress } from "@/utils/common";
 import { useWeb3Context } from "@/contexts/Web3";
 import { useStakingContext } from "@/contexts/Staking";
-import React, { useState, useEffect, useRef, FormEvent, startTransition } from "react";
+import React, { useState, useEffect, useRef, FormEvent } from "react";
 import ReactDOM from "react-dom";
 import { Pool } from "@/contexts/types/models";
+import InfoTooltip from "@/components/InfoTooltip";
 
 interface ModalProps {
   buttonText: string;
@@ -94,38 +95,77 @@ const UpdatePoolOperatorModal: React.FC<ModalProps> = ({ buttonText, pool }) => 
         <div onClick={(e) => e.stopPropagation()} className={styles.modalOverlay}>
           <div onClick={(e) => e.stopPropagation()} className={styles.modalContent} ref={modalRef}>
             <button className={styles.modalClose} onClick={closeModal} aria-label="Close update pool modal">&times;</button>
-            <h2>Update rewards share</h2>
+            <h2 className={styles.modalTitle}>Set up a rewards share</h2>
 
-            <p>Please provide a node operator address to share the rewards and the %, which is forwarded to the address. Check the <a onClick={() => { startTransition(() => { /* navigate to faqs if needed */ }) }}>FAQ section</a> to learn more.</p>
+            <p className={styles.modalDescription}>Don’t want to run the node yourself? Add a trusted operator’s address and choose what % of your node rewards to send them automatically.</p>
 
             <form className={styles.form} onSubmit={handleUpdate}>
-              <input
-                type="text"
-                minLength={42}
-                maxLength={42}
-                value={poolOperator}
-                className={styles.formInput}
-                placeholder="Enter pool operator address"
-                onChange={(e) => setPoolOperator(e.target.value)}
-              />
-
-              <div className={styles.inputWrapper}>
+              <label className={styles.fieldLabel}>
+                <span>
+                  Node Operator Address
+                  <InfoTooltip
+                    id="node-operator-address-tooltip"
+                    placement="top"
+                    content={
+                      <>
+                        <p>The wallet address of the person or service running your validator node.</p>
+                        <p>
+                          Rewards will be forwarded to this address based on the configured percentage. Only native
+                          (EOA) addresses are supported.
+                        </p>
+                      </>
+                    }
+                  >
+                    <span className={styles.infoIcon}>i</span>
+                  </InfoTooltip>
+                </span>
                 <input
-                  type="number"
-                  min={0}
-                  max={20}
-                  step={0.01}
+                  type="text"
+                  minLength={42}
+                  maxLength={42}
+                  value={poolOperator}
                   className={styles.formInput}
-                  placeholder="Operator share %"
-                  value={poolOperatorShare ? poolOperatorShare.dividedBy(100).toString() : ""}
-                  onChange={(e) => {
-                    const percentage = parseFloat(e.target.value);
-                    const scaledValue = isNaN(percentage) ? null : new BigNumber(percentage * 100);
-                    setPoolOperatorShare(scaledValue);
-                  }}
+                  placeholder="Enter pool operator address"
+                  onChange={(e) => setPoolOperator(e.target.value)}
                 />
-                <span className={styles.percentageSign}>%</span>
-              </div>
+              </label>
+
+              <label className={styles.fieldLabel}>
+                <span>
+                  Reward Share Percentage (%)
+                  <InfoTooltip
+                    id="reward-share-percentage-tooltip"
+                    placement="top"
+                    content={
+                      <>
+                        <p>The portion of your 20% node owner reward to share with the operator.</p>
+                        <p>
+                          Enter a value between 0.01% and 20%. This share is paid automatically at the end of each Epoch.
+                        </p>
+                      </>
+                    }
+                  >
+                    <span className={styles.infoIcon}>i</span>
+                  </InfoTooltip>
+                </span>
+                <div className={styles.inputWrapper}>
+                  <input
+                    type="number"
+                    min={0}
+                    max={20}
+                    step={0.01}
+                    className={styles.formInput}
+                    placeholder="Operator share %"
+                    value={poolOperatorShare ? poolOperatorShare.dividedBy(100).toString() : ""}
+                    onChange={(e) => {
+                      const percentage = parseFloat(e.target.value);
+                      const scaledValue = isNaN(percentage) ? null : new BigNumber(percentage * 100);
+                      setPoolOperatorShare(scaledValue);
+                    }}
+                  />
+                  <span className={styles.percentageSign}>%</span>
+                </div>
+              </label>
 
               {!canUpdate ? (
                 <p className={styles.stakeWarning}>You can update the pool operator rewards share only once per Epoch</p>

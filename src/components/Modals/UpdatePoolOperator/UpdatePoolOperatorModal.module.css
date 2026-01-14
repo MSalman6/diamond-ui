@@ -51,6 +51,20 @@
   margin-top: 10px;
 }
 
+.fieldLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.fieldLabel > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .formInput {
   width: 100%;
   padding: 12px;
@@ -80,6 +94,19 @@
   pointer-events: none;
 }
 
+.infoIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  font-size: 10px;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
 .formSubmit {
   max-width: 140px;
   align-self: center;
@@ -89,6 +116,20 @@
 .stakeWarning {
   color: #ff6b6b;
   text-align: center;
+}
+
+.modalTitle {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.modalDescription {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  font-size: 14px;
 }
 
 :global(body.light-theme) .modalContent {
