@@ -11,7 +11,7 @@ import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { timestampToDate, truncateAddress } from '@/utils/common';
 
-type ProposalType = "protocol" | "treasury" | "parameter" | "community" | "open";
+type ProposalType = "protocol" | "parameter" | "community" | "open";
 
 type Proposal = {
   id: string;
@@ -385,10 +385,9 @@ export default function DaoPage() {
               <div className="filter-container">
                 <select id="proposal-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
                   <option value="all">All Types</option>
-                  <option value="treasury">Treasury</option>
-                  <option value="parameter">Parameter</option>
-                  <option value="community">Community</option>
-                  <option value="protocol">Protocol</option>
+                  <option value="parameter">Ecosystem Parameter</option>
+                  <option value="community">Contract Upgrade</option>
+                  <option value="protocol">Open</option>
                 </select>
               </div>
             </div>

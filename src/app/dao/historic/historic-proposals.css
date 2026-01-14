@@ -333,11 +333,17 @@
 
 .participation-value {
   position: absolute;
-  right: -25px;
-  top: -4px;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text);
+  pointer-events: none;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
   transition: color 0.5s ease;
+  top: 5px;
 }
 
 .exceeding-value {
