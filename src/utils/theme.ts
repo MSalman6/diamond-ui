@@ -46,6 +46,9 @@ const setupTheme = (themeToggle: HTMLInputElement) => {
       "--diamond-2-color": "rgba(138, 43, 226, 0.08)",
       "--diamond-3-color": "rgba(0, 157, 255, 0.08)",
       "--cosmic-grid-color": "rgba(255, 255, 255, 0.05)",
+      "--scrollbar-thumb": "rgba(255, 255, 255, 0.25)",
+      "--scrollbar-thumb-hover": "rgba(255, 255, 255, 0.35)",
+      "--scrollbar-track": "rgba(255, 255, 255, 0.06)",
     },
     light: {
       "--bg": "#ffffff",
@@ -65,6 +68,9 @@ const setupTheme = (themeToggle: HTMLInputElement) => {
       "--diamond-2-color": "rgba(138, 43, 226, 0.25)",
       "--diamond-3-color": "rgba(0, 157, 255, 0.25)",
       "--cosmic-grid-color": "rgba(0, 0, 0, 0.06)",
+      "--scrollbar-thumb": "rgba(0, 0, 0, 0.22)",
+      "--scrollbar-thumb-hover": "rgba(0, 0, 0, 0.32)",
+      "--scrollbar-track": "rgba(0, 0, 0, 0.06)",
     },
   };
 
