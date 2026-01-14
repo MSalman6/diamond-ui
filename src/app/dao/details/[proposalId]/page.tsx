@@ -59,29 +59,28 @@ export default function ProposalDetailsPage() {
     return undefined
   })()
 
-  useEffect(() => {
-    // animate progress bars on mount
-    const t = setTimeout(() => {
-      setProgressYesWidth("68%")
-      setProgressNoWidth("22%")
-    }, 500)
-
-    return () => clearTimeout(t)
-  }, [])
-
-  // update progress bars from votingStats
+  // update progress bars from votingStats (kept fully in sync with numeric stats)
   useEffect(() => {
     try {
-      if (votingStats && votingStats.total && BigNumber(votingStats.total).isGreaterThan(0)) {
-        const pos = BigNumber(votingStats.positive || 0)
-        const neg = BigNumber(votingStats.negative || 0)
-        const total = BigNumber(votingStats.total || pos.plus(neg))
-        const yesPercent = total.isZero() ? 0 : pos.multipliedBy(100).dividedBy(total).toNumber()
-        const noPercent = total.isZero() ? 0 : neg.multipliedBy(100).dividedBy(total).toNumber()
+      const total = BigNumber(votingStats?.total || 0)
+
+      if (total.isGreaterThan(0)) {
+        const pos = BigNumber(votingStats?.positive || 0)
+        const neg = BigNumber(votingStats?.negative || 0)
+        const yesPercent = pos.multipliedBy(100).dividedBy(total).toNumber()
+        const noPercent = neg.multipliedBy(100).dividedBy(total).toNumber()
         setProgressYesWidth(`${yesPercent.toFixed(0)}%`)
         setProgressNoWidth(`${noPercent.toFixed(0)}%`)
+      } else {
+        // no votes / zero total stake -> empty bar
+        setProgressYesWidth("0%")
+        setProgressNoWidth("0%")
       }
-    } catch (e) {}
+    } catch (e) {
+      // in case of any malformed data, fall back to empty bar
+      setProgressYesWidth("0%")
+      setProgressNoWidth("0%")
+    }
   }, [votingStats])
 
   // fetch proposal details and related data
@@ -412,14 +411,42 @@ export default function ProposalDetailsPage() {
                       <div className="progress-yes" style={{ width: progressYesWidth, transition: "width 1.5s ease-out" }} />
                       <div className="progress-no" style={{ width: progressNoWidth, transition: "width 1.5s ease-out" }} />
                     </div>
-                    <div className="voting-progress-tooltip" id="progress-tooltip" ref={tooltipRef}>Tooltip content</div>
+                    <div className="voting-progress-tooltip" id="progress-tooltip" ref={tooltipRef}></div>
                   </div>
                   <div className="voting-stats">
-                    <div className="stat-item total-stake">Total stake: {votingStats?.total ? String(votingStats.total) + ' DMD' : '1,000,000 DMD'}</div>
-                    <div className="stat-item yes-votes">Yes: {votingStats && votingStats.total ? `${BigNumber(votingStats.positive || 0).multipliedBy(100).dividedBy(votingStats.total).toFixed(0)}%` : '68%'}</div>
-                    <div className="stat-item no-votes">No: {votingStats && votingStats.total ? `${BigNumber(votingStats.negative || 0).multipliedBy(100).dividedBy(votingStats.total).toFixed(0)}%` : '22%'}</div>
-                    <div className="stat-divider" />
-                    <div className="stat-item participation">Participation: {votingStats?.participation ? `${votingStats.participation}%` : '90%'}</div>
+                    {(() => {
+                      const totalBn = BigNumber(votingStats?.total || 0)
+                      const positiveBn = BigNumber(votingStats?.positive || 0)
+                      const negativeBn = BigNumber(votingStats?.negative || 0)
+                      const hasTotal = totalBn.isGreaterThan(0)
+
+                      const yesPct = hasTotal
+                        ? positiveBn.multipliedBy(100).dividedBy(totalBn).toFixed(2)
+                        : '0'
+                      const noPct = hasTotal
+                        ? negativeBn.multipliedBy(100).dividedBy(totalBn).toFixed(2)
+                        : '0'
+
+                      return (
+                        <>
+                          <div className="stat-item total-stake">
+                            Total stake: {hasTotal ? `${totalBn.dividedBy(1e18).toFixed(4)} DMD` : '0 DMD'}
+                          </div>
+                          <div className="stat-item yes-votes">
+                            Yes: {`${yesPct}%`}
+                          </div>
+                          <div className="stat-item no-votes">
+                            No: {`${noPct}%`}
+                          </div>
+                          <div className="stat-divider" />
+                          <div className="stat-item participation">
+                            Participation: {votingStats?.participation != null
+                              ? `${votingStats.participation}%`
+                              : '0%'}
+                          </div>
+                        </>
+                      )
+                    })()}
                   </div>
                   <div className="voting-time"><i className="fas fa-clock" /> <span>{proposal?.votingEnd ? `Voting ended on ${timestampToDate(proposal.votingEnd)}` : 'Voting ended on 11 Mar 2025'}</span></div>
                 </div>
