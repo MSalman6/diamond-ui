@@ -405,7 +405,7 @@ export default function ProfilePage() {
         </div>
       </div>
                 
-                <div className="node-stake-panel">
+        <div className="node-stake-panel">
         <div className="node-stake-header">
           <h3>Voting power <InfoTooltip content={<div><p>Voting power is the share of total DAO stake that your validator pool represents (your own stake + delegated stake).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
           <div className="node-stake-value highlight">12%</div>

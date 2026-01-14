@@ -12,6 +12,7 @@ import StakeModal from '@/components/Modals/Stake/StakeModal';
 import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
+import InfoTooltip from '@/components/InfoTooltip';
 
 export default function ValidatorDetails() {
   const params = useParams();
@@ -181,7 +182,7 @@ export default function ValidatorDetails() {
         <div className="stats-grid-wireframe">
           <div className="stat-card-wireframe fade-in">
             <div className="stat-header">
-              <h3>Pool stake <i className="fas fa-info-circle info-icon" title="Total stake in this pool"></i></h3>
+              <h3>Pool stake <i className="fas fa-info-circle info-icon" title="Summary of your total stake, combining your own validator stake and all delegations received."></i></h3>
             </div>
             <p className="stat-value-large">{pool ? BigNumber(pool.totalStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : 0} DMD</p>
             <div className="stat-trend positive">
@@ -194,7 +195,23 @@ export default function ValidatorDetails() {
 
           <div className="stat-card-wireframe fade-in">
             <div className="stat-header">
-              <h3>Score <i className="fas fa-info-circle info-icon" title="Validator score"></i></h3>
+              <h3>Score <InfoTooltip
+                placement="bottom"
+                content={
+                  <div>
+                    <p>The Bonus Score measures your validator's performance and uptime.</p>
+                    <ul>
+                      <li>Staying online and ready increases your score.</li>
+                      <li>Downtime, missed key operations, or unavailability decrease it.</li>
+                    </ul>
+                    <p>Your selection chance for the next epoch is based on <strong>Stake × Bonus Score</strong>.</p>
+                    <p>Scores range from <strong>1 to 1000</strong>.</p>
+                  </div>
+                }
+              >
+                <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+              </InfoTooltip>
+              </h3>
             </div>
             <p className="stat-value-large">{pool ? pool.score : 0}</p>
             <div className="stat-trend negative">
@@ -207,7 +224,7 @@ export default function ValidatorDetails() {
 
           <div className="stat-card-wireframe fade-in">
             <div className="stat-header">
-              <h3>Voting power <i className="fas fa-info-circle info-icon" title="Voting power percentage"></i></h3>
+              <h3>Voting power <i className="fas fa-info-circle info-icon" title="Voting power is the share of total DAO stake that your validator pool represents (your own stake + delegated stake)."></i></h3>
             </div>
             <p className="stat-value-large">{pool ? pool.votingPower?.toString() : 0}%</p>
             <div className="stat-trend negative">
@@ -220,7 +237,7 @@ export default function ValidatorDetails() {
 
           <div className="stat-card-wireframe fade-in">
             <div className="stat-header">
-              <h3>Validator stake <i className="fas fa-info-circle info-icon" title="Validator's own stake"></i></h3>
+              <h3>Validator stake <i className="fas fa-info-circle info-icon" title="The amount of DMD you've personally staked as a validator in your own pool."></i></h3>
             </div>
             <p className="stat-value-large">{pool ? BigNumber(pool.ownStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : 0} DMD</p>
             <div className="stat-trend positive">
@@ -241,7 +258,7 @@ export default function ValidatorDetails() {
 
           <div className="stat-card-wireframe fade-in">
             <div className="stat-header">
-              <h3>Delegated stake <i className="fas fa-info-circle info-icon" title="Total delegated stake"></i></h3>
+              <h3>Delegated stake <i className="fas fa-info-circle info-icon" title="The amount of DMD delegated to your validator pool by other users."></i></h3>
             </div>
             <p className="stat-value-large">{pool ? BigNumber(pool.totalStake).minus(pool.ownStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : 0} DMD</p>
             <div className="stat-trend positive">
