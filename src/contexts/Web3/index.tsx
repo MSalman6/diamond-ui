@@ -13,6 +13,8 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { ContractManager } from "@/contexts/services/contractManager";
 import { config as wagmiConfig } from "@/contexts/WalletConnect/config/wagmi";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { validateRpcUrl } from "@/utils/rpc";
+import { getRPC, saveRPC, clearRPC } from "@/utils/storage";
 
 import {
   BlockRewardHbbft,
@@ -51,6 +53,8 @@ interface Web3ContextProps {
   showLoader: (loading: boolean, loadingMsg: string) => void;
   getUpdatedBalance: () => Promise<BigNumber>;
   updateWalletBalance: () => Promise<void>;
+  applyCustomRpc: (url: string) => Promise<{ ok: boolean; message?: string }>;
+  resetToDefaultRpc: () => Promise<void>;
 }
 
 const Web3Context = createContext<Web3ContextProps | undefined>(undefined);
@@ -72,7 +76,8 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
    * 2. The environment variable "VITE_APP_RPC_URL" defined via import.meta.env.
    * 3. A default URL ("https://testnet-rpc.bit.diamonds/") if neither of the above is available.
    */
-  const rpcUrl = localStorage.getItem("rpcUrl") || process.env.NEXT_PUBLIC_RPC_URL || "https://testnet-rpc.bit.diamonds/";
+  // Prefer cookie/localStorage via storage util, then env, then default
+  const rpcUrl = getRPC() || process.env.NEXT_PUBLIC_RPC_URL || "https://testnet-rpc.bit.diamonds/";
   const [wagmiConnector, setWagmiConnector] = useState<WalletConnectProvider | null>(null);
   const [web3, setWeb3] = useState<Web3>(new Web3(rpcUrl));
 
@@ -188,6 +193,37 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     }
   };
 
+  const applyCustomRpc = async (url: string) => {
+    showLoader(true, "Validating RPC endpoint...");
+    const res = await validateRpcUrl(url, { expectedChainId: Number(chainId) });
+    if (!res.ok) {
+      showLoader(false, "");
+      return { ok: false, message: res.error?.message || "Invalid RPC" };
+    }
+    // Save to storage
+    const stored = saveRPC(url);
+    if (!stored) {
+      showLoader(false, "");
+      return { ok: false, message: "Failed to save RPC to storage" };
+    }
+    // Reinitialize provider/contracts
+    const provider = new Web3(url);
+    setWeb3(provider);
+    await reinitializeContractsWithProvider(provider);
+    showLoader(false, "");
+    return { ok: true };
+  };
+
+  const resetToDefaultRpc = async () => {
+    showLoader(true, "Resetting RPC...");
+    clearRPC();
+    const defaultUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://testnet-rpc.bit.diamonds/";
+    const provider = new Web3(defaultUrl);
+    setWeb3(provider);
+    await reinitializeContractsWithProvider(provider);
+    showLoader(false, "");
+  };
+
   const InitializeWagmiWallet = async (connector: any) => {
     try {
       let provider = await connector.getProvider();
@@ -286,7 +322,9 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     showLoader,
     getUpdatedBalance,
     updateWalletBalance,
-    ensureWalletConnection
+    ensureWalletConnection,
+    applyCustomRpc,
+    resetToDefaultRpc
   };
 
   return (

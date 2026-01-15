@@ -1,6 +1,33 @@
+"use client";
+
 import Link from "next/link";
+import { useState, useMemo } from "react";
+import { useWeb3Context } from "@/contexts/Web3";
+import RpcConfigurationModal from "@/components/Modals/RPCConfiguration";
 
 export default function Footer() {
+  const { web3 } = useWeb3Context();
+  const [open, setOpen] = useState(false);
+
+  const currentEndpoint = useMemo(() => {
+    const provider: any = web3?.currentProvider as any;
+    const url: string = provider?.host || provider?.connection?.url || provider?.rpcUrl || '';
+    return url;
+  }, [web3]);
+
+  const shortUrl = useMemo(() => {
+    const url = currentEndpoint || '';
+    if (!url) return 'Wallet Provider';
+    if (url.length <= 32) return url;
+    try {
+      const u = new URL(url);
+      const host = u.host;
+      return host.length > 32 ? host.slice(0, 29) + '...' : host;
+    } catch {
+      return url.slice(0, 29) + '...';
+    }
+  }, [currentEndpoint]);
+
   return (
     <footer>
       <div className="container">
@@ -37,9 +64,14 @@ export default function Footer() {
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>
             <a href="#">Cookie Policy</a>
+            <button className="btn-outline" onClick={() => setOpen(true)} title={currentEndpoint}>
+              <i className="fas fa-cog" style={{ marginRight: 8 }}></i>
+              RPC: {shortUrl}
+            </button>
           </div>
         </div>
       </div>
+      <RpcConfigurationModal isOpen={open} onClose={() => setOpen(false)} />
     </footer>
   );
 }
