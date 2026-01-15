@@ -493,7 +493,7 @@ export default function ProposalDetailsPage() {
                 </div>
               </div>
 
-              <div className="related-proposals-section">
+              {/* <div className="related-proposals-section">
                 <div className="card-header"><h3>Related Proposals</h3></div>
                 <div className="related-proposal-item">
                   <div className="related-proposal-status executed" />
@@ -502,7 +502,7 @@ export default function ProposalDetailsPage() {
                     <div className="related-proposal-meta"><span>DMD-58-01</span> <span>Executed: 15 Feb 2025</span></div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
