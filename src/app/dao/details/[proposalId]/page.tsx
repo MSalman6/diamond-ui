@@ -459,10 +459,14 @@ export default function ProposalDetailsPage() {
                       {proposal?.discussionUrl ? (
                         <a href={proposal.discussionUrl} target="_blank" rel="noreferrer" className="discussion-link">Discussion Link</a>
                       ) : (
-                        <>
-                          <a href="#" className="discussion-link">Forum</a>
-                          <a href="#" className="discussion-link">Chat</a>
-                        </>
+                        <a
+                          href="https://discord.com/invite/MwqZ2CYcB4"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="discussion-link"
+                        >
+                          Discuss on Discord
+                        </a>
                       )}
                     </div>
                 </div>
