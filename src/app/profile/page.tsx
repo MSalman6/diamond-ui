@@ -289,141 +289,131 @@ export default function ProfilePage() {
                       <span className="status-badge active">Active</span>
                     </div>
                   </div>
-                  <div className="validator-score">
-                    <div className="score-label">Score</div>
-                    <div className="score-info">
-                      <div className="score-value">97.5</div>
-                      <InfoTooltip
-                        placement="bottom"
-                        content={
-                          <div>
-                            <p>The Bonus Score measures your validator's performance and uptime.</p>
-                            <ul>
-                              <li>Staying online and ready increases your score.</li>
-                              <li>Downtime, missed key operations, or unavailability decrease it.</li>
-                            </ul>
-                            <p>Your selection chance for the next epoch is based on <strong>Stake × Bonus Score</strong>.</p>
-                            <p>Scores range from <strong>1 to 1000</strong>.</p>
-                          </div>
-                        }
-                      >
-                        <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
-                      </InfoTooltip>
-                    </div>
-                    <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
-                  </div>
                 </div>
                 
                 <div className="combined-stake-card">
-        <div className="stake-card-header">
-          <h3>Validator Pool Overview <InfoTooltip content={<div><p>Summary of your total stake, combining your own validator stake and all delegations received.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
-          <div className="total-stake-value highlight">17,000 DMD</div>
-          <div className="cr-count">Connectivity reports: 0</div>
-        </div>
-        
-        <div className="stake-breakdown">
-          <div className="stake-item">
-            <div className="stake-item-header">
-              <span className="stake-label">My validator stake <InfoTooltip content={<div><p>The amount of DMD you've personally staked as a validator in your own pool.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
-              <span className="stake-value highlight">10,100 DMD</span>
-            </div>
-            <div className="stake-change positive">+5 DMD since epoch 22</div>
-            <div className="stake-actions">
-              {
-                myPool && (
-                  <>
-                    <StakeModal buttonText="Stake" pool={myPool} />
-                    <UnstakeModal buttonText="Unstake" pool={myPool} />
-                    <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
-                    <button className="btn-secondary btn-sm">Remove pool</button>
-                  </>
-                )
-              }
-            </div>
-          </div>
-          
-          <div className="stake-item">
-            <div className="stake-item-header">
-              <span className="stake-label">Delegated stake to my pool <InfoTooltip content={<div><p>The amount of DMD delegated to your pool by other users (excluding your own stake).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
-              <span className="stake-value highlight">7,000 DMD</span>
-            </div>
-            <div className="stake-change positive">+5 DMD since epoch 22</div>
-            <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
-          </div>
-        </div>
-        
-        <div className="stake-distribution-section">
-          <div className="distribution-header">
-            <span className="distribution-label">Stake Distribution <InfoTooltip content={<div><p>Visual breakdown showing the ratio between your own stake and delegated stake in your validator pool.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
-          </div>
-          <div className="stake-distribution">
-            <div className="stake-bar">
-              <InfoTooltip placement="top" content={<div><p>59% own stake</p></div>}>
-                <div className="own-stake" style={{width: "59%"}} />
-              </InfoTooltip>
-              <InfoTooltip placement="top" content={<div><p>41% delegated</p></div>}>
-                <div className="delegated-stake" style={{width: "41%"}} />
-              </InfoTooltip>
-            </div>
-            <div className="stake-labels">
-              <span className="own-stake-label">59% own stake</span>
-              <span className="delegated-stake-label">41% delegated</span>
-            </div>
-          </div>
-        </div>
-      </div>
+                  <div className="stake-card-header">
+                    <h3>Validator Pool Overview <InfoTooltip content={<div><p>Summary of your total stake, combining your own validator stake and all delegations received.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
+                    <div className="total-stake-value highlight">17,000 DMD</div>
+                    <div className="cr-count">Connectivity reports: 0</div>
+                  </div>
+                  
+                  <div className="stake-breakdown">
+                    <div className="stake-item">
+                      <div className="stake-item-header">
+                        <span className="stake-label">My validator stake <InfoTooltip content={<div><p>The amount of DMD you've personally staked as a validator in your own pool.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
+                        <span className="stake-value highlight">10,100 DMD</span>
+                      </div>
+                      <div className="stake-change positive">+5 DMD since epoch 22</div>
+                      <div className="stake-actions">
+                        {
+                          myPool && (
+                            <>
+                              <StakeModal buttonText="Stake" pool={myPool} />
+                              <UnstakeModal buttonText="Unstake" pool={myPool} />
+                              <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
+                              <button className="btn-secondary btn-sm">Remove pool</button>
+                            </>
+                          )
+                        }
+                      </div>
+                    </div>
+                    
+                    <div className="stake-item">
+                      <div className="stake-item-header">
+                        <span className="stake-label">Delegated stake to my pool <InfoTooltip content={<div><p>The amount of DMD delegated to your pool by other users (excluding your own stake).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
+                        <span className="stake-value highlight">7,000 DMD</span>
+                      </div>
+                      <div className="stake-change positive">+5 DMD since epoch 22</div>
+                      <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
+                    </div>
+                  </div>
+                  
+                  <div className="stake-distribution-section">
+                    <div className="distribution-header">
+                      <span className="distribution-label">Stake Distribution <InfoTooltip content={<div><p>Visual breakdown showing the ratio between your own stake and delegated stake in your validator pool.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
+                    </div>
+                    <div className="stake-distribution">
+                      <div className="stake-bar">
+                        <InfoTooltip placement="top" content={<div><p>59% own stake</p></div>}>
+                          <div className="own-stake" style={{width: "59%"}} />
+                        </InfoTooltip>
+                        <InfoTooltip placement="top" content={<div><p>41% delegated</p></div>}>
+                          <div className="delegated-stake" style={{width: "41%"}} />
+                        </InfoTooltip>
+                      </div>
+                      <div className="stake-labels">
+                        <span className="own-stake-label">59% own stake</span>
+                        <span className="delegated-stake-label">41% delegated</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-        <div className="validator-stats-row">
-        <div className="stat-card">
-          <div className="stat-label">Estimated monthly rewards <InfoTooltip content={<div><p>Estimated DMD rewards earned this month based on your validator pool total stake.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-          <div className="stat-value highlight">100 DMD</div>
-          <div className="stat-note">Earned per 1000DMD = 5,88DMD <InfoTooltip content={<div><p>Rewards earned per 1000 DMD staked in the last 30 days.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-          <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">Rewards history</button>
-        </div>
+                  <div className="validator-stats-row">
+                  <div className="stat-card">
+                    <div className="stat-label">Estimated monthly rewards <InfoTooltip content={<div><p>Estimated DMD rewards earned this month based on your validator pool total stake.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                    <div className="stat-value highlight">100 DMD</div>
+                    <div className="stat-note">Earned per 1000DMD = 5,88DMD <InfoTooltip content={<div><p>Rewards earned per 1000 DMD staked in the last 30 days.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                    <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">Rewards history</button>
+                  </div>
 
-        <div className="stat-card">
-          <div className="stat-label">My outgoing delegations <InfoTooltip content={<div><p>Amount of DMD you've delegated to other validators from your account (if any).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-          <div className="stat-value highlight">100 DMD</div>
-          <div className="stat-change positive">+5 DMD since epoch 22</div>
-        </div>
+                  <div className="stat-card">
+                    <div className="stat-label">My outgoing delegations <InfoTooltip content={<div><p>Amount of DMD you've delegated to other validators from your account (if any).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                    <div className="stat-value highlight">100 DMD</div>
+                    <div className="stat-change positive">+5 DMD since epoch 22</div>
+                  </div>
 
-        <div className="stat-card">
-          <div className="stat-label">Node operator shared reward <InfoTooltip content={<div><strong>The portion of the validator's 20% reward that is shared with a separate node operator.</strong> <p>Useful when a node owner delegates technical operation to someone else but keeps ownership and voting rights. Configurable per pool (from 0.01% to 20%).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-          <div className="stat-value highlight">9%</div>
-          <div className="stat-note copy-address-container">
-            0x9f515...62F94{" "}
-            <button
-              className="btnIcon"
-              id="copy-address"
-              title="Copy Address"
-              onClick={() => copyData("0x9f515...62F94")}
-            >
-              <i className="fas fa-copy"></i>
-            </button>
-          </div>
-          {myPool && <UpdatePoolOperatorModal buttonText="Edit" pool={myPool} />}
-        </div>
-      </div>
-                
-        <div className="node-stake-panel">
-        <div className="node-stake-header">
-          <h3>Voting power <InfoTooltip content={<div><p>Voting power is the share of total DAO stake that your validator pool represents (your own stake + delegated stake).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
-          <div className="node-stake-value highlight">12%</div>
-        </div>
-        
-        <div className="node-stake-details">
-          <div className="node-stake-info">
-            <div className="voting-power">
-              <div>
-                <span className="info-value negative">-0.01%</span>
-                <span className="info-label">since epoch 22</span>
-              </div>
-              <span className="proposals-info">Proposals created: 10</span>
-            </div>
-            <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
-          </div>
-        </div>
-      </div>
+                  <div className="stat-card">
+                    <div className="stat-label">Node operator shared reward <InfoTooltip content={<div><strong>The portion of the validator's 20% reward that is shared with a separate node operator.</strong> <p>Useful when a node owner delegates technical operation to someone else but keeps ownership and voting rights. Configurable per pool (from 0.01% to 20%).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                    <div className="stat-value highlight">9%</div>
+                    <div className="stat-note copy-address-container">
+                      0x9f515...62F94{" "}
+                      <button
+                        className="btnIcon"
+                        id="copy-address"
+                        title="Copy Address"
+                        onClick={() => copyData("0x9f515...62F94")}
+                      >
+                        <i className="fas fa-copy"></i>
+                      </button>
+                    </div>
+                    {myPool && <UpdatePoolOperatorModal buttonText="Edit" pool={myPool} />}
+                  </div>
+                </div>
+                          
+                <div className="validator-stats-row">
+                  {/* Voting power card */}
+                  <div className="stat-card">
+                    <div className="stat-label">Voting power <InfoTooltip content={<div><p>Voting power is the share of total DAO stake that your validator pool represents (your own stake + delegated stake).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                    <div className="stat-value highlight">12%</div>
+                    <div className="stat-note"><span className="info-value negative">-0.01%</span> since epoch 22</div>
+                    <div className="stat-note">Proposals created: 10</div>
+                    <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
+                  </div>
+
+                  {/* Score card */}
+                  <div className="stat-card">
+                    <div className="stat-label">Score <InfoTooltip
+                      placement="bottom"
+                      content={
+                        <div>
+                          <p>The Bonus Score measures your validator's performance and uptime.</p>
+                          <ul>
+                            <li>Staying online and ready increases your score.</li>
+                            <li>Downtime, missed key operations, or unavailability decrease it.</li>
+                          </ul>
+                          <p>Your selection chance for the next epoch is based on <strong>Stake × Bonus Score</strong>.</p>
+                          <p>Scores range from <strong>1 to 1000</strong>.</p>
+                        </div>
+                      }
+                    >
+                      <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                    </InfoTooltip></div>
+                    <div className="stat-value highlight">97.5</div>
+                    <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
