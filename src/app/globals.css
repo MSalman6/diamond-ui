@@ -363,6 +363,7 @@ section h2 {
   transition: var(--transition-speed);
   border: none;
   cursor: pointer;
+}
 
 /* Moved from src/app/dao/create/Create.module.css to satisfy CSS module purity rules */
 #proposalType,
@@ -465,8 +466,6 @@ form button .active {
 form button .disabled {
   cursor: not-allowed;
   opacity: 0.5;
-}
-  text-align: center;
 }
 
 .btn-secondary i {

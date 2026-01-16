@@ -2,7 +2,6 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import './InfoTooltip.css';
 
 type Props = {
   content: React.ReactNode;

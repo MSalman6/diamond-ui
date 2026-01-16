@@ -1,5 +1,6 @@
 'use client';
 
+import '../Validators.css';
 import './ValidatorDetails.css';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState, startTransition } from 'react';
