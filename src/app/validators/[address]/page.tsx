@@ -182,20 +182,33 @@ export default function ValidatorDetails() {
         <div className="stats-grid-wireframe">
           <div className="stat-card-wireframe fade-in">
             <div className="stat-header">
-              <h3>Pool stake <i className="fas fa-info-circle info-icon" title="Summary of your total stake, combining your own validator stake and all delegations received."></i></h3>
+              <h3>
+                Pool stake
+                <InfoTooltip
+                  placement="bottom"
+                  content={<span>Summary of your total stake, combining your own validator stake and all delegations received.</span>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
             </div>
             <p className="stat-value-large">{pool ? BigNumber(pool.totalStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : 0} DMD</p>
             <div className="stat-trend positive">
               <i className="fas fa-arrow-up"></i> 5 DMD since 01.01.24
             </div>
             <div className="stat-footer">
-              <span className="connectivity-info">Connectivity reports: 0 <i className="fas fa-info-circle info-icon" title=""></i></span>
+              <span className="connectivity-info">
+                Connectivity reports: 0
+                <InfoTooltip placement="bottom" content={<span />}> 
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </span>
             </div>
           </div>
 
           <div className="stat-card-wireframe fade-in">
             <div className="stat-header">
-              <h3>Score <InfoTooltip
+              <h3>Score<InfoTooltip
                 placement="bottom"
                 content={
                   <div>
@@ -224,7 +237,15 @@ export default function ValidatorDetails() {
 
           <div className="stat-card-wireframe fade-in">
             <div className="stat-header">
-              <h3>Voting power <i className="fas fa-info-circle info-icon" title="Voting power is the share of total DAO stake that your validator pool represents (your own stake + delegated stake)."></i></h3>
+              <h3>
+                Voting power
+                <InfoTooltip
+                  placement="bottom"
+                  content={<span>Voting power is the share of total DAO stake that your validator pool represents (your own stake + delegated stake).</span>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
             </div>
             <p className="stat-value-large">{pool ? pool.votingPower?.toString() : 0}%</p>
             <div className="stat-trend negative">
@@ -237,7 +258,15 @@ export default function ValidatorDetails() {
 
           <div className="stat-card-wireframe fade-in">
             <div className="stat-header">
-              <h3>Validator stake <i className="fas fa-info-circle info-icon" title="The amount of DMD you've personally staked as a validator in your own pool."></i></h3>
+              <h3>
+                Validator stake
+                <InfoTooltip
+                  placement="bottom"
+                  content={<span>The amount of DMD you've personally staked as a validator in your own pool.</span>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
             </div>
             <p className="stat-value-large">{pool ? BigNumber(pool.ownStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : 0} DMD</p>
             <div className="stat-trend positive">
@@ -247,7 +276,12 @@ export default function ValidatorDetails() {
 
           <div className="stat-card-wireframe fade-in">
             <div className="stat-header">
-              <h3>Monthly rewards <i className="fas fa-info-circle info-icon" title=""></i></h3>
+              <h3>
+                Monthly rewards
+                <InfoTooltip placement="bottom" content={<span />}> 
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
             </div>
             <p className="stat-value-large">100 DMD</p>
             <div className="stat-subtitle">Earned per 1000DMD = 5.88DMD</div>
@@ -258,7 +292,15 @@ export default function ValidatorDetails() {
 
           <div className="stat-card-wireframe fade-in">
             <div className="stat-header">
-              <h3>Delegated stake <i className="fas fa-info-circle info-icon" title="The amount of DMD delegated to your validator pool by other users."></i></h3>
+              <h3>
+                Delegated stake
+                <InfoTooltip
+                  placement="bottom"
+                  content={<span>The amount of DMD delegated to your validator pool by other users.</span>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
             </div>
             <p className="stat-value-large">{pool ? BigNumber(pool.totalStake).minus(pool.ownStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : 0} DMD</p>
             <div className="stat-trend positive">

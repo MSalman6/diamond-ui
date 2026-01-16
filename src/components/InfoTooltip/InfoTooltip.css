@@ -49,8 +49,9 @@
 }
 
 .info-tooltip-trigger {
-  display: inline-flex;
+  margin-left: 5px;
   align-items: center;
+  display: inline-flex;
 }
 
 .info-tooltip-portal .tooltip-title {

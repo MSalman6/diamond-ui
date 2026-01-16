@@ -2,6 +2,7 @@
 
 import "./proposal-details.css"
 import React, { useEffect, useRef, useState } from "react"
+import InfoTooltip from '@/components/InfoTooltip'
 import { usePathname } from 'next/navigation'
 import BigNumber from 'bignumber.js'
 import { useDaoContext } from '@/contexts/DAO'
@@ -314,10 +315,9 @@ export default function ProposalDetailsPage() {
                   <div className="parameter-fee">
                     <span className="label">Set Parameter Fee:</span>
                     <span className="value">{proposal?.parameterFee ? proposal.parameterFee : '100 DMD'}</span>
-                    <div className="info-tooltip-container">
-                      <i className="fas fa-info-circle info-icon" />
-                      <div className="info-tooltip">This is a fee to update the parameter.</div>
-                    </div>
+                    <InfoTooltip placement="bottom" content={<span>This is a fee to update the parameter.</span>}>
+                      <i className="fas fa-info-circle info-icon" aria-hidden="true" />
+                    </InfoTooltip>
                   </div>
                   <div className="parameter-description">
                     <h4>Description</h4>
