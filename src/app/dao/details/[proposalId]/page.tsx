@@ -354,6 +354,20 @@ export default function ProposalDetailsPage() {
                 </div>
               </div>
 
+              <div className="proposal-timeline-section">
+                <div className="card-header"><h3>Proposal Timeline</h3></div>
+                <div className="timeline">
+                  <div className="timeline-item">
+                    <div className="timeline-dot"><i className="fas fa-plus" /></div>
+                    <div className="timeline-content">
+                      <div className="timeline-date">{proposal?.timestamp ? timestampToDate(proposal.timestamp) : ''}</div>
+                      <div className="timeline-title">Proposal Created</div>
+                      <div className="timeline-description">Proposal was submitted to the DMD DAO governance system</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className={`proposal-card contract-upgrade-card ${type !== "contract-upgrade" ? "hidden" : ""}`} id="contract-upgrade-content">
                 <div className="card-header"><h3>Contract Upgrade</h3></div>
                 <div className="card-content">
@@ -483,7 +497,7 @@ export default function ProposalDetailsPage() {
 
           <div className="full-width-sections">
             <div className="bottom-grid">
-              <div className="proposal-timeline-section">
+              {/* <div className="proposal-timeline-section">
                 <div className="card-header"><h3>Proposal Timeline</h3></div>
                 <div className="timeline">
                   <div className="timeline-item">
@@ -495,7 +509,7 @@ export default function ProposalDetailsPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               {/* <div className="related-proposals-section">
                 <div className="card-header"><h3>Related Proposals</h3></div>
