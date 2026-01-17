@@ -251,7 +251,7 @@ export default function DaoPage() {
       {/* Stats */}
       <section className="governance-stats">
         <div className="container">
-          <div className="stats-grid">
+          <div className="dao-stats-grid">
             <div className="stat-card dao-phase-card">
               <div className="stat-header">
                 <h3>DAO Phase</h3>
