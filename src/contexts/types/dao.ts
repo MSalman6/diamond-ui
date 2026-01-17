@@ -17,6 +17,13 @@ export interface Proposal {
   participation: string;
   exceedingYes: string;
   totalStakeSnapshot: string;
+  createdAt?: string;
+  creationBlock?: string;
+  votingStartAt?: string;
+  votingEndAt?: string;
+  finalizedAt?: string;
+  finalizedResult?: 'Accepted' | 'Declined' | 'Pending' | string;
+  executedAt?: string;
 }
 
 export interface TotalVotingStats {

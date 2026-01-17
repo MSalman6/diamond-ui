@@ -119,6 +119,25 @@ export default function ProposalDetailsPage() {
               if (daoContext.getProposalVotingStats) {
                 daoContext.getProposalVotingStats(res.id).then((stats: any) => setVotingStats(stats)).catch(() => {})
               }
+              // fetch and attach timeline info
+              if (daoContext.getProposalTimeline) {
+                try {
+                  daoContext.getProposalTimeline(res.id).then((tl: any) => {
+                    if (tl) {
+                      const updated = { ...res };
+                      if (tl.createdAt) updated.createdAt = tl.createdAt;
+                      if (tl.creationBlock) updated.creationBlock = tl.creationBlock;
+                      if (tl.votingStartAt) updated.votingStartAt = tl.votingStartAt;
+                      if (tl.votingEndAt) updated.votingEndAt = tl.votingEndAt;
+                      if (tl.finalizedAt) updated.finalizedAt = tl.finalizedAt;
+                      if (tl.finalizedResult) updated.finalizedResult = tl.finalizedResult;
+                      if (tl.executedAt) updated.executedAt = tl.executedAt;
+                      setProposal(updated);
+                      if (daoContext.setProposalsState) daoContext.setProposalsState([updated]);
+                    }
+                  }).catch(() => {})
+                } catch (e) {}
+              }
               if (daoContext.getStateString) setProposalState(daoContext.getStateString(res.state))
               web3Context.showLoader?.(false, "")
             }).catch(() => { web3Context.showLoader?.(false, "") })
@@ -365,6 +384,38 @@ export default function ProposalDetailsPage() {
                       <div className="timeline-description">Proposal was submitted to the DMD DAO governance system</div>
                     </div>
                   </div>
+                  {proposal?.votingStartAt && (
+                    <div className="timeline-item">
+                      <div className="timeline-dot"><i className="fas fa-bullhorn" /></div>
+                      <div className="timeline-content">
+                        <div className="timeline-date">{timestampToDate(proposal.votingStartAt)}</div>
+                        <div className="timeline-title">Voting Started</div>
+                        <div className="timeline-description">Voting phase began for this proposal{proposal?.votingEndAt ? ` — ends on ${timestampToDate(proposal.votingEndAt)}` : ''}</div>
+                      </div>
+                    </div>
+                  )}
+
+                  {proposal?.finalizedAt && (
+                    <div className="timeline-item">
+                      <div className="timeline-dot"><i className={`fas ${proposal.finalizedResult === 'Accepted' ? 'fa-check-circle' : 'fa-times-circle'}`} /></div>
+                      <div className="timeline-content">
+                        <div className="timeline-date">{timestampToDate(proposal.finalizedAt)}</div>
+                        <div className="timeline-title">Finalized — {proposal.finalizedResult || ''}</div>
+                        <div className="timeline-description">Voting finalized on-chain{proposal.finalizedResult === 'Accepted' ? ' — proposal accepted' : ' — proposal declined'}</div>
+                      </div>
+                    </div>
+                  )}
+
+                  {proposal?.executedAt && (
+                    <div className="timeline-item">
+                      <div className="timeline-dot"><i className="fas fa-play-circle" /></div>
+                      <div className="timeline-content">
+                        <div className="timeline-date">{timestampToDate(proposal.executedAt)}</div>
+                        <div className="timeline-title">Executed</div>
+                        <div className="timeline-description">Proposal was executed by the community</div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

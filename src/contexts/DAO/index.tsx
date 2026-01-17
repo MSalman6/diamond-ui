@@ -34,6 +34,7 @@ interface DaoContextProps {
   getProposalTimestamp: (proposalId: string) => Promise<number>;
   timestampToDate: (timestamp: string) => string;
   getHistoricProposals: () => Promise<void>;
+  getProposalTimeline: (proposalId: string) => Promise<any>;
   finalizeProposal: (proposalId: string) => Promise<string>;
   getCachedProposals: () => Proposal[];
   getProposalDetails: (proposalId: string) => Promise<Proposal>;
@@ -279,7 +280,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
 
     const proposalIdTopic = web3Context.web3.utils.padLeft(web3Context.web3.utils.toHex(proposalId), 64);
 
-    for (const signature of eventSignatures) {
+  for (const signature of eventSignatures) {
         try {
             const logs = await web3Context.web3.eth.getPastLogs({
                 address: web3Context.contractsManager.daoContract.options.address,
@@ -295,7 +296,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
             if (logs && logs.length > 0) {
                 // Fetch the timestamp of the block where the event was emitted
                 const block = await web3Context.web3.eth.getBlock(logs[0].blockNumber);
-                return block.timestamp as number;
+        return block.timestamp as number;
             }
         } catch (error) {
             console.error(`Error fetching logs with signature ${signature}:`, error);
@@ -304,6 +305,133 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     }
 
     throw new Error("No events found for the given proposalId");
+  };
+
+  // Returns creation block + timestamp for a proposal by inspecting ProposalCreated logs
+  const getProposalCreationBlock = async (proposalId: string): Promise<{ timestamp: number; blockNumber: number } | null> => {
+    try {
+      const daoContractAbi: any = web3Context.contractsManager.daoContract.options.jsonInterface;
+      const eventSignatures = [
+        web3Context.web3.utils.keccak256('ProposalCreated(address,uint256,address[],uint256[],bytes[],string,string,string)'),
+        daoContractAbi.find((item: any) => item.name === 'ProposalCreated' && item.type === 'event')?.signature
+      ].filter(Boolean);
+
+      const proposalIdTopic = web3Context.web3.utils.padLeft(web3Context.web3.utils.toHex(proposalId), 64);
+
+      for (const signature of eventSignatures) {
+        try {
+          const logs = await web3Context.web3.eth.getPastLogs({
+            address: web3Context.contractsManager.daoContract.options.address,
+            topics: [signature, null, proposalIdTopic],
+            fromBlock: 0,
+            toBlock: 'latest'
+          });
+
+          if (logs && logs.length > 0) {
+            const blockNumber = logs[0].blockNumber;
+            const block = await web3Context.web3.eth.getBlock(blockNumber);
+            return { timestamp: block.timestamp as number, blockNumber };
+          }
+        } catch (err) {
+          console.error('Error reading ProposalCreated logs:', err);
+        }
+      }
+    } catch (err) {
+      console.error('getProposalCreationBlock failed:', err);
+    }
+
+    return null;
+  };
+
+  // Build a timeline for a proposal by reading on-chain events: SwitchDaoPhase, VotingFinalized, ProposalExecuted
+  const getProposalTimeline = async (proposalId: string) => {
+    const daoAbi: any = web3Context.contractsManager.daoContract.options.jsonInterface;
+    const result: any = {};
+
+    try {
+      const creation = await getProposalCreationBlock(proposalId);
+      if (!creation) return null;
+      result.createdAt = String(creation.timestamp);
+      result.creationBlock = String(creation.blockNumber);
+
+      const switchEvent = daoAbi.find((it: any) => it.name === 'SwitchDaoPhase' && it.type === 'event');
+      if (switchEvent) {
+        const sig = switchEvent.signature;
+        const phaseTopic = web3Context.web3.utils.padLeft(web3Context.web3.utils.toHex(1), 64); // phase == 1
+
+        try {
+          const logs = await web3Context.web3.eth.getPastLogs({
+            address: web3Context.contractsManager.daoContract.options.address,
+            topics: [sig, phaseTopic],
+            fromBlock: creation.blockNumber,
+            toBlock: 'latest'
+          });
+
+          if (logs && logs.length > 0) {
+            const log = logs[0];
+            const decoded = web3Context.web3.eth.abi.decodeLog(switchEvent.inputs, log.data, log.topics.slice(1));
+            result.votingStartAt = String(decoded.start || '');
+            result.votingEndAt = String(decoded.end || '');
+          }
+        } catch (err) {
+          console.error('Error fetching SwitchDaoPhase logs:', err);
+        }
+      }
+
+      const vfEvent = daoAbi.find((it: any) => it.name === 'VotingFinalized' && it.type === 'event');
+      if (vfEvent) {
+        const sig = vfEvent.signature;
+        const proposalIdTopic = web3Context.web3.utils.padLeft(web3Context.web3.utils.toHex(proposalId), 64);
+        try {
+          const logs = await web3Context.web3.eth.getPastLogs({
+            address: web3Context.contractsManager.daoContract.options.address,
+            topics: [sig, null, proposalIdTopic],
+            fromBlock: creation.blockNumber,
+            toBlock: 'latest'
+          });
+
+          if (logs && logs.length > 0) {
+            const log = logs[logs.length - 1];
+            const block = await web3Context.web3.eth.getBlock(log.blockNumber);
+            const decoded = web3Context.web3.eth.abi.decodeLog(vfEvent.inputs, log.data, log.topics.slice(1));
+            const accepted = decoded.accepted;
+            result.finalizedAt = String(block.timestamp as number);
+            result.finalizedResult = accepted ? 'Accepted' : 'Declined';
+          } else {
+            result.finalizedResult = 'Pending';
+          }
+        } catch (err) {
+          console.error('Error fetching VotingFinalized logs:', err);
+        }
+      }
+
+      const peEvent = daoAbi.find((it: any) => it.name === 'ProposalExecuted' && it.type === 'event');
+      if (peEvent) {
+        const sig = peEvent.signature;
+        const proposalIdTopic = web3Context.web3.utils.padLeft(web3Context.web3.utils.toHex(proposalId), 64);
+        try {
+          const logs = await web3Context.web3.eth.getPastLogs({
+            address: web3Context.contractsManager.daoContract.options.address,
+            topics: [sig, null, proposalIdTopic],
+            fromBlock: creation.blockNumber,
+            toBlock: 'latest'
+          });
+
+          if (logs && logs.length > 0) {
+            const log = logs[logs.length - 1];
+            const block = await web3Context.web3.eth.getBlock(log.blockNumber);
+            result.executedAt = String(block.timestamp as number);
+          }
+        } catch (err) {
+          console.error('Error fetching ProposalExecuted logs:', err);
+        }
+      }
+
+      return result;
+    } catch (err) {
+      console.error('getProposalTimeline failed:', err);
+      return null;
+    }
   };
 
   const getCachedProposals = () => {
@@ -991,6 +1119,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     getProposalTimestamp,
     timestampToDate,
     getHistoricProposals,
+  getProposalTimeline,
     finalizeProposal,
     getCachedProposals,
     getProposalDetails,
