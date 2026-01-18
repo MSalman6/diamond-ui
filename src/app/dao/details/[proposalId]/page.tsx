@@ -17,6 +17,7 @@ export default function ProposalDetailsPage() {
   const [decodedDataCollapsed, setDecodedDataCollapsed] = useState(false)
   const [progressYesWidth, setProgressYesWidth] = useState("0%")
   const [progressNoWidth, setProgressNoWidth] = useState("0%")
+  const [thresholdLeft, setThresholdLeft] = useState<string>("0%")
   const tooltipRef = useRef<HTMLDivElement | null>(null)
   const progressBarRef = useRef<HTMLDivElement | null>(null)
 
@@ -60,29 +61,38 @@ export default function ProposalDetailsPage() {
     return undefined
   })()
 
-  // update progress bars from votingStats (kept fully in sync with numeric stats)
   useEffect(() => {
     try {
-      const total = BigNumber(votingStats?.total || 0)
+      const stakeForCalculation = (proposal?.totalStakeSnapshot && proposal.totalStakeSnapshot !== '0')
+        ? proposal.totalStakeSnapshot
+        : stakingContext.totalDaoStake
 
-      if (total.isGreaterThan(0)) {
-        const pos = BigNumber(votingStats?.positive || 0)
-        const neg = BigNumber(votingStats?.negative || 0)
-        const yesPercent = pos.multipliedBy(100).dividedBy(total).toNumber()
-        const noPercent = neg.multipliedBy(100).dividedBy(total).toNumber()
-        setProgressYesWidth(`${yesPercent.toFixed(0)}%`)
-        setProgressNoWidth(`${noPercent.toFixed(0)}%`)
+      const totalStake = BigNumber(stakeForCalculation || 0)
+      const pos = BigNumber(votingStats?.positive || 0)
+      const neg = BigNumber(votingStats?.negative || 0)
+
+      if (totalStake.isGreaterThan(0)) {
+
+        const exceedingYesPct = BigNumber.max(0, pos.minus(neg)).multipliedBy(100).dividedBy(totalStake).toNumber()
+        const noPct = neg.multipliedBy(100).dividedBy(totalStake).toNumber()
+        setProgressYesWidth(`${Math.max(0, Math.min(100, exceedingYesPct))}%`)
+        setProgressNoWidth(`${Math.max(0, Math.min(100, noPct))}%`)
       } else {
-        // no votes / zero total stake -> empty bar
         setProgressYesWidth("0%")
         setProgressNoWidth("0%")
       }
+
+      const rawType = String(proposal?.rawProposalType || '')
+      const thresholdPercentage = daoContext.getProposalThreshold
+        ? daoContext.getProposalThreshold(rawType || '0')
+        : 0
+      setThresholdLeft(`${thresholdPercentage}%`)
     } catch (e) {
-      // in case of any malformed data, fall back to empty bar
       setProgressYesWidth("0%")
       setProgressNoWidth("0%")
+      setThresholdLeft("0%")
     }
-  }, [votingStats])
+  }, [votingStats, proposal?.totalStakeSnapshot, proposal?.proposalType, proposal?.rawProposalType, stakingContext.totalDaoStake])
 
   // fetch proposal details and related data
   useEffect(() => {
@@ -151,7 +161,6 @@ export default function ProposalDetailsPage() {
     if (proposalId) getProposalDetails(proposalId)
   }, [proposalId, web3Context.userWallet?.myAddr, daoContext.daoPhase])
 
-  // derive UI section type from the proposal's type so the page shows only relevant data
   useEffect(() => {
     try {
       const pt = String(proposal?.proposalType || proposal?.rawProposalType || '').toLowerCase()
@@ -472,11 +481,29 @@ export default function ProposalDetailsPage() {
                 <div className="card-content">
                   <div className="voting-status-message executed"><i className="fas fa-check-circle" /> <span>This proposal was Executed by the community</span></div>
                   <div className="voting-progress-container">
-                    <div className="voting-progress-bar" ref={progressBarRef} onMouseMove={handleProgressMouseMove}>
-                      <div className="progress-yes" style={{ width: progressYesWidth, transition: "width 1.5s ease-out" }} />
-                      <div className="progress-no" style={{ width: progressNoWidth, transition: "width 1.5s ease-out" }} />
+                    <div
+                      className="voting-progress-bar segmented"
+                      ref={progressBarRef}
+                      onMouseMove={handleProgressMouseMove}
+                      style={{
+                        ['--yes-width' as any]: progressYesWidth,
+                        ['--no-width' as any]: progressNoWidth,
+                        ['--threshold-left' as any]: thresholdLeft,
+                      }}
+                    >
+                      <div className="bar-segments">
+                        <div className="progress-yes" />
+                        <div className="progress-no" />
+                      </div>
+                      <div className="threshold-line" />
+                      <div className="threshold-label">Acceptance Threshold</div>
                     </div>
-                    <div className="voting-progress-tooltip" id="progress-tooltip" ref={tooltipRef}></div>
+                    {/* <div className="voting-progress-tooltip" id="progress-tooltip" ref={tooltipRef}></div> */}
+                    <div className="voting-legend">
+                      <span className="legend-item"><span className="legend-dot yes"></span> Exceeding yes (Yes - No)</span>
+                      <span className="legend-item"><span className="legend-dot no"></span> No Votes</span>
+                      <span className="legend-item"><span className="legend-dot threshold"></span> Acceptance Threshold</span>
+                    </div>
                   </div>
                   <div className="voting-stats">
                     {(() => {

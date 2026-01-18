@@ -821,8 +821,9 @@
   position: absolute;
   top: 0;
   height: 100%;
-  width: 2px;
-  background: rgba(255, 255, 255, 0.8);
+  width: 4px;
+  background: #FFC107;
+  border: 0.5px solid rgba(0, 0, 0, 0.6);
   z-index: 2;
 }
 
@@ -834,6 +835,34 @@
   font-size: 0.75rem;
   white-space: nowrap;
   color: rgba(255, 255, 255, 0.8);
+}
+
+.voting-progress-bar.segmented .bar-segments {
+  display: flex;
+  height: 100%;
+}
+
+.voting-progress-bar.segmented .progress-yes,
+.voting-progress-bar.segmented .progress-no {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 100%;
+  margin-left: 0;
+  transition: width 1.5s ease-out;
+}
+
+.voting-progress-bar.segmented .progress-yes {
+  width: var(--yes-width, 0%);
+}
+
+.voting-progress-bar.segmented .progress-no {
+  width: var(--no-width, 0%);
+}
+
+.voting-progress-bar.segmented .threshold-line,
+.voting-progress-bar.segmented .threshold-label {
+  left: var(--threshold-left, 0%);
 }
 
 .voting-progress-tooltip {
@@ -890,6 +919,49 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.voting-legend {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+
+.voting-legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  border: 1px solid var(--border-color);
+  display: inline-block;
+}
+
+.legend-dot.yes {
+  background: linear-gradient(90deg, #16a085, #2ecc71);
+}
+
+.legend-dot.no {
+  background: linear-gradient(90deg, #ff4c4c, #ff9800);
+}
+
+.legend-dot.threshold {
+  background: #FFC107;
+  border-color: rgba(0, 0, 0, 0.6);
+}
+
+.voting-progress-bar.segmented .threshold-line {
+  left: var(--threshold-left, 0%);
+  transform: translateX(-50%);
+}
+.voting-progress-bar.segmented .threshold-label {
+  left: var(--threshold-left, 0%);
 }
 
 .stat-item {
@@ -1495,10 +1567,6 @@ body.light-theme .progress-yes {
 
 body.light-theme .progress-no {
   background: linear-gradient(90deg, #e53935, #f57c00);
-}
-
-body.light-theme .threshold-line {
-  background: rgba(0, 0, 0, 0.5);
 }
 
 body.light-theme .threshold-label {
