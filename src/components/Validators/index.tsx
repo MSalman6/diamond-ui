@@ -357,7 +357,7 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
             return (
               <td key={colIndex} onClick={(e) => e.stopPropagation()}>
                 {BigNumber(pool.orderedWithdrawAmount).isGreaterThan(0) && BigNumber(pool.orderedWithdrawUnlockEpoch).isLessThanOrEqualTo(stakingEpoch) ? (
-                  <button className="btn-stake" onClick={(e) => {e.stopPropagation(); claimOrderedUnstake(pool)}}>Claim</button>
+                  <button className="btn-stake claim-btn" onClick={(e) => {e.stopPropagation(); claimOrderedUnstake(pool)}}>Claim</button>
                 ) : (
                   BigNumber(pool.myStake).isGreaterThan(0) && (
                     <UnstakeModal buttonText="Unstake" pool={pool} />

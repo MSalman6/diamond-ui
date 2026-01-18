@@ -1468,3 +1468,40 @@ body.light-theme .column-remove:hover {
   margin-left: auto;
   margin-right: 0;
 }
+
+.claim-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  background: rgba(255, 159, 67, 0.15);
+  color: #ff9f43;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.claim-btn:hover {
+  background: rgba(255, 159, 67, 0.3);
+}
+
+.claim-btn:active {
+  transform: scale(0.95);
+}
+
+.claim-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+body.light-theme .claim-btn {
+  background: rgba(255, 159, 67, 0.15);
+  color: #e65100;
+}
+
+body.light-theme .claim-btn:hover {
+  background: rgba(255, 159, 67, 0.25);
+}
