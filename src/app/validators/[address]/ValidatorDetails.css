@@ -753,6 +753,7 @@ body.light-theme .info-icon {
   font-size: 2rem;
   font-weight: 700;
   background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 10px;
@@ -1462,6 +1463,27 @@ body.light-theme .pagination-ellipsis {
 .cta-button:hover {
   background: var(--card-bg);
   transform: translateY(-2px);
+}
+
+.cta-button.coming-soon {
+  background: rgba(128, 128, 128, 0.15);
+  border-color: rgba(128, 128, 128, 0.35);
+  color: var(--text-secondary);
+}
+
+.cta-button.coming-soon:hover {
+  background: rgba(128, 128, 128, 0.2);
+  transform: none;
+}
+
+body.light-theme .cta-button.coming-soon {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+  color: #6b7280;
+}
+
+body.light-theme .cta-button.coming-soon:hover {
+  background: #e5e7eb;
 }
 
 @keyframes shimmer {

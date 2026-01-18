@@ -232,7 +232,13 @@ export default function ValidatorDetails() {
               <i className="fas fa-arrow-down"></i> 10 since 01.01.24
             </div>
             <div className="stat-actions">
-              <button onClick={() => toast.info("Coming soon!")} className="cta-button">History</button>
+              <button
+                onClick={() => toast.info("Coming soon!")}
+                className="cta-button coming-soon"
+                title="Coming soon"
+              >
+                History
+              </button>
             </div>
           </div>
 
@@ -287,7 +293,14 @@ export default function ValidatorDetails() {
             <p className="stat-value-large">100 DMD</p>
             <div className="stat-subtitle">Earned per 1000DMD = 5.88DMD</div>
             <div className="stat-actions">
-              <button onClick={() => toast.info("Coming soon!")} className="cta-button" id="rewards-history-button">History</button>
+              <button
+                onClick={() => toast.info("Coming soon!")}
+                className="cta-button coming-soon"
+                id="rewards-history-button"
+                title="Coming soon"
+              >
+                History
+              </button>
             </div>
           </div>
 
