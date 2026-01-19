@@ -496,7 +496,7 @@ export default function ProposalDetailsPage() {
                         <div className="progress-no" />
                       </div>
                       <div className="threshold-line" />
-                      <div className="threshold-label">Acceptance Threshold</div>
+                      {/* <div className="threshold-label">Acceptance Threshold</div> */}
                     </div>
                     {/* <div className="voting-progress-tooltip" id="progress-tooltip" ref={tooltipRef}></div> */}
                     <div className="voting-legend">
@@ -532,15 +532,33 @@ export default function ProposalDetailsPage() {
                           </div>
                           <div className="stat-divider" />
                           <div className="stat-item participation">
-                            Participation: {votingStats?.participation != null
-                              ? `${votingStats.participation}%`
-                              : '0%'}
+                            Participation:{" "}
+                            {votingStats?.total
+                              .dividedBy(10 ** 18)
+                              .toFixed(4, BigNumber.ROUND_DOWN)}{" "}
+                            DMD (
+                            {BigNumber(votingStats?.total)
+                              .dividedBy(
+                                Number(
+                                  proposal?.totalStakeSnapshot &&
+                                    proposal?.totalStakeSnapshot !== "0"
+                                    ? proposal?.totalStakeSnapshot
+                                    : stakingContext.totalDaoStake,
+                                ),
+                              )
+                              .multipliedBy(100)
+                              .toFixed(4)}
+                            % |{" "}
+                            {daoContext.getProposalThreshold(
+                              proposal?.rawProposalType,
+                            )}
+                            % required)
                           </div>
                         </>
                       )
                     })()}
                   </div>
-                  <div className="voting-time"><i className="fas fa-clock" /> <span>{proposal?.votingEnd ? `Voting ended on ${timestampToDate(proposal.votingEnd)}` : 'Voting ended on 11 Mar 2025'}</span></div>
+                  <div className="voting-time"><i className="fas fa-clock" /> <span>{proposal?.finalizedAt ? `Voting ended on ${timestampToDate(proposal?.finalizedAt)}` : 'Voting ended on 11 Mar 2025'}</span></div>
                 </div>
               </div>
 
