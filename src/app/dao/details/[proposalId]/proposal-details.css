@@ -1660,3 +1660,7 @@ body.light-theme .type-btn.active {
   background: rgba(0, 157, 255, 0.2);
   color: #0077cc;
 }
+
+.proposal-hero-content {
+  margin-top: 60px;
+}

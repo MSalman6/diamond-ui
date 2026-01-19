@@ -125,6 +125,7 @@
   border-radius: 6px;
   padding: 12px;
   margin-top: 12px;
+  text-align: center;
 }
 
 .warningBox p {
@@ -188,6 +189,7 @@
   padding: 12px;
   margin-top: 12px;
   margin-bottom: 12px;
+  text-align: center;
 }
 
 .infoBox p {
@@ -216,4 +218,8 @@
 .switchButton:focus {
   outline: none;
   box-shadow: 0 0 0 4px rgba(1,69,178,0.12);
+}
+
+.feeInfoText {
+  text-align: center;
 }

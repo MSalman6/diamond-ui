@@ -479,7 +479,12 @@ export default function ProposalDetailsPage() {
               <div className="proposal-card voting-card">
                 <div className="card-header"><h3>Voting Progress</h3></div>
                 <div className="card-content">
-                  <div className="voting-status-message executed"><i className="fas fa-check-circle" /> <span>This proposal was Executed by the community</span></div>
+                  {proposal?.executedAt && (
+                    <div className="voting-status-message executed">
+                      <i className="fas fa-check-circle" />
+                      <span>This proposal was Executed by the community</span>
+                    </div>
+                  )}
                   <div className="voting-progress-container">
                     <div
                       className="voting-progress-bar segmented"
@@ -532,6 +537,9 @@ export default function ProposalDetailsPage() {
                           </div>
                           <div className="stat-divider" />
                           <div className="stat-item participation">
+                            Exceeding Yes: {BigNumber.max(0, BigNumber(votingStats?.positive).minus(votingStats?.negative)).dividedBy(10**18).toFixed(4)} DMD ({parseFloat(String(progressYesWidth)).toFixed(4)}% | {daoContext.getProposalThreshold(proposal?.rawProposalType)}% required)
+                          </div>
+                          <div className="stat-item participation">
                             Participation:{" "}
                             {votingStats?.total
                               .dividedBy(10 ** 18)
@@ -558,7 +566,9 @@ export default function ProposalDetailsPage() {
                       )
                     })()}
                   </div>
-                  <div className="voting-time"><i className="fas fa-clock" /> <span>{proposal?.finalizedAt ? `Voting ended on ${timestampToDate(proposal?.finalizedAt)}` : 'Voting ended on 11 Mar 2025'}</span></div>
+                  {proposal?.finalizedAt && (
+                    <div className="voting-time"><i className="fas fa-clock" /> <span>{`Voting ended on ${timestampToDate(proposal.finalizedAt)}`}</span></div>
+                  )}
                 </div>
               </div>
 

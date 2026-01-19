@@ -28,20 +28,7 @@ type Proposal = {
   actionsNeeded?: boolean;
 };
 
-const initialProposals: Proposal[] = [
-  {
-    id: "p1",
-    date: "2025-04-02",
-    creator: "0x8F3c...9D2b",
-    creatorColor: "#3a7bd5",
-    title: "Increase Min. Gas price",
-    type: "parameter",
-    participation: 65,
-    exceeding: 12.5,
-    voted: true,
-    status: "Active",
-  }
-];
+const initialProposals: Proposal[] = [];
 
 export default function DaoPage() {
   useFadeInAnimation();
@@ -346,12 +333,12 @@ export default function DaoPage() {
               <div className="stat-content">
                 <p className="stat-value">{daoContext.allDaoProposals ? daoContext.allDaoProposals.length : 0}</p>
                 <div className="proposals-breakdown">
-                  <div className="breakdown-item">
+                  <div className="breakdown-item-dao">
                     <span className="breakdown-dot passed" />
                     <span className="breakdown-label">Passed:</span>
                     <span className="breakdown-value">{daoContext.allDaoProposals ? daoContext.allDaoProposals.filter(p => p.state === '4' || p.state === '6').length : 0}</span>
                   </div>
-                  <div className="breakdown-item">
+                  <div className="breakdown-item-dao">
                     <span className="breakdown-dot rejected" />
                     <span className="breakdown-label">Rejected:</span>
                     <span className="breakdown-value">{daoContext.allDaoProposals ? daoContext.allDaoProposals.filter(p => p.state === '5').length : 0}</span>
