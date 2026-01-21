@@ -6,6 +6,8 @@
   --border-color: rgba(255, 255, 255, 0.1);
   --text: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent: #3a7bd5;
+  --accent-hover: #2f6bbf;
   --purple-glow: rgba(138, 43, 226, 0.4);
   --blue-glow: rgba(0, 157, 255, 0.4);
   --teal-glow: rgba(0, 255, 191, 0.4);

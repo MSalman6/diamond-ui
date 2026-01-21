@@ -1466,24 +1466,27 @@ body.light-theme .pagination-ellipsis {
 }
 
 .cta-button.coming-soon {
-  background: rgba(128, 128, 128, 0.15);
-  border-color: rgba(128, 128, 128, 0.35);
-  color: var(--text-secondary);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 .cta-button.coming-soon:hover {
-  background: rgba(128, 128, 128, 0.2);
+  background: var(--accent);
   transform: none;
 }
 
 body.light-theme .cta-button.coming-soon {
-  background: #e5e7eb;
-  border-color: #d1d5db;
-  color: #6b7280;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  opacity: 0.7;
 }
 
 body.light-theme .cta-button.coming-soon:hover {
-  background: #e5e7eb;
+  background: var(--accent);
 }
 
 @keyframes shimmer {
