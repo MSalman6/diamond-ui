@@ -221,11 +221,11 @@ export default function DaoPage() {
                   <div className="step-dot" />
                   <span>Voting</span>
                 </div>
-                <div className="phase-connector" />
+                {/* <div className="phase-connector" />
                 <div className="phase-step">
                   <div className="step-dot" />
                   <span>Execution</span>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -285,11 +285,11 @@ export default function DaoPage() {
                   <div className="stat-details">
                     <div className="detail-item">
                       <span className="detail-label">Pool Stake:</span>
-                      <span className="detail-value">{stakingContext.myPool.ownStake ? stakingContext.myPool.ownStake.dividedBy(1e18).toFixed(2) + ' DMD' : '0 DMD'}</span>
+                      <span className="detail-value">{stakingContext.myPool.ownStake ? BigNumber(stakingContext.myPool.ownStake).dividedBy(1e18).toFixed(2) + ' DMD' : '0 DMD'}</span>
                     </div>
                     <div className="detail-item">
                       <span className="detail-label">Total Stake:</span>
-                      <span className="detail-value">{stakingContext.totalDaoStake ? stakingContext.totalDaoStake.dividedBy(1e18).toFixed(2) + ' DMD' : '0 DMD'}</span>
+                      <span className="detail-value">{stakingContext.totalDaoStake ?  BigNumber(stakingContext.totalDaoStake).dividedBy(1e18).toFixed(2) + ' DMD' : '0 DMD'}</span>
                     </div>
                   </div>
                   <div className="voting-power-bar">
@@ -425,7 +425,7 @@ export default function DaoPage() {
                       <td>
                         <div className="proposal-title"><span>{p.title}</span></div>
                       </td>
-                      <td><span className={`proposal-type ${p.type}`}>{p.type === "community" ? "Open" : p.type}</span></td>
+                      <td><span className={`proposal-type ${(p.type || '').replace(/\s+/g, '-')}`}>{p.type === "community" ? "Open" : p.type}</span></td>
                       <td>
                         <div className="participation-bar">
                           <div className="participation-progress" style={{ width: `${p.participation}%` }} />

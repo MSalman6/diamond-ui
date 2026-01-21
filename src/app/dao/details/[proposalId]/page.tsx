@@ -370,10 +370,12 @@ export default function ProposalDetailsPage() {
                 <div className="card-content">
                   <div className="funding-purpose"><h4>{proposal?.title || ''}</h4></div>
                   <div className="funding-details">
-                    <div className="payout-address">
-                      <span className="label">Payout Address</span>
-                      <div className="address-container">{proposal?.targets?.[0] || '0xabc...123'}</div>
-                    </div>
+                    {proposal?.targets?.[0] && proposal.targets[0] !== '0x0000000000000000000000000000000000000000' && (
+                      <div className="payout-address">
+                        <span className="label">Payout Address</span>
+                        <div className="address-container">{proposal.targets[0]}</div>
+                      </div>
+                    )}
                     <div className="payout-amount">
                       <span className="label">Amount</span>
                       <div className="value">{proposal?.values && proposal.values[0] ? (new BigNumber(proposal.values[0]).dividedBy(10**18)).toString() + ' DMD' : '10,000 DMD'}</div>
