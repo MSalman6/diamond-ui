@@ -200,7 +200,17 @@ export default function ValidatorDetails() {
             <div className="stat-footer">
               <span className="connectivity-info">
                 Connectivity reports: 0
-                <InfoTooltip placement="bottom" content={<span />}> 
+                <InfoTooltip
+                  placement="bottom"
+                  content={
+                  <div>
+                    <p>Number of detected connectivity issues for this validator.</p>
+                    <p>
+                    <strong>Monthly rewards:</strong> Estimated rewards earned by this validator over the past 30 days. Includes both validator and delegator rewards and depends on uptime, performance, and stake size.
+                    </p>
+                  </div>
+                  }
+                >
                   <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                 </InfoTooltip>
               </span>
