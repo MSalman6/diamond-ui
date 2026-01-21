@@ -936,8 +936,6 @@
 }
 
 .participation-value {
-  position: absolute;
-  right: -8px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 0.85rem;
