@@ -441,7 +441,9 @@ export default function ProposalDetailsPage() {
                       <button id="expand-call-data" className="expand-btn" onClick={() => setCallDataCollapsed(!callDataCollapsed)}>
                         {callDataCollapsed ? (<><i className="fas fa-chevron-down"></i> Expand</>) : (<><i className="fas fa-chevron-up"></i> Collapse</>) }
                       </button>
-                      <div className={`call-data-content ${callDataCollapsed ? "collapsed" : ""}`}>{proposal?.calldatas?.[0] || 'Raw call data…'}</div>
+                      <div className={`call-data-content ${callDataCollapsed ? "collapsed" : ""}`}>
+                        <pre className="code-block"><code>{proposal?.calldatas?.[0] || 'Raw call data…'}</code></pre>
+                      </div>
                     </div>
                     <div className="decoded-data">
                       <button id="expand-decoded-data" className="expand-btn" onClick={() => setDecodedDataCollapsed(!decodedDataCollapsed)}>

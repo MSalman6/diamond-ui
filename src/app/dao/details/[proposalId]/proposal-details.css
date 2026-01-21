@@ -137,7 +137,29 @@
   transition: background-color 0.5s ease;
 }
 
-/* Update the proposal grid to be more flexible */
+.proposal-details-page-root {
+  width: 100%;
+}
+
+.target-address .value,
+.transaction-value,
+.transaction-hash,
+.address-container,
+.call-data-content,
+.decoded-data-content {
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.call-data-content,
+.decoded-data-content {
+  white-space: pre-wrap;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  line-height: 1.4;
+}
+
 .proposal-grid {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
@@ -927,6 +949,7 @@
   align-items: center;
   margin-top: 8px;
   font-size: 0.9rem;
+  flex-wrap: wrap;
 }
 
 .voting-legend .legend-item {
