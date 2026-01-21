@@ -342,14 +342,14 @@ export default function ProposalDetailsPage() {
                   </div>
                   <div className="parameter-fee">
                     <span className="label">Set Parameter Fee:</span>
-                    <span className="value">{proposal?.parameterFee ? proposal.parameterFee : '100 DMD'}</span>
+                    <span className="value">{daoContext?.proposalFee ? BigNumber(daoContext?.proposalFee).dividedBy(1e18).toString() + ' DMD' : '100 DMD'}</span>
                     <InfoTooltip placement="bottom" content={<span>This is a fee to update the parameter.</span>}>
                       <i className="fas fa-info-circle info-icon" aria-hidden="true" />
                     </InfoTooltip>
                   </div>
                   <div className="parameter-description">
                     <h4>Description</h4>
-                    <p>{proposal?.description || 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'}</p>
+                    <p>{proposal?.description || ''}</p>
                   </div>
                   <div className="parameter-impact">
                     <h4>Impact Assessment</h4>

@@ -11,6 +11,7 @@ BigNumber.config({ EXPONENTIAL_AT: 1e+9 });
 
 interface DaoContextProps {
   daoPhase: any,
+  proposalFee: string;
   daoPhaseCount: string;
   daoInitialized: boolean;
   activeProposals: Proposal[];
@@ -1096,6 +1097,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
   const contextValue = {
     // states
     daoPhase,
+    proposalFee,
     daoPhaseCount,
     phaseEndTimer,
     daoInitialized,
@@ -1119,7 +1121,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     getProposalTimestamp,
     timestampToDate,
     getHistoricProposals,
-  getProposalTimeline,
+    getProposalTimeline,
     finalizeProposal,
     getCachedProposals,
     getProposalDetails,
