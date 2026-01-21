@@ -867,19 +867,14 @@
   font-weight: 500;
 }
 
-.proposal-type.protocol {
+.proposal-type.ecosystem-parameter-change {
   background: rgba(0, 210, 255, 0.15);
   color: #00d2ff;
 }
 
-.proposal-type.treasury {
+.proposal-type.contract-upgrade {
   background: rgba(161, 127, 224, 0.15);
   color: #a17fe0;
-}
-
-.proposal-type.parameter {
-  background: rgba(255, 159, 67, 0.15);
-  color: #ff9f43;
 }
 
 .proposal-type.community {
@@ -887,6 +882,15 @@
   color: #07f49e;
 }
 
+.proposal-type.open {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+}
+
+.proposal-type.open-payout {
+  background: rgba(255, 159, 67, 0.15);
+  color: #ff9f43;
+}
 
 .light-theme .proposal-type.protocol {
   background: rgba(0, 119, 204, 0.12);

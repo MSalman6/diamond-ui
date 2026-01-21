@@ -197,7 +197,7 @@ export default function HistoricProposalsPage() {
                 <span className="stat-value declined">{daoList.filter(p => p.status.toLowerCase() === 'declined').length}</span>
               </div>
             </div>
-            <div style={{ marginTop: 8 }}>
+            <div className="controls-status">
               {loading && <div className="loader-text">Loading proposals...</div>}
               {error && <div className="error-text">{error}</div>}
               {!loading && !error && indexingStatus && <div className="indexing-status">{indexingStatus}</div>}
@@ -240,7 +240,7 @@ export default function HistoricProposalsPage() {
                     <td>
                       <div className="proposal-title"><span>{p.title}</span></div>
                     </td>
-                    <td><span className={`proposal-type ${p.type}`}>{p.type}</span></td>
+                    <td><span className={`proposal-type ${(p.type || '').replace(/\s+/g, '-')}`}>{p.type}</span></td>
                     <td>
                       <div className="participation-bar">
                         <div className="participation-progress" style={{ width: `${p.participation}%` }} />

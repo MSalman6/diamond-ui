@@ -46,7 +46,7 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 20px;
+  width: 100%;
 }
 
 .search-filter-group {
@@ -152,6 +152,11 @@
 
 .stat-value.declined {
   color: #ff6b6b;
+}
+
+.controls-status {
+  flex: 0 0 100%;
+  margin-top: 8px;
 }
 
 /* Historic Proposals Section */
@@ -290,19 +295,14 @@
   font-weight: 500;
 }
 
-.proposal-type.ecosystem {
+.proposal-type.ecosystem-parameter-change {
   background: rgba(0, 210, 255, 0.15);
   color: #00d2ff;
 }
 
-.proposal-type.treasury {
+.proposal-type.contract-upgrade {
   background: rgba(161, 127, 224, 0.15);
   color: #a17fe0;
-}
-
-.proposal-type.protocol {
-  background: rgba(255, 159, 67, 0.15);
-  color: #ff9f43;
 }
 
 .proposal-type.community {
@@ -313,6 +313,11 @@
 .proposal-type.open {
   background: rgba(255, 107, 107, 0.15);
   color: #ff6b6b;
+}
+
+.proposal-type.open-payout {
+  background: rgba(255, 159, 67, 0.15);
+  color: #ff9f43;
 }
 
 .participation-bar {
@@ -434,6 +439,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+    align-self: flex-end;
   }
 
   .proposals-table-container {
