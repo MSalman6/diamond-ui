@@ -3,6 +3,7 @@
 import "./proposal-details.css"
 import React, { useEffect, useRef, useState } from "react"
 import InfoTooltip from '@/components/InfoTooltip'
+import Modal from '@/components/Modal'
 import { usePathname } from 'next/navigation'
 import BigNumber from 'bignumber.js'
 import { useDaoContext } from '@/contexts/DAO'
@@ -307,6 +308,43 @@ export default function ProposalDetailsPage() {
                 </div>
               </div>
 
+              {/* Dismiss Proposal (proposer only, created phase) */}
+              {web3Context.userWallet?.myAddr === proposal?.proposer &&
+                proposal?.state === '0' &&
+                daoContext.daoPhase?.phase === '0' && (
+                  <div className="proposal-card dismiss-card">
+                    <div className="card-header"><h3>Dismiss Proposal</h3></div>
+                    <div className="card-content">
+                      <button className="primaryBtn" onClick={() => setDismissProposal(true)}>
+                        <i className="fas fa-times" /> Dismiss Proposal
+                      </button>
+                      <Modal isOpen={dismissProposal} onClose={() => setDismissProposal(false)}>
+                        <div className="modal-body">
+                          <h3>Confirm Dismissal</h3>
+                          <p>Are you sure you want to dismiss this proposal?</p>
+                          <div className="form-group">
+                            <label>Dismissal Reason (optional)</label>
+                            <input
+                              type="text"
+                              placeholder="Reason"
+                              value={dismissReason}
+                              onChange={(e) => setDismissReason(e.target.value)}
+                            />
+                          </div>
+                          <div className="modal-actions" style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                            <button className="primaryBtn" onClick={handleDismissProposal}>
+                              Yes, dismiss
+                            </button>
+                            <button className="btn-cancel" onClick={() => setDismissProposal(false)}>
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </Modal>
+                    </div>
+                  </div>
+                )}
+
               <div className={`proposal-card parameter-change-card ${type !== "parameter-change" ? "hidden" : ""}`} id="parameter-change-content">
                 <div className="card-header"><h3>Parameter Change</h3></div>
                 <div className="card-content">
@@ -572,6 +610,70 @@ export default function ProposalDetailsPage() {
                   </div>
                   {proposal?.finalizedAt && (
                     <div className="voting-time"><i className="fas fa-clock" /> <span>{`Voting ended on ${timestampToDate(proposal.finalizedAt)}`}</span></div>
+                  )}
+
+                  {/* Voting Actions */}
+                  {stakingContext.myPool &&
+                    (proposal?.state === '2' || (daoContext.daoPhase?.phase === '1' && proposal?.state === '0')) && (
+                      <div className="voting-actions" style={{ marginTop: '16px' }}>
+                        {/* Already voted notice */}
+                        {(myVote?.vote === '0' || myVote?.vote === '1') && Number(myVote?.timestamp || 0) > 0 && (
+                          <div className="voted-notice" style={{ marginBottom: '10px' }}>
+                            {myVote?.vote === '0' ? (
+                              <p>You have already voted against the proposal. Do you want to change your decision?</p>
+                            ) : (
+                              <p>You have already voted for the proposal. Do you want to change your decision?</p>
+                            )}
+                          </div>
+                        )}
+                        {/* Vote reason */}
+                        {web3Context.userWallet?.myAddr && (
+                          <div className="form-group" style={{ marginBottom: '10px' }}>
+                            <input
+                              type="text"
+                              placeholder={myVote?.reason ? myVote.reason : 'Vote Reason'}
+                              value={voteReason}
+                              onChange={(e) => setVoteReason(e.target.value)}
+                            />
+                          </div>
+                        )}
+                        <div className="vote-buttons" style={{ display: 'flex', gap: '10px' }}>
+                          {Number(myVote?.timestamp || 0) === 0 ? (
+                            <>
+                              <button className="primaryBtn vote-yes" onClick={() => handleCastVote(1)}>
+                                Vote For <i className="fas fa-thumbs-up" />
+                              </button>
+                              <button className="primaryBtn vote-no" onClick={() => handleCastVote(0)}>
+                                Vote Against <i className="fas fa-thumbs-down" />
+                              </button>
+                            </>
+                          ) : myVote?.vote === '0' ? (
+                            <button className="primaryBtn vote-yes" onClick={() => handleCastVote(1)}>
+                              Vote For <i className="fas fa-thumbs-up" />
+                            </button>
+                          ) : (
+                            <button className="primaryBtn vote-no" onClick={() => handleCastVote(0)}>
+                              Vote Against <i className="fas fa-thumbs-down" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                  {/* Finalize & Execute Actions */}
+                  {proposal?.state === '3' && (
+                    <div className="finalize-actions" style={{ marginTop: '16px' }}>
+                      <button className="primaryBtn" onClick={() => handleProposalFinalization(proposal?.id)}>
+                        Finalize Proposal
+                      </button>
+                    </div>
+                  )}
+                  {proposal?.state === '4' && (
+                    <div className="execute-actions" style={{ marginTop: '12px' }}>
+                      <button className="primaryBtn" onClick={() => handleProposalExecution(proposal?.id)}>
+                        Execute Proposal
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
