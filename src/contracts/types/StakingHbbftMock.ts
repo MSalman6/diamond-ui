@@ -259,6 +259,8 @@ export interface StakingHbbftMock extends BaseContract {
       _internetAddresses: (string | number[])[]
     ): NonPayableTransactionObject<void>;
 
+    initializeV3(): NonPayableTransactionObject<void>;
+
     isPoolActive(_stakingAddress: string): NonPayableTransactionObject<boolean>;
 
     isPoolValid(_stakingAddress: string): NonPayableTransactionObject<boolean>;
@@ -384,6 +386,12 @@ export interface StakingHbbftMock extends BaseContract {
     setNodeOperator(
       _operatorAddress: string,
       _operatorShare: number | string | BN
+    ): NonPayableTransactionObject<void>;
+
+    setNodeOperatorMock(
+      poolStakingAddress: string,
+      operator: string,
+      share: number | string | BN
     ): NonPayableTransactionObject<void>;
 
     setPoolInfo(

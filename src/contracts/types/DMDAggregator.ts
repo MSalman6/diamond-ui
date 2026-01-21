@@ -36,6 +36,28 @@ export interface DMDAggregator extends BaseContract {
   ): DMDAggregator;
   clone(): DMDAggregator;
   methods: {
+    renounceOwnership(): NonPayableTransactionObject<void>;
+
+    setBlockRewardContract(_br: string): NonPayableTransactionObject<void>;
+
+    setKeygenHistoryContract(_kh: string): NonPayableTransactionObject<void>;
+
+    setStakingContract(_st: string): NonPayableTransactionObject<void>;
+
+    setTxPermissionContract(_tp: string): NonPayableTransactionObject<void>;
+
+    setValidatorsSetContract(_vs: string): NonPayableTransactionObject<void>;
+
+    transferOwnership(newOwner: string): NonPayableTransactionObject<void>;
+
+    br(): NonPayableTransactionObject<string>;
+
+    bs(): NonPayableTransactionObject<string>;
+
+    ct(): NonPayableTransactionObject<string>;
+
+    dao(): NonPayableTransactionObject<string>;
+
     getActiveProposals(): NonPayableTransactionObject<
       [
         [
@@ -115,7 +137,6 @@ export interface DMDAggregator extends BaseContract {
         string,
         string,
         string,
-        boolean,
         string,
         string,
         string
@@ -238,21 +259,15 @@ export interface DMDAggregator extends BaseContract {
       1: string;
     }>;
 
+    kh(): NonPayableTransactionObject<string>;
+
     owner(): NonPayableTransactionObject<string>;
 
-    renounceOwnership(): NonPayableTransactionObject<void>;
+    st(): NonPayableTransactionObject<string>;
 
-    setBlockRewardContract(_br: string): NonPayableTransactionObject<void>;
+    tp(): NonPayableTransactionObject<string>;
 
-    setKeygenHistoryContract(_kh: string): NonPayableTransactionObject<void>;
-
-    setStakingContract(_st: string): NonPayableTransactionObject<void>;
-
-    setTxPermissionContract(_tp: string): NonPayableTransactionObject<void>;
-
-    setValidatorsSetContract(_vs: string): NonPayableTransactionObject<void>;
-
-    transferOwnership(newOwner: string): NonPayableTransactionObject<void>;
+    vs(): NonPayableTransactionObject<string>;
   };
   events: {
     OwnershipTransferred(cb?: Callback<OwnershipTransferred>): EventEmitter;

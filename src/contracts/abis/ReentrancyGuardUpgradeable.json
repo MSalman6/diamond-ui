@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ReentrancyGuardUpgradeable",
-  "sourceName": "contracts/DiamondDao.sol",
+  "sourceName": "contracts/DiamondDaoFlat.sol",
   "abi": [
     {
       "inputs": [],

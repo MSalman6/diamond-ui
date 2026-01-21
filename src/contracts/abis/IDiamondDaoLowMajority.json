@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IDiamondDaoLowMajority",
-  "sourceName": "contracts/interfaces/IDiamondDaoLowMajority.sol",
+  "sourceName": "contracts/DiamondDaoFlat.sol",
   "abi": [
     {
       "inputs": [

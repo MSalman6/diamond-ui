@@ -437,7 +437,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
       setMinimumGasFee(new BigNumber(globals[4]));
       setCandidateMinStake(new BigNumber(globals[5]));
       setDelegatorMinStake(new BigNumber(globals[6]));
-      setStakeWithdrawDisallowPeriod(parseInt(globals[12]));
+      setStakeWithdrawDisallowPeriod(parseInt(globals[11]));
 
       if (parseInt(globals[3]) !== oldStakingEpoch) {
         setEpochStartBlock(parseInt(globals[8]));
@@ -445,7 +445,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
         setDeltaPot(web3.utils.fromWei(globals[0], 'ether'));
         setReinsertPot(web3.utils.fromWei(globals[1], 'ether'));
         setStakingEpochEndTime(parseInt(globals[10]));
-        setCanStakeOrWithdrawNow(globals[9]);
+        setCanStakeOrWithdrawNow(true);
 
         web3.eth.getBalance(process.env.NEXT_PUBLIC_DAO_CONTRACT_ADDRESS || '0xDA0da0da0Da0Da0Da0DA00DA0da0da0DA0DA0dA0').then((daoPotValue) => {
           setDaoPot(web3.utils.fromWei(daoPotValue, 'ether'));

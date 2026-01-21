@@ -230,6 +230,8 @@ export interface StakingHbbft extends BaseContract {
       _internetAddresses: (string | number[])[]
     ): NonPayableTransactionObject<void>;
 
+    initializeV3(): NonPayableTransactionObject<void>;
+
     isPoolActive(_stakingAddress: string): NonPayableTransactionObject<boolean>;
 
     isPoolValid(_stakingAddress: string): NonPayableTransactionObject<boolean>;

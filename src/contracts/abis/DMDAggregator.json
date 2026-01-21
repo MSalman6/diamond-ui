@@ -77,6 +77,143 @@
     },
     {
       "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_br",
+          "type": "address"
+        }
+      ],
+      "name": "setBlockRewardContract",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_kh",
+          "type": "address"
+        }
+      ],
+      "name": "setKeygenHistoryContract",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_st",
+          "type": "address"
+        }
+      ],
+      "name": "setStakingContract",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_tp",
+          "type": "address"
+        }
+      ],
+      "name": "setTxPermissionContract",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_vs",
+          "type": "address"
+        }
+      ],
+      "name": "setValidatorsSetContract",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "br",
+      "outputs": [
+        {
+          "internalType": "contract IBlockRewardHbbft",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "bs",
+      "outputs": [
+        {
+          "internalType": "contract IBonusScoreSystem",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "ct",
+      "outputs": [
+        {
+          "internalType": "contract IConnectivityTracker",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "dao",
+      "outputs": [
+        {
+          "internalType": "contract IDiamondDao",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "getActiveProposals",
       "outputs": [
         {
@@ -532,11 +669,6 @@
               "internalType": "uint256",
               "name": "stakingEpochStartBlock",
               "type": "uint256"
-            },
-            {
-              "internalType": "bool",
-              "name": "areStakeAndWithdrawAllowed",
-              "type": "bool"
             },
             {
               "internalType": "uint256",
@@ -1168,6 +1300,19 @@
     },
     {
       "inputs": [],
+      "name": "kh",
+      "outputs": [
+        {
+          "internalType": "contract IKeyGenHistory",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "owner",
       "outputs": [
         {
@@ -1181,87 +1326,41 @@
     },
     {
       "inputs": [],
-      "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
+      "name": "st",
+      "outputs": [
         {
-          "internalType": "address",
-          "name": "_br",
+          "internalType": "contract IStakingHbbft",
+          "name": "",
           "type": "address"
         }
       ],
-      "name": "setBlockRewardContract",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [
+      "inputs": [],
+      "name": "tp",
+      "outputs": [
         {
-          "internalType": "address",
-          "name": "_kh",
+          "internalType": "contract ITxPermission",
+          "name": "",
           "type": "address"
         }
       ],
-      "name": "setKeygenHistoryContract",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [
+      "inputs": [],
+      "name": "vs",
+      "outputs": [
         {
-          "internalType": "address",
-          "name": "_st",
+          "internalType": "contract IValidatorSetHbbft",
+          "name": "",
           "type": "address"
         }
       ],
-      "name": "setStakingContract",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_tp",
-          "type": "address"
-        }
-      ],
-      "name": "setTxPermissionContract",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_vs",
-          "type": "address"
-        }
-      ],
-      "name": "setValidatorsSetContract",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     }
   ],

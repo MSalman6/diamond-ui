@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "OwnableUpgradeable",
-  "sourceName": "contracts/DiamondDao.sol",
+  "sourceName": "contracts/DiamondDaoFlat.sol",
   "abi": [
     {
       "inputs": [],
