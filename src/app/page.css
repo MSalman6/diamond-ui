@@ -791,6 +791,11 @@
     margin-top: 8px;
     font-weight: 500;
   }
+
+  .cr-change {
+    margin-top: 0px !important;
+    margin-bottom: 15px !important;
+  }
   
   .stake-change.positive {
     color: #6ee7b7;
@@ -1056,8 +1061,8 @@
 
   .cr-count {
     flex-basis: 100%;
-    margin-top: 8px;
-    text-align: right;
+    margin-top: 0px;
+    text-align: left;
     font-size: 0.85rem;
     opacity: 0.85;
   }

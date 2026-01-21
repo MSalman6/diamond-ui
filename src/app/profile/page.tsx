@@ -295,7 +295,6 @@ export default function ProfilePage() {
                   <div className="stake-card-header">
                     <h3>Validator Pool Overview <InfoTooltip content={<div><p>Summary of your total stake, combining your own validator stake and all delegations received.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
                     <div className="total-stake-value highlight">17,000 DMD</div>
-                    <div className="cr-count">Connectivity reports: 0</div>
                   </div>
                   
                   <div className="stake-breakdown">
@@ -411,6 +410,8 @@ export default function ProfilePage() {
                       <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                     </InfoTooltip></div>
                     <div className="stat-value highlight">97.5</div>
+                    <div className="cr-count">Connectivity reports: 0</div>
+                    <div className="stat-change positive cr-change">+5 points since epoch 22</div>
                     <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
                   </div>
                 </div>
