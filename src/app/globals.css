@@ -367,50 +367,41 @@ section h2 {
   cursor: pointer;
 }
 
-/* Moved from src/app/dao/create/Create.module.css to satisfy CSS module purity rules */
-#proposalType,
 #epcContractName {
   background: var(--card-bg);
   color: var(--text);
 }
 
-#proposalType option,
 #epcContractName option {
   background: var(--card-bg);
   color: var(--text);
 }
 
-#proposalType option:hover,
 #epcContractName option:hover {
   background: var(--card-hover);
   color: var(--text);
 }
 
-body.light-theme #proposalType,
 body.light-theme #epcContractName {
   background: var(--card-bg);
   color: var(--text);
 }
 
-body.light-theme #proposalType option,
 body.light-theme #epcContractName option {
   background: var(--card-bg);
   color: var(--text);
 }
 
-body.dark-theme #proposalType,
 body.dark-theme #epcContractName {
   background: var(--card-bg) !important;
   color: var(--text) !important;
 }
 
-body.dark-theme #proposalType option,
 body.dark-theme #epcContractName option {
   background: var(--card-bg) !important;
   color: var(--text) !important;
 }
 
-body.dark-theme #proposalType option:hover,
 body.dark-theme #epcContractName option:hover {
   background: var(--card-hover) !important;
   color: var(--text) !important;
