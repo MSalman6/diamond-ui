@@ -703,6 +703,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
             proposalTypeEnum = 1;
           }
 
+          const gasPrice = await web3Context.web3.eth.getGasPrice();
           await web3Context.contractsManager.daoContract.methods.propose(
             targets,
             values,
@@ -711,7 +712,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
             description,
             discussionUrl,
             proposalTypeEnum
-          ).send({from: web3Context.userWallet.myAddr, value: proposalFee});
+          ).send({from: web3Context.userWallet.myAddr, value: proposalFee, gasPrice});
           const proposalId = await web3Context.contractsManager.daoContract.methods.hashProposal(
             targets, values, callDatas, description
           ).call();
@@ -733,7 +734,8 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
   
         web3Context.showLoader(true, "Dismissing proposal 💎");
         try {       
-          await web3Context.contractsManager.daoContract.methods.cancel(proposalId, reason).send({from: web3Context.userWallet.myAddr});
+          const gasPrice = await web3Context.web3.eth.getGasPrice();
+          await web3Context.contractsManager.daoContract.methods.cancel(proposalId, reason).send({from: web3Context.userWallet.myAddr, gasPrice});
           web3Context.showLoader(false, "");
           toast.success("Proposal Dismissed 💎");
           resolve();
@@ -759,14 +761,17 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
 
         if (hasVotedBefore) {
           // User has voted before - use changeVote function
-          await web3Context.contractsManager.daoContract.methods.changeVote(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr});
+          const gasPrice = await web3Context.web3.eth.getGasPrice();
+          await web3Context.contractsManager.daoContract.methods.changeVote(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr, gasPrice});
           toast.success(`Vote Changed 💎`);
         } else {
           // First-time voting - use vote or voteWithReason
           if (reason.length > 0) {
-            await web3Context.contractsManager.daoContract.methods.voteWithReason(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr});
+            const gasPrice = await web3Context.web3.eth.getGasPrice();
+            await web3Context.contractsManager.daoContract.methods.voteWithReason(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr, gasPrice});
           } else {
-            await web3Context.contractsManager.daoContract.methods.vote(proposalId, vote).send({from: web3Context.userWallet.myAddr});
+            const gasPrice = await web3Context.web3.eth.getGasPrice();
+            await web3Context.contractsManager.daoContract.methods.vote(proposalId, vote).send({from: web3Context.userWallet.myAddr, gasPrice});
           }
           toast.success(`Vote Casted 💎`);
         }
@@ -950,7 +955,8 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
 
         web3Context.showLoader(true, "Finalizing proposal 💎");
         try {
-          await web3Context.contractsManager.daoContract.methods.finalize(proposalId).send({ from: web3Context.userWallet.myAddr });
+          const gasPrice = await web3Context.web3.eth.getGasPrice();
+          await web3Context.contractsManager.daoContract.methods.finalize(proposalId).send({ from: web3Context.userWallet.myAddr, gasPrice });
           const proposalUpdated = await getProposalDetails(proposalId);
           await setProposalsState([proposalUpdated]);
           web3Context.showLoader(false, "");
@@ -979,7 +985,8 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
 
         web3Context.showLoader(true, "Executing proposal 💎");
         try {
-          await web3Context.contractsManager.daoContract.methods.execute(proposalId).send({ from: web3Context.userWallet.myAddr });
+          const gasPrice = await web3Context.web3.eth.getGasPrice();
+          await web3Context.contractsManager.daoContract.methods.execute(proposalId).send({ from: web3Context.userWallet.myAddr, gasPrice });
           proposalDetails = await getProposalDetails(proposalId);
           await setProposalsState([proposalDetails]);
           await postProposalExecutionUpdates(proposalId); // Update parameters if ECP
