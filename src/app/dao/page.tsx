@@ -247,7 +247,13 @@ export default function DaoPage() {
                 </div>
               </div>
               <div className="stat-content">
-                <p className="stat-value">{(daoContext?.daoPhase && daoContext.daoPhase.daoEpoch) ? `Proposal Phase ${daoContext.daoPhase.daoEpoch}` : 'Proposal Phase 61'}</p>
+                <p className="stat-value">
+                  {daoContext?.daoPhase && daoContext.daoPhase.daoEpoch !== undefined
+                    ? (Number(daoContext.daoPhase.daoEpoch) === 0
+                        ? `Proposal Phase ${daoContext.daoPhase.daoEpoch}`
+                        : `Voting Phase ${daoContext.daoPhase.daoEpoch}`)
+                    : 'DMD Governance'}
+                </p>
                 <div className="countdown-timer">
                   <div className="countdown-item">
                     <span className="countdown-value">{countdown.days}</span>
