@@ -75,6 +75,19 @@ export default function ProfilePage() {
 
   const hasValidator = Boolean(myPool);
 
+  // Compute own validator stake and delegated stake for the current pool
+  const totalStakeWei = BigNumber(myPool?.totalStake || 0);
+  const myValidatorStakeWei = BigNumber(myPool?.myStake || 0);
+  const delegatedStakeWei = BigNumber.max(totalStakeWei.minus(myValidatorStakeWei), 0);
+
+  // Compute stake distribution percentages (own vs delegated)
+  const ownStakePct = totalStakeWei.isGreaterThan(0)
+    ? myValidatorStakeWei.multipliedBy(100).dividedBy(totalStakeWei).toFixed(0)
+    : '0';
+  const delegatedStakePct = totalStakeWei.isGreaterThan(0)
+    ? delegatedStakeWei.multipliedBy(100).dividedBy(totalStakeWei).toFixed(0)
+    : '0';
+
   const copyData = (data: string) => {
     copy(data);
     toast.success("Copied to clipboard");
@@ -117,7 +130,7 @@ export default function ProfilePage() {
                       </div>
                       <div className="stat-actions">
                         <div className="stat-action-group">
-                          <Link href="/validators?filter=stakedOn" className="btn-primary btn-sm">Stake / Unstake</Link>
+                          <Link href="/validators?filter=stakedOn" className="btn-primary btn-sm">Stake/Unstake</Link>
                           <CreatePoolModal buttonText="Create pool" />
                         </div>
                         <div>
@@ -294,14 +307,16 @@ export default function ProfilePage() {
                 <div className="combined-stake-card">
                   <div className="stake-card-header">
                     <h3>Validator Pool Overview <InfoTooltip content={<div><p>Summary of your total stake, combining your own validator stake and all delegations received.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
-                    <div className="total-stake-value highlight">17,000 DMD</div>
+                    <div className="total-stake-value highlight">
+                      {formatDMDAmount(BigNumber(myPool?.totalStake || 0))}
+                    </div>
                   </div>
                   
                   <div className="stake-breakdown">
                     <div className="stake-item">
                       <div className="stake-item-header">
                         <span className="stake-label">My validator stake <InfoTooltip content={<div><p>The amount of DMD you've personally staked as a validator in your own pool.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
-                        <span className="stake-value highlight">10,100 DMD</span>
+                        <span className="stake-value highlight">{formatDMDAmount(myValidatorStakeWei)}</span>
                       </div>
                       <div className="stake-change positive">+5 DMD since epoch 22</div>
                       <div className="stake-actions">
@@ -321,7 +336,7 @@ export default function ProfilePage() {
                     <div className="stake-item">
                       <div className="stake-item-header">
                         <span className="stake-label">Delegated stake to my pool <InfoTooltip content={<div><p>The amount of DMD delegated to your pool by other users (excluding your own stake).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
-                        <span className="stake-value highlight">7,000 DMD</span>
+                        <span className="stake-value highlight">{formatDMDAmount(delegatedStakeWei)}</span>
                       </div>
                       <div className="stake-change positive">+5 DMD since epoch 22</div>
                       <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
@@ -334,16 +349,20 @@ export default function ProfilePage() {
                     </div>
                     <div className="stake-distribution">
                       <div className="stake-bar">
-                        <InfoTooltip placement="top" content={<div><p>59% own stake</p></div>}>
-                          <div className="own-stake" style={{width: "59%"}} />
-                        </InfoTooltip>
-                        <InfoTooltip placement="top" content={<div><p>41% delegated</p></div>}>
-                          <div className="delegated-stake" style={{width: "41%"}} />
-                        </InfoTooltip>
+                          <div
+                            className="own-stake"
+                            title={`${ownStakePct}% own stake`}
+                            style={{ width: `${ownStakePct}%` }}
+                          />
+                          <div
+                            className="delegated-stake"
+                            title={`${delegatedStakePct}% delegated`}
+                            style={{ width: `${delegatedStakePct}%` }}
+                          />
                       </div>
                       <div className="stake-labels">
-                        <span className="own-stake-label">59% own stake</span>
-                        <span className="delegated-stake-label">41% delegated</span>
+                        <span className="own-stake-label">{ownStakePct}% own stake</span>
+                        <span className="delegated-stake-label">{delegatedStakePct}% delegated</span>
                       </div>
                     </div>
                   </div>

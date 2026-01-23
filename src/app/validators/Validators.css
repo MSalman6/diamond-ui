@@ -299,41 +299,6 @@
   font-weight: 500;
 }
 
-.btn-stake,
-.btn-unstake {
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
-  border: none;
-}
-
-.btn-stake {
-  background: rgba(7, 244, 158, 0.15);
-  color: #07f49e;
-  margin-right: 5px;
-}
-
-.btn-stake:hover {
-  background: rgba(7, 244, 158, 0.3);
-}
-
-.btn-unstake {
-  background: rgba(255, 107, 107, 0.15);
-  color: #ff6b6b;
-}
-
-.btn-unstake:hover {
-  background: rgba(255, 107, 107, 0.3);
-}
-
-.btn-stake:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .pagination {
   display: flex;
   justify-content: center;
@@ -994,11 +959,6 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-.btn-stake:active,
-.btn-unstake:active {
-  transform: scale(0.95);
-}
-
 .validators-table tbody tr:hover {
   background: rgba(255, 255, 255, 0.05);
   box-shadow: 0 0 15px rgba(0, 157, 255, 0.1);
@@ -1132,15 +1092,6 @@ body.light-theme .status-invalid {
 body.light-theme .status-jailed {
   background: rgba(255, 159, 67, 0.15);
   color: #e65100;
-}
-
-body.light-theme .btn-stake {
-  background: rgba(7, 244, 158, 0.15);
-  color: #038d5a;
-}
-
-body.light-theme .btn-stake:hover {
-  background: rgba(7, 244, 158, 0.25);
 }
 
 body.light-theme .btn-unstake {

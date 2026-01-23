@@ -270,7 +270,19 @@
     display: flex;
     gap: 10px;
   }
-  
+
+  .stake-actions > * {
+    gap: 10px;
+    height: 35px;
+    display: flex;
+    line-height: inherit;
+    justify-content: center;
+    border: 1px solid #fff3;
+  }
+
+  body.light-theme .stake-actions > * {
+    box-shadow: 0 2px 8px #3182ce4d;
+  }
   
   [data-tooltip] {
     position: relative;

@@ -2431,6 +2431,46 @@ footer {
   justify-content: center;
 }
 
+.btn-stake,
+.btn-unstake {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+}
+
+.btn-stake {
+  background: rgba(7, 244, 158, 0.15);
+  color: #07f49e;
+  margin-right: 5px;
+}
+
+.btn-stake:hover {
+  background: rgba(7, 244, 158, 0.3);
+}
+
+.btn-unstake {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+}
+
+.btn-unstake:hover {
+  background: rgba(255, 107, 107, 0.3);
+}
+
+.btn-stake:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-stake:active,
+.btn-unstake:active {
+  transform: scale(0.95);
+}
+
 @media (max-width: 768px) {
   .header-right .cta-button,
   .header-right .user-wallet-info {
@@ -3169,6 +3209,15 @@ body.light-theme .dropdown-section ul li a {
 
 body.light-theme .dropdown-section ul li a:hover {
   color: #2d3748;
+}
+
+body.light-theme .btn-stake {
+  background: rgba(7, 244, 158, 0.15);
+  color: #038d5a;
+}
+
+body.light-theme .btn-stake:hover {
+  background: rgba(7, 244, 158, 0.25);
 }
 
 @media (max-width: 768px) {
