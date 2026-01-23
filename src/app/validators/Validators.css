@@ -532,21 +532,6 @@
   background: rgba(255, 0, 0, 0.3);
 }
 
-.btn-cancel {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-white);
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: var(--transition);
-  font-weight: 500;
-}
-
-.btn-cancel:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
 .btn-apply {
   background: #0070f3;
   color: white;
@@ -847,6 +832,7 @@
     width: 100%;
   }
 }
+
 @media (max-width: 576px) {
   .validators-hero-content h1 {
     font-size: 2rem;
@@ -1183,15 +1169,6 @@ body.light-theme .column-remove {
 body.light-theme .column-remove:hover {
   background-color: rgba(255, 0, 0, 0.15);
   color: #d32f2f;
-}
-
-body.light-theme .btn-cancel {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: #121826;
-}
-
-body.light-theme .btn-cancel:hover {
-  background-color: rgba(0, 0, 0, 0.1);
 }
 
 body.light-theme .validator-info {

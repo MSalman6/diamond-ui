@@ -249,7 +249,7 @@ export default function DaoPage() {
               <div className="stat-content">
                 <p className="stat-value">
                   {daoContext?.daoPhase && daoContext.daoPhase.daoEpoch !== undefined
-                    ? (Number(daoContext.daoPhase.daoEpoch) === 0
+                    ? (daoContext.daoPhase.phase === '0'
                         ? `Proposal Phase ${daoContext.daoPhase.daoEpoch}`
                         : `Voting Phase ${daoContext.daoPhase.daoEpoch}`)
                     : 'DMD Governance'}
@@ -273,7 +273,7 @@ export default function DaoPage() {
                   </div>
                 </div>
                 {
-                  daoContext.daoPhase.phase !== '0' && (
+                  daoContext.daoPhase.phase === '0' && (
                     <Link href="/dao/create" className="btn-primary create-proposal-btn">
                       <i className="fas fa-plus-circle" /> Create Proposal
                     </Link>

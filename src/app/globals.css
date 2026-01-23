@@ -687,6 +687,21 @@ header .container {
   cursor: not-allowed;
 }
 
+.btn-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-white);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
 @media (min-width: 769px) {
   .dropdown:hover .dropdown-menu {
     opacity: 1;
@@ -2504,6 +2519,15 @@ footer {
   .theme-toggle-wrapper {
     margin-right: 0;
   }
+}
+
+body.light-theme .btn-cancel {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #121826;
+}
+
+body.light-theme .btn-cancel:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 body.light-theme .mobile-menu {
