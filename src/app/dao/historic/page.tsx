@@ -178,7 +178,7 @@ export default function HistoricProposalsPage() {
                 <select id="proposal-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
                   <option value="all">All Types</option>
                   <option value="ecosystem">Ecosystem Parameter</option>
-                  <option value="community">Community</option>
+                  <option value="contract-upgrade">Contract upgrade</option>
                   <option value="open">Open</option>
                 </select>
               </div>

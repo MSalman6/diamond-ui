@@ -877,6 +877,11 @@
   color: #a17fe0;
 }
 
+.proposal-type.contract-fill {
+  background: rgba(93, 38, 193, 0.15);
+  color: #5d26c1;
+}
+
 .proposal-type.community {
   background: rgba(7, 244, 158, 0.15);
   color: #07f49e;

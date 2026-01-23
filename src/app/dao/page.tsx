@@ -11,7 +11,7 @@ import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { timestampToDate, truncateAddress } from '@/utils/common';
 
-type ProposalType = "protocol" | "parameter" | "community" | "open";
+type ProposalType = "protocol" | "parameter" | "open";
 
 type Proposal = {
   id: string;
@@ -272,9 +272,14 @@ export default function DaoPage() {
                     <span className="countdown-label">Seconds</span>
                   </div>
                 </div>
-                <Link href="/dao/create" className="btn-primary create-proposal-btn">
-                  <i className="fas fa-plus-circle" /> Create Proposal
-                </Link>
+                {
+                  daoContext.daoPhase.phase !== '0' && (
+                    <Link href="/dao/create" className="btn-primary create-proposal-btn">
+                      <i className="fas fa-plus-circle" /> Create Proposal
+                    </Link>
+                  )
+                }
+                
               </div>
             </div>
 
@@ -379,7 +384,7 @@ export default function DaoPage() {
                 <select id="proposal-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
                   <option value="all">All Types</option>
                   <option value="parameter">Ecosystem Parameter</option>
-                  <option value="community">Contract Upgrade</option>
+                  <option value="contract-upgrade">Contract Upgrade</option>
                   <option value="protocol">Open</option>
                 </select>
               </div>

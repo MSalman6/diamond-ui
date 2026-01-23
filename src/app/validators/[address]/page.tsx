@@ -187,7 +187,7 @@ export default function ValidatorDetails() {
                 Pool stake
                 <InfoTooltip
                   placement="bottom"
-                  content={<span>Summary of your total stake, combining your own validator stake and all delegations received.</span>}
+                  content={<p>Total amount of DMD staked on this validator, including both the validator’s own stake and delegated stake from others.</p>}
                 >
                   <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                 </InfoTooltip>
@@ -205,9 +205,6 @@ export default function ValidatorDetails() {
                   content={
                   <div>
                     <p>Number of detected connectivity issues for this validator.</p>
-                    <p>
-                    <strong>Monthly rewards:</strong> Estimated rewards earned by this validator over the past 30 days. Includes both validator and delegator rewards and depends on uptime, performance, and stake size.
-                    </p>
                   </div>
                   }
                 >
@@ -221,18 +218,7 @@ export default function ValidatorDetails() {
             <div className="stat-header">
               <h3>Score<InfoTooltip
                 placement="bottom"
-                content={
-                  <div>
-                    <p>The Bonus Score measures your validator's performance and uptime.</p>
-                    <ul>
-                      <li>Staying online and ready increases your score.</li>
-                      <li>Downtime, missed key operations, or unavailability decrease it.</li>
-                    </ul>
-                    <p>Your selection chance for the next epoch is based on <strong>Stake × Bonus Score</strong>.</p>
-                    <p>Scores range from <strong>1 to 1000</strong>.</p>
-                  </div>
-                }
-              >
+                content={<><p>Bonus Score earned by this validator through uptime and availability.</p> <p>Higher scores increase the chances of being selected for the active validator set in future epochs.</p></>}>
                 <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
               </InfoTooltip>
               </h3>
@@ -258,7 +244,7 @@ export default function ValidatorDetails() {
                 Voting power
                 <InfoTooltip
                   placement="bottom"
-                  content={<span>Voting power is the share of total DAO stake that your validator pool represents (your own stake + delegated stake).</span>}
+                  content={<><p>Share of DAO voting influence held by this validator.</p><p>Voting power is based on total stake and affects how strongly a validator can influence governance proposals.</p></>}
                 >
                   <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                 </InfoTooltip>
@@ -279,7 +265,7 @@ export default function ValidatorDetails() {
                 Validator stake
                 <InfoTooltip
                   placement="bottom"
-                  content={<span>The amount of DMD you've personally staked as a validator in your own pool.</span>}
+                  content={<span>Amount of DMD staked by the validator themselves, excluding delegations.</span>}
                 >
                   <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                 </InfoTooltip>
@@ -295,7 +281,7 @@ export default function ValidatorDetails() {
             <div className="stat-header">
               <h3>
                 Monthly rewards
-                <InfoTooltip placement="bottom" content={<span />}> 
+                <InfoTooltip placement="bottom" content={<><p>Estimated rewards earned by this validator over the past 30 days.</p> <p>Includes both validator and delegator rewards and depends on uptime, performance, and stake size.</p></>}> 
                   <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                 </InfoTooltip>
               </h3>
@@ -320,7 +306,7 @@ export default function ValidatorDetails() {
                 Delegated stake
                 <InfoTooltip
                   placement="bottom"
-                  content={<span>The amount of DMD delegated to your validator pool by other users.</span>}
+                  content={<span>Total amount of DMD delegated to this validator by other users.</span>}
                 >
                   <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                 </InfoTooltip>

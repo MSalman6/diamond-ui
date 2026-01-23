@@ -667,6 +667,26 @@ header .container {
   font-size: 0.7rem;
 }
 
+.primaryBtn {
+  padding: 10px 20px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.primaryBtn:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.primaryBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @media (min-width: 769px) {
   .dropdown:hover .dropdown-menu {
     opacity: 1;

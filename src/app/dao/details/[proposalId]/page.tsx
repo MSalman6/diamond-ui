@@ -63,6 +63,10 @@ export default function ProposalDetailsPage() {
   })()
 
   useEffect(() => {
+    console.log({proposal})
+  }, [proposal])
+
+  useEffect(() => {
     try {
       const stakeForCalculation = (proposal?.totalStakeSnapshot && proposal.totalStakeSnapshot !== '0')
         ? proposal.totalStakeSnapshot
@@ -403,24 +407,24 @@ export default function ProposalDetailsPage() {
                 </div>
               </div>
 
-              <div className={`proposal-card funding-request-card ${type !== "funding-request" ? "hidden" : ""}`} id="funding-request-content">
-                <div className="card-header"><h3>Funding Request</h3></div>
-                <div className="card-content">
-                  <div className="funding-purpose"><h4>{proposal?.title || ''}</h4></div>
-                  <div className="funding-details">
-                    {proposal?.targets?.[0] && proposal.targets[0] !== '0x0000000000000000000000000000000000000000' && (
+              {type === "funding-request" && proposal?.targets?.[0] !== '0x0000000000000000000000000000000000000000' && (
+                <div className="proposal-card funding-request-card" id="funding-request-content">
+                  <div className="card-header"><h3>Funding Request</h3></div>
+                  <div className="card-content">
+                    <div className="funding-purpose"><h4>{proposal?.title || ''}</h4></div>
+                    <div className="funding-details">
                       <div className="payout-address">
                         <span className="label">Payout Address</span>
                         <div className="address-container">{proposal.targets[0]}</div>
                       </div>
-                    )}
-                    <div className="payout-amount">
-                      <span className="label">Amount</span>
-                      <div className="value">{proposal?.values && proposal.values[0] ? (new BigNumber(proposal.values[0]).dividedBy(10**18)).toString() + ' DMD' : '10,000 DMD'}</div>
+                      <div className="payout-amount">
+                        <span className="label">Amount</span>
+                        <div className="value">{proposal?.values && proposal.values[0] ? (new BigNumber(proposal.values[0]).dividedBy(10**18)).toString() + ' DMD' : '10,000 DMD'}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               <div className="proposal-timeline-section">
                 <div className="card-header"><h3>Proposal Timeline</h3></div>

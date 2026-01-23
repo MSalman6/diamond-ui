@@ -383,7 +383,7 @@ export default function ProfilePage() {
                   </div>
 
                   <div className="stat-card">
-                    <div className="stat-label">Node operator shared reward <InfoTooltip content={<div><strong>The portion of the validator's 20% reward that is shared with a separate node operator.</strong> <p>Useful when a node owner delegates technical operation to someone else but keeps ownership and voting rights. Configurable per pool (from 0.01% to 20%).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                    <div className="stat-label">Node operator shared reward <InfoTooltip content={<div><p>The portion of the validator's 20% reward that is shared with a separate node operator.</p> <p>Useful when a node owner delegates technical operation to someone else but keeps ownership and voting rights. Configurable per pool (from 0.01% to 20%).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="stat-value highlight">9%</div>
                     <div className="stat-note copy-address-container">
                       0x9f515...62F94{" "}
@@ -421,8 +421,8 @@ export default function ProfilePage() {
                             <li>Staying online and ready increases your score.</li>
                             <li>Downtime, missed key operations, or unavailability decrease it.</li>
                           </ul>
-                          <p>Your selection chance for the next epoch is based on <strong>Stake × Bonus Score</strong>.</p>
-                          <p>Scores range from <strong>1 to 1000</strong>.</p>
+                          <p>Your selection chance for the next epoch is based on Stake × Bonus Score.</p>
+                          <p>Scores range from 1 to 1000.</p>
                         </div>
                       }
                     >

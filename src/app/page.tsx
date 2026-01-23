@@ -8,11 +8,33 @@ import { useTheme } from '../hooks';
 import { getThemeImagePath } from '../utils/imageUtils';
 import { useWalletConnect } from "@/contexts/WalletConnect";
 import { useWeb3Context } from "@/contexts/Web3";
+import { useDaoContext, useStakingContext } from "@/contexts";
+import BigNumber from "bignumber.js";
+import { timestampToDateTime } from "@/utils/common";
+BigNumber.config({ EXPONENTIAL_AT: 1e+9 });
+
 
 export default function Home() {
   const theme = useTheme();
   const { userWallet } = useWeb3Context();
+  const { claimingContractBalance } = useDaoContext();
   const { open: openWalletModal, isConnected } = useWalletConnect();
+
+  const {
+    pools,
+    myPool,
+    keyGenRound,
+    stakingEpoch,
+    epochStartTime,
+    epochStartBlock,
+    activeValidators,
+    validCandidates,
+    minimumGasFee,
+    reinsertPot,
+    deltaPot,
+    myTotalStake,
+    myCandidateStake,
+    claimOrderedUnstake } = useStakingContext();
 
   const getImagePath = (filename: string) => {
     return getThemeImagePath(filename, theme);
@@ -353,43 +375,43 @@ export default function Home() {
             <div className="stats-grid">
               <div className="stat-card fade-in">
                 <h3>Current Epoch</h3>
-                <p className="stat-value">396</p>
+                <p className="stat-value">{stakingEpoch}</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Key Gen. Round</h3>
-                <p className="stat-value">1</p>
+                <p className="stat-value">{keyGenRound}</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Epoch Start Time</h3>
-                <p className="stat-value">22 May 2025 16:41:57</p>
+                <p className="stat-value">{timestampToDateTime(epochStartTime)}</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Epoch Start Block</h3>
-                <p className="stat-value">112839</p>
+                <p className="stat-value">{epochStartBlock}</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Active Validators</h3>
-                <p className="stat-value">25</p>
+                <p className="stat-value">{activeValidators}</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Valid Candidates</h3>
-                <p className="stat-value">61</p>
+                <p className="stat-value">{validCandidates}</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Min. Gas Fee</h3>
-                <p className="stat-value">1 Gwei</p>
+                <p className="stat-value">{minimumGasFee.dividedBy(10**9).toString()} Gwei</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Reinsert Pot</h3>
-                <p className="stat-value">345662.1747 DMD</p>
+                <p className="stat-value">{BigNumber(reinsertPot).toFixed(4, BigNumber.ROUND_DOWN)} DMD</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Delta Pot</h3>
-                <p className="stat-value">512829.4899 DMD</p>
+                <p className="stat-value">{BigNumber(deltaPot).toFixed(4, BigNumber.ROUND_DOWN)} DMD</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Claiming Pot</h3>
-                <p className="stat-value">2114280.8052 DMD</p>
+                <p className="stat-value">{claimingContractBalance.toFixed(4, BigNumber.ROUND_DOWN)} DMD</p>
               </div>
             </div>
           </div>
