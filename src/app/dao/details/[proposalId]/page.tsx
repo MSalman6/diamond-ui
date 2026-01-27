@@ -63,10 +63,6 @@ export default function ProposalDetailsPage() {
   })()
 
   useEffect(() => {
-    console.log({proposal})
-  }, [proposal])
-
-  useEffect(() => {
     try {
       const stakeForCalculation = (proposal?.totalStakeSnapshot && proposal.totalStakeSnapshot !== '0')
         ? proposal.totalStakeSnapshot
