@@ -12,6 +12,7 @@ import { truncateAddress } from '@/utils/common';
 import { useWeb3Context } from '@/contexts/Web3';
 import InfoTooltip from '@/components/InfoTooltip';
 import { useStakingContext } from '@/contexts/Staking';
+import { useDaoContext } from '@/contexts/DAO';
 import { useWalletConnect } from '@/contexts/WalletConnect';
 import StakeModal from '@/components/Modals/Stake/StakeModal';
 import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
@@ -21,8 +22,9 @@ import UpdatePoolOperatorModal from '@/components/Modals/UpdatePoolOperator/Upda
 export default function ProfilePage() {
   const router = useRouter();
   const { userWallet } = useWeb3Context();
-  const { myPool, pools, totalDaoStake } = useStakingContext();
+  const { myPool, pools, totalDaoStake, myTotalStake, myCandidateStake } = useStakingContext();
   const { isConnected } = useWalletConnect();
+  const { allDaoProposals } = useDaoContext();
 
   // Get validators that user has staked with (has myStake > 0)
   const stakedValidators = useMemo(() => {
@@ -72,6 +74,34 @@ export default function ProfilePage() {
     const dmdAmount = amount.dividedBy(1e18);
     return dmdAmount.toFormat(0, BigNumber.ROUND_DOWN) + ' DMD';
   };
+
+  const myDelegatedStakeWei = useMemo(() => {
+    if (myPool) {
+      return new BigNumber(0);
+    }
+    return myTotalStake || new BigNumber(0);
+  }, [myPool, myTotalStake]);
+
+  const myOutgoingDelegationsWei = useMemo(() => {
+    return myCandidateStake || new BigNumber(0);
+  }, [myCandidateStake]);
+
+  // Number of proposals created by the user
+  const myProposalsCreated = useMemo(() => {
+    if (!allDaoProposals || !userWallet.myAddr) return 0;
+    try {
+      return allDaoProposals.filter(p => (p.proposer || '').toLowerCase() === userWallet.myAddr.toLowerCase()).length;
+    } catch {
+      return 0;
+    }
+  }, [allDaoProposals, userWallet.myAddr]);
+
+  // Aggregate voting power of validators the user staked with
+  const stakedWithVotingPowerPct = useMemo(() => {
+    if (!totalDaoStake || totalDaoStake.isZero()) return '0.0';
+    const sumStakeWei = stakedValidators.reduce((sum, v) => sum.plus(v.totalStake || 0), new BigNumber(0));
+    return BigNumber(sumStakeWei).dividedBy(totalDaoStake).multipliedBy(100).toFixed(2);
+  }, [stakedValidators, totalDaoStake]);
 
   const hasValidator = Boolean(myPool);
 
@@ -125,8 +155,8 @@ export default function ProfilePage() {
                         <h3>My delegated stake <InfoTooltip content={<div><p>The total amount of DMD you've staked to validators. This amount remains under your control and can be unstaked at any time unless locked in an active Epoch.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
                       </div>
                       <div className="stat-value-container">
-                        <div className="stat-value highlight">100.6267 DMD</div>
-                        <div className="stat-change positive">+5 DMD since epoch 22</div>
+                        <div className="stat-value highlight">{formatDMDAmount(myDelegatedStakeWei)}</div>
+                        <div className="stat-change positive" style={{display:'none'}}>+ DMD since last epoch</div>
                       </div>
                       <div className="stat-actions">
                         <div className="stat-action-group">
@@ -144,9 +174,9 @@ export default function ProfilePage() {
                         <h3>Monthly rewards <InfoTooltip content={<div><p>Rewards earned from your current staked DMD over the past 30 days. This estimate depends on the performance and uptime of the validator(s) you’ve delegated to.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
                       </div>
                       <div className="stat-value-container">
-                        <div className="stat-value highlight">100 DMD</div>
-                        <div className="stat-change positive">+5 DMD since epoch 22</div>
-                        <div className="stat-note">from staking on 1 validator</div>
+                        <div className="stat-value highlight">—</div>
+                        <div className="stat-change positive" style={{display:'none'}}>+ DMD since epoch</div>
+                        <div className="stat-note">from staking on {stakedValidators.length} validator{stakedValidators.length === 1 ? '' : 's'}</div>
                       </div>
                       <div className="stat-actions">
                         <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
@@ -158,8 +188,8 @@ export default function ProfilePage() {
                         <h3>DAO participation <InfoTooltip content={<div><p>Displays the number of governance proposals you have created. As a delegator, your stake indirectly contributes to DAO voting power - but only the validator decides how to vote.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
                       </div>
                       <div className="stat-value-container">
-                        <div className="stat-value highlight">2 proposals created</div>
-                        <div className="stat-note">Total voting power of the Staked With: 1.33%</div>
+                        <div className="stat-value highlight">{myProposalsCreated} proposal{myProposalsCreated === 1 ? '' : 's'} created</div>
+                        <div className="stat-note">Total voting power of the Staked With: {stakedWithVotingPowerPct}%</div>
                       </div>
                       <div className="stat-actions">
                         <Link href="/dao" className="btn-primary btn-sm">Go to DAO</Link>
@@ -371,27 +401,27 @@ export default function ProfilePage() {
                   <div className="validator-stats-row">
                   <div className="stat-card">
                     <div className="stat-label">Monthly rewards <InfoTooltip content={<div><p>DMD rewards earned this month based on your validator pool total stake.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-                    <div className="stat-value highlight">100 DMD</div>
-                    <div className="stat-note">Earned per 1000DMD = 5,88DMD <InfoTooltip content={<div><p>Rewards earned per 1000 DMD staked in the last 30 days.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                    <div className="stat-value highlight">—</div>
+                    <div className="stat-note">Estimate coming soon <InfoTooltip content={<div><p>Reward estimation is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">Rewards history</button>
                   </div>
 
                   <div className="stat-card">
                     <div className="stat-label">My outgoing delegations <InfoTooltip content={<div><p>Amount of DMD you've delegated to other validators from your account (if any).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-                    <div className="stat-value highlight">100 DMD</div>
-                    <div className="stat-change positive">+5 DMD since epoch 22</div>
+                    <div className="stat-value highlight">{formatDMDAmount(myOutgoingDelegationsWei)}</div>
+                    <div className="stat-change positive" style={{display:'none'}}>+ DMD since epoch</div>
                   </div>
 
                   <div className="stat-card">
                     <div className="stat-label">Node operator shared reward <InfoTooltip content={<div><p>The portion of the validator's 20% reward that is shared with a separate node operator.</p> <p>Useful when a node owner delegates technical operation to someone else but keeps ownership and voting rights. Configurable per pool (from 0.01% to 20%).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-                    <div className="stat-value highlight">9%</div>
+                    <div className="stat-value highlight">{myPool?.poolOperatorShare ? BigNumber(myPool.poolOperatorShare).dividedBy(100).toFixed(2) + '%' : '—'}</div>
                     <div className="stat-note copy-address-container">
-                      0x9f515...62F94{" "}
+                      {myPool?.poolOperator ? truncateAddress(myPool.poolOperator) : '—'}{' '}
                       <button
                         className="btnIcon"
                         id="copy-address"
                         title="Copy Address"
-                        onClick={() => copyData("0x9f515...62F94")}
+                        onClick={() => myPool?.poolOperator && copyData(myPool.poolOperator)}
                       >
                         <i className="fas fa-copy"></i>
                       </button>
@@ -404,9 +434,9 @@ export default function ProfilePage() {
                   {/* Voting power card */}
                   <div className="stat-card">
                     <div className="stat-label">Voting power <InfoTooltip content={<div><p>Voting power is the share of total DAO stake that your validator pool represents (your own stake + delegated stake).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-                    <div className="stat-value highlight">12%</div>
-                    <div className="stat-note"><span className="info-value negative">-0.01%</span> since epoch 22</div>
-                    <div className="stat-note">Proposals created: 10</div>
+                    <div className="stat-value highlight">{myPool?.votingPower && myPool.votingPower.toString() !== 'NaN' ? `${myPool.votingPower.toString()}%` : '0%'}</div>
+                    <div className="stat-note" style={{display:'none'}}><span className="info-value negative">-</span> since epoch</div>
+                    <div className="stat-note">Proposals created: {myProposalsCreated}</div>
                     <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
                   </div>
 
@@ -428,9 +458,9 @@ export default function ProfilePage() {
                     >
                       <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                     </InfoTooltip></div>
-                    <div className="stat-value highlight">97.5</div>
-                    <div className="cr-count">Connectivity reports: 0</div>
-                    <div className="stat-change positive cr-change">+5 points since epoch 22</div>
+                    <div className="stat-value highlight">{myPool?.score !== undefined && myPool?.score !== null ? Number(myPool.score).toFixed(1) : '—'}</div>
+                    <div className="cr-count">Connectivity reports: {myPool?.connectivityReport ?? '—'}</div>
+                    <div className="stat-change positive cr-change" style={{display:'none'}}>+ points since epoch</div>
                     <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
                   </div>
                 </div>
