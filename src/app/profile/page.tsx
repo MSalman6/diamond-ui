@@ -141,7 +141,7 @@ export default function ProfilePage() {
                     
                     <div className="stat-section">
                       <div className="stat-header">
-                        <h3>Estimated monthly rewards <InfoTooltip content={<div><p>Estimated rewards earned from your current staked DMD over the past 30 days. This estimate depends on the performance and uptime of the validator(s) you’ve delegated to.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
+                        <h3>Monthly rewards <InfoTooltip content={<div><p>Rewards earned from your current staked DMD over the past 30 days. This estimate depends on the performance and uptime of the validator(s) you’ve delegated to.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
                       </div>
                       <div className="stat-value-container">
                         <div className="stat-value highlight">100 DMD</div>
@@ -370,7 +370,7 @@ export default function ProfilePage() {
 
                   <div className="validator-stats-row">
                   <div className="stat-card">
-                    <div className="stat-label">Estimated monthly rewards <InfoTooltip content={<div><p>Estimated DMD rewards earned this month based on your validator pool total stake.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                    <div className="stat-label">Monthly rewards <InfoTooltip content={<div><p>DMD rewards earned this month based on your validator pool total stake.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="stat-value highlight">100 DMD</div>
                     <div className="stat-note">Earned per 1000DMD = 5,88DMD <InfoTooltip content={<div><p>Rewards earned per 1000 DMD staked in the last 30 days.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">Rewards history</button>

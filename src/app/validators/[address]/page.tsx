@@ -281,7 +281,7 @@ export default function ValidatorDetails() {
             <div className="stat-header">
               <h3>
                 Monthly rewards
-                <InfoTooltip placement="bottom" content={<><p>Estimated rewards earned by this validator over the past 30 days.</p> <p>Includes both validator and delegator rewards and depends on uptime, performance, and stake size.</p></>}> 
+                <InfoTooltip placement="bottom" content={<><p>Rewards earned by this validator over the past 30 days.</p> <p>Includes both validator and delegator rewards and depends on uptime, performance, and stake size.</p></>}> 
                   <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                 </InfoTooltip>
               </h3>
