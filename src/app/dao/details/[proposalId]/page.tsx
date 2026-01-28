@@ -50,6 +50,10 @@ export default function ProposalDetailsPage() {
   const [voteReason, setVoteReason] = useState<string>("")
   const [dismissReason, setDismissReason] = useState<string>("")
   const [dismissProposal, setDismissProposal] = useState<boolean>(false)
+  const [paramFunctionName, setParamFunctionName] = useState<string>("")
+  const [paramDisplayName, setParamDisplayName] = useState<string>("")
+  const [currentParamValue, setCurrentParamValue] = useState<string>("")
+  const [proposedParamValue, setProposedParamValue] = useState<string>("")
 
   const pathname = usePathname()
   const proposalId = (() => {
@@ -175,6 +179,99 @@ export default function ProposalDetailsPage() {
       }
     } catch (e) {}
   }, [proposal?.proposalType, proposal?.rawProposalType])
+
+  // Format parameter values based on the parameter/function
+  const formatParameterValue = (fnName: string, displayName: string, rawValue: string): string => {
+    try {
+      const v = rawValue || '0'
+      const name = (displayName || fnName || '').toLowerCase()
+      // Specific formatting rules per parameter
+      if (fnName === 'setStandByFactor' || name.includes('standby')) {
+        return `${v}`
+      }
+      if (fnName === 'setGovernancePotShareNominator' || name.includes('governance pot share nominator')) {
+        return `${v} %`
+      }
+      if (fnName === 'setReportDisallowPeriod' || name.includes('report disallow period')) {
+        // seconds -> minutes
+        return `${(Number(v) / 60).toFixed(0)} minutes`
+      }
+      if (fnName === 'setBlockGasLimit' || name.includes('block gas limit')) {
+        // show in mGas
+        return `${(Number(v) / 10 ** 6).toFixed(0)} mGas`
+      }
+      if (fnName === 'setMinimumGasPrice' || name.includes('minimum gas price')) {
+        // show in Gwei
+        return `${(Number(v) / 10 ** 9).toFixed(0)} Gwei`
+      }
+      if (fnName === 'setCreateProposalFee' || name.includes('create proposal fee')) {
+        return `${BigNumber(v).dividedBy(10 ** 18).toFixed()} DMD`
+      }
+      if (fnName === 'setDelegatorMinStake' || name.includes('delegator min stake')) {
+        return `${BigNumber(v).dividedBy(10 ** 18).toFixed()} DMD`
+      }
+      // Fallback to crypto unit heuristic
+      return formatCryptoUnitValue(v)
+    } catch (e) {
+      return rawValue
+    }
+  }
+
+  // derive parameter name/function and compute current/proposed values
+  useEffect(() => {
+    (async () => {
+      try {
+        const target = proposal?.targets?.[0]
+        const calldata = proposal?.calldatas?.[0]
+        if (!target || !calldata) return
+
+        let fnName = ''
+        let displayName = ''
+        try {
+          const decoded: any = decodeCallData(web3Context.contractsManager, target, calldata)
+          if (decoded && decoded['Function Name']) fnName = decoded['Function Name']
+        } catch (e) {}
+        try {
+          const info = getFunctionInfoWithAbi(web3Context.contractsManager, target, calldata)
+          displayName = info?.parameterName || ''
+        } catch (e) {}
+        setParamFunctionName(fnName)
+        setParamDisplayName(displayName)
+
+        // Proposed value extracted from calldata
+        const rawProposed = extractValueFromCalldata(calldata)
+        setProposedParamValue(formatParameterValue(fnName, displayName, rawProposed))
+
+        // Fetch current value based on the function
+        let currentRaw = '0'
+        if (fnName === 'setCreateProposalFee') {
+          currentRaw = await web3Context.contractsManager.daoContract.methods.createProposalFee().call()
+        } else if (fnName === 'setDelegatorMinStake') {
+          currentRaw = await web3Context.contractsManager.stContract?.methods.delegatorMinStake().call() || '0'
+        } else if (fnName === 'setMinimumGasPrice') {
+          currentRaw = await web3Context.contractsManager.tpContract?.methods.minimumGasPrice().call() || '0'
+        } else if (fnName === 'setBlockGasLimit') {
+          currentRaw = await web3Context.contractsManager.tpContract?.methods.blockGasLimit().call() || '0'
+        } else if (fnName === 'setReportDisallowPeriod') {
+          currentRaw = await web3Context.contractsManager.ctContract?.methods.reportDisallowPeriod().call() || '0'
+        } else if (fnName === 'setGovernancePotShareNominator') {
+          const nom = await web3Context.contractsManager.brContract?.methods.governancePotShareNominator().call() || '0'
+          const denom = await web3Context.contractsManager.brContract?.methods.governancePotShareDenominator().call() || '100'
+          try {
+            const pct = BigNumber(nom).multipliedBy(100).dividedBy(denom).toFixed(0)
+            setCurrentParamValue(`${pct} %`)
+          } catch (e) {
+            setCurrentParamValue(`${nom} %`)
+          }
+          return
+        } else if (fnName === 'setStandByFactor') {
+          currentRaw = await web3Context.contractsManager.bsContract?.methods.standByFactor().call() || '0'
+        }
+
+        setCurrentParamValue(formatParameterValue(fnName, displayName, currentRaw))
+      } catch (e) {}
+    })()
+  }, [proposal?.targets, proposal?.calldatas, web3Context.contractsManager])
 
   // interaction handlers
   const handleDismissProposal = async () => {
@@ -351,31 +448,20 @@ export default function ProposalDetailsPage() {
                   <div className="parameter-name"><h4>{(() => {
                     try {
                       if (proposal?.proposalType === 'Ecosystem Parameter Change' && proposal?.calldatas && proposal.calldatas[0]) {
-                        const { parameterName } = getFunctionInfoWithAbi(web3Context.contractsManager, proposal.targets?.[0], proposal.calldatas[0])
-                        return parameterName || 'Min. Delegator Fee'
+                        return paramDisplayName || 'Parameter Change'
                       }
                     } catch (e) {}
-                    return 'Min. Delegator Fee'
+                    return 'Parameter Change'
                   })()}</h4></div>
                   <div className="parameter-comparison">
                     <div className="parameter-current">
                       <div className="label">Current</div>
-                      <div className="value">{(() => {
-                        return proposal?.currentValue ? proposal.currentValue : '50 DMD'
-                      })()}</div>
+                      <div className="value">{currentParamValue || ''}</div>
                     </div>
                     <div className="parameter-arrow">→</div>
                     <div className="parameter-proposed">
                       <div className="label">Proposed</div>
-                      <div className="value">{(() => {
-                        try {
-                          if (proposal?.calldatas && proposal.calldatas[0]) {
-                            const rawValue = extractValueFromCalldata(proposal.calldatas[0])
-                            return formatCryptoUnitValue(rawValue) || '100 DMD'
-                          }
-                        } catch (e) {}
-                        return '100 DMD'
-                      })()}</div>
+                      <div className="value">{proposedParamValue || ''}</div>
                     </div>
                   </div>
                   <div className="parameter-fee">

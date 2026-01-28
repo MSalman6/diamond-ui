@@ -511,7 +511,7 @@ export default function DaoPage() {
                   {displayedProposals
                     .filter((p) => p.status === (daoContext.getStateString ? daoContext.getStateString('3') : '3'))
                     .map((p) => (
-                    <tr key={p.id}>
+                    <tr key={p.id} onClick={() => handleDetailsClick(p.id)} style={{ cursor: 'pointer' }}>
                       <td>{p.date}</td>
                       <td>
                         <div className="creator-address">
