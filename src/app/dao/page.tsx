@@ -46,7 +46,7 @@ export default function DaoPage() {
   // Modal state
   const [voteModalOpen, setVoteModalOpen] = useState(false);
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(null);
-  const [selectedVote, setSelectedVote] = useState<"Yes" | "No" | "Abstain" | null>(null);
+  const [selectedVote, setSelectedVote] = useState<"Yes" | "No" | null>(null);
 
   // Contexts
   const router = useRouter();
@@ -91,6 +91,20 @@ export default function DaoPage() {
       return mapped;
     });
   }, [daoContext.activeProposals, daoContext.allDaoProposals, activeTab, daoContext.daoPhase, daoContext.daoPhaseCount]);
+
+  const finalizeableProposalsCount = useMemo(() => {
+    try {
+      if (!daoContext?.allDaoProposals) return 0;
+      return daoContext.allDaoProposals.filter((proposal: any) => proposal.state === "3").length;
+    } catch {
+      return 0;
+    }
+  }, [daoContext?.allDaoProposals]);
+
+  const votingPhase = useMemo(() => {
+    const phase = daoContext?.daoPhase?.phase;
+    return phase !== '0';
+  }, [daoContext?.daoPhase?.phase]);
 
   // Filter/sort/search derived list (prefer DAO data when present, otherwise fallback to local)
   const displayedProposals = useMemo(() => {
@@ -186,11 +200,25 @@ export default function DaoPage() {
     setVoteModalOpen(true);
   }
 
+  async function handleFinalizeClick(p: Proposal) {
+    try {
+      if (daoContext?.finalizeProposal) {
+        await daoContext.finalizeProposal(p.id);
+      }
+    } catch (e) {}
+  }
+
   function confirmVote() {
     if (!selectedVote || !selectedProposal) return;
     setVoteModalOpen(false);
     alert(`Your vote (${selectedVote}) has been submitted successfully!`);
   }
+
+  useEffect(() => {
+    if (activeTab === 'actionsNeeded' && finalizeableProposalsCount === 0) {
+      setActiveTab('currentPhase');
+    }
+  }, [activeTab, finalizeableProposalsCount]);
 
   return (
     <div className="dao-page">
@@ -393,19 +421,11 @@ export default function DaoPage() {
 
           <div className="proposals-tabs">
             <button className={`tab-btn ${activeTab === "currentPhase" ? "active" : ""}`} data-tab="current" onClick={() => setActiveTab("currentPhase")}>Proposals of the current DAO phase</button>
-            <button className={`tab-btn ${activeTab === "actionsNeeded" ? "active" : ""}`} data-tab="actions" onClick={() => setActiveTab("actionsNeeded")}>Actions needed
-            {daoContext.allDaoProposals && daoContext.allDaoProposals.filter(proposal => 
-                  proposal.state === "3" || 
-                  (proposal.state === "4" && daoContext.daoPhase.daoEpoch == Number(proposal.daoPhaseCount) + 1)
-                ).length > 0 && (
-                <span className="actionsNeededBadge">
-                  {daoContext.allDaoProposals.filter(proposal => 
-                    proposal.state === "3" || 
-                    (proposal.state === "4" && daoContext.daoPhase.daoEpoch == Number(proposal.daoPhaseCount) + 1)
-                  ).length}
-                </span>
-                )}
-            </button>
+            {finalizeableProposalsCount > 0 && (
+              <button className={`tab-btn ${activeTab === "actionsNeeded" ? "active" : ""}`} data-tab="actions" onClick={() => setActiveTab("actionsNeeded")}>Actions needed
+                <span className="actionsNeededBadge">{finalizeableProposalsCount}</span>
+              </button>
+            )}
           </div>
 
           <div className={`proposals-tab-content ${activeTab === "currentPhase" ? "active" : ""}`} id="current-tab">
@@ -420,6 +440,7 @@ export default function DaoPage() {
                     <th onClick={() => onSort("participation")}>Participation <i className={`fas ${sortField === "participation" ? (sortAsc ? "fa-sort-up" : "fa-sort-down") : "fa-sort"}`} /></th>
                     <th onClick={() => onSort("exceeding")}>Exceeding Yes <i className={`fas ${sortField === "exceeding" ? (sortAsc ? "fa-sort-up" : "fa-sort-down") : "fa-sort"}`} /></th>
                     <th onClick={() => onSort("voted")}>Voted <i className={`fas ${sortField === "voted" ? (sortAsc ? "fa-sort-up" : "fa-sort-down") : "fa-sort"}`} /></th>
+                    {votingPhase && (<th>Action</th>)}
                     <th onClick={() => onSort("status")}>Status <i className={`fas ${sortField === "status" ? (sortAsc ? "fa-sort-up" : "fa-sort-down") : "fa-sort"}`} /></th>
                   </tr>
                 </thead>
@@ -445,7 +466,7 @@ export default function DaoPage() {
                               const snap = (p as any).totalStakeSnapshot;
                               if (snap && snap !== '0') {
                                 const tokens = BigNumber(snap).multipliedBy(Number(p.participation)).dividedBy(100).dividedBy(1e18).toFixed(2);
-                                return <span className="participation-value">{p.participation}% • {tokens} DMD</span>;
+                                return <span className="participation-value">{p.participation}%</span>;
                               }
                             } catch (e) {console.log("EREREOEREOORER", e);}
                             return <span className="participation-value">{p.participation}%</span>;
@@ -454,6 +475,13 @@ export default function DaoPage() {
                       </td>
                       <td><span className={`exceeding-value ${p.exceeding >= 0 ? "positive" : "negative"}`}>{p.exceeding >= 0 ? `+${p.exceeding}%` : `${p.exceeding}%`}</span></td>
                       <td><span className={`voted-status ${p.voted ? "voted" : "not-voted"}`}>{p.voted ? <i className="fas fa-check-circle" /> : <i className="fas fa-times-circle" />}</span></td>
+                      {votingPhase && (
+                        <td>
+                          <button className="btn-vote" onClick={(e) => { e.stopPropagation(); openVoteModal(p); }}>
+                            <i className="fas fa-vote-yea" /> Vote
+                          </button>
+                        </td>
+                      )}
                       <td>
                         <span className={`proposal-status ${p.status.toLowerCase()}`}>{p.status}</span>
                       </td>
@@ -480,7 +508,9 @@ export default function DaoPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {displayedProposals.map((p) => (
+                  {displayedProposals
+                    .filter((p) => p.status === (daoContext.getStateString ? daoContext.getStateString('3') : '3'))
+                    .map((p) => (
                     <tr key={p.id}>
                       <td>{p.date}</td>
                       <td>
@@ -492,7 +522,7 @@ export default function DaoPage() {
                       <td>
                         <div className="proposal-title"><span>{p.title}</span></div>
                       </td>
-                      <td><span className={`proposal-type ${p.type}`}>{p.type}</span></td>
+                      <td><span className={`proposal-type ${(p.type || '').replace(/\s+/g, '-')}`}>{p.type}</span></td>
                       <td>
                         <div className="participation-bar">
                           <div className="participation-progress" style={{ width: `${p.participation}%` }} />
@@ -501,7 +531,7 @@ export default function DaoPage() {
                               const snap = (p as any).totalStakeSnapshot;
                               if (snap && snap !== '0') {
                                 const tokens = BigNumber(snap).multipliedBy(Number(p.participation)).dividedBy(100).dividedBy(1e18).toFixed(2);
-                                return <span className="participation-value">{p.participation}% • {tokens} DMD</span>;
+                                return <span className="participation-value">{p.participation}%</span>;
                               }
                             } catch (e) {}
                             return <span className="participation-value">{p.participation}%</span>;
@@ -510,8 +540,8 @@ export default function DaoPage() {
                       </td>
                       <td><span className={`exceeding-value ${p.exceeding >= 0 ? "positive" : "negative"}`}>{p.exceeding >= 0 ? `+${p.exceeding}%` : `${p.exceeding}%`}</span></td>
                       <td>
-                        <button className="btn-vote" onClick={(e) => { e.stopPropagation(); openVoteModal(p); }}>
-                          <i className="fas fa-vote-yea" /> Vote
+                        <button className="btn-vote" onClick={(e) => { e.stopPropagation(); handleFinalizeClick(p); }}>
+                          <i className="fas fa-gavel" /> Finalize
                         </button>
                       </td>
                       <td><span className={`proposal-status ${p.status.toLowerCase()}`}>{p.status}</span></td>
@@ -566,20 +596,19 @@ export default function DaoPage() {
                   </div>
                 </div>
 
-                <div className="voting-stats">
-                  <div className="voting-stat">
+                <div className="voting-stats-dao">
+                  <div className="voting-stat-dao">
                     <span className="stat-label">Participation</span>
                     <div className="participation-bar">
                       <div className="participation-progress" style={{ width: `${selectedProposal.participation}%` }} />
                       <span className="participation-value">{selectedProposal.participation}%</span>
                     </div>
                   </div>
-                  <div className="voting-stat">
+                  <div className="voting-stat-dao">
                     <span className="stat-label">Current Results</span>
                     <div className="results-bars">
                       <div className="result-bar yes"><span className="result-label">Yes</span><div className="result-progress-container"><div className="result-progress" style={{ width: `68%` }} /></div><span className="result-value">68%</span></div>
                       <div className="result-bar no"><span className="result-label">No</span><div className="result-progress-container"><div className="result-progress" style={{ width: `22%` }} /></div><span className="result-value">22%</span></div>
-                      <div className="result-bar abstain"><span className="result-label">Abstain</span><div className="result-progress-container"><div className="result-progress" style={{ width: `10%` }} /></div><span className="result-value">10%</span></div>
                     </div>
                   </div>
                 </div>
@@ -589,7 +618,6 @@ export default function DaoPage() {
                   <div className="vote-buttons">
                     <button className={`vote-btn vote-yes ${selectedVote === "Yes" ? "selected" : ""}`} onClick={() => setSelectedVote("Yes")}><i className="fas fa-check-circle" /> Yes</button>
                     <button className={`vote-btn vote-no ${selectedVote === "No" ? "selected" : ""}`} onClick={() => setSelectedVote("No")}><i className="fas fa-times-circle" /> No</button>
-                    <button className={`vote-btn vote-abstain ${selectedVote === "Abstain" ? "selected" : ""}`} onClick={() => setSelectedVote("Abstain")}><i className="fas fa-minus-circle" /> Abstain</button>
                   </div>
                   <div className="voting-power-info">
                     <span>Your Voting Power: <strong>4.2%</strong></span>

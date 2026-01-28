@@ -933,10 +933,6 @@
   background: #ff4c4c;
 }
 
-.tooltip-item.abstain .dot {
-  background: #ffc107;
-}
-
 .voting-stats {
   display: flex;
   flex-direction: column;
@@ -1017,11 +1013,6 @@
 .no-votes .stat-value,
 .no-votes .stat-percentage {
   color: #ff4c4c;
-}
-
-.abstain-votes .stat-value,
-.abstain-votes .stat-percentage {
-  color: #ffc107;
 }
 
 .stat-divider {
@@ -1608,11 +1599,6 @@ body.light-theme .yes-votes .stat-percentage {
 body.light-theme .no-votes .stat-value,
 body.light-theme .no-votes .stat-percentage {
   color: #e53935;
-}
-
-body.light-theme .abstain-votes .stat-value,
-body.light-theme .abstain-votes .stat-percentage {
-  color: #f57c00;
 }
 
 body.light-theme .stat-divider {

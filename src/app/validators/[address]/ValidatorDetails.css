@@ -1168,11 +1168,6 @@ body.light-theme .address-icon {
   color: #ff6b6b;
 }
 
-.vote-badge.vote-abstain {
-  background: rgba(255, 159, 67, 0.15);
-  color: #ff9f43;
-}
-
 .proposal-status {
   display: inline-block;
   padding: 6px 12px;
@@ -1245,11 +1240,6 @@ body.light-theme .vote-badge.vote-yes {
 body.light-theme .vote-badge.vote-no {
   background: rgba(255, 107, 107, 0.15);
   color: #d32f2f;
-}
-
-body.light-theme .vote-badge.vote-abstain {
-  background: rgba(255, 159, 67, 0.15);
-  color: #e65100;
 }
 
 body.light-theme .proposal-status.passed {
@@ -2203,10 +2193,4 @@ body.light-theme .tooltip::after {
   background: rgba(239, 68, 68, 0.2);
   color: #ef4444;
   border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.vote-abstain {
-  background: rgba(156, 163, 175, 0.2);
-  color: #9ca3af;
-  border: 1px solid rgba(156, 163, 175, 0.3);
 }

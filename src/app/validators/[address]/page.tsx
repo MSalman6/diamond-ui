@@ -422,8 +422,8 @@ export default function ValidatorDetails() {
                     </td>
                     <td><span className="proposal-type protocol">{proposal.proposalType || 'Protocol'}</span></td>
                     <td>
-                      <span className={`vote-badge ${proposal.myVote == "2" ? "vote-yes" : proposal.myVote == "1" ? "vote-no" : "vote-abstain"}`}>
-                        {proposal.myVote == "2" ? "Yes" : proposal.myVote == "1" ? "No" : "Abstain"}
+                      <span className={`vote-badge ${proposal.myVote == "2" ? "vote-yes" : proposal.myVote == "1" ? "vote-no" : ""}`}>
+                        {proposal.myVote == "2" ? "Yes" : proposal.myVote == "1" ? "No" : ""}
                       </span>
                     </td>
                     <td><span className="proposal-status passed">Unknown</span></td>

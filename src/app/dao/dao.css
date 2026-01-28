@@ -691,7 +691,6 @@
   color: #333;
 }
 
-
 .proposals-tabs {
   display: flex;
   gap: 10px;
@@ -700,6 +699,37 @@
   transition: border-color 0.5s ease;
 }
 
+.actionsNeededBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 25px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff6b6b, #ff3b3b);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.75rem;
+  line-height: 1;
+  margin-left: 5px;
+  box-shadow: 0 6px 18px rgba(255, 59, 59, 0.18);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  white-space: nowrap;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.actionsNeededBadge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(255, 59, 59, 0.22);
+}
+
+.actionsNeededBadge.small {
+  min-width: 16px;
+  height: 16px;
+  padding: 0 6px;
+  font-size: 0.65rem;
+}
 
 .light-theme .proposals-tabs {
   border-bottom: 1px solid #e0e4e8;
@@ -922,7 +952,7 @@
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
   overflow: visible;
-  width: 100%;
+  min-width: 100%;
   max-width: 120px;
   position: relative;
 }
@@ -953,7 +983,6 @@
   white-space: nowrap;
   transition: color 0.5s ease;
 }
-
 
 .light-theme .participation-value {
   color: #333;
@@ -1304,11 +1333,15 @@
   color: #333;
 }
 
-.voting-stats {
+.voting-stats-dao {
+  gap: 15px;
+  display: flex;
   margin-bottom: 25px;
+  flex-direction: column;
 }
 
-.voting-stat {
+.voting-stat-dao {
+  min-width: 100%;
   margin-bottom: 20px;
 }
 
@@ -1376,21 +1409,12 @@
   background: #ff6b6b;
 }
 
-.result-bar.abstain .result-progress {
-  background: #ff9f43;
-}
-
-
 .light-theme .result-bar.yes .result-progress {
   background: #00a86b;
 }
 
 .light-theme .result-bar.no .result-progress {
   background: #e53e3e;
-}
-
-.light-theme .result-bar.abstain .result-progress {
-  background: #e67e22;
 }
 
 .result-value {
@@ -1475,16 +1499,6 @@
   color: #ff6b6b;
 }
 
-.vote-btn.vote-abstain {
-  border-color: rgba(255, 159, 67, 0.3);
-}
-
-.vote-btn.vote-abstain:hover,
-.vote-btn.vote-abstain.selected {
-  background: rgba(255, 159, 67, 0.15);
-  color: #ff9f43;
-}
-
 
 .light-theme .vote-btn.vote-yes {
   border-color: rgba(0, 168, 107, 0.3);
@@ -1504,16 +1518,6 @@
 .light-theme .vote-btn.vote-no.selected {
   background: rgba(229, 62, 62, 0.12);
   color: #e53e3e;
-}
-
-.light-theme .vote-btn.vote-abstain {
-  border-color: rgba(230, 126, 34, 0.3);
-}
-
-.light-theme .vote-btn.vote-abstain:hover,
-.light-theme .vote-btn.vote-abstain.selected {
-  background: rgba(230, 126, 34, 0.12);
-  color: #e67e22;
 }
 
 .voting-power-info {
