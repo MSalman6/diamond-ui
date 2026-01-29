@@ -185,7 +185,7 @@ export default function ProfilePage() {
                       </div>
                       <div className="stat-value-container">
                         <div className="stat-value highlight">—</div>
-                        <div className="stat-change positive" style={{display:'none'}}>+ DMD since epoch</div>
+                        <div className="stat-value highlight">N DMD</div>
                         <div className="stat-note">from staking on {stakedValidators.length} validator{stakedValidators.length === 1 ? '' : 's'}</div>
                       </div>
                       <div className="stat-actions">
@@ -360,7 +360,6 @@ export default function ProfilePage() {
                         <span className="stake-label">My validator stake <InfoTooltip content={<div><p>The amount of DMD you've personally staked as a validator in your own pool.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
                         <span className="stake-value highlight">{formatDMDAmount(myValidatorStakeWei)}</span>
                       </div>
-                      <div className="stake-change positive">+5 DMD since epoch 22</div>
                       <div className="stake-actions">
                         {
                           myPool && (
@@ -380,7 +379,6 @@ export default function ProfilePage() {
                         <span className="stake-label">Delegated stake to my pool <InfoTooltip content={<div><p>The amount of DMD delegated to your pool by other users (excluding your own stake).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
                         <span className="stake-value highlight">{formatDMDAmount(delegatedStakeWei)}</span>
                       </div>
-                      <div className="stake-change positive">+5 DMD since epoch 22</div>
                       <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
                     </div>
                   </div>

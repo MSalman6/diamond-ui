@@ -76,7 +76,7 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
         setCurrentPage(0);
       }
 
-      // Initialize sorting from URL params, e.g. ?sort=myStake&direction=descending
+      // Sorting with URL params, e.g. ?sort=myStake&direction=descending
       const sortKey = searchParams?.get('sort');
       const dirParam = searchParams?.get('direction') || searchParams?.get('dir');
       const direction = dirParam === 'descending' || dirParam === 'asc' || dirParam === 'desc' || dirParam === 'ascending'
@@ -86,9 +86,7 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
       if (sortKey && tableFieldsDefault.some(tf => tf.key === sortKey && tf.sortAble)) {
         setSortConfig({ key: sortKey, direction: direction || 'descending' });
       }
-    } catch (e) {
-      // ignore malformed params
-    }
+    } catch (e) {}
   }, [searchParams]);
 
   // Update localStorage when table fields change
