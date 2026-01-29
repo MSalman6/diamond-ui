@@ -380,6 +380,16 @@
     color: #6ee7b7;
   }
   
+  .status-badge.valid {
+    background: rgba(0, 210, 255, 0.15);
+    color: #00d2ff;
+  }
+
+  .status-badge.invalid {
+    background: rgba(255, 107, 107, 0.15);
+    color: #ff6b6b;
+  }
+
   .status-badge.inactive {
     background: rgba(249, 115, 22, 0.2);
     color: #f97316;

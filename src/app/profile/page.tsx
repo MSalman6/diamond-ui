@@ -105,6 +105,16 @@ export default function ProfilePage() {
 
   const hasValidator = Boolean(myPool);
 
+  // Determine current validator status
+  const myValidatorStatus = useMemo(() => {
+    if (!myPool) return null;
+    const isActive = Boolean((myPool as any).isActive);
+    const isValid = Boolean((myPool as any).isToBeElected || (myPool as any).isPendingValidator);
+    if (isActive) return { label: 'Active', className: 'active' } as const;
+    if (isValid) return { label: 'Valid', className: 'valid' } as const;
+    return { label: 'Invalid', className: 'invalid' } as const;
+  }, [myPool]);
+
   // Compute own validator stake and delegated stake for the current pool
   const totalStakeWei = BigNumber(myPool?.totalStake || 0);
   const myValidatorStakeWei = BigNumber(myPool?.myStake || 0);
@@ -143,7 +153,7 @@ export default function ProfilePage() {
                         <div className="wallet-icon-inner"></div>
                       </div>
                       <div className="wallet-details">
-                        <h1>{userWallet.myAddr && truncateAddress(userWallet.myAddr)}</h1>
+                        <h1>{userWallet.myAddr}</h1>
                         <p>User Account</p>
                       </div>
                     </div>
@@ -328,8 +338,10 @@ export default function ProfilePage() {
                       <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #6EE7B7, #3B82F6)"}}></div>
                     </div>
                     <div className="validator-details">
-                      <h1>{userWallet.myAddr && truncateAddress(userWallet.myAddr)}</h1>
-                      <span className="status-badge active">Active</span>
+                      <h1>{userWallet.myAddr}</h1>
+                      {myValidatorStatus && (
+                        <span className={`status-badge ${myValidatorStatus.className}`}>{myValidatorStatus.label}</span>
+                      )}
                     </div>
                   </div>
                 </div>
