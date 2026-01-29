@@ -431,6 +431,23 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Wallet Compatibility Bar */}
+        <section className="compatibility">
+          <div className="container">
+            <div className="compatibility-bar">
+              <span className="compatibility-title">Compatible with WalletConnect-enabled wallets:</span>
+              <div className="wallets-list">
+                <span className="wallet-chip">MetaMask</span>
+                <span className="wallet-chip">Brave</span>
+                <span className="wallet-chip">Coinbase Wallet</span>
+                <span className="wallet-chip" title="More wallets will be added soon">
+                  + More coming soon
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Community Section */}
         <section className="community">
           <div className="container">

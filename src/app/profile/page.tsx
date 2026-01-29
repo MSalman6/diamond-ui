@@ -426,7 +426,7 @@ export default function ProfilePage() {
                     <div className="stat-label">Node operator shared reward <InfoTooltip content={<div><p>The portion of the validator's 20% reward that is shared with a separate node operator.</p> <p>Useful when a node owner delegates technical operation to someone else but keeps ownership and voting rights. Configurable per pool (from 0.01% to 20%).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="stat-value highlight">{myPool?.poolOperatorShare ? BigNumber(myPool.poolOperatorShare).dividedBy(100).toFixed(2) + '%' : '—'}</div>
                     <div className="stat-note copy-address-container">
-                      {myPool?.poolOperator ? truncateAddress(myPool.poolOperator) : '—'}{' '}
+                      {myPool?.poolOperator ? myPool.poolOperator : '—'}{' '}
                       <button
                         className="btnIcon"
                         id="copy-address"

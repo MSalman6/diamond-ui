@@ -352,7 +352,7 @@ export default function DaoPage() {
                 </div>
                 <div className="pot-distribution">
                   <div className="distribution-item">
-                    <span className="distribution-label">Low majority pot</span>
+                    <span className="distribution-label">Low Majority Pot</span>
                     <span className="distribution-value">{daoContext.lowMajorityContractBalance ? `${daoContext.lowMajorityContractBalance.toFixed(2)} DMD` : '0 DMD'}</span>
                     {/* <div className="distribution-bar">
                       <div className="distribution-progress community" style={{ width: `40%` }} />

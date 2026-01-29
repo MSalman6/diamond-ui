@@ -542,6 +542,41 @@
   background: rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
+
+.compatibility {
+  padding: 20px 0;
+  background: var(--bg);
+}
+
+.compatibility-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+}
+
+.compatibility-title {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.wallets-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.wallet-chip {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.9rem;
+}
   
   .table-container {
     overflow-x: auto;
