@@ -1,0 +1,223 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 520px;
+  padding: 32px;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+  margin: 20px;
+}
+
+.modalContent h3 {
+  color: var(--text);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.headerTitle {
+  margin-top: 4px;
+}
+
+.addressLine {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.importantBlock {
+  border: 1px solid rgba(255, 167, 38, 0.25);
+  background: rgba(255, 167, 38, 0.08);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.importantIcon {
+  margin-right: 8px;
+}
+
+.importantLabel {
+  font-weight: 700;
+  margin-right: 6px;
+}
+
+.importantText {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 6px 0 0 0;
+}
+
+.modalClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.modalClose:hover {
+  background: var(--card-hover);
+  color: var(--text);
+  transform: scale(1.1);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: center;
+}
+
+.confirmLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.formInput {
+  width: 100%;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.formSubmit {
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  max-width: 150px;
+  align-self: center;
+}
+
+.unstakeWarning {
+  color: #ffa726;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  margin: 0;
+  padding: 16px;
+  background: rgba(255, 167, 38, 0.1);
+  border: 1px solid rgba(255, 167, 38, 0.2);
+  border-radius: 8px;
+}
+
+/* Light theme overrides */
+:global(body.light-theme) .modalOverlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+:global(body.light-theme) .modalContent {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+:global(body.light-theme) .importantBlock {
+  border-color: rgba(255, 167, 38, 0.25);
+  background: rgba(255, 167, 38, 0.08);
+}
+
+:global(body.light-theme) .modalClose {
+  color: #718096;
+}
+
+:global(body.light-theme) .modalClose:hover {
+  background: #f7fafc;
+  color: #2d3748;
+}
+
+:global(body.light-theme) .formInput {
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  color: #2d3748;
+}
+
+:global(body.light-theme) .formInput:focus {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+:global(body.light-theme) .unstakeWarning {
+  color: #d69e2e;
+  background: rgba(214, 158, 46, 0.1);
+  border-color: rgba(214, 158, 46, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .modalContent {
+    margin: 10px;
+    padding: 24px;
+    max-width: 100%;
+  }
+  .formInput {
+    padding: 14px;
+    font-size: 16px;
+  }
+  .formSubmit {
+    padding: 14px 24px;
+  }
+}

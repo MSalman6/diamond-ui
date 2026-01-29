@@ -16,6 +16,7 @@ import { useDaoContext } from '@/contexts/DAO';
 import { useWalletConnect } from '@/contexts/WalletConnect';
 import StakeModal from '@/components/Modals/Stake/StakeModal';
 import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
+import RemoveValidatorModal from '@/components/Modals/RemoveValidator/RemoveValidatorModal';
 import CreatePoolModal from '@/components/Modals/CreatePool/CreatePoolModal';
 import UpdatePoolOperatorModal from '@/components/Modals/UpdatePoolOperator/UpdatePoolOperatorModal';
 
@@ -367,7 +368,9 @@ export default function ProfilePage() {
                               <StakeModal buttonText="Stake" pool={myPool} />
                               <UnstakeModal buttonText="Unstake" pool={myPool} />
                               <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
-                              <button className="btn-secondary btn-sm">Remove pool</button>
+                              {myPool && (
+                                <RemoveValidatorModal buttonText="Remove pool" pool={myPool} />
+                              )}
                             </>
                           )
                         }

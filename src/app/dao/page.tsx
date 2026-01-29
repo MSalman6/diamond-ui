@@ -558,7 +558,9 @@ export default function DaoPage() {
               <div className="empty-state-icon"><i className="fas fa-file-alt" /></div>
               <h3>No proposals found</h3>
               <p>There are no proposals matching your search criteria.</p>
-              <button className="btn-primary create-proposal-btn"><i className="fas fa-plus-circle" /> Create Proposal</button>
+              <Link href="/dao/create" className="btn-primary create-proposal-btn">
+                <i className="fas fa-plus-circle" /> Create Proposal
+              </Link>
             </div>
           )}
 
