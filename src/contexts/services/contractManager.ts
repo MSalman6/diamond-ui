@@ -1,5 +1,6 @@
 import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
+import { formatTxError, logDebugError, logDebugStart, getDebugLevel } from '@/utils/web3Errors';
 
 // Contract ABIs
 import {
@@ -61,6 +62,64 @@ export class ContractManager {
 
   public constructor(public web3: Web3) {}
 
+  /**
+   * Wrap a web3 Contract to log method calls and decode revert reasons.
+   * Returns a Proxy that leaves normal behavior intact but adds helpful debugging.
+   */
+  private wrapContract<T extends any>(name: string, abi: any[], contract: T): T {
+    const level = getDebugLevel();
+    if (level <= 0) return contract;
+
+    const methodsProxy = new Proxy((contract as any).methods, {
+      get: (target: any, prop: PropertyKey) => {
+        const orig = (target as any)[prop as any];
+        if (typeof orig !== 'function') return orig;
+        return (...args: any[]) => {
+          const meta = { contract: name, method: String(prop), args };
+          try {
+            const callObj = orig.apply(target, args);
+            // Wrap call()
+            const call = (...callArgs: any[]) => {
+              // Log at level 2
+              logDebugStart(meta);
+              return callObj.call(...callArgs).catch((err: any) => {
+                logDebugError(this.web3, abi, meta, err);
+                // Re-throw with formatted message for upstream handlers
+                const msg = formatTxError(this.web3, abi, err, 'Call failed');
+                throw new Error(msg);
+              });
+            };
+            // Wrap send()
+            const send = (opts: any) => {
+              // Log at level 2
+              logDebugStart(meta);
+              const promi = callObj.send(opts);
+              promi.on('error', (err: any) => {
+                logDebugError(this.web3, abi, meta, err);
+              });
+              return promi;
+            };
+            // Return a lightweight wrapper preserving original object's shape
+            return {
+              ...callObj,
+              call,
+              send,
+            };
+          } catch (err) {
+            throw err;
+          }
+        };
+      }
+    });
+
+    return new Proxy(contract as any, {
+      get: (target, prop, receiver) => {
+        if (prop === 'methods') return methodsProxy;
+        return Reflect.get(target, prop, receiver);
+      }
+    }) as any as T;
+  }
+
   public static getContractAddresses() : ContractAddresses {
     return { validatorSetAddress: '0x1000000000000000000000000000000000000001' }
   }
@@ -74,15 +133,16 @@ export class ContractManager {
     const contractAddresses = ContractManager.getContractAddresses();
 
     const abi = JsonValidatorSetHbbft.abi as any;
-    const validatorSetContract = new this.web3.eth.Contract(abi, contractAddresses.validatorSetAddress) as unknown as ValidatorSetHbbft;
-    this.cachedValidatorSetHbbft = validatorSetContract;
-    return validatorSetContract;
+    const raw = new this.web3.eth.Contract(abi, contractAddresses.validatorSetAddress) as unknown as ValidatorSetHbbft;
+    const wrapped = this.wrapContract<ValidatorSetHbbft>('ValidatorSetHbbft', abi, raw);
+    this.cachedValidatorSetHbbft = wrapped;
+    return wrapped;
   }
 
   public getRegistry() : Registry {
     const abi = JsonRegistry.abi as any;
-    const result = new this.web3.eth.Contract(abi, '0x6000000000000000000000000000000000000000') as unknown as Registry;
-    return result;
+    const raw = new this.web3.eth.Contract(abi, '0x6000000000000000000000000000000000000000') as unknown as Registry;
+    return this.wrapContract<Registry>('Registry', abi, raw);
   }
 
   public async getRewardHbbft() : Promise<BlockRewardHbbft> {
@@ -93,8 +153,9 @@ export class ContractManager {
     const contractAddress = await this.getValidatorSetHbbft().methods.blockRewardContract().call();
 
     const abi = JsonBlockRewardHbbft.abi as any;
-    const result = new this.web3.eth.Contract(abi, contractAddress) as unknown as BlockRewardHbbft;
-    this.cachedRewardContract = result;
+    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as BlockRewardHbbft;
+    const wrapped = this.wrapContract<BlockRewardHbbft>('BlockRewardHbbft', abi, raw);
+    this.cachedRewardContract = wrapped;
     return this.cachedRewardContract!;
   }
 
@@ -113,9 +174,10 @@ export class ContractManager {
 
     const contractAddress = await this.getValidatorSetHbbft().methods.stakingContract().call();
     const abi = JsonStakingHbbft.abi as any;
-    const stakingContract = new this.web3.eth.Contract(abi, contractAddress) as unknown as StakingHbbft;
-    this.cachedStakingHbbft = stakingContract;
-    return stakingContract;
+    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as StakingHbbft;
+    const wrapped = this.wrapContract<StakingHbbft>('StakingHbbft', abi, raw);
+    this.cachedStakingHbbft = wrapped;
+    return wrapped;
   }
 
   public getContractPermission() : TxPermissionHbbft {        
@@ -127,9 +189,10 @@ export class ContractManager {
     const configuredAddress = '0x4000000000000000000000000000000000000001';
 
     const abi = JsonTxPermissionHbbft.abi as any;
-    const permissionContract = new this.web3.eth.Contract(abi, configuredAddress) as unknown as TxPermissionHbbft;
-    this.cachedPermission = permissionContract;
-    return permissionContract;
+    const raw = new this.web3.eth.Contract(abi, configuredAddress) as unknown as TxPermissionHbbft;
+    const wrapped = this.wrapContract<TxPermissionHbbft>('TxPermissionHbbft', abi, raw);
+    this.cachedPermission = wrapped;
+    return wrapped;
   }
 
   public async getKeyGenHistory() : Promise<KeyGenHistory> {
@@ -139,9 +202,10 @@ export class ContractManager {
 
     const contractAddress = await this.getValidatorSetHbbft().methods.keyGenHistoryContract().call();
     const abi = JsonKeyGenHistory.abi as any;
-    const contract = new this.web3.eth.Contract(abi, contractAddress) as unknown as KeyGenHistory;
-    this.cachedKeyGenHistory = contract;
-    return contract;
+    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as KeyGenHistory;
+    const wrapped = this.wrapContract<KeyGenHistory>('KeyGenHistory', abi, raw);
+    this.cachedKeyGenHistory = wrapped;
+    return wrapped;
   }
 
   public async isValidatorAvailable(miningAddress: string) {
@@ -184,46 +248,46 @@ export class ContractManager {
     const contractAddress = await this.getValidatorSetHbbft().methods.randomContract().call();
 
     const abi = JsonRandomHbbft.abi as any;
-    const contract = new this.web3.eth.Contract(abi, contractAddress) as unknown as RandomHbbft;
-    return contract;
+    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as RandomHbbft;
+    return this.wrapContract<RandomHbbft>('RandomHbbft', abi, raw);
   }
 
   public getDaoContract(): DiamondDao {
     const contractAddress = '0xDA0da0da0Da0Da0Da0DA00DA0da0da0DA0DA0dA0';
 
     const abi = JsonDiamonDao.abi as any;
-    const contract = new this.web3.eth.Contract(abi, contractAddress) as unknown as DiamondDao;
-    return contract;
+    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as DiamondDao;
+    return this.wrapContract<DiamondDao>('DiamondDao', abi, raw);
   }
 
   public async getCertifierHbbft(): Promise<CertifierHbbft> {
     const contractAddress = '0x65219102B1AFBC624C56CDbf02186B8341703456';
 
     const abi = JsonCertifierHbbft.abi as any;
-    const contract = new this.web3.eth.Contract(abi, contractAddress) as unknown as CertifierHbbft;
-    return contract;
+    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as CertifierHbbft;
+    return this.wrapContract<CertifierHbbft>('CertifierHbbft', abi, raw);
   }
 
   public async getConnectivityTracker(): Promise<ConnectivityTrackerHbbft> {
     const bsContract = await this.getBonusScoreSystem();
     const contractAddress = await bsContract.methods.connectivityTracker().call();
     const abi = JsonConnectivityTrackerHbbft.abi as any;
-    const contract = new this.web3.eth.Contract(abi, contractAddress) as unknown as ConnectivityTrackerHbbft;
-    return contract;
+    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as ConnectivityTrackerHbbft;
+    return this.wrapContract<ConnectivityTrackerHbbft>('ConnectivityTrackerHbbft', abi, raw);
   }
 
   public async getDMDAggregator(): Promise<DMDAggregator> {
     const contractAddress = process.env.NEXT_PUBLIC_AGGREGATOR_CONTRACT_ADDRESS || '0x9990000000000000000000000000000000000000';
 
     const abi = JsonHbbtAggregator.abi as any;
-    const contract = new this.web3.eth.Contract(abi, contractAddress) as unknown as DMDAggregator;
-    return contract;
+    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as DMDAggregator;
+    return this.wrapContract<DMDAggregator>('DMDAggregator', abi, raw);
   }
 
   public async getBonusScoreSystem(): Promise<BonusScoreSystem> {
     const contractAddress = await this.getValidatorSetHbbft().methods.bonusScoreSystem().call();
     const abi = JsonBonusScoreSystem.abi as any;
-    const contract = new this.web3.eth.Contract(abi, contractAddress) as unknown as BonusScoreSystem;
-    return contract;
+    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as BonusScoreSystem;
+    return this.wrapContract<BonusScoreSystem>('BonusScoreSystem', abi, raw);
   }
 }

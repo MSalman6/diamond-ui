@@ -6,6 +6,7 @@ import { useWeb3Context } from "@/contexts/Web3";
 import { DaoPhase, Proposal, TotalVotingStats, Vote } from "@/contexts/types/dao";
 import BigNumber from 'bignumber.js';
 import { getFunctionSelector, timestampToDate } from '../../utils/common';
+import { formatTxError } from '@/utils/web3Errors';
 import { useStakingContext } from '@/contexts/Staking';
 BigNumber.config({ EXPONENTIAL_AT: 1e+9 });
 
@@ -151,6 +152,13 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
         errorMessage = err.message;
       }
     }
+
+    // Try to decode via ABI/custom errors for more clarity
+    try {
+      const daoAbi: any = web3Context.contractsManager.daoContract.options.jsonInterface || [];
+      const decodedMsg = formatTxError(web3Context.web3, daoAbi, err, errorMessage);
+      if (decodedMsg) errorMessage = decodedMsg;
+    } catch {}
 
     // Clean up common prefixes/suffixes
     errorMessage = errorMessage
