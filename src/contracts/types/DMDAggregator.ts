@@ -36,20 +36,6 @@ export interface DMDAggregator extends BaseContract {
   ): DMDAggregator;
   clone(): DMDAggregator;
   methods: {
-    renounceOwnership(): NonPayableTransactionObject<void>;
-
-    setBlockRewardContract(_br: string): NonPayableTransactionObject<void>;
-
-    setKeygenHistoryContract(_kh: string): NonPayableTransactionObject<void>;
-
-    setStakingContract(_st: string): NonPayableTransactionObject<void>;
-
-    setTxPermissionContract(_tp: string): NonPayableTransactionObject<void>;
-
-    setValidatorsSetContract(_vs: string): NonPayableTransactionObject<void>;
-
-    transferOwnership(newOwner: string): NonPayableTransactionObject<void>;
-
     br(): NonPayableTransactionObject<string>;
 
     bs(): NonPayableTransactionObject<string>;
@@ -91,28 +77,7 @@ export interface DMDAggregator extends BaseContract {
 
     getDaoPhaseProposals(
       daoPhase: number | string | BN
-    ): NonPayableTransactionObject<
-      [
-        [
-          string,
-          string,
-          string,
-          string[],
-          string[],
-          string[],
-          string,
-          string,
-          string,
-          string,
-          string,
-          string
-        ],
-        string[],
-        [string, string, string, string],
-        string,
-        string
-      ][]
-    >;
+    ): NonPayableTransactionObject<string[]>;
 
     getDelegationsData(
       delegators: string[],
@@ -263,9 +228,23 @@ export interface DMDAggregator extends BaseContract {
 
     owner(): NonPayableTransactionObject<string>;
 
+    renounceOwnership(): NonPayableTransactionObject<void>;
+
+    setBlockRewardContract(_br: string): NonPayableTransactionObject<void>;
+
+    setKeygenHistoryContract(_kh: string): NonPayableTransactionObject<void>;
+
+    setStakingContract(_st: string): NonPayableTransactionObject<void>;
+
+    setTxPermissionContract(_tp: string): NonPayableTransactionObject<void>;
+
+    setValidatorsSetContract(_vs: string): NonPayableTransactionObject<void>;
+
     st(): NonPayableTransactionObject<string>;
 
     tp(): NonPayableTransactionObject<string>;
+
+    transferOwnership(newOwner: string): NonPayableTransactionObject<void>;
 
     vs(): NonPayableTransactionObject<string>;
   };
