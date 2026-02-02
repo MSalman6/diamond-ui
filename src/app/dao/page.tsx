@@ -449,10 +449,16 @@ export default function DaoPage() {
                     <tr key={p.id} onClick={() => handleDetailsClick(p.id)} style={{ cursor: 'pointer' }}>
                       <td>{p.date}</td>
                       <td>
-                        <div className="creator-address">
-                          <div className="address-icon" style={{ backgroundColor: p.creatorColor }} />
-                          <span>{p.creator}</span>
-                        </div>
+                        {(() => {
+                          const hash = (p.creator || "").split("").reduce((h, ch) => ch.charCodeAt(0) + ((h << 5) - h), 0);
+                          const color = `#${(hash & 0x00ffffff).toString(16).padStart(6, "0")}`;
+                          return (
+                            <div className="creator-address">
+                              <div className="address-icon" style={{ backgroundColor: color }} />
+                              <span>{p.creator}</span>
+                            </div>
+                          );
+                        })()}
                       </td>
                       <td>
                         <div className="proposal-title"><span>{p.title}</span></div>
@@ -514,10 +520,16 @@ export default function DaoPage() {
                     <tr key={p.id} onClick={() => handleDetailsClick(p.id)} style={{ cursor: 'pointer' }}>
                       <td>{p.date}</td>
                       <td>
-                        <div className="creator-address">
-                          <div className="address-icon" style={{ backgroundColor: p.creatorColor }} />
-                          <span>{p.creator}</span>
-                        </div>
+                        {(() => {
+                          const hash = (p.creator || "").split("").reduce((h, ch) => ch.charCodeAt(0) + ((h << 5) - h), 0);
+                          const color = `#${(hash & 0x00ffffff).toString(16).padStart(6, "0")}`;
+                          return (
+                            <div className="creator-address">
+                              <div className="address-icon" style={{ backgroundColor: color }} />
+                              <span>{p.creator}</span>
+                            </div>
+                          );
+                        })()}
                       </td>
                       <td>
                         <div className="proposal-title"><span>{p.title}</span></div>
