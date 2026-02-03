@@ -1045,6 +1045,72 @@
   opacity: 0.8;
 }
 
+/* Voting Actions */
+.voting-actions {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.voting-actions .voted-notice {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.voting-actions .form-group {
+  margin-bottom: 10px;
+}
+
+.voting-actions .form-group input {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.voting-actions .form-group input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(0, 157, 255, 0.2);
+}
+
+.vote-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.vote-buttons .primaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 160px;
+}
+
+.primaryBtn.vote-yes {
+  background: linear-gradient(90deg, #16a085, #2ecc71);
+}
+
+.primaryBtn.vote-yes:hover:not(:disabled) {
+  background: linear-gradient(90deg, #1b9b7e, #29c267);
+}
+
+.primaryBtn.vote-no {
+  background: linear-gradient(90deg, #ff4c4c, #ff9800);
+}
+
+.primaryBtn.vote-no:hover:not(:disabled) {
+  background: linear-gradient(90deg, #e84545, #f28a00);
+}
+
 /* Discussion Card */
 .discussion-links {
   display: flex;
@@ -1615,6 +1681,34 @@ body.light-theme .threshold-not-met {
 
 body.light-theme .voting-time {
   border-top: 1px solid #e5e7eb;
+}
+
+body.light-theme .voting-actions {
+  border-top: 1px solid #e5e7eb;
+}
+
+body.light-theme .voting-actions .voted-notice {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+body.light-theme .voting-actions .form-group input {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #121826;
+}
+
+body.light-theme .voting-actions .form-group input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.2);
+}
+
+body.light-theme .primaryBtn.vote-yes {
+  background: linear-gradient(90deg, #16a085, #27ae60);
+}
+
+body.light-theme .primaryBtn.vote-no {
+  background: linear-gradient(90deg, #e53935, #f57c00);
 }
 
 /* Discussion links */
