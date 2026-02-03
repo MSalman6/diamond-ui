@@ -15,6 +15,7 @@ import { config as wagmiConfig } from "@/contexts/WalletConnect/config/wagmi";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { validateRpcUrl } from "@/utils/rpc";
 import { getRPC, saveRPC, clearRPC } from "@/utils/storage";
+import { checkProviderHealth, getGasPriceSafe, isEip1193Provider } from "../../utils/providerHealth";
 
 import {
   BlockRewardHbbft,
@@ -43,6 +44,7 @@ interface ContractsState {
 
 interface Web3ContextProps {
   web3: Web3;
+  readonlyWeb3: Web3;
   userWallet: UserWallet;
   contractsManager: ContractsState;
   web3Initialized: boolean;
@@ -53,8 +55,10 @@ interface Web3ContextProps {
   showLoader: (loading: boolean, loadingMsg: string) => void;
   getUpdatedBalance: () => Promise<BigNumber>;
   updateWalletBalance: () => Promise<void>;
+  ensureProviderReady: () => Promise<boolean>;
   applyCustomRpc: (url: string) => Promise<{ ok: boolean; message?: string }>;
   resetToDefaultRpc: () => Promise<void>;
+  getGasPriceSafe: () => Promise<string>;
 }
 
 const Web3Context = createContext<Web3ContextProps | undefined>(undefined);
@@ -79,7 +83,10 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
   // Prefer cookie/localStorage via storage util, then env, then default
   const rpcUrl = getRPC() || process.env.NEXT_PUBLIC_RPC_URL || "https://testnet-rpc.bit.diamonds/";
   const [wagmiConnector, setWagmiConnector] = useState<WalletConnectProvider | null>(null);
+  // Wallet-connected for signing
   const [web3, setWeb3] = useState<Web3>(new Web3(rpcUrl));
+  // Stable HTTP RPC for reads only
+  const [readonlyWeb3, setReadonlyWeb3] = useState<Web3>(new Web3(rpcUrl));
 
   const [userWallet, setUserWallet] = useState<UserWallet>(new UserWallet("", new BigNumber(0)));
   const initialContracts = new ContractManager(web3);
@@ -103,6 +110,52 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Attach basic EIP-1193 event listeners when using a wallet provider
+  useEffect(() => {
+    const provider: any = (web3 as any)?.currentProvider;
+    if (provider && isEip1193Provider(provider)) {
+      const onAccountsChanged = async (accounts: string[]) => {
+        if (!accounts || accounts.length === 0) {
+          // Switch back to readonly RPC for stability
+          setUserWallet(new UserWallet("", new BigNumber(0)));
+          setWeb3(readonlyWeb3);
+        } else {
+          try {
+            await InitializeWagmiWallet(wagmiConnector || { getProvider: async () => provider, disconnect: async () => {}, name: provider?.name });
+          } catch {}
+        }
+      };
+      const onChainChanged = async (_chainId: string) => {
+        // Force refresh of contracts and wallet balance on network change
+        try {
+          const cid = await web3.eth.getChainId();
+          if (cid !== Number(chainId)) {
+            toast.warn("Wrong network. Please switch to DMD Network.");
+          }
+          await reinitializeContractsWithProvider(web3);
+          await updateWalletBalance();
+        } catch (err) {
+          console.warn('[Provider] chainChanged handling error', err);
+        }
+      };
+      const onDisconnect = () => {
+        // Fall back to readonly provider to keep UI responsive
+        setUserWallet(new UserWallet("", new BigNumber(0)));
+        setWeb3(readonlyWeb3);
+      };
+
+      provider.on?.('accountsChanged', onAccountsChanged);
+      provider.on?.('chainChanged', onChainChanged);
+      provider.on?.('disconnect', onDisconnect);
+
+      return () => {
+        provider.removeListener?.('accountsChanged', onAccountsChanged);
+        provider.removeListener?.('chainChanged', onChainChanged);
+        provider.removeListener?.('disconnect', onDisconnect);
+      };
+    }
+  }, [web3, readonlyWeb3, wagmiConnector]);
+
   useEffect(() => {
     if (wagmiConnector) {
       const unwatch = watchAccount(wagmiConfig, {
@@ -121,6 +174,44 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wagmiConnector]);
+
+  // Provider monitor - if connected wallet becomes unresponsive, try refreshing
+  useEffect(() => {
+    let timer: any;
+    let consecutiveFailures = 0;
+    const start = () => {
+      if (!userWallet?.myAddr) return; // only when connected
+      timer = setInterval(async () => {
+        try {
+          const { ok } = await checkProviderHealth(web3, { expectedChainId: Number(chainId), timeoutMs: 4000 });
+          if (!ok) {
+            consecutiveFailures += 1;
+            if (consecutiveFailures >= 2) {
+              // Attempt a silent refresh via connector
+              if (wagmiConnector?.getProvider) {
+                try {
+                  const p = await wagmiConnector.getProvider();
+                  const next = new Web3(p);
+                  setWeb3(next);
+                  await reinitializeContractsWithProvider(next);
+                  consecutiveFailures = 0;
+                } catch (e) {
+                  console.warn('[Provider] auto-refresh failed', e);
+                }
+              }
+            }
+          } else {
+            consecutiveFailures = 0;
+          }
+        } catch {}
+      }, 30000); // 30s
+    };
+    start();
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userWallet.myAddr, web3, wagmiConnector]);
 
   const initialize = async () => {
     if (!web3Initialized) {
@@ -207,9 +298,13 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
       return { ok: false, message: "Failed to save RPC to storage" };
     }
     // Reinitialize provider/contracts
-    const provider = new Web3(url);
-    setWeb3(provider);
-    await reinitializeContractsWithProvider(provider);
+    const httpProvider = new Web3(url);
+    setReadonlyWeb3(httpProvider);
+    const cp: any = (web3 as any)?.currentProvider;
+    if (!cp || !isEip1193Provider(cp)) {
+      setWeb3(httpProvider);
+      await reinitializeContractsWithProvider(httpProvider);
+    }
     showLoader(false, "");
     return { ok: true };
   };
@@ -218,9 +313,13 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     showLoader(true, "Resetting RPC...");
     clearRPC();
     const defaultUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://testnet-rpc.bit.diamonds/";
-    const provider = new Web3(defaultUrl);
-    setWeb3(provider);
-    await reinitializeContractsWithProvider(provider);
+    const httpProvider = new Web3(defaultUrl);
+    setReadonlyWeb3(httpProvider);
+    const cp: any = (web3 as any)?.currentProvider;
+    if (!cp || !isEip1193Provider(cp)) {
+      setWeb3(httpProvider);
+      await reinitializeContractsWithProvider(httpProvider);
+    }
     showLoader(false, "");
   };
 
@@ -299,6 +398,70 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     return true;
   }
 
+  // Validate wallet provider health before any transaction
+  const ensureProviderReady = async (): Promise<boolean> => {
+    try {
+      // Is provider healthy?
+      const { ok, reason } = await checkProviderHealth(web3, { expectedChainId: Number(chainId) });
+      if (ok) return true;
+
+      console.log('[Provider] Health check failed:', reason);
+
+      // Try refreshing via connector
+      if (wagmiConnector?.getProvider) {
+        console.log('[Provider] Attempting auto-refresh via connector...');
+        try {
+          const p = await wagmiConnector.getProvider();
+          const next = new Web3(p);
+          setWeb3(next);
+          await reinitializeContractsWithProvider(next);
+          
+          // Recheck after refresh
+          const recheck = await checkProviderHealth(next, { expectedChainId: Number(chainId) });
+          if (recheck.ok) {
+            console.log('[Provider] Auto-refresh successful!');
+            toast.success('Wallet connection restored');
+            return true;
+          }
+          console.log('[Provider] Auto-refresh failed, still unhealthy');
+        } catch (refreshErr) {
+          console.warn('[Provider] Auto-refresh error:', refreshErr);
+        }
+      }
+
+      // If no accounts, prompt user to reconnect
+      if (reason?.includes('No accounts') || reason?.includes('not ready')) {
+        toast.error('Wallet connection lost, please reconnect after refresh', { autoClose: 4000 });
+        // Disconnect after a short delay to allow user to read the message
+        setTimeout(() => {
+          console.log('[Provider] Auto-disconnecting stale wallet');
+          disconnect();
+          close();
+        }, 5000); // 5 seconds
+        return false;
+      }
+
+      // If wrong chain
+      if (reason?.includes('chain')) {
+        toast.error(reason, { autoClose: 7000 });
+        return false;
+      }
+
+      // Force disconnect and reconnect
+      toast.error('Wallet provider unresponsive, please reconnect after refresh', { autoClose: 4000 });
+      setTimeout(() => {
+        console.log('[Provider] Auto-disconnecting unresponsive wallet');
+        disconnect();
+        close();
+      }, 5000); // 5 seconds
+      return false;
+    } catch (err) {
+      console.warn('[Provider] readiness check failed', err);
+      toast.error('Wallet connection error. Please disconnect and reconnect your wallet.', { autoClose: 5000 });
+      return false;
+    }
+  };
+
   const getUpdatedBalance = async (): Promise<BigNumber> => {
     if (!userWallet || !web3) return new BigNumber(0);
 
@@ -307,9 +470,15 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     return myBalance;
   }
 
+  // Provide a safe way to fetch gas price with fallback to HTTP RPC
+  const getGasPriceSafeFn = async (): Promise<string> => {
+    return getGasPriceSafe(web3, readonlyWeb3);
+  };
+
   const contextValue = {
     // state
     web3,
+    readonlyWeb3,
     userWallet,
     web3Initialized,
     contractsManager,
@@ -323,8 +492,10 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     getUpdatedBalance,
     updateWalletBalance,
     ensureWalletConnection,
+    ensureProviderReady,
     applyCustomRpc,
-    resetToDefaultRpc
+    resetToDefaultRpc,
+    getGasPriceSafe: getGasPriceSafeFn
   };
 
   return (
