@@ -508,6 +508,43 @@ export default function ProposalDetailsPage() {
                 </div>
               )}
 
+              <div className={`proposal-card contract-upgrade-card ${type !== "contract-upgrade" ? "hidden" : ""}`} id="contract-upgrade-content">
+                <div className="card-header"><h3>Contract Upgrade</h3></div>
+                <div className="card-content">
+                  <div className="upgrade-title"><h4>{proposal?.title || ''}</h4></div>
+                  <div className="technical-details">
+                    <div className="target-address">
+                      <div className="label">Target</div>
+                      <div className="value">{proposal?.targets?.[0] || '0xdef...456'}</div>
+                    </div>
+                    <div className="call-data">
+                      <button id="expand-call-data" className="expand-btn" onClick={() => setCallDataCollapsed(!callDataCollapsed)}>
+                        {callDataCollapsed ? (<><i className="fas fa-chevron-down"></i> Expand</>) : (<><i className="fas fa-chevron-up"></i> Collapse</>) }
+                      </button>
+                      <div className={`call-data-content ${callDataCollapsed ? "collapsed" : ""}`}>
+                        <pre className="code-block"><code>{proposal?.calldatas?.[0] || 'Raw call data…'}</code></pre>
+                      </div>
+                    </div>
+                    <div className="decoded-data">
+                      <button id="expand-decoded-data" className="expand-btn" onClick={() => setDecodedDataCollapsed(!decodedDataCollapsed)}>
+                        {decodedDataCollapsed ? (<><i className="fas fa-chevron-down"></i> Expand</>) : (<><i className="fas fa-chevron-up"></i> Collapse</>) }
+                      </button>
+                      <div className={`decoded-data-content ${decodedDataCollapsed ? "collapsed" : ""}`}>
+                        {(() => {
+                          try {
+                            const res = proposal?.targets?.[0] && proposal?.calldatas?.[0] ? decodeCallData(web3Context.contractsManager, proposal.targets[0], proposal.calldatas[0]) : {}
+                            if (res && Object.keys(res).length > 0) {
+                              return Object.entries(res).map(([k, v]) => (<div key={k}><strong>{capitalizeFirstLetter(k)}:</strong> {String(v)}</div>))
+                            }
+                          } catch (e) {}
+                          return 'Decoded data…'
+                        })()}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="proposal-timeline-section">
                 <div className="card-header"><h3>Proposal Timeline</h3></div>
                 <div className="timeline">
@@ -551,43 +588,6 @@ export default function ProposalDetailsPage() {
                       </div>
                     </div>
                   )}
-                </div>
-              </div>
-
-              <div className={`proposal-card contract-upgrade-card ${type !== "contract-upgrade" ? "hidden" : ""}`} id="contract-upgrade-content">
-                <div className="card-header"><h3>Contract Upgrade</h3></div>
-                <div className="card-content">
-                  <div className="upgrade-title"><h4>{proposal?.title || ''}</h4></div>
-                  <div className="technical-details">
-                    <div className="target-address">
-                      <div className="label">Target</div>
-                      <div className="value">{proposal?.targets?.[0] || '0xdef...456'}</div>
-                    </div>
-                    <div className="call-data">
-                      <button id="expand-call-data" className="expand-btn" onClick={() => setCallDataCollapsed(!callDataCollapsed)}>
-                        {callDataCollapsed ? (<><i className="fas fa-chevron-down"></i> Expand</>) : (<><i className="fas fa-chevron-up"></i> Collapse</>) }
-                      </button>
-                      <div className={`call-data-content ${callDataCollapsed ? "collapsed" : ""}`}>
-                        <pre className="code-block"><code>{proposal?.calldatas?.[0] || 'Raw call data…'}</code></pre>
-                      </div>
-                    </div>
-                    <div className="decoded-data">
-                      <button id="expand-decoded-data" className="expand-btn" onClick={() => setDecodedDataCollapsed(!decodedDataCollapsed)}>
-                        {decodedDataCollapsed ? (<><i className="fas fa-chevron-down"></i> Expand</>) : (<><i className="fas fa-chevron-up"></i> Collapse</>) }
-                      </button>
-                      <div className={`decoded-data-content ${decodedDataCollapsed ? "collapsed" : ""}`}>
-                        {(() => {
-                          try {
-                            const res = proposal?.targets?.[0] && proposal?.calldatas?.[0] ? decodeCallData(web3Context.contractsManager, proposal.targets[0], proposal.calldatas[0]) : {}
-                            if (res && Object.keys(res).length > 0) {
-                              return Object.entries(res).map(([k, v]) => (<div key={k}><strong>{capitalizeFirstLetter(k)}:</strong> {String(v)}</div>))
-                            }
-                          } catch (e) {}
-                          return 'Decoded data…'
-                        })()}
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
 
