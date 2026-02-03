@@ -47,6 +47,8 @@ export default function DaoPage() {
   const [voteModalOpen, setVoteModalOpen] = useState(false);
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(null);
   const [selectedVote, setSelectedVote] = useState<"Yes" | "No" | null>(null);
+  const [voteSubmitting, setVoteSubmitting] = useState<boolean>(false);
+  const [isMyPoolValid, setIsMyPoolValid] = useState<boolean>(true);
 
   // Contexts
   const router = useRouter();
@@ -184,6 +186,25 @@ export default function DaoPage() {
     return () => clearInterval(id);
   }, [daoContext?.daoPhase?.end]);
 
+  // Check if my pool is valid
+  useEffect(() => {
+    let cancelled = false;
+    async function checkPoolValidity() {
+      try {
+        if (web3Context.contractsManager?.stContract?.methods?.isPoolValid && web3Context.userWallet?.myAddr) {
+          const res = await web3Context.contractsManager.stContract.methods.isPoolValid(web3Context.userWallet.myAddr).call();
+          if (!cancelled) setIsMyPoolValid(!!res);
+        } else {
+          if (!cancelled) setIsMyPoolValid(true);
+        }
+      } catch {
+        if (!cancelled) setIsMyPoolValid(true);
+      }
+    }
+    checkPoolValidity();
+    return () => { cancelled = true; };
+  }, [web3Context.contractsManager?.stContract, web3Context.userWallet?.myAddr, web3Context.web3Initialized, stakingContext?.myPool]);
+
   // Sorting toggle handler
   function onSort(field: string) {
     if (sortField === field) {
@@ -208,10 +229,35 @@ export default function DaoPage() {
     } catch (e) {}
   }
 
-  function confirmVote() {
-    if (!selectedVote || !selectedProposal) return;
-    setVoteModalOpen(false);
-    alert(`Your vote (${selectedVote}) has been submitted successfully!`);
+  async function confirmVote() {
+    if (!selectedVote || !selectedProposal || voteSubmitting) return;
+    try {
+      setVoteSubmitting(true);
+      try {
+        const isValid = web3Context.contractsManager?.stContract?.methods?.isPoolValid
+          ? await web3Context.contractsManager.stContract.methods
+              .isPoolValid(web3Context.userWallet?.myAddr)
+              .call()
+          : true;
+        if (!isValid) {
+          setVoteSubmitting(false);
+          return;
+        }
+      } catch {}
+
+      const voteValue = selectedVote === "Yes" ? 1 : 0;
+
+      await daoContext.castVote((selectedProposal as any).id, voteValue, "");
+
+      // Close modal and refresh proposals to reflect updated state
+      setVoteModalOpen(false);
+      try {
+        await daoContext.getActiveProposals();
+        await daoContext.getHistoricProposals();
+      } catch {}
+    } catch (e) {} finally {
+      setVoteSubmitting(false);
+    }
   }
 
   useEffect(() => {
@@ -440,7 +486,7 @@ export default function DaoPage() {
                     <th onClick={() => onSort("participation")}>Participation <i className={`fas ${sortField === "participation" ? (sortAsc ? "fa-sort-up" : "fa-sort-down") : "fa-sort"}`} /></th>
                     <th onClick={() => onSort("exceeding")}>Exceeding Yes <i className={`fas ${sortField === "exceeding" ? (sortAsc ? "fa-sort-up" : "fa-sort-down") : "fa-sort"}`} /></th>
                     <th onClick={() => onSort("voted")}>Voted <i className={`fas ${sortField === "voted" ? (sortAsc ? "fa-sort-up" : "fa-sort-down") : "fa-sort"}`} /></th>
-                    {votingPhase && (<th>Action</th>)}
+                    {votingPhase && isMyPoolValid && (<th>Action</th>)}
                     <th onClick={() => onSort("status")}>Status <i className={`fas ${sortField === "status" ? (sortAsc ? "fa-sort-up" : "fa-sort-down") : "fa-sort"}`} /></th>
                   </tr>
                 </thead>
@@ -481,7 +527,7 @@ export default function DaoPage() {
                       </td>
                       <td><span className={`exceeding-value ${p.exceeding >= 0 ? "positive" : "negative"}`}>{p.exceeding >= 0 ? `+${p.exceeding}%` : `${p.exceeding}%`}</span></td>
                       <td><span className={`voted-status ${p.voted ? "voted" : "not-voted"}`}>{p.voted ? <i className="fas fa-check-circle" /> : <i className="fas fa-times-circle" />}</span></td>
-                      {votingPhase && (
+                      {votingPhase && isMyPoolValid && p.status !== (daoContext.getStateString ? daoContext.getStateString('1') : 'Canceled') && (
                         <td>
                           <button className="btn-vote" onClick={(e) => { e.stopPropagation(); openVoteModal(p); }}>
                             <i className="fas fa-vote-yea" /> Vote
@@ -606,7 +652,7 @@ export default function DaoPage() {
                 <div className="proposal-info">
                   <h4 id="vote-proposal-title">{selectedProposal.title}</h4>
                   <div className="proposal-meta">
-                    <span className={`proposal-type ${selectedProposal.type}`}>{selectedProposal.type}</span>
+                    <span className={`proposal-type ${(selectedProposal.type || '').replace(/\s+/g, '-')}`}>{selectedProposal.type}</span>
                     <span className="proposal-date">Created on {selectedProposal.date}</span>
                   </div>
                   <div className="proposal-description">
@@ -646,7 +692,9 @@ export default function DaoPage() {
           </div>
           <div className="modal-footer">
             <button className="btn-secondary close-modal" onClick={() => setVoteModalOpen(false)}>Cancel</button>
-            <button className="btn-primary" id="confirm-vote" disabled={!selectedVote} onClick={confirmVote}>Confirm Vote</button>
+            <button className="btn-primary" id="confirm-vote" disabled={!selectedVote || voteSubmitting} onClick={confirmVote}>
+              {voteSubmitting ? (<><i className="fas fa-spinner fa-spin" /> Submitting…</>) : 'Confirm Vote'}
+            </button>
           </div>
         </div>
       </div>
