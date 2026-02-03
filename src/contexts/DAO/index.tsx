@@ -701,6 +701,10 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
         if (await getProposalExists(targets, values, callDatas, description)) return toast.warn("Proposal already exists");
 
         try {
+          // Pre-validate provider readiness
+          const ready = await web3Context.ensureProviderReady();
+          if (!ready) {return reject("Provider not ready");}
+
           web3Context.showLoader(true, "Creating proposal 💎");
           
           let proposalTypeEnum = 0;
@@ -711,7 +715,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
             proposalTypeEnum = 1;
           }
 
-          const gasPrice = await web3Context.web3.eth.getGasPrice();
+          const gasPrice = await web3Context.getGasPriceSafe();
           await web3Context.contractsManager.daoContract.methods.propose(
             targets,
             values,
@@ -740,9 +744,13 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     return new Promise<void>(async (resolve, reject) => {
         if (!web3Context.ensureWalletConnection()) return reject("Wallet not connected");
   
+        // Pre-validate provider readiness
+        const ready = await web3Context.ensureProviderReady();
+        if (!ready) {return reject("Provider not ready");}
+
         web3Context.showLoader(true, "Dismissing proposal 💎");
         try {       
-          const gasPrice = await web3Context.web3.eth.getGasPrice();
+          const gasPrice = await web3Context.getGasPriceSafe();
           await web3Context.contractsManager.daoContract.methods.cancel(proposalId, reason).send({from: web3Context.userWallet.myAddr, gasPrice});
           web3Context.showLoader(false, "");
           toast.success("Proposal Dismissed 💎");
@@ -761,6 +769,10 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     return new Promise<void>(async (resolve, reject) => {
       if (!web3Context.ensureWalletConnection()) return reject("Wallet not connected");
       
+      // Pre-validate provider readiness
+      const ready = await web3Context.ensureProviderReady();
+      if (!ready) {return reject("Provider not ready");}
+
       web3Context.showLoader(true, `Casting vote 💎`);
       try {
         // Check if user has already voted on this proposal
@@ -769,16 +781,16 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
 
         if (hasVotedBefore) {
           // User has voted before - use changeVote function
-          const gasPrice = await web3Context.web3.eth.getGasPrice();
+          const gasPrice = await web3Context.getGasPriceSafe();
           await web3Context.contractsManager.daoContract.methods.changeVote(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr, gasPrice});
           toast.success(`Vote Changed 💎`);
         } else {
           // First-time voting - use vote or voteWithReason
           if (reason.length > 0) {
-            const gasPrice = await web3Context.web3.eth.getGasPrice();
+            const gasPrice = await web3Context.getGasPriceSafe();
             await web3Context.contractsManager.daoContract.methods.voteWithReason(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr, gasPrice});
           } else {
-            const gasPrice = await web3Context.web3.eth.getGasPrice();
+            const gasPrice = await web3Context.getGasPriceSafe();
             await web3Context.contractsManager.daoContract.methods.vote(proposalId, vote).send({from: web3Context.userWallet.myAddr, gasPrice});
           }
           toast.success(`Vote Casted 💎`);
@@ -961,9 +973,13 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     return new Promise<string>(async (resolve, reject) => {
         if (!web3Context.ensureWalletConnection()) return resolve("");
 
+        // Pre-validate provider readiness
+        const ready = await web3Context.ensureProviderReady();
+        if (!ready) {return reject("Provider not ready");}
+
         web3Context.showLoader(true, "Finalizing proposal 💎");
         try {
-          const gasPrice = await web3Context.web3.eth.getGasPrice();
+          const gasPrice = await web3Context.getGasPriceSafe();
           await web3Context.contractsManager.daoContract.methods.finalize(proposalId).send({ from: web3Context.userWallet.myAddr, gasPrice });
           const proposalUpdated = await getProposalDetails(proposalId);
           await setProposalsState([proposalUpdated]);
@@ -991,9 +1007,13 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
         let proposalDetails = await getProposalDetails(proposalId);
         if (proposalDetails.proposalType == 'Contract Upgrade' &&  proposalDetails.proposer !== web3Context.userWallet.myAddr) return toast.warn("Only proposer can execute the proposal");
 
+        // Pre-validate provider readiness
+        const ready = await web3Context.ensureProviderReady();
+        if (!ready) {return reject("Provider not ready");}
+
         web3Context.showLoader(true, "Executing proposal 💎");
         try {
-          const gasPrice = await web3Context.web3.eth.getGasPrice();
+          const gasPrice = await web3Context.getGasPriceSafe();
           await web3Context.contractsManager.daoContract.methods.execute(proposalId).send({ from: web3Context.userWallet.myAddr, gasPrice });
           proposalDetails = await getProposalDetails(proposalId);
           await setProposalsState([proposalDetails]);

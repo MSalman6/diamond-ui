@@ -56,6 +56,8 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
     getUpdatedBalance,
     userWallet,
     web3,
+    ensureProviderReady,
+    getGasPriceSafe,
   } = useWeb3Context();
   
   const [showAllPools, setShowAllPools] = useState<boolean>(false);
@@ -417,7 +419,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
    */
   const buildTxOpts = async (overrides: Partial<{from: string; gasPrice: string; gasLimit: string; value: string;}> = {}) => {
     try {
-      const rpcGasPrice = await web3.eth.getGasPrice(); // wei string
+      const rpcGasPrice = await getGasPriceSafe();
       const minGas = minimumGasFee ? minimumGasFee : new BigNumber(0);
       const finalGasPrice = BigNumber.max(new BigNumber(rpcGasPrice || 0), minGas).toFixed(0);
 
@@ -725,6 +727,10 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
     try {
       if (!contractsManager.stContract || !userWallet || !userWallet.myAddr) return false;
 
+      // Pre-validate provider readiness
+      const ready = await ensureProviderReady();
+      if (!ready) {return false;}
+
       let txOpts = await buildTxOpts({ from: userWallet.myAddr, value: web3.utils.toWei(stakeAmount.toString()) });
 
       const accBalance = await getUpdatedBalance();
@@ -766,6 +772,10 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
 
     if (!contractsManager.stContract || !userWallet || !userWallet.myAddr) return false;
 
+    // Pre-validate provider readiness
+    const ready = await ensureProviderReady();
+    if (!ready) {return false;}
+
     try {
       let receipt;
       showLoader(true, `Removing Pool 💎`);
@@ -788,6 +798,10 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
 
   const updatePoolOperatorRewardsShare = async (pool: Pool, nodeOperatorAddress: string, nodeOperatorShare: BigNumber)=> {    
     try {
+        // Pre-validate provider readiness
+        const ready = await ensureProviderReady();
+        if (!ready) {return false;}
+
         const txOpts = await buildTxOpts({ from: userWallet.myAddr });
         showLoader(true, "Updating pool rewards share 💎");
         const receipt = await contractsManager.stContract?.methods.setNodeOperator(nodeOperatorAddress, nodeOperatorShare.toString()).send(txOpts);
@@ -839,6 +853,10 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
     let txOpts = await buildTxOpts({ from: userWallet.myAddr });
     if (!contractsManager.stContract || !userWallet || !userWallet.myAddr) return false;
 
+    // Pre-validate provider readiness
+    const ready = await ensureProviderReady();
+    if (!ready) {return false;}
+
     // determine available withdraw method and allowed amount
     const { maxWithdrawAmount, maxWithdrawOrderAmount } = await getWithdrawableAmounts(pool);
 
@@ -889,6 +907,9 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
       return false;
     } else {
       try {
+        // Pre-validate provider readiness
+        const ready = await ensureProviderReady();
+        if (!ready) {return false;}
         showLoader(true, `Staking ${stakeAmount} DMD 💎`);
         const receipt = await contractsManager.stContract?.methods.stake(pool.stakingAddress).send(txOpts);
         if (!showHistoricBlock && receipt) setCurrentBlockNumber(receipt.blockNumber);
@@ -915,6 +936,9 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
       return false;
     } else {
       try {
+        // Pre-validate provider readiness
+        const ready = await ensureProviderReady();
+        if (!ready) {return false;}
         showLoader(true, `Claiming ${claimAmount.dividedBy(10**18)} DMD 💎`);
         const receipt = await contractsManager.stContract.methods.claimOrderedWithdraw(pool.stakingAddress).send(txOpts);
         if (!showHistoricBlock) setCurrentBlockNumber(receipt.blockNumber);
