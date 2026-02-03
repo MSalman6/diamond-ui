@@ -49,6 +49,7 @@ export default function DaoPage() {
   const [selectedVote, setSelectedVote] = useState<"Yes" | "No" | null>(null);
   const [voteSubmitting, setVoteSubmitting] = useState<boolean>(false);
   const [isMyPoolValid, setIsMyPoolValid] = useState<boolean>(true);
+  const [votedByMe, setVotedByMe] = useState<Record<string, boolean>>({});
 
   // Contexts
   const router = useRouter();
@@ -93,6 +94,46 @@ export default function DaoPage() {
       return mapped;
     });
   }, [daoContext.activeProposals, daoContext.allDaoProposals, activeTab, daoContext.daoPhase, daoContext.daoPhaseCount]);
+
+  // Reset voted map when wallet changes
+  useEffect(() => {
+    setVotedByMe({});
+  }, [web3Context.userWallet?.myAddr]);
+
+  // Load per-proposal voted status for current wallet
+  useEffect(() => {
+    let cancelled = false;
+    async function loadVotedStatus() {
+      try {
+        const myAddr = web3Context.userWallet?.myAddr;
+        if (!myAddr) return;
+        const allIds: string[] = [
+          ...(daoContext.activeProposals || []).map((p: any) => String(p.id)),
+          ...(daoContext.allDaoProposals || []).map((p: any) => String(p.id))
+        ];
+        const uniqueIds = Array.from(new Set(allIds));
+        const idsToFetch = uniqueIds.filter((id) => votedByMe[id] === undefined);
+        if (!idsToFetch.length) return;
+
+        const results = await Promise.all(idsToFetch.map(async (id) => {
+          try {
+            const vote = await daoContext.getMyVote(id, myAddr);
+            return Number(vote?.timestamp) > 0;
+          } catch {
+            return false;
+          }
+        }));
+
+        if (!cancelled) {
+          const update: Record<string, boolean> = {};
+          idsToFetch.forEach((id, idx) => { update[id] = !!results[idx]; });
+          setVotedByMe((prev) => ({ ...prev, ...update }));
+        }
+      } catch {}
+    }
+    loadVotedStatus();
+    return () => { cancelled = true; };
+  }, [web3Context.userWallet?.myAddr, daoContext.activeProposals, daoContext.allDaoProposals, votedByMe]);
 
   const finalizeableProposalsCount = useMemo(() => {
     try {
@@ -155,8 +196,8 @@ export default function DaoPage() {
       });
     }
 
-    return list;
-  }, [daoMappedProposals, localProposals, filterQuery, search, filter, sortField, sortAsc, web3Context.userWallet, daoContext]);
+    return list.map((p) => ({ ...p, voted: !!votedByMe[p.id] }));
+  }, [daoMappedProposals, localProposals, filterQuery, search, filter, sortField, sortAsc, web3Context.userWallet, daoContext, votedByMe]);
 
   const handleDetailsClick = (proposalId: string) => {
     startTransition(() => {
@@ -251,6 +292,10 @@ export default function DaoPage() {
 
       // Close modal and refresh proposals to reflect updated state
       setVoteModalOpen(false);
+      // mark as voted for current wallet
+      try {
+        setVotedByMe((prev) => ({ ...prev, [String((selectedProposal as any).id)]: true }));
+      } catch {}
       try {
         await daoContext.getActiveProposals();
         await daoContext.getHistoricProposals();
