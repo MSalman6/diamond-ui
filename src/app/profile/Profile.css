@@ -99,6 +99,11 @@ body.light-theme {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+.copyBtnIcon {
+  width: 28px !important;
+  height: 28px !important;
+}
+
 .copy-address-container {
   gap: .7rem;
   display: flex;

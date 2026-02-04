@@ -78,7 +78,7 @@
   
   .validator-details h1 {
     margin: 0;
-    font-size: clamp(1.5rem, 5vw, 2rem); 
+    font-size: 1.3rem; 
   }
   
   .validator-score {
@@ -273,9 +273,9 @@
 
   .stake-actions > * {
     gap: 10px;
-    height: 35px;
     display: flex;
     line-height: inherit;
+    height: 35px !important;
     justify-content: center;
     border: 1px solid #fff3;
   }
@@ -332,7 +332,7 @@
   
   .wallet-details h1 {
     margin-bottom: 5px;
-    font-size: clamp(1.5rem, 5vw, 2rem); 
+    font-size: 1.3rem; 
   }
   
   .wallet-details p {
@@ -1320,7 +1320,7 @@
     }
   
     .wallet-details h1 {
-      font-size: 1.3rem;
+      font-size: 1rem;
     }
   
     

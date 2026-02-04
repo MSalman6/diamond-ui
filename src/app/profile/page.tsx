@@ -431,7 +431,7 @@ export default function ProfilePage() {
                     <div className="stat-note copy-address-container">
                       {myPool?.poolOperator ? myPool.poolOperator : '—'}{' '}
                       <button
-                        className="btnIcon"
+                        className="btnIcon copyBtnIcon"
                         id="copy-address"
                         title="Copy Address"
                         onClick={() => myPool?.poolOperator && copyData(myPool.poolOperator)}
@@ -472,7 +472,7 @@ export default function ProfilePage() {
                       <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                     </InfoTooltip></div>
                     <div className="stat-value highlight">{myPool?.score !== undefined && myPool?.score !== null ? Number(myPool.score).toFixed(1) : '—'}</div>
-                    <div className="cr-count">Connectivity reports: {myPool?.connectivityReport ?? '—'}</div>
+                    <div className="cr-count">Connectivity reports: {myPool?.connectivityReport ?? '—'}<InfoTooltip content={<div><p>Number of detected connectivity issues for this validator.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="stat-change positive cr-change" style={{display:'none'}}>+ points since epoch</div>
                     <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
                   </div>
