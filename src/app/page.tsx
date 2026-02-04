@@ -553,7 +553,7 @@ export default function Home() {
               <div className="news-content">
                 <h3>Connect to DMD</h3>
                 <p>Are you a third-party company seeking a sustainable blockchain solution with industry-leading features for hosting your project? Look no further!</p>
-                <a href="#" className="btn-small">Learn more</a>
+                <a target="_blank" href="https://discord.com/channels/1267133854154756178/1431651278689402932" className="btn-small">Learn more</a>
               </div>
               <div className="news-image">
                 <div className="news-image-inner">
