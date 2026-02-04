@@ -433,16 +433,77 @@ export default function Home() {
 
         {/* Wallet Compatibility Bar */}
         <section className="compatibility">
-          <div className="container">
-            <div className="compatibility-bar">
-              <span className="compatibility-title">Compatible with WalletConnect-enabled wallets:</span>
-              <div className="wallets-list">
-                <span className="wallet-chip">MetaMask</span>
-                <span className="wallet-chip">Brave</span>
-                <span className="wallet-chip">Coinbase Wallet</span>
-                <span className="wallet-chip" title="More wallets will be added soon">
-                  + More coming soon
-                </span>
+          <div className="slider">
+            <div className="slide-track">
+              <div className="slide">
+                <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_metamask.svg" height={100} width={250} alt="MetaMask" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://brave.com/wallet/" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_brave.svg" height={100} width={250} alt="Brave" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://www.coinbase.com/wallet" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_coinbase.svg" height={100} width={250} alt="Coinbase Wallet" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://walletconnect.com" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_walletconnect.svg" height={100} width={250} alt="WalletConnect" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_metamask.svg" height={100} width={250} alt="MetaMask" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://brave.com/wallet/" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_brave.svg" height={100} width={250} alt="Brave" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://www.coinbase.com/wallet" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_coinbase.svg" height={100} width={250} alt="Coinbase Wallet" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://walletconnect.com" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_walletconnect.svg" height={100} width={250} alt="WalletConnect" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_metamask.svg" height={100} width={250} alt="MetaMask" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://brave.com/wallet/" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_brave.svg" height={100} width={250} alt="Brave" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://www.coinbase.com/wallet" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_coinbase.svg" height={100} width={250} alt="Coinbase Wallet" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://walletconnect.com" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_walletconnect.svg" height={100} width={250} alt="WalletConnect" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_metamask.svg" height={100} width={250} alt="MetaMask" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://brave.com/wallet/" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_brave.svg" height={100} width={250} alt="Brave" />
+                </a>
               </div>
             </div>
           </div>
