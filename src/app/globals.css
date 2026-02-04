@@ -2020,16 +2020,28 @@ header .container {
   list-style-type: decimal;
 }
 
+.pt20 {
+  padding-top: 20px !important;
+}
+
+.pb20 {
+  padding-bottom: 20px !important;
+}
+
 .pt0 {
   padding-top: 0 !important;
 }
 
 .ml40 {
-  margin-left: 40px;
+  margin-left: 40px !important;
+}
+
+.mt20 {
+  margin-top: 20px !important;
 }
 
 .pl20 {
-  padding-left: 20px;
+  padding-left: 20px !important;
 }
 
 .pb0 {
@@ -2037,11 +2049,11 @@ header .container {
 }
 
 .pb20 {
-  padding-bottom: 20px;
+  padding-bottom: 20px !important;
 }
 
 .pl40 {
-  padding-left: 40px;
+  padding-left: 40px !important;
 }
 
 .pt0 {
@@ -2049,7 +2061,7 @@ header .container {
 }
 
 .pr20 {
-  padding-right: 20px;
+  padding-right: 20px !important;
 }
 
 .faq-answer ul {
@@ -2078,6 +2090,10 @@ header .container {
 
 .faq-actions .btn-primary {
   min-width: 180px;
+}
+
+.heading-strong {
+    margin-left: 20px;
 }
 
 footer {
