@@ -528,30 +528,14 @@ body.light-theme .wiki-card:hover {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-body.light-theme .tech-subsection {
-  background: rgba(0, 0, 0, 0.02);
-}
-
-body.light-theme .feature-item {
-  background: rgba(0, 0, 0, 0.02);
-}
-
 body.light-theme .feature-item:hover {
   background: rgba(0, 0, 0, 0.05);
   border-color: rgba(0, 0, 0, 0.1);
 }
 
-body.light-theme .dmd-uses li {
-  background: rgba(0, 0, 0, 0.02);
-}
-
 body.light-theme .market-info {
   background: rgba(99, 102, 241, 0.1);
   border-color: rgba(99, 102, 241, 0.2);
-}
-
-body.light-theme .references-list li {
-  background: rgba(0, 0, 0, 0.02);
 }
 
 body.light-theme .references-list li:hover {
