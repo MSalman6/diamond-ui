@@ -352,7 +352,7 @@ export default function Home() {
               <div className="design-content">
                 <h2 className="fade-in">Smart contracts<br/>done smarter</h2>
                 <p>The Diamond platform offers a secure, energy-efficient environment for smart contract execution—leveraging DMD's high-performance blockchain architecture.</p>
-                <a href="validators.html" className="btn-primary">Start Staking <i className="fas fa-arrow-right"></i></a>
+                <Link href="/validators" className="btn-primary">Start Staking <i className="fas fa-arrow-right"></i></Link>
               </div>
               <div className="smart-contracts-images">
                 <Image className="smart-contracts-image" src={getImagePath("3d-logo.png")} alt="" width={500} height={500} />
