@@ -746,7 +746,7 @@ export default function DaoPage() {
                     <button className={`vote-btn vote-no ${selectedVote === "No" ? "selected" : ""}`} onClick={() => setSelectedVote("No")}><i className="fas fa-times-circle" /> No</button>
                   </div>
                   <div className="voting-power-info">
-                    <span>Your Voting Power: <strong>4.2%</strong></span>
+                    <span>Your Voting Power: <strong>{stakingContext?.myPool?.votingPower ? `${stakingContext.myPool.votingPower.toFixed(2)}%` : '0%'}</strong></span>
                   </div>
                 </div>
               </>
