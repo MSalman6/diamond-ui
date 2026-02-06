@@ -570,6 +570,12 @@ export default function ProposalDetailsPage() {
                       <div className="label">Target</div>
                       <div className="value">{proposal?.targets?.[0] || '0xdef...456'}</div>
                     </div>
+                    {proposal?.values && proposal.values[0] && proposal.values[0] !== '0' && (
+                      <div className="payout-amount">
+                        <span className="label">Requested Amount</span>
+                        <div className="value">{(new BigNumber(proposal.values[0]).dividedBy(10**18)).toString() + ' DMD'}</div>
+                      </div>
+                    )}
                     <div className="call-data">
                       <button id="expand-call-data" className="expand-btn" onClick={() => setCallDataCollapsed(!callDataCollapsed)}>
                         {callDataCollapsed ? (<><i className="fas fa-chevron-down"></i> Expand</>) : (<><i className="fas fa-chevron-up"></i> Collapse</>) }
