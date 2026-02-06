@@ -4,6 +4,7 @@ import "./dao.css";
 import React, { useEffect, useMemo, useState, startTransition } from "react";
 import Link from 'next/link';
 import BigNumber from 'bignumber.js';
+import { toast } from 'react-toastify';
 import { useFadeInAnimation } from "@/hooks/useFadeInAnimation";
 import { useRouter } from 'next/navigation';
 import { useDaoContext } from '@/contexts/DAO';
@@ -270,6 +271,23 @@ export default function DaoPage() {
     } catch (e) {}
   }
 
+  function handleCreateProposalClick(e: React.MouseEvent) {
+    e.preventDefault();
+    if (finalizeableProposalsCount > 0) {
+      setActiveTab('actionsNeeded');
+      toast.warning('Please finalize existing proposals before creating a new one');
+      // Scroll to proposals section
+      setTimeout(() => {
+        const proposalsSection = document.querySelector('.proposals-management');
+        if (proposalsSection) {
+          proposalsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    } else {
+      router.push('/dao/create');
+    }
+  }
+
   async function confirmVote() {
     if (!selectedVote || !selectedProposal || voteSubmitting) return;
     try {
@@ -393,12 +411,11 @@ export default function DaoPage() {
                 </div>
                 {
                   daoContext.daoPhase.phase === '0' && (
-                    <Link href="/dao/create" className="btn-primary create-proposal-btn">
+                    <button onClick={handleCreateProposalClick} className="btn-primary create-proposal-btn">
                       <i className="fas fa-plus-circle" /> Create Proposal
-                    </Link>
+                    </button>
                   )
                 }
-                
               </div>
             </div>
 
@@ -663,9 +680,9 @@ export default function DaoPage() {
               <p>There are no proposals matching your search criteria.</p>
               {
                 daoContext.daoPhase.phase === '0' && (
-                  <Link href="/dao/create" className="btn-primary create-proposal-btn">
+                  <button onClick={handleCreateProposalClick} className="btn-primary create-proposal-btn">
                     <i className="fas fa-plus-circle" /> Create Proposal
-                  </Link>
+                  </button>
                 )
               }
             </div>
