@@ -22,7 +22,7 @@ export default function ValidatorDetails() {
   
   // Context hooks
   const { userWallet, web3Initialized, showLoader } = useWeb3Context();
-  const { activeProposals, getMyVote, getActiveProposals } = useDaoContext();
+  const { activeProposals, getMyVote, getActiveProposals, getStateString } = useDaoContext();
   const { pools, stakingEpoch, claimOrderedUnstake } = useStakingContext();
 
   // State
@@ -427,7 +427,7 @@ export default function ValidatorDetails() {
                         {proposal.myVote == "2" ? "Yes" : proposal.myVote == "1" ? "No" : ""}
                       </span>
                     </td>
-                    <td><span className="proposal-status passed">Unknown</span></td>
+                    <td><span className={`proposal-status ${proposal.state === '2' ? 'active' : proposal.state === '4' ? 'passed' : proposal.state === '5' ? 'rejected' : proposal.state === '6' ? 'executed' : ''}`}>{getStateString(proposal.state)}</span></td>
                     <td>
                       <button onClick={() => navigateToProposal(proposal.id)} className="cta-button">
                         Details
