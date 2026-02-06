@@ -176,10 +176,12 @@ export default function HistoricProposalsPage() {
               </div>
               <div className="filter-container">
                 <select id="proposal-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
-                  <option value="all">All Types</option>
-                  <option value="ecosystem">Ecosystem Parameter</option>
-                  <option value="contract-upgrade">Contract upgrade</option>
+                  <option value="all">All</option>
                   <option value="open">Open</option>
+                  <option value="open payout">Open payout</option>
+                  <option value="contract fill">Contract fill</option>
+                  <option value="contract upgrade">Contract upgrade</option>
+                  <option value="parameter">Ecosystem parameter</option>                  
                 </select>
               </div>
             </div>
@@ -255,6 +257,7 @@ export default function HistoricProposalsPage() {
             </table>
           </div>
 
+          {displayed.length > PAGE_SIZE && (
           <div className="pagination">
             <button className="pagination-btn" onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1}>
               <i className="fas fa-chevron-left" />
@@ -287,6 +290,7 @@ export default function HistoricProposalsPage() {
               <i className="fas fa-chevron-right" />
             </button>
           </div>
+          )}
         </div>
       </section>
     </div>

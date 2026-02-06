@@ -580,8 +580,10 @@ export default function DaoPage() {
                 <select id="proposal-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
                   <option value="all">All</option>
                   <option value="open">Open</option>
+                  <option value="open payout">Open payout</option>
+                  <option value="contract fill">Contract fill</option>
                   <option value="contract upgrade">Contract upgrade</option>
-                  <option value="parameter">Ecosystem parameter</option>
+                  <option value="parameter">Ecosystem parameter</option> 
                 </select>
               </div>
             </div>
