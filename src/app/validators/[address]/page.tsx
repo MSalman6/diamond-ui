@@ -194,9 +194,9 @@ export default function ValidatorDetails() {
               </h3>
             </div>
             <p className="stat-value-large">{pool ? BigNumber(pool.totalStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : 0} DMD</p>
-            <div className="stat-trend positive">
+            {/* <div className="stat-trend positive">
               <i className="fas fa-arrow-up"></i> 5 DMD since 01.01.24
-            </div>
+            </div> */}
             <div className="stat-footer">
               <span className="connectivity-info">
                 Connectivity reports: 0
@@ -224,9 +224,10 @@ export default function ValidatorDetails() {
               </h3>
             </div>
             <p className="stat-value-large">{pool ? pool.score : 0}</p>
-            <div className="stat-trend negative">
+            <div className="stat-subtitle">History coming soon <InfoTooltip content={<div><p>Score history is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+            {/* <div className="stat-trend negative">
               <i className="fas fa-arrow-down"></i> 10 since 01.01.24
-            </div>
+            </div> */}
             <div className="stat-actions">
               <button
                 onClick={() => toast.info("Coming soon!")}
@@ -251,9 +252,9 @@ export default function ValidatorDetails() {
               </h3>
             </div>
             <p className="stat-value-large">{pool ? pool.votingPower?.toString() : 0}%</p>
-            <div className="stat-trend negative">
+            {/* <div className="stat-trend negative">
               <i className="fas fa-arrow-down"></i> 0.01% since 01.01.24
-            </div>
+            </div> */}
             <div className="stat-footer">
               <span className="proposals-info">Proposals created: {filteredProposals.filter(p => p.proposer === address).length}</span>
             </div>
@@ -272,9 +273,9 @@ export default function ValidatorDetails() {
               </h3>
             </div>
             <p className="stat-value-large">{pool ? BigNumber(pool.ownStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : 0} DMD</p>
-            <div className="stat-trend positive">
+            {/* <div className="stat-trend positive">
               <i className="fas fa-arrow-up"></i> 5 DMD since 01.01.24
-            </div>
+            </div> */}
           </div>
 
           <div className="stat-card-wireframe fade-in">
@@ -286,8 +287,8 @@ export default function ValidatorDetails() {
                 </InfoTooltip>
               </h3>
             </div>
-            <p className="stat-value-large">100 DMD</p>
-            <div className="stat-subtitle">Earned per 1000DMD = 5.88DMD</div>
+            <p className="stat-value-large">N DMD</p>
+            <div className="stat-subtitle">Estimate coming soon <InfoTooltip content={<div><p>Reward estimation is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
             <div className="stat-actions">
               <button
                 onClick={() => toast.info("Coming soon!")}
@@ -313,9 +314,9 @@ export default function ValidatorDetails() {
               </h3>
             </div>
             <p className="stat-value-large">{pool ? BigNumber(pool.totalStake).minus(pool.ownStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : 0} DMD</p>
-            <div className="stat-trend positive">
+            {/* <div className="stat-trend positive">
               <i className="fas fa-arrow-up"></i> 5 DMD since 01.01.24
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
