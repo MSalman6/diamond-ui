@@ -403,15 +403,15 @@ export default function DaoPage() {
             <h1 className="fade-in">Governance</h1>
             <div className="phase-indicator">
               <div className="phase-badge">
-                <i className="fas fa-hourglass-half" /> Current Phase: Proposal
+                <i className="fas fa-hourglass-half" /> Current Phase: {daoContext?.daoPhase?.phase === '0' ? 'Proposal' : 'Voting'}
               </div>
               <div className="phase-progress">
-                <div className="phase-step active">
+                <div className={`phase-step ${daoContext?.daoPhase?.phase === '0' ? 'active' : ''}`}>
                   <div className="step-dot" />
                   <span>Proposal</span>
                 </div>
                 <div className="phase-connector" />
-                <div className="phase-step">
+                <div className={`phase-step ${daoContext?.daoPhase?.phase !== '0' ? 'active' : ''}`}>
                   <div className="step-dot" />
                   <span>Voting</span>
                 </div>
