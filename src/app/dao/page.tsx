@@ -748,16 +748,18 @@ export default function DaoPage() {
             </div>
           )}
 
-          {/* Pagination placeholder */}
-          <div className="pagination">
-            <button className="pagination-btn"><i className="fas fa-chevron-left" /></button>
-            <button className="pagination-btn active">1</button>
-            <button className="pagination-btn">2</button>
-            <button className="pagination-btn">3</button>
-            <span className="pagination-ellipsis">...</span>
-            <button className="pagination-btn">10</button>
-            <button className="pagination-btn"><i className="fas fa-chevron-right" /></button>
-          </div>
+          {/* Pagination - only show if there are enough proposals */}
+          {displayedProposals.length > 10 && (
+            <div className="pagination">
+              <button className="pagination-btn"><i className="fas fa-chevron-left" /></button>
+              <button className="pagination-btn active">1</button>
+              <button className="pagination-btn">2</button>
+              <button className="pagination-btn">3</button>
+              <span className="pagination-ellipsis">...</span>
+              <button className="pagination-btn">10</button>
+              <button className="pagination-btn"><i className="fas fa-chevron-right" /></button>
+            </div>
+          )}
         </div>
       </section>
 
