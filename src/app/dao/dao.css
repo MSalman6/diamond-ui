@@ -155,52 +155,39 @@
   background: #f5f7fa;
 }
 
-.dao-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+.dao-stats-flex {
   gap: 25px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-
-@media (max-width: 1200px) {
-  .dao-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .dao-stats-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.stat-card {
+.dao-stat-card {
+  flex: 1 1 auto;
   background: var(--card-bg);
   border-radius: 8px;
   padding: 25px;
   transition: var(--transition);
   border: 1px solid var(--border-color);
-  height: 100%;
   display: flex;
   flex-direction: column;
   transition: background-color 0.5s ease, border-color 0.5s ease;
+  text-align: left;
 }
 
-
-.light-theme .stat-card {
+.light-theme .dao-stat-card {
   background: #ffffff;
   border: 1px solid #e0e4e8;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.stat-card:hover {
+.dao-stat-card:hover {
   transform: translateY(-5px);
   background: var(--card-hover);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 
-.light-theme .stat-card:hover {
+.light-theme .dao-stat-card:hover {
   background: #ffffff;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
 }
@@ -1643,7 +1630,7 @@
     width: 45%;
   }
 
-  .stat-card .stat-value {
+  .dao-stat-card .stat-value {
     font-size: 1.5rem;
   }
 }
@@ -1873,7 +1860,7 @@
 }
 
 
-.light-theme .stat-card:hover {
+.light-theme .dao-stat-card:hover {
   background: #ffffff;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
 }

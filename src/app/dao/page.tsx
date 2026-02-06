@@ -357,8 +357,8 @@ export default function DaoPage() {
       {/* Stats */}
       <section className="governance-stats">
         <div className="container">
-          <div className="dao-stats-grid">
-            <div className="stat-card dao-phase-card">
+          <div className="dao-stats-flex">
+            <div className="dao-stat-card dao-phase-card">
               <div className="stat-header">
                 <h3>DAO Phase</h3>
                 <div className="stat-icon">
@@ -403,7 +403,7 @@ export default function DaoPage() {
             </div>
 
             {stakingContext?.myPool ? (
-              <div className="stat-card voting-power-card">
+              <div className="dao-stat-card voting-power-card">
                 <div className="stat-header">
                   <h3>Voting Power</h3>
                   <div className="stat-icon">
@@ -429,7 +429,7 @@ export default function DaoPage() {
               </div>
             ) : null}
 
-            <div className="stat-card governance-pot-card">
+            <div className="dao-stat-card governance-pot-card">
               <div className="stat-header">
                 <h3>Governance Pot</h3>
                 <div className="stat-icon">
@@ -453,7 +453,7 @@ export default function DaoPage() {
               </div>
             </div>
 
-            <div className="stat-card historic-proposals-card">
+            <div className="dao-stat-card historic-proposals-card">
               <div className="stat-header">
                 <h3>Historic Proposals</h3>
                 <div className="stat-icon">

@@ -628,14 +628,6 @@
     gap: 10px; 
   }
   
-  
-  .dao-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin: 20px 0;
-  }
-  
   .dao-stat-card {
     background: var(--card-bg);
     border-radius: 8px;
@@ -1242,11 +1234,7 @@
     .user-dashboard {
       padding-top: 100px;
     }
-  
-    .dao-stats-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  
+
     .user-actions,
     .validator-actions {
       justify-content: center;
@@ -1294,10 +1282,6 @@
   
     .stat-actions .btn-sm {
       width: 100%;
-    }
-    
-    .dao-stats-grid {
-      grid-template-columns: 1fr;
     }
   
     .validator-stats {
