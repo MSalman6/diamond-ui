@@ -97,8 +97,7 @@ const RemoveValidatorModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                   type="checkbox"
                   checked={confirmed}
                   onChange={(e) => setConfirmed(e.target.checked)}
-                />
-                <span>I understand that this action is irreversible and the address cannot be reused.</span>
+                /> I understand that this action is irreversible and the address cannot be reused.
               </label>
 
               <button className={"btn-primary " + styles.formSubmit} type="submit">

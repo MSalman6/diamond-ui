@@ -115,11 +115,9 @@
 }
 
 .confirmLabel {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
   color: var(--text-secondary);
   font-size: 0.95rem;
+  word-wrap: break-word;
 }
 
 .formInput {
