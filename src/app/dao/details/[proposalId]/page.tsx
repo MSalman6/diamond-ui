@@ -279,9 +279,59 @@ export default function ProposalDetailsPage() {
     if (daoContext.dismissProposal) {
       try {
         await daoContext.dismissProposal(proposal.id, dismissReason)
-        // refresh
-        if (daoContext.getProposalDetails) daoContext.getProposalDetails(proposal.id).then((res: any) => setProposal(res)).catch(() => {})
-      } catch (e) {}
+        // Close the modal
+        setDismissProposal(false)
+        setDismissReason("")
+        
+        // Refetch proposal details
+        if (daoContext.getProposalDetails) {
+          const updatedProposal = await daoContext.getProposalDetails(proposal.id)
+          if (updatedProposal) {
+            setProposal(updatedProposal)
+            // Update state string
+            if (daoContext.getStateString) {
+              setProposalState(daoContext.getStateString(updatedProposal.state))
+            }
+            // Update proposals in cache
+            if (daoContext.setProposalsState) {
+              daoContext.setProposalsState([updatedProposal])
+            }
+            if (daoContext.setActiveProposals && daoContext.activeProposals) {
+              daoContext.setActiveProposals(
+                daoContext.activeProposals.map((p: any) => p.id === updatedProposal.id ? updatedProposal : p)
+              )
+            }
+          }
+        }
+        
+        // Refetch voting stats
+        if (daoContext.getProposalVotingStats && proposal.id) {
+          const updatedStats = await daoContext.getProposalVotingStats(proposal.id)
+          if (updatedStats) {
+            setVotingStats(updatedStats)
+          }
+        }
+        
+        // Refetch timeline info
+        if (daoContext.getProposalTimeline && proposal.id) {
+          const tl = await daoContext.getProposalTimeline(proposal.id)
+          if (tl) {
+            setProposal((prev: any) => {
+              const updated = { ...prev }
+              if (tl.createdAt) updated.createdAt = tl.createdAt
+              if (tl.creationBlock) updated.creationBlock = tl.creationBlock
+              if (tl.votingStartAt) updated.votingStartAt = tl.votingStartAt
+              if (tl.votingEndAt) updated.votingEndAt = tl.votingEndAt
+              if (tl.finalizedAt) updated.finalizedAt = tl.finalizedAt
+              if (tl.finalizedResult) updated.finalizedResult = tl.finalizedResult
+              if (tl.executedAt) updated.executedAt = tl.executedAt
+              return updated
+            })
+          }
+        }
+      } catch (e) {
+        console.error("Failed to dismiss proposal:", e)
+      }
     }
   }
 
@@ -378,7 +428,7 @@ export default function ProposalDetailsPage() {
                 <div className="proposal-date">
                   <i className="fas fa-calendar" /> Date: {proposal?.timestamp ? timestampToDate(proposal.timestamp) : ''}
                 </div>
-                <div className="proposal-status executed">
+                <div className={`proposal-status ${(proposalState || 'Executed').toLowerCase().replace(/[^a-z]/g, '')}`}>
                   <i className="fas fa-check-circle" /> {proposalState || 'Executed'}
                 </div>
               </div>
@@ -611,9 +661,9 @@ export default function ProposalDetailsPage() {
                 <div className="card-header"><h3>Voting Progress</h3></div>
                 <div className="card-content">
                   {proposal?.executedAt && (
-                    <div className="voting-status-message executed">
+                    <div className={`voting-status-message ${(proposalState || 'executed').toLowerCase().replace(/[^a-z]/g, '')}`}>
                       <i className="fas fa-check-circle" />
-                      <span>This proposal was Executed by the community</span>
+                      <span>This proposal was {proposalState || 'Executed'} by the community</span>
                     </div>
                   )}
                   <div className="voting-progress-container">

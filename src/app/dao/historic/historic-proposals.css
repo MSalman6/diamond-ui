@@ -371,21 +371,6 @@
   font-weight: 500;
 }
 
-.proposal-status.accepted {
-  background: rgba(7, 244, 158, 0.15);
-  color: #07f49e;
-}
-
-.proposal-status.declined {
-  background: rgba(255, 107, 107, 0.15);
-  color: #ff6b6b;
-}
-
-.proposal-status.executed {
-  background: rgba(0, 210, 255, 0.15);
-  color: #00d2ff;
-}
-
 /* Responsive Styles */
 @media (max-width: 1200px) {
   .search-filter-container {
@@ -577,7 +562,60 @@ body.light-theme .proposal-type.open {
   color: #e53e3e;
 }
 
+/* Active proposals (voting in progress) */
+.proposal-status.active {
+  background: rgba(0, 157, 255, 0.15);
+  color: #00d2ff;
+}
+
+/* Executed (accepted and executed) - green */
+.proposal-status.executed {
+  background: rgba(0, 200, 83, 0.15);
+  color: #00c853;
+}
+
+/* Declined (rejected) - red */
+.proposal-status.declined {
+  background: rgba(255, 76, 76, 0.15);
+  color: #ff4c4c;
+}
+
+/* Accepted (approved but not executed yet) - green */
+.proposal-status.accepted {
+  background: rgba(0, 200, 83, 0.15);
+  color: #00c853;
+}
+
+/* Created (just created, not yet active) - light blue */
+.proposal-status.created {
+  background: rgba(100, 150, 255, 0.15);
+  color: #6496ff;
+}
+
+/* Canceled - gray */
+.proposal-status.canceled {
+  background: rgba(150, 150, 150, 0.15);
+  color: #999;
+}
+
+/* VotingFinished - yellow/orange */
+.proposal-status.votingfinished {
+  background: rgba(255, 193, 7, 0.15);
+  color: #ffc107;
+}
+
+/* Unknown - gray */
+.proposal-status.unknown {
+  background: rgba(150, 150, 150, 0.15);
+  color: #999;
+}
+
 /* Proposal statuses in light theme */
+body.light-theme .proposal-status.active {
+  background: rgba(0, 157, 255, 0.15);
+  color: #0077cc;
+}
+
 body.light-theme .proposal-status.accepted {
   background-color: rgba(7, 244, 158, 0.15);
   color: #059669;

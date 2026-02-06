@@ -56,19 +56,131 @@
   font-weight: 500;
 }
 
+/* Active proposals (voting in progress) */
 .proposal-status.active {
   background: rgba(0, 157, 255, 0.15);
   color: #00d2ff;
 }
 
+/* Executed (accepted and executed) - green */
 .proposal-status.executed {
   background: rgba(0, 200, 83, 0.15);
   color: #00c853;
 }
 
+/* Declined (rejected) - red */
 .proposal-status.declined {
   background: rgba(255, 76, 76, 0.15);
   color: #ff4c4c;
+}
+
+/* Accepted (approved but not executed yet) - green */
+.proposal-status.accepted {
+  background: rgba(0, 200, 83, 0.15);
+  color: #00c853;
+}
+
+/* Created (just created, not yet active) - light blue */
+.proposal-status.created {
+  background: rgba(100, 150, 255, 0.15);
+  color: #6496ff;
+}
+
+/* Canceled - gray */
+.proposal-status.canceled {
+  background: rgba(150, 150, 150, 0.15);
+  color: #999;
+}
+
+/* VotingFinished - yellow/orange */
+.proposal-status.votingfinished {
+  background: rgba(255, 193, 7, 0.15);
+  color: #ffc107;
+}
+
+/* Unknown - gray */
+.proposal-status.unknown {
+  background: rgba(150, 150, 150, 0.15);
+  color: #999;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text);
+  transition: color 0.5s ease;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  background: var(--darker-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 12px 15px;
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+}
+
+
+.light-theme .form-group label {
+  color: #333;
+}
+
+.light-theme .form-group input,
+.light-theme .form-group select,
+.light-theme .form-group textarea {
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  color: #333;
+}
+
+
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  padding-right: 40px;
+}
+
+
+.light-theme .form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(0, 157, 255, 0.2);
+}
+
+
+.light-theme .form-group input:focus,
+.light-theme .form-group select:focus,
+.light-theme .form-group textarea:focus {
+  border-color: #0077cc;
+  box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.15);
+}
+
+.form-group select option {
+  background-color: var(--darker-bg);
+  color: var(--text);
+}
+
+.light-theme .form-group select option {
+  background-color: #ffffff;
+  color: #333;
 }
 
 /* Diamond Animation */
@@ -806,6 +918,36 @@
   color: #ff4c4c;
 }
 
+.voting-status-message.accepted {
+  background: rgba(0, 200, 83, 0.15);
+  color: #00c853;
+}
+
+.voting-status-message.active {
+  background: rgba(0, 157, 255, 0.15);
+  color: #00d2ff;
+}
+
+.voting-status-message.created {
+  background: rgba(100, 150, 255, 0.15);
+  color: #6496ff;
+}
+
+.voting-status-message.canceled {
+  background: rgba(150, 150, 150, 0.15);
+  color: #999;
+}
+
+.voting-status-message.votingfinished {
+  background: rgba(255, 193, 7, 0.15);
+  color: #ffc107;
+}
+
+.voting-status-message.unknown {
+  background: rgba(150, 150, 150, 0.15);
+  color: #999;
+}
+
 .voting-progress-container {
   position: relative;
   margin-bottom: 30px;
@@ -1319,6 +1461,26 @@
   background: #ff4c4c;
 }
 
+.related-proposal-status.accepted {
+  background: #00c853;
+}
+
+.related-proposal-status.created {
+  background: #6496ff;
+}
+
+.related-proposal-status.canceled {
+  background: #999;
+}
+
+.related-proposal-status.votingfinished {
+  background: #ffc107;
+}
+
+.related-proposal-status.unknown {
+  background: #999;
+}
+
 .related-proposal-content {
   flex: 1;
 }
@@ -1525,6 +1687,11 @@ body.light-theme .card-header h3 {
 body.light-theme .proposal-status.active {
   background: rgba(0, 157, 255, 0.15);
   color: #0077cc;
+}
+
+body.light-theme .proposal-status.accepted {
+  background-color: rgba(7, 244, 158, 0.15);
+  color: #059669;
 }
 
 body.light-theme .proposal-status.executed {

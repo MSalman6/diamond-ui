@@ -25,8 +25,8 @@ export default function HistoricProposalsPage() {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<string>("all");
-  const [sortField, setSortField] = useState<string | null>(null);
-  const [sortAsc, setSortAsc] = useState(true);
+  const [sortField, setSortField] = useState<string | null>('date');
+  const [sortAsc, setSortAsc] = useState(false);
 
   const [indexingStatus, setIndexingStatus] = useState<string | null>(null);
 
