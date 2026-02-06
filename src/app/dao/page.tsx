@@ -51,6 +51,10 @@ export default function DaoPage() {
   const [voteSubmitting, setVoteSubmitting] = useState<boolean>(false);
   const [isMyPoolValid, setIsMyPoolValid] = useState<boolean>(true);
   const [votedByMe, setVotedByMe] = useState<Record<string, boolean>>({});
+  const [voteModalProgressYesWidth, setVoteModalProgressYesWidth] = useState("0%");
+  const [voteModalProgressNoWidth, setVoteModalProgressNoWidth] = useState("0%");
+  const [voteModalThresholdLeft, setVoteModalThresholdLeft] = useState<string>("0%");
+  const [voteModalStats, setVoteModalStats] = useState<any>(null);
 
   // Contexts
   const router = useRouter();
@@ -261,6 +265,59 @@ export default function DaoPage() {
     setSelectedProposal(p);
     setSelectedVote(null);
     setVoteModalOpen(true);
+    
+    // Calculate voting progress bar widths
+    (async () => {
+      try {
+        const proposalData = daoContext.activeProposals.find((ap: any) => ap.id === p.id) || 
+                            daoContext.allDaoProposals.find((ap: any) => ap.id === p.id);
+        
+        if (proposalData && daoContext.getProposalVotingStats) {
+          const votingStats = await daoContext.getProposalVotingStats(p.id);
+          
+          // Store voting stats for display
+          setVoteModalStats({
+            votingStats,
+            proposalData,
+            stakeForCalculation: (proposalData?.totalStakeSnapshot && proposalData.totalStakeSnapshot !== '0')
+              ? proposalData.totalStakeSnapshot
+              : stakingContext.totalDaoStake
+          });
+          
+          const stakeForCalculation = (proposalData?.totalStakeSnapshot && proposalData.totalStakeSnapshot !== '0')
+            ? proposalData.totalStakeSnapshot
+            : stakingContext.totalDaoStake;
+          
+          const totalStake = BigNumber(stakeForCalculation || 0);
+          const pos = BigNumber(votingStats?.positive || 0);
+          const neg = BigNumber(votingStats?.negative || 0);
+          
+          if (totalStake.isGreaterThan(0)) {
+            const exceedingYesPct = BigNumber.max(0, pos.minus(neg)).multipliedBy(100).dividedBy(totalStake).toNumber();
+            const noPct = neg.multipliedBy(100).dividedBy(totalStake).toNumber();
+            setVoteModalProgressYesWidth(`${Math.max(0, Math.min(100, exceedingYesPct))}%`);
+            setVoteModalProgressNoWidth(`${Math.max(0, Math.min(100, noPct))}%`);
+          } else {
+            setVoteModalProgressYesWidth("0%");
+            setVoteModalProgressNoWidth("0%");
+          }
+          
+          const rawType = String(proposalData?.rawProposalType || '');
+          const thresholdPercentage = daoContext.getProposalThreshold
+            ? daoContext.getProposalThreshold(rawType || '0')
+            : 0;
+          setVoteModalThresholdLeft(`${thresholdPercentage}%`);
+        } else {
+          setVoteModalProgressYesWidth("0%");
+          setVoteModalProgressNoWidth("0%");
+          setVoteModalThresholdLeft("0%");
+        }
+      } catch (e) {
+        setVoteModalProgressYesWidth("0%");
+        setVoteModalProgressNoWidth("0%");
+        setVoteModalThresholdLeft("0%");
+      }
+    })();
   }
 
   async function handleFinalizeClick(p: Proposal) {
@@ -582,7 +639,7 @@ export default function DaoPage() {
                                 const tokens = BigNumber(snap).multipliedBy(Number(p.participation)).dividedBy(100).dividedBy(1e18).toFixed(2);
                                 return <span className="participation-value">{p.participation}%</span>;
                               }
-                            } catch (e) {console.log("EREREOEREOORER", e);}
+                            } catch (e) {console.log("Error", e);}
                             return <span className="participation-value">{p.participation}%</span>;
                           })()}
                         </div>
@@ -724,18 +781,66 @@ export default function DaoPage() {
 
                 <div className="voting-stats-dao">
                   <div className="voting-stat-dao">
-                    <span className="stat-label">Participation</span>
-                    <div className="participation-bar">
-                      <div className="participation-progress" style={{ width: `${selectedProposal.participation}%` }} />
-                      <span className="participation-value">{selectedProposal.participation}%</span>
-                    </div>
-                  </div>
-                  <div className="voting-stat-dao">
                     <span className="stat-label">Current Results</span>
-                    <div className="results-bars">
-                      <div className="result-bar yes"><span className="result-label">Yes</span><div className="result-progress-container"><div className="result-progress" style={{ width: `68%` }} /></div><span className="result-value">68%</span></div>
-                      <div className="result-bar no"><span className="result-label">No</span><div className="result-progress-container"><div className="result-progress" style={{ width: `22%` }} /></div><span className="result-value">22%</span></div>
+                    <div className="voting-progress-container">
+                      <div
+                        className="voting-progress-bar segmented"
+                        style={{
+                          ['--yes-width' as any]: voteModalProgressYesWidth,
+                          ['--no-width' as any]: voteModalProgressNoWidth,
+                          ['--threshold-left' as any]: voteModalThresholdLeft,
+                        }}
+                      >
+                        <div className="bar-segments">
+                          <div className="progress-yes" />
+                          <div className="progress-no" />
+                        </div>
+                        <div className="threshold-line" />
+                      </div>
+                      <div className="voting-legend">
+                        <span className="legend-item"><span className="legend-dot yes"></span> Exceeding yes (Yes - No)</span>
+                        <span className="legend-item"><span className="legend-dot no"></span> No Votes</span>
+                        <span className="legend-item"><span className="legend-dot threshold"></span> Acceptance Threshold</span>
+                      </div>
                     </div>
+                    {voteModalStats && (() => {
+                      const totalBn = BigNumber(voteModalStats.votingStats?.total || 0);
+                      const positiveBn = BigNumber(voteModalStats.votingStats?.positive || 0);
+                      const negativeBn = BigNumber(voteModalStats.votingStats?.negative || 0);
+                      const hasTotal = totalBn.isGreaterThan(0);
+
+                      const yesPct = hasTotal
+                        ? positiveBn.multipliedBy(100).dividedBy(totalBn).toFixed(2)
+                        : '0';
+                      const noPct = hasTotal
+                        ? negativeBn.multipliedBy(100).dividedBy(totalBn).toFixed(2)
+                        : '0';
+
+                      return (
+                        <div className="voting-stats" style={{ marginTop: '20px' }}>
+                          <div className="stat-item total-stake">
+                            Total stake: {hasTotal ? `${totalBn.dividedBy(1e18).toFixed(4)} DMD` : '0 DMD'}
+                          </div>
+                          <div className="stat-item yes-votes">
+                            Yes: {`${yesPct}%`}
+                          </div>
+                          <div className="stat-item no-votes">
+                            No: {`${noPct}%`}
+                          </div>
+                          <div className="stat-divider" />
+                          <div className="stat-item participation">
+                            Exceeding Yes: {BigNumber.max(0, positiveBn.minus(negativeBn)).dividedBy(10**18).toFixed(4)} DMD ({parseFloat(String(voteModalProgressYesWidth)).toFixed(4)}% | {daoContext.getProposalThreshold(voteModalStats.proposalData?.rawProposalType)}% required)
+                          </div>
+                          <div className="stat-item participation">
+                            Participation:{" "}
+                            {totalBn.dividedBy(10 ** 18).toFixed(4, BigNumber.ROUND_DOWN)}{" "}
+                            DMD (
+                            {totalBn.dividedBy(Number(voteModalStats.stakeForCalculation)).multipliedBy(100).toFixed(4)}% |{" "}
+                            {daoContext.getProposalThreshold(voteModalStats.proposalData?.rawProposalType)}% required)
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
 
