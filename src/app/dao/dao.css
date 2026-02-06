@@ -1305,9 +1305,11 @@ body.light-theme .proposal-status.declined {
 }
 
 .proposal-meta {
-  display: flex;
   gap: 15px;
+  display: flex;
+  align-items: center;
   margin-bottom: 15px;
+  justify-content: center;
 }
 
 .proposal-date {
@@ -1366,7 +1368,6 @@ body.light-theme .proposal-status.declined {
   color: var(--text);
   transition: color 0.5s ease;
 }
-
 
 .light-theme .stat-label {
   color: #333;
@@ -1879,7 +1880,7 @@ body.light-theme .proposal-status.declined {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-.modal-header {
+.dao-modal-header {
   padding: 20px;
   border-bottom: 1px solid var(--border-color);
   display: flex;
@@ -1889,11 +1890,11 @@ body.light-theme .proposal-status.declined {
 }
 
 
-.light-theme .modal-header {
+.light-theme .dao-modal-header {
   border-bottom: 1px solid #e0e4e8;
 }
 
-.modal-header h3 {
+.dao-modal-header h3 {
   margin: 0;
   font-size: 1.3rem;
   color: var(--text);
@@ -1901,7 +1902,7 @@ body.light-theme .proposal-status.declined {
 }
 
 
-.light-theme .modal-header h3 {
+.light-theme .dao-modal-header h3 {
   color: #333;
 }
 
@@ -1924,8 +1925,12 @@ body.light-theme .proposal-status.declined {
   opacity: 1;
 }
 
-.modal-body {
+.dao-modal-body {
   padding: 20px;
+}
+
+.dao-modal-body > * {
+  text-align: center;
 }
 
 .modal-footer {

@@ -768,11 +768,11 @@ export default function DaoPage() {
       {/* Vote Modal */}
       <div id="vote-modal" className={`modal ${voteModalOpen ? "show" : ""}`} onClick={(e) => { if (e.target === e.currentTarget) setVoteModalOpen(false); }}>
         <div className="modal-content">
-          <div className="modal-header">
+          <div className="dao-modal-header">
             <h3>Vote on Proposal</h3>
             <button className="close-modal" onClick={() => setVoteModalOpen(false)}><i className="fas fa-times" /></button>
           </div>
-          <div className="modal-body">
+          <div className="dao-modal-body">
             {selectedProposal && (
               <>
                 <div className="proposal-info">
