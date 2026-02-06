@@ -85,7 +85,10 @@ export default function CreateProposalPage() {
   };
 
   const handleRemoveOpenProposalField = (index: number) => {
-    if (proposalType === "low-majority-fill" && openProposalFields.length <= 1) return;
+    if (proposalType === "low-majority-fill" && openProposalFields.length <= 1) {
+      return;
+    }
+
     const newFields = [...openProposalFields];
     newFields.splice(index, 1);
     setOpenProposalFields(newFields);
@@ -267,6 +270,8 @@ export default function CreateProposalPage() {
             onChange={(e) => {
               const newType = e.target.value;
               setProposalType(newType);
+
+              // Reset fields based on the selected proposal type
               if (newType === "low-majority-fill") {
                 setOpenProposalFields([{ target: lowMajorityContractAddress, amount: "" }]);
               } else if (newType === "open" && proposalType === "low-majority-fill") {
@@ -282,23 +287,32 @@ export default function CreateProposalPage() {
         </div>
 
         <form className={styles.propsalForm} onSubmit={createProposal}>
-          {(proposalType === "open" && !isLowMajorityEligible && daoContext.notEnoughGovernanceFunds) && (
-            <p className={styles.warningText}>
-              Warning: The total funding requested by active proposals exceeds the available balance in the governance pot. Please create and vote carefully to ensure optimal fund allocation.
-            </p>
-          )}
+          {
+            // Show High Majority warning for high majority proposals
+            (proposalType === "open" && !isLowMajorityEligible && daoContext.notEnoughGovernanceFunds) && (
+              <p className={styles.warningText}>
+                Warning: The total funding requested by active proposals exceeds the available balance in the governance pot. Please create and vote carefully to ensure optimal fund allocation.
+              </p>
+            )
+          }
 
-          {(proposalType === "open" && isLowMajorityEligible && daoContext.notEnoughLowMajorityFunds) && (
-            <p className={styles.warningText}>
-              Warning: The total funding requested by active proposals exceeds the available balance in the low majority pot. Please vote carefully to ensure optimal fund allocation.
-            </p>
-          )}
+          {
+            // Show Low Majority warning for low majority proposals
+            (proposalType === "open" && isLowMajorityEligible && daoContext.notEnoughLowMajorityFunds) && (
+              <p className={styles.warningText}>
+                Warning: The total funding requested by active proposals exceeds the available balance in the low majority pot. Please vote carefully to ensure optimal fund allocation.
+              </p>
+            )
+          }
 
-          {(proposalType !== "open" && daoContext.notEnoughGovernanceFunds) && (
-            <p className={styles.warningText}>
-              Warning: The total funding requested by active proposals exceeds the available balance in the governance pot. Please create and vote carefully to ensure optimal fund allocation.
-            </p>
-          )}
+          {
+            // Show appropriate warnings for other proposal types
+            (proposalType !== "open" && daoContext.notEnoughGovernanceFunds) && (
+              <p className={styles.warningText}>
+                Warning: The total funding requested by active proposals exceeds the available balance in the governance pot. Please create and vote carefully to ensure optimal fund allocation.
+              </p>
+            )
+          }
 
           <input type="text" className={styles.formInput} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Proposal Title" required />
           <input type="text" className={styles.formInput} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Proposal Description" required />
@@ -346,12 +360,13 @@ export default function CreateProposalPage() {
                 )}
               </div>
 
-                  {openProposalFields.map((field, index) => (
-                <div key={index}>
-                      <span className={styles.addRemoveTransaction} onClick={() => { index !== 0 && handleRemoveOpenProposalField(index); }}>
-                        Transaction {index + 1}
-                        {index !== 0 && (<i className="fas fa-minus-circle" style={{ color: 'red', marginLeft: 8 }} />)}
-                      </span>
+              {
+                openProposalFields.map((field, index) => (
+                  <div key={index}>
+                    <span className={styles.addRemoveTransaction} onClick={() => {index !== 0 && handleRemoveOpenProposalField(index)}}>
+                      Transaction {index + 1}
+                      {index !== 0 && (<i className="fas fa-minus-circle" style={{ color: 'red', marginLeft: 8 }} />)}
+                    </span>
 
                   <input
                     type="text"
