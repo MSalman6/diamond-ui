@@ -1174,6 +1174,7 @@ body.light-theme .address-icon {
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
+  text-align: center;
 }
 
 .proposal-status.passed {
