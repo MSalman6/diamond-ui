@@ -417,8 +417,11 @@ export default function ProposalDetailsPage() {
                       </button>
                       <Modal isOpen={dismissProposal} onClose={() => setDismissProposal(false)}>
                         <div className="modal-body">
-                          <h3>Confirm Dismissal</h3>
-                          <p>Are you sure you want to dismiss this proposal?</p>
+                          <h3 style={{ textAlign: 'center' }}>Confirm Dismissal</h3>
+                          <p style={{ textAlign: 'center', marginTop: '1rem' }}>Are you sure you want to dismiss this proposal?</p>
+                          <p style={{ textAlign: 'center', color: '#f59e0b' }}>
+                            ⚠️ This action is irreversible. The proposal fee will not be refunded.
+                          </p>
                           <div className="form-group">
                             <label>Dismissal Reason (optional)</label>
                             <input
