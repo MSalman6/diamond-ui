@@ -12,12 +12,13 @@ import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { timestampToDate, truncateAddress } from '@/utils/common';
 
-type ProposalType = "protocol" | "parameter" | "open";
+type ProposalType = "parameter" | "open" | "contract upgrade";
 
 type Proposal = {
   id: string;
   date: string;
   creator: string;
+  fullCreatorAddress?: string;
   creatorColor?: string;
   title: string;
   type: ProposalType | string;
@@ -82,10 +83,12 @@ export default function DaoPage() {
     if (!src || !src.length) return [];
 
     return src.map((p: any) => {
+      const fullAddress = p.proposer || p.proposerAddress || "";
       const mapped: Proposal = {
         id: p.id,
         date: (p.timestamp ? timestampToDate(p.timestamp) : new Date().toISOString().slice(0,10)),
-        creator: truncateAddress(p.proposer || p.proposerAddress || ""),
+        creator: truncateAddress(fullAddress),
+        fullCreatorAddress: fullAddress,
         creatorColor: undefined,
         title: p.title || (p.description ? String(p.description).split('\n')[0] : ""),
         type: (p.proposalType || p.rawProposalType || 'open').toLowerCase(),
@@ -173,7 +176,7 @@ export default function DaoPage() {
       } else if (filterQuery === 'myProposals') {
         const myAddr = web3Context.userWallet?.myAddr?.toLowerCase();
         if (myAddr) {
-          list = list.filter((p: any) => (p.creator && String(p.creator).toLowerCase().includes(myAddr)) || (p.id && String(p.id).toLowerCase().includes(myAddr)) );
+          list = list.filter((p: any) => (p.fullCreatorAddress && String(p.fullCreatorAddress).toLowerCase() === myAddr));
         }
       }
     }
@@ -575,10 +578,10 @@ export default function DaoPage() {
               </div>
               <div className="filter-container">
                 <select id="proposal-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
-                  <option value="all">All Types</option>
-                  <option value="parameter">Ecosystem Parameter</option>
-                  <option value="contract-upgrade">Contract Upgrade</option>
-                  <option value="protocol">Open</option>
+                  <option value="all">All</option>
+                  <option value="open">Open</option>
+                  <option value="contract upgrade">Contract upgrade</option>
+                  <option value="parameter">Ecosystem parameter</option>
                 </select>
               </div>
             </div>
