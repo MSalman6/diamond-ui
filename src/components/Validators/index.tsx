@@ -12,6 +12,7 @@ import { useTheme } from '../../hooks';
 import { truncateAddress } from '../../utils/common';
 import { getThemeImagePath } from '../../utils/imageUtils';
 import Image from 'next/image';
+import InfoTooltip from '../InfoTooltip';
 
 interface TableField {
   key: string;
@@ -192,17 +193,17 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
   const getTooltipText = (key: string) => {
     switch (key) {
       case 'isActive':
-        return "Active candidate is part of the active set; Valid - is not part of the active set, but can be elected; Invalid - a candidate who is flagged unavailable on the blockchain or has not enough stake";
+          return "Active candidate is part of the active set; Valid - is not part of the active set, but can be elected; Invalid - a candidate who is flagged unavailable on the blockchain or has not enough stake";
       case 'totalStake':
-        return "Total delegated DMD (self-staked DMD + delegates' stake)";
+          return "Total delegated DMD (self-staked DMD + delegates' stake)";
       case 'votingPower':
-        return "Value that approximates a node's influence in the DAO participation";
+          return "Value that approximates a node’s influence in the DAO participation";
       case 'score':
-        return "Combined score value, based on the results of generating the shared key, the stability of the validator connection and misbehaviour reports from other validators";
+          return "Combined score value, based on the results of generating the shared key, the stability of the validator connection and misbehaviour reports from other validators";
       case 'connectivityReport':
-        return "Connectivity report value, based on how many other active validators did report bad connectivity towards that node";
+          return "Connectivity report value, based on how many other active validators did report bad connectivity towards that node";
       default:
-        return "";
+          return "";
     }
   };
 
@@ -243,6 +244,11 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
                 {column.label}
                 {column.sortAble && column.key && column.key !== 'stakingAddress' && column.key !== 'stakeBtn' && column.key !== 'unstakeClaimBtn' && (
                   <>
+                    {column.key !== 'myStake' && (
+                      <InfoTooltip content={getTooltipText(column.key)}>
+                        <i className="fas fa-info-circle" />
+                      </InfoTooltip>
+                    )}
                     <i className="fas fa-sort"></i>
                   </>
                 )}
