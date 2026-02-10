@@ -213,6 +213,7 @@
   color: var(--text-white);
   border-bottom: 1px solid var(--border-color);
   position: relative;
+  white-space: nowrap;
 }
 
 .validators-table th i {
@@ -905,11 +906,6 @@
 }
 .validators-table tbody tr:nth-child(10) {
   animation-delay: 1s;
-}
-
-.validators-table th {
-  position: relative;
-  overflow: hidden;
 }
 
 .validators-table th::after {
