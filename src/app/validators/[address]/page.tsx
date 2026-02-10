@@ -55,18 +55,18 @@ export default function ValidatorDetails() {
     
     const proposals = await Promise.all(
       activeProposals.map(async (proposal) => {
-        // Only process proposals where address is relevant
-        if (proposal.proposer !== address && proposal.state !== '2') return null;
-
         const vote = address ? await getMyVote(proposal.id, address) : null;
-        // Only proceed if vote exists and vote.timestamp is greater than 0
-        if (!vote || +vote.timestamp <= 0) return null;
 
+        // Include if validator is the proposer (regardless of vote status)
         if (proposal.proposer === address) {
-          return { ...proposal, myVote: vote.vote };
-        } else if (vote.vote !== '0') {
+          return { ...proposal, myVote: vote?.vote || '0' };
+        }
+        
+        // Include if validator voted on an active proposal
+        if (proposal.state === '2' && vote && +vote.timestamp > 0 && vote.vote !== '0') {
           return { ...proposal, myVote: vote.vote };
         }
+
         return null;
       })
     );
@@ -401,7 +401,6 @@ export default function ValidatorDetails() {
                   <th>Date <i className="fas fa-sort"></i></th>
                   <th>Proposal Name <i className="fas fa-sort"></i></th>
                   <th>Proposal Type <i className="fas fa-sort"></i></th>
-                  <th>Vote <i className="fas fa-sort"></i></th>
                   <th>Status <i className="fas fa-sort"></i></th>
                   <th>Action</th>
                 </tr>
@@ -422,11 +421,6 @@ export default function ValidatorDetails() {
                       </div>
                     </td>
                     <td><span className="proposal-type protocol">{proposal.proposalType || 'Protocol'}</span></td>
-                    <td>
-                      <span className={`vote-badge ${proposal.myVote == "2" ? "vote-yes" : proposal.myVote == "1" ? "vote-no" : ""}`}>
-                        {proposal.myVote == "2" ? "Yes" : proposal.myVote == "1" ? "No" : ""}
-                      </span>
-                    </td>
                     <td><span className={`proposal-status ${proposal.state === '2' ? 'active' : proposal.state === '4' ? 'passed' : proposal.state === '5' ? 'rejected' : proposal.state === '6' ? 'executed' : ''}`}>{getStateString(proposal.state)}</span></td>
                     <td>
                       <button onClick={() => navigateToProposal(proposal.id)} className="cta-button">
@@ -436,7 +430,7 @@ export default function ValidatorDetails() {
                   </tr>
                 )) : (
                   <tr>
-                    <td colSpan={6}>No DAO participations found</td>
+                    <td colSpan={5}>No DAO participations found</td>
                   </tr>
                 )
               }
