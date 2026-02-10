@@ -229,6 +229,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .stat-value {
@@ -249,9 +250,10 @@
 
 
 .countdown-timer {
+  gap: 1.5rem;
   display: flex;
-  justify-content: space-between;
   margin-bottom: 20px;
+  justify-content: space-between;
 }
 
 .countdown-item {
@@ -417,9 +419,10 @@
 }
 
 .distribution-item {
-  display: flex;
-  flex-direction: column;
   gap: 5px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .distribution-label {
