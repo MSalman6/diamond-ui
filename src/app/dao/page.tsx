@@ -571,14 +571,14 @@ export default function DaoPage() {
               </div>
               <div className="filter-container">
                 <select id="scope-filter" value={filterQuery} onChange={(e) => setFilterQuery(e.target.value)}>
-                  <option value="">All</option>
+                  <option value="">All Statuses</option>
                   <option value="myProposals">My proposals</option>
                   <option value="unfinalized">Unfinalized</option>
                 </select>
               </div>
               <div className="filter-container">
                 <select id="proposal-filter" value={filter} onChange={(e) => setFilter(e.target.value)}>
-                  <option value="all">All</option>
+                  <option value="all">All Types</option>
                   <option value="open">Open</option>
                   <option value="open payout">Open payout</option>
                   <option value="contract fill">Contract fill</option>
@@ -777,7 +777,7 @@ export default function DaoPage() {
               <>
                 <div className="proposal-info">
                   <h4 id="vote-proposal-title">{selectedProposal.title}</h4>
-                  <div className="proposal-meta">
+                  <div className="proposal-meta-dao">
                     <span className={`proposal-type ${(selectedProposal.type || '').replace(/\s+/g, '-')}`}>{selectedProposal.type}</span>
                     <span className="proposal-date">Created on {selectedProposal.date}</span>
                   </div>

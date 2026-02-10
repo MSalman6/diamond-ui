@@ -437,7 +437,7 @@ export default function Home() {
             <div className="slide-track">
               <div className="slide">
                 <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_metamask.svg" height={100} width={250} alt="MetaMask" />
+                  <Image src="/images/wallets/logo_metamask.png" height={100} width={250} alt="MetaMask" />
                 </a>
               </div>
               <div className="slide">
@@ -457,7 +457,7 @@ export default function Home() {
               </div>
               <div className="slide">
                 <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_metamask.svg" height={100} width={250} alt="MetaMask" />
+                  <Image src="/images/wallets/logo_metamask.png" height={100} width={250} alt="MetaMask" />
                 </a>
               </div>
               <div className="slide">
@@ -477,7 +477,7 @@ export default function Home() {
               </div>
               <div className="slide">
                 <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_metamask.svg" height={100} width={250} alt="MetaMask" />
+                  <Image src="/images/wallets/logo_metamask.png" height={100} width={250} alt="MetaMask" />
                 </a>
               </div>
               <div className="slide">
@@ -497,7 +497,7 @@ export default function Home() {
               </div>
               <div className="slide">
                 <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_metamask.svg" height={100} width={250} alt="MetaMask" />
+                  <Image src="/images/wallets/logo_metamask.png" height={100} width={250} alt="MetaMask" />
                 </a>
               </div>
               <div className="slide">

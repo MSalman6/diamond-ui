@@ -1307,7 +1307,7 @@ body.light-theme .proposal-status.declined {
   color: #333;
 }
 
-.proposal-meta {
+.proposal-meta-dao {
   gap: 15px;
   display: flex;
   align-items: center;
