@@ -59,11 +59,11 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; 2025 DMD Diamond. All rights reserved.</p>
+          <p>&copy; 2025 DMD Diamond Association</p>
           <div className="footer-links">
-            <a href="#">Privacy Policy</a>
+            {/* <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>
-            <a href="#">Cookie Policy</a>
+            <a href="#">Cookie Policy</a> */}
             <button className="btn-outline" onClick={() => setOpen(true)} title={currentEndpoint}>
               <i className="fas fa-cog" style={{ marginRight: 8 }}></i>
               RPC: {shortUrl}
