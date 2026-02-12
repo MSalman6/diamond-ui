@@ -547,16 +547,22 @@ export default function ProposalDetailsPage() {
                   <div className="card-header"><h3>Funding Request</h3></div>
                   <div className="card-content">
                     <div className="funding-purpose"><h4>{proposal?.title || ''}</h4></div>
-                    <div className="funding-details">
-                      <div className="payout-address">
-                        <span className="label">Payout Address</span>
-                        <div className="address-container">{proposal.targets[0]}</div>
-                      </div>
-                      <div className="payout-amount">
-                        <span className="label">Amount</span>
-                        <div className="value">{proposal?.values && proposal.values[0] ? (new BigNumber(proposal.values[0]).dividedBy(10**18)).toString() + ' DMD' : '10,000 DMD'}</div>
-                      </div>
-                    </div>
+                    {proposal?.targets?.map((target: string, index: number) => {
+                      if (target === '0x0000000000000000000000000000000000000000') return null
+                      return (
+                        <div key={index} className="funding-details" style={{ marginBottom: index < (proposal.targets?.length || 0) - 1 ? '20px' : '0', paddingBottom: '20px', borderBottom: index < (proposal.targets?.length || 0) - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none' }}>
+                          {proposal.targets.length > 1 && <div style={{ marginBottom: '10px', fontWeight: 'bold', color: 'var(--accent)' }}>Transaction {index + 1}</div>}
+                          <div className="payout-address">
+                            <span className="label">Payout Address</span>
+                            <div className="address-container">{target}</div>
+                          </div>
+                          <div className="payout-amount">
+                            <span className="label">Amount</span>
+                            <div className="value">{proposal?.values && proposal.values[index] ? (new BigNumber(proposal.values[index]).dividedBy(10**18)).toString() + ' DMD' : '0 DMD'}</div>
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
                 </div>
               )}
@@ -565,42 +571,45 @@ export default function ProposalDetailsPage() {
                 <div className="card-header"><h3>Contract Upgrade</h3></div>
                 <div className="card-content">
                   <div className="upgrade-title"><h4>{proposal?.title || ''}</h4></div>
-                  <div className="technical-details">
-                    <div className="target-address">
-                      <div className="label">Target</div>
-                      <div className="value">{proposal?.targets?.[0] || '0xdef...456'}</div>
-                    </div>
-                    {proposal?.values && proposal.values[0] && proposal.values[0] !== '0' && (
-                      <div className="payout-amount">
-                        <span className="label">Requested Amount</span>
-                        <div className="value">{(new BigNumber(proposal.values[0]).dividedBy(10**18)).toString() + ' DMD'}</div>
+                  {proposal?.targets?.map((target: string, index: number) => (
+                    <div key={index} className="technical-details" style={{ marginBottom: index < (proposal.targets?.length || 0) - 1 ? '30px' : '0', paddingBottom: '20px', borderBottom: index < (proposal.targets?.length || 0) - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none' }}>
+                      {proposal.targets.length > 1 && <div style={{ marginBottom: '10px', fontWeight: 'bold', color: 'var(--accent)' }}>Transaction {index + 1}</div>}
+                      <div className="target-address">
+                        <div className="label">Target</div>
+                        <div className="value">{target || '0xdef...456'}</div>
                       </div>
-                    )}
-                    <div className="call-data">
-                      <button id="expand-call-data" className="expand-btn" onClick={() => setCallDataCollapsed(!callDataCollapsed)}>
-                        {callDataCollapsed ? (<><i className="fas fa-chevron-down"></i> Expand</>) : (<><i className="fas fa-chevron-up"></i> Collapse</>) }
-                      </button>
-                      <div className={`call-data-content ${callDataCollapsed ? "collapsed" : ""}`}>
-                        <pre className="code-block"><code>{proposal?.calldatas?.[0] || 'Raw call data…'}</code></pre>
+                      {proposal?.values && proposal.values[index] && proposal.values[index] !== '0' && (
+                        <div className="payout-amount">
+                          <span className="label">Requested Amount</span>
+                          <div className="value">{(new BigNumber(proposal.values[index]).dividedBy(10**18)).toString() + ' DMD'}</div>
+                        </div>
+                      )}
+                      <div className="call-data">
+                        <button id={`expand-call-data-${index}`} className="expand-btn" onClick={() => setCallDataCollapsed(!callDataCollapsed)}>
+                          {callDataCollapsed ? (<><i className="fas fa-chevron-down"></i> Expand</>) : (<><i className="fas fa-chevron-up"></i> Collapse</>) }
+                        </button>
+                        <div className={`call-data-content ${callDataCollapsed ? "collapsed" : ""}`}>
+                          <pre className="code-block"><code>{proposal?.calldatas?.[index] || 'Raw call data…'}</code></pre>
+                        </div>
+                      </div>
+                      <div className="decoded-data">
+                        <button id={`expand-decoded-data-${index}`} className="expand-btn" onClick={() => setDecodedDataCollapsed(!decodedDataCollapsed)}>
+                          {decodedDataCollapsed ? (<><i className="fas fa-chevron-down"></i> Expand</>) : (<><i className="fas fa-chevron-up"></i> Collapse</>) }
+                        </button>
+                        <div className={`decoded-data-content ${decodedDataCollapsed ? "collapsed" : ""}`}>
+                          {(() => {
+                            try {
+                              const res = target && proposal?.calldatas?.[index] ? decodeCallData(web3Context.contractsManager, target, proposal.calldatas[index]) : {}
+                              if (res && Object.keys(res).length > 0) {
+                                return Object.entries(res).map(([k, v]) => (<div key={k}><strong>{capitalizeFirstLetter(k)}:</strong> {String(v)}</div>))
+                              }
+                            } catch (e) {}
+                            return 'Decoded data…'
+                          })()}
+                        </div>
                       </div>
                     </div>
-                    <div className="decoded-data">
-                      <button id="expand-decoded-data" className="expand-btn" onClick={() => setDecodedDataCollapsed(!decodedDataCollapsed)}>
-                        {decodedDataCollapsed ? (<><i className="fas fa-chevron-down"></i> Expand</>) : (<><i className="fas fa-chevron-up"></i> Collapse</>) }
-                      </button>
-                      <div className={`decoded-data-content ${decodedDataCollapsed ? "collapsed" : ""}`}>
-                        {(() => {
-                          try {
-                            const res = proposal?.targets?.[0] && proposal?.calldatas?.[0] ? decodeCallData(web3Context.contractsManager, proposal.targets[0], proposal.calldatas[0]) : {}
-                            if (res && Object.keys(res).length > 0) {
-                              return Object.entries(res).map(([k, v]) => (<div key={k}><strong>{capitalizeFirstLetter(k)}:</strong> {String(v)}</div>))
-                            }
-                          } catch (e) {}
-                          return 'Decoded data…'
-                        })()}
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
