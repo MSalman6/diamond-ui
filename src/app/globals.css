@@ -2972,7 +2972,7 @@ body.light-theme .stat-header h3,
 body.light-theme .stat-label,
 body.light-theme .stake-label,
 body.light-theme .distribution-label {
-  color: #2d3748;
+  color: #718096;
   font-weight: 600;
 }
 
@@ -3088,7 +3088,6 @@ body.light-theme .dao-stat-card:hover {
 }
 
 body.light-theme .dao-stat-card h3 {
-  color: #2d3748;
   font-weight: 500;
 }
 
