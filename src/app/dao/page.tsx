@@ -669,13 +669,13 @@ export default function DaoPage() {
                       </td>
                       <td><span className={`exceeding-value ${p.exceeding >= 0 ? "positive" : "negative"}`}>{p.exceeding >= 0 ? `+${p.exceeding}%` : `${p.exceeding}%`}</span></td>
                       <td><span className={`voted-status ${p.voted ? "voted" : "not-voted"}`}>{p.voted ? <i className="fas fa-check-circle" /> : <i className="fas fa-times-circle" />}</span></td>
-                      {votingPhase && isMyPoolValid && p.status !== (daoContext.getStateString ? daoContext.getStateString('1') : 'Canceled') && (
+                      {/* {votingPhase && isMyPoolValid && p.status !== (daoContext.getStateString ? daoContext.getStateString('1') : 'Canceled') && (
                         <td>
                           <button className="btn-vote" onClick={(e) => { e.stopPropagation(); openVoteModal(p); }}>
                             <i className="fas fa-vote-yea" /> Vote
                           </button>
                         </td>
-                      )}
+                      )} */}
                       <td>
                         <span className={`proposal-status ${p.status.toLowerCase()}`}>{p.status}</span>
                       </td>

@@ -811,6 +811,7 @@
   border-bottom: 1px solid var(--border-color);
   position: relative;
   transition: color 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
+  white-space: nowrap;
 }
 
 
@@ -2622,6 +2623,7 @@ body.light-theme .proposal-status.declined {
   border-bottom: 1px solid var(--border-color);
   position: relative;
   transition: color 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
+  white-space: nowrap;
 }
 
 
