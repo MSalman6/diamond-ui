@@ -431,6 +431,13 @@ export default function ProposalDetailsPage() {
                 <div className={`proposal-status ${(proposalState || 'Executed').toLowerCase().replace(/[^a-z]/g, '')}`}>
                   <i className="fas fa-check-circle" /> {proposalState || 'Executed'}
                 </div>
+                {web3Context.userWallet?.myAddr === proposal?.proposer &&
+                  proposal?.state === '0' &&
+                  daoContext.daoPhase?.phase === '0' && (
+                    <button className="dismiss-proposal-btn" onClick={() => setDismissProposal(true)}>
+                      <i className="fas fa-times" /> Dismiss
+                    </button>
+                  )}
               </div>
             </div>
           </div>
@@ -454,46 +461,6 @@ export default function ProposalDetailsPage() {
                   </div>
                 </div>
               </div>
-
-              {/* Dismiss Proposal (proposer only, created phase) */}
-              {web3Context.userWallet?.myAddr === proposal?.proposer &&
-                proposal?.state === '0' &&
-                daoContext.daoPhase?.phase === '0' && (
-                  <div className="proposal-card dismiss-card">
-                    <div className="card-header"><h3>Dismiss Proposal</h3></div>
-                    <div className="card-content">
-                      <button className="primaryBtn" onClick={() => setDismissProposal(true)}>
-                        <i className="fas fa-times" /> Dismiss Proposal
-                      </button>
-                      <Modal isOpen={dismissProposal} onClose={() => setDismissProposal(false)}>
-                        <div className="modal-body">
-                          <h3 style={{ textAlign: 'center' }}>Confirm Dismissal</h3>
-                          <p style={{ textAlign: 'center', marginTop: '1rem' }}>Are you sure you want to dismiss this proposal?</p>
-                          <p style={{ textAlign: 'center', color: '#f59e0b' }}>
-                            ⚠️ This action is irreversible. The proposal fee will not be refunded.
-                          </p>
-                          <div className="form-group">
-                            <label>Dismissal Reason (optional)</label>
-                            <input
-                              type="text"
-                              placeholder="Reason"
-                              value={dismissReason}
-                              onChange={(e) => setDismissReason(e.target.value)}
-                            />
-                          </div>
-                          <div className="modal-actions" style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                            <button className="primaryBtn" onClick={handleDismissProposal}>
-                              Yes, dismiss
-                            </button>
-                            <button className="btn-cancel" onClick={() => setDismissProposal(false)}>
-                              Cancel
-                            </button>
-                          </div>
-                        </div>
-                      </Modal>
-                    </div>
-                  </div>
-                )}
 
               <div className={`proposal-card parameter-change-card ${type !== "parameter-change" ? "hidden" : ""}`} id="parameter-change-content">
                 <div className="card-header"><h3>Parameter Change</h3></div>
@@ -891,6 +858,34 @@ export default function ProposalDetailsPage() {
           </div>
         </div>
       </section>
+
+      {/* Dismiss Proposal Modal */}
+      <Modal isOpen={dismissProposal} onClose={() => setDismissProposal(false)}>
+        <div className="modal-body">
+          <h3 style={{ textAlign: 'center' }}>Confirm Dismissal</h3>
+          <p style={{ textAlign: 'center', marginTop: '1rem' }}>Are you sure you want to dismiss this proposal?</p>
+          <p style={{ textAlign: 'center', color: '#f59e0b' }}>
+            ⚠️ This action is irreversible. The proposal fee will not be refunded.
+          </p>
+          <div className="form-group">
+            <label>Dismissal Reason (optional)</label>
+            <input
+              type="text"
+              placeholder="Reason"
+              value={dismissReason}
+              onChange={(e) => setDismissReason(e.target.value)}
+            />
+          </div>
+          <div className="modal-actions" style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+            <button className="primaryBtn" onClick={handleDismissProposal}>
+              Yes, dismiss
+            </button>
+            <button className="btn-cancel" onClick={() => setDismissProposal(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

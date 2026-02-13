@@ -105,6 +105,36 @@
   color: #999;
 }
 
+.dismiss-proposal-btn {
+  gap: 6px;
+  display: flex;
+  align-items: center;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  background: rgba(255, 76, 76, 0.15);
+  color: #ff4c4c;
+  border: 1px solid rgba(255, 76, 76, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 35px;
+}
+
+.dismiss-proposal-btn > i {
+  margin-top: 3px;
+}
+
+.dismiss-proposal-btn:hover {
+  background: rgba(255, 76, 76, 0.25);
+  border-color: rgba(255, 76, 76, 0.5);
+  transform: translateY(-1px);
+}
+
+.dismiss-proposal-btn i {
+  font-size: 0.85rem;
+}
+
 .form-group {
   margin-bottom: 20px;
 }

@@ -57,6 +57,10 @@ export default function DaoPage() {
   const [voteModalThresholdLeft, setVoteModalThresholdLeft] = useState<string>("0%");
   const [voteModalStats, setVoteModalStats] = useState<any>(null);
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const PAGE_SIZE = 10;
+
   // Contexts
   const router = useRouter();
   const daoContext = useDaoContext();
@@ -206,6 +210,20 @@ export default function DaoPage() {
 
     return list.map((p) => ({ ...p, voted: !!votedByMe[p.id] }));
   }, [daoMappedProposals, localProposals, filterQuery, search, filter, sortField, sortAsc, web3Context.userWallet, daoContext, votedByMe]);
+
+  // Paginated proposals
+  const paginatedProposals = useMemo(() => {
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    const endIndex = startIndex + PAGE_SIZE;
+    return displayedProposals.slice(startIndex, endIndex);
+  }, [displayedProposals, currentPage]);
+
+  const pageCount = Math.ceil(displayedProposals.length / PAGE_SIZE);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, filter, activeTab]);
 
   const handleDetailsClick = (proposalId: string) => {
     startTransition(() => {
@@ -615,7 +633,7 @@ export default function DaoPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {displayedProposals.map((p) => (
+                  {paginatedProposals.map((p) => (
                     <tr key={p.id} onClick={() => handleDetailsClick(p.id)} style={{ cursor: 'pointer' }}>
                       <td>{p.date}</td>
                       <td>
@@ -684,7 +702,7 @@ export default function DaoPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {displayedProposals
+                  {paginatedProposals
                     .filter((p) => p.status === (daoContext.getStateString ? daoContext.getStateString('3') : '3'))
                     .map((p) => (
                     <tr key={p.id} onClick={() => handleDetailsClick(p.id)} style={{ cursor: 'pointer' }}>
@@ -750,16 +768,60 @@ export default function DaoPage() {
             </div>
           )}
 
-          {/* Pagination - only show if there are enough proposals */}
-          {displayedProposals.length > 10 && (
+          {displayedProposals.length > PAGE_SIZE && (
             <div className="pagination">
-              <button className="pagination-btn"><i className="fas fa-chevron-left" /></button>
-              <button className="pagination-btn active">1</button>
-              <button className="pagination-btn">2</button>
-              <button className="pagination-btn">3</button>
-              <span className="pagination-ellipsis">...</span>
-              <button className="pagination-btn">10</button>
-              <button className="pagination-btn"><i className="fas fa-chevron-right" /></button>
+              <button 
+                className="pagination-btn" 
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} 
+                disabled={currentPage === 1}
+              >
+                <i className="fas fa-chevron-left" />
+              </button>
+
+              {(() => {
+                const maxButtons = 7;
+                const pages: number[] = [];
+                let start = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+                let end = start + maxButtons - 1;
+                if (end > pageCount) {
+                  end = pageCount;
+                  start = Math.max(1, end - maxButtons + 1);
+                }
+                for (let i = start; i <= end; i++) pages.push(i);
+                return (
+                  <>
+                    {start > 1 && (
+                      <button className="pagination-btn" onClick={() => setCurrentPage(1)}>
+                        1
+                      </button>
+                    )}
+                    {start > 2 && <span className="pagination-ellipsis">...</span>}
+                    {pages.map((pg) => (
+                      <button
+                        key={pg}
+                        className={`pagination-btn ${pg === currentPage ? 'active' : ''}`}
+                        onClick={() => setCurrentPage(pg)}
+                      >
+                        {pg}
+                      </button>
+                    ))}
+                    {end < pageCount - 1 && <span className="pagination-ellipsis">...</span>}
+                    {end < pageCount && (
+                      <button className="pagination-btn" onClick={() => setCurrentPage(pageCount)}>
+                        {pageCount}
+                      </button>
+                    )}
+                  </>
+                );
+              })()}
+
+              <button 
+                className="pagination-btn" 
+                onClick={() => setCurrentPage((p) => Math.min(pageCount, p + 1))} 
+                disabled={currentPage === pageCount}
+              >
+                <i className="fas fa-chevron-right" />
+              </button>
             </div>
           )}
         </div>
