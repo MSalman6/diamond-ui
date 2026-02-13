@@ -485,9 +485,9 @@ export default function ProposalDetailsPage() {
                     </div>
                   </div>
                   <div className="parameter-fee">
-                    <span className="label">Set Parameter Fee:</span>
+                    <span className="label">Proposal fee:</span>
                     <span className="value">{daoContext?.proposalFee ? BigNumber(daoContext?.proposalFee).dividedBy(1e18).toString() + ' DMD' : '100 DMD'}</span>
-                    <InfoTooltip placement="bottom" content={<span>This is a fee to update the parameter.</span>}>
+                    <InfoTooltip placement="bottom" content={<span>Fee to create a proposal. Refunded if approved.</span>}>
                       <i className="fas fa-info-circle info-icon" aria-hidden="true" />
                     </InfoTooltip>
                   </div>
@@ -530,6 +530,13 @@ export default function ProposalDetailsPage() {
                         </div>
                       )
                     })}
+                    <div className="parameter-fee" style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                      <span className="label">Proposal fee:</span>
+                      <span className="value">{daoContext?.proposalFee ? BigNumber(daoContext?.proposalFee).dividedBy(1e18).toString() + ' DMD' : '100 DMD'}</span>
+                      <InfoTooltip placement="bottom" content={<span>Fee to create a proposal. Refunded if approved.</span>}>
+                        <i className="fas fa-info-circle info-icon" aria-hidden="true" />
+                      </InfoTooltip>
+                    </div>
                   </div>
                 </div>
               )}
@@ -577,6 +584,13 @@ export default function ProposalDetailsPage() {
                       </div>
                     </div>
                   ))}
+                  <div className="parameter-fee" style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                    <span className="label">Proposal fee:</span>
+                    <span className="value">{daoContext?.proposalFee ? BigNumber(daoContext?.proposalFee).dividedBy(1e18).toString() + ' DMD' : '100 DMD'}</span>
+                    <InfoTooltip placement="bottom" content={<span>Fee to create a proposal. Refunded if approved.</span>}>
+                      <i className="fas fa-info-circle info-icon" aria-hidden="true" />
+                    </InfoTooltip>
+                  </div>
                 </div>
               </div>
 
