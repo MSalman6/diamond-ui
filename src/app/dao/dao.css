@@ -341,13 +341,6 @@
   margin-bottom: 15px;
 }
 
-.detail-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  font-size: 0.9rem;
-}
-
 .detail-label {
   color: var(--text-secondary);
   transition: color 0.5s ease;
@@ -2198,8 +2191,8 @@ body.light-theme .proposal-status.declined {
 }
 
 .detail-item {
+  gap: 0.4rem;
   display: flex;
-  justify-content: space-between;
   margin-bottom: 8px;
   font-size: 0.9rem;
 }
