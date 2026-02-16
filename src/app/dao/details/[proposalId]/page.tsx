@@ -10,6 +10,7 @@ import { useDaoContext } from '@/contexts/DAO'
 import { useWeb3Context } from '@/contexts/Web3'
 import { useStakingContext } from '@/contexts/Staking'
 import { capitalizeFirstLetter, decodeCallData, extractValueFromCalldata, formatCryptoUnitValue, getFunctionInfoWithAbi, timestampToDate } from '@/utils/common'
+import { getProposalImpact } from '@/constants/proposalImpacts'
 
 export default function ProposalDetailsPage() {
   const [menuActive, setMenuActive] = useState(false)
@@ -495,17 +496,32 @@ export default function ProposalDetailsPage() {
                     <h4>Description</h4>
                     <p>{proposal?.description || ''}</p>
                   </div>
-                  <div className="parameter-impact">
-                    <h4>Impact Assessment</h4>
-                    <div className="impact-item">
-                      <div className="impact-icon positive">+</div>
-                      <div className="impact-text"><p>Improves validator revenue.</p></div>
-                    </div>
-                    <div className="impact-item">
-                      <div className="impact-icon negative">-</div>
-                      <div className="impact-text"><p>May reduce small delegations.</p></div>
-                    </div>
-                  </div>
+                  {(() => {
+                    const impactData = getProposalImpact(paramFunctionName);
+                    if (!impactData) return null;
+                    
+                    return (
+                      <div className="parameter-impact">
+                        <h4>
+                          Impact Assessment
+                          {impactData.specialIndicator === 'blue' && (
+                            <span className="special-indicator blue-indicator">🟦</span>
+                          )}
+                        </h4>
+                        <div className="impact-title">{impactData.title}</div>
+                        {impactData.effects.map((effect, index) => (
+                          <div key={index} className="impact-item">
+                            <div className={`impact-icon ${effect.type}`}>
+                              {effect.type === 'positive' ? '+' : '-'}
+                            </div>
+                            <div className="impact-text">
+                              <p>{effect.text}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
 
