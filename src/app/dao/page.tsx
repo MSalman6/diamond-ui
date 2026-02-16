@@ -161,6 +161,13 @@ export default function DaoPage() {
     return phase !== '0';
   }, [daoContext?.daoPhase?.phase]);
 
+  const getDisplayStatus = (proposal: Proposal) => {
+    if (proposal.status === 'Active' && votingPhase) {
+      return 'Voting';
+    }
+    return proposal.status;
+  };
+
   // Filter/sort/search derived list (prefer DAO data when present, otherwise fallback to local)
   const displayedProposals = useMemo(() => {
     let list: Proposal[];
@@ -628,7 +635,6 @@ export default function DaoPage() {
                     <th onClick={() => onSort("participation")}>Participation <i className={`fas ${sortField === "participation" ? (sortAsc ? "fa-sort-up" : "fa-sort-down") : "fa-sort"}`} /></th>
                     <th onClick={() => onSort("exceeding")}>Exceeding Yes <i className={`fas ${sortField === "exceeding" ? (sortAsc ? "fa-sort-up" : "fa-sort-down") : "fa-sort"}`} /></th>
                     <th onClick={() => onSort("voted")}>Voted <i className={`fas ${sortField === "voted" ? (sortAsc ? "fa-sort-up" : "fa-sort-down") : "fa-sort"}`} /></th>
-                    {votingPhase && isMyPoolValid && (<th>Action</th>)}
                     <th onClick={() => onSort("status")}>Status <i className={`fas ${sortField === "status" ? (sortAsc ? "fa-sort-up" : "fa-sort-down") : "fa-sort"}`} /></th>
                   </tr>
                 </thead>
@@ -677,7 +683,7 @@ export default function DaoPage() {
                         </td>
                       )} */}
                       <td>
-                        <span className={`proposal-status ${p.status.toLowerCase()}`}>{p.status}</span>
+                        <span className={`proposal-status ${getDisplayStatus(p).toLowerCase()}`}>{getDisplayStatus(p)}</span>
                       </td>
                     </tr>
                   ))}

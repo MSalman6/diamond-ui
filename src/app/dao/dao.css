@@ -880,11 +880,15 @@
 }
 
 .proposal-type {
-  display: inline-block;
+  width: 100%;
+  display: flex;
   padding: 4px 10px;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 500;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
 }
 
 .proposal-type.ecosystem-parameter-change {
@@ -1037,6 +1041,11 @@
   color: #00d2ff;
 }
 
+.proposal-status.voting {
+  background: rgba(0, 157, 255, 0.15);
+  color: #00d2ff;
+}
+
 /* Executed (accepted and executed) - green */
 .proposal-status.executed {
   background: rgba(0, 200, 83, 0.15);
@@ -1080,6 +1089,11 @@
 }
 
 body.light-theme .proposal-status.active {
+  background: rgba(0, 157, 255, 0.15);
+  color: #0077cc;
+}
+
+body.light-theme .proposal-status.voting {
   background: rgba(0, 157, 255, 0.15);
   color: #0077cc;
 }
