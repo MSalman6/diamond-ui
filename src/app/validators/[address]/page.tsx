@@ -44,34 +44,46 @@ export default function ValidatorDetails() {
   useEffect(() => {
     const foundPool = pools.find((pool) => pool.stakingAddress === address);
     setPool(foundPool || null);
-    if (foundPool) {
-      filterProposals();
-    }
   }, [address, pools, userWallet.myAddr]);
+
+  useEffect(() => {
+    if (!address) return;
+    filterProposals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address, activeProposals]);
 
   // Functions
   async function filterProposals() {
     if (!activeProposals.length) return;
-    
+
     const proposals = await Promise.all(
       activeProposals.map(async (proposal) => {
-        const vote = address ? await getMyVote(proposal.id, address) : null;
-
-        // Include if validator is the proposer (regardless of vote status)
-        if (proposal.proposer === address) {
-          return { ...proposal, myVote: vote?.vote || '0' };
+        let vote: any = null;
+        try {
+          vote = address ? await getMyVote(proposal.id, address) : null;
+        } catch {
+          vote = null;
         }
-        
-        // Include if validator voted on an active proposal
-        if (proposal.state === '2' && vote && +vote.timestamp > 0 && vote.vote !== '0') {
-          return { ...proposal, myVote: vote.vote };
+
+        const isProposer = String(proposal.proposer || '').toLowerCase() === String(address || '').toLowerCase();
+        const hasVoted = !!vote && Number(vote.timestamp || 0) > 0 && (vote.vote === '0' || vote.vote === '1');
+
+        if (isProposer || hasVoted) {
+          return { ...proposal, myVote: hasVoted ? vote.vote : null };
         }
 
         return null;
-      })
+      }),
     );
 
-    setFilteredProposals(proposals.filter((proposal) => proposal !== null));
+    const unique = new Map<string, any>();
+    for (const p of proposals) {
+      if (p && p.id) unique.set(String(p.id), p);
+    }
+
+    const list = Array.from(unique.values());
+    list.sort((a, b) => Number(b.timestamp || 0) - Number(a.timestamp || 0));
+    setFilteredProposals(list);
   }
 
   const copyData = (data: string) => {
