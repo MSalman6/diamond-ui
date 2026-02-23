@@ -437,12 +437,32 @@ export default function Home() {
             <div className="slide-track">
               <div className="slide">
                 <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_metamask.png" height={100} width={250} alt="MetaMask" />
+                  <Image src={"/images/wallets/" + (theme === 'light' ? 'logo_metamask_dark.svg' : 'logo_metamask_light.svg')} height={100} width={250} alt="MetaMask" />
+                </a>
+              </div>
+                <div className="slide">
+                <a href="https://brave.com/wallet/" target="_blank" rel="noopener noreferrer">
+                  <Image src={"/images/wallets/" + (theme === 'light' ? 'logo_brave_dark.png' : 'logo_brave_light.png')} height={100} width={250} alt="Brave" />
+                </a>
+                </div>
+              <div className="slide">
+                <a href="https://www.coinbase.com/wallet" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_coinbase.svg" height={100} width={250} alt="Coinbase Wallet" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://walletconnect.com" target="_blank" rel="noopener noreferrer">
+                  <Image src="/images/wallets/logo_walletconnect.svg" height={100} width={250} alt="WalletConnect" />
+                </a>
+              </div>
+              <div className="slide">
+                <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">
+                  <Image src={"/images/wallets/" + (theme === 'light' ? 'logo_metamask_dark.svg' : 'logo_metamask_light.svg')} height={100} width={250} alt="MetaMask" />
                 </a>
               </div>
               <div className="slide">
                 <a href="https://brave.com/wallet/" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_brave.svg" height={100} width={250} alt="Brave" />
+                  <Image src={"/images/wallets/" + (theme === 'light' ? 'logo_brave_dark.png' : 'logo_brave_light.png')} height={100} width={250} alt="Brave" />
                 </a>
               </div>
               <div className="slide">
@@ -457,12 +477,12 @@ export default function Home() {
               </div>
               <div className="slide">
                 <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_metamask.png" height={100} width={250} alt="MetaMask" />
+                  <Image src={"/images/wallets/" + (theme === 'light' ? 'logo_metamask_dark.svg' : 'logo_metamask_light.svg')} height={100} width={250} alt="MetaMask" />
                 </a>
               </div>
               <div className="slide">
                 <a href="https://brave.com/wallet/" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_brave.svg" height={100} width={250} alt="Brave" />
+                  <Image src={"/images/wallets/" + (theme === 'light' ? 'logo_brave_dark.png' : 'logo_brave_light.png')} height={100} width={250} alt="Brave" />
                 </a>
               </div>
               <div className="slide">
@@ -477,32 +497,12 @@ export default function Home() {
               </div>
               <div className="slide">
                 <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_metamask.png" height={100} width={250} alt="MetaMask" />
+                  <Image src={"/images/wallets/" + (theme === 'light' ? 'logo_metamask_dark.svg' : 'logo_metamask_light.svg')} height={100} width={250} alt="MetaMask" />
                 </a>
               </div>
               <div className="slide">
                 <a href="https://brave.com/wallet/" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_brave.svg" height={100} width={250} alt="Brave" />
-                </a>
-              </div>
-              <div className="slide">
-                <a href="https://www.coinbase.com/wallet" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_coinbase.svg" height={100} width={250} alt="Coinbase Wallet" />
-                </a>
-              </div>
-              <div className="slide">
-                <a href="https://walletconnect.com" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_walletconnect.svg" height={100} width={250} alt="WalletConnect" />
-                </a>
-              </div>
-              <div className="slide">
-                <a href="https://metamask.io" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_metamask.png" height={100} width={250} alt="MetaMask" />
-                </a>
-              </div>
-              <div className="slide">
-                <a href="https://brave.com/wallet/" target="_blank" rel="noopener noreferrer">
-                  <Image src="/images/wallets/logo_brave.svg" height={100} width={250} alt="Brave" />
+                  <Image src={"/images/wallets/" + (theme === 'light' ? 'logo_brave_dark.png' : 'logo_brave_light.png')} height={100} width={250} alt="Brave" />
                 </a>
               </div>
             </div>
