@@ -502,12 +502,7 @@ export default function ProposalDetailsPage() {
                     
                     return (
                       <div className="parameter-impact">
-                        <h4>
-                          Impact Assessment
-                          {impactData.specialIndicator === 'blue' && (
-                            <span className="special-indicator blue-indicator">🟦</span>
-                          )}
-                        </h4>
+                        <h4>Impact Assessment</h4>
                         {impactData.effects.map((effect, index) => (
                           <div key={index} className="impact-item">
                             <div className={`impact-icon ${effect.type}`}>
