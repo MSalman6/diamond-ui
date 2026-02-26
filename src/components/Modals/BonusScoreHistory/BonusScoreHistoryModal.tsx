@@ -2,7 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import Modal from '@/components/Modal';
+import { clientApiGet } from '@/lib/apiClient';
+import { usePrivacyMode } from '@/contexts/PrivacyMode';
 import './BonusScoreHistoryModal.css';
+import { toast } from 'react-toastify';
 
 interface BonusScoreHistoryEntry {
   block_number: number;
@@ -27,6 +30,7 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
   const [history, setHistory] = useState<BonusScoreHistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { isPrivacyMode } = usePrivacyMode();
 
   useEffect(() => {
     if (isOpen && validatorAddress) {
@@ -35,28 +39,25 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
   }, [isOpen, validatorAddress]);
 
   const fetchHistory = async () => {
+    // Block API calls in Privacy Mode
+    if (isPrivacyMode) {
+      setError('Bonus score history is not available in Privacy Mode');
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
     try {
-      const endpoint = process.env.NEXT_PUBLIC_DB_ENDPOINT || 'http://localhost:4000/';
-      const apiKey = process.env.NEXT_PUBLIC_DB_API_KEY || '';
+      const endpoint = `node/${validatorAddress}/bonus-score-reasons-history/`;
       
-      const url = `${endpoint}node/${validatorAddress}/bonus-score-reasons-history/`;
-      
-      const response = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await clientApiGet<{ data: BonusScoreHistoryEntry[] }>(endpoint);
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch history: ${response.statusText}`);
+        toast.error(response.error || `Failed to fetch history: ${response.status}`);
       }
 
-      const data = await response.json();
-      setHistory(data.data || []);
+      setHistory(response.data.data || []);
     } catch (err) {
       console.error('Error fetching bonus score history:', err);
       setError(err instanceof Error ? err.message : 'Failed to load history');
@@ -99,7 +100,7 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
         {error && (
           <div className="bonus-history-error">
             <i className="fas fa-exclamation-circle"></i>
-            <p>{error}</p>
+            <p>Unavailable</p>
           </div>
         )}
 
