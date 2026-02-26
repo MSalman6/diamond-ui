@@ -6,26 +6,30 @@ import Link from 'next/link';
 import BigNumber from 'bignumber.js';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { truncateAddress } from '@/utils/common';
 import { useWeb3Context } from '@/contexts/Web3';
 import InfoTooltip from '@/components/InfoTooltip';
 import { useStakingContext } from '@/contexts/Staking';
 import { useDaoContext } from '@/contexts/DAO';
+import { useIsPrivacyMode } from '@/contexts';
 import { useWalletConnect } from '@/contexts/WalletConnect';
 import StakeModal from '@/components/Modals/Stake/StakeModal';
 import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
 import RemoveValidatorModal from '@/components/Modals/RemoveValidator/RemoveValidatorModal';
 import CreatePoolModal from '@/components/Modals/CreatePool/CreatePoolModal';
 import UpdatePoolOperatorModal from '@/components/Modals/UpdatePoolOperator/UpdatePoolOperatorModal';
+import BonusScoreHistoryModal from '@/components/Modals/BonusScoreHistory/BonusScoreHistoryModal';
 
 export default function ProfilePage() {
   const router = useRouter();
   const { userWallet } = useWeb3Context();
   const { myPool, pools, totalDaoStake, myTotalStake, myCandidateStake } = useStakingContext();
+  const isPrivacyMode = useIsPrivacyMode();
   const { isConnected } = useWalletConnect();
   const { allDaoProposals } = useDaoContext();
+  const [isBonusHistoryModalOpen, setIsBonusHistoryModalOpen] = useState(false);
 
   // Get validators that user has staked with (has myStake > 0)
   const stakedValidators = useMemo(() => {
@@ -473,7 +477,9 @@ export default function ProfilePage() {
                     <div className="stat-value highlight">{myPool?.score !== undefined && myPool?.score !== null ? Number(myPool.score).toFixed(1) : '—'}</div>
                     <div className="cr-count">Connectivity reports: {myPool?.connectivityReport ?? '—'}<InfoTooltip content={<div><p>Number of detected connectivity issues for this validator.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="stat-change positive cr-change" style={{display:'none'}}>+ points since epoch</div>
-                    <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
+                    {!isPrivacyMode && (
+                      <button onClick={() => setIsBonusHistoryModalOpen(true)} className="btn-secondary btn-sm">History</button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -589,6 +595,13 @@ export default function ProfilePage() {
             </div>
           </section>
         </div>
+
+        {/* Modals */}
+        <BonusScoreHistoryModal
+          isOpen={isBonusHistoryModalOpen}
+          onClose={() => setIsBonusHistoryModalOpen(false)}
+          validatorAddress={userWallet.myAddr}
+        />
     </div>
   );
 }

@@ -9,11 +9,14 @@ import { truncateAddress, timestampToDate } from '@/utils/common';
 import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { useDaoContext } from '@/contexts/DAO';
+import { useIsPrivacyMode } from '@/contexts/PrivacyMode';
 import StakeModal from '@/components/Modals/Stake/StakeModal';
 import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import InfoTooltip from '@/components/InfoTooltip';
+import BonusScoreHistoryModal from '@/components/Modals/BonusScoreHistory/BonusScoreHistoryModal';
+
 
 export default function ValidatorDetails() {
   const params = useParams();
@@ -24,12 +27,14 @@ export default function ValidatorDetails() {
   const { userWallet, web3Initialized, showLoader } = useWeb3Context();
   const { activeProposals, getMyVote, getActiveProposals, getStateString } = useDaoContext();
   const { pools, stakingEpoch, claimOrderedUnstake } = useStakingContext();
+  const isPrivacyMode = useIsPrivacyMode();
 
   // State
   const [pool, setPool] = useState<any | null>(null);
   const [filteredProposals, setFilteredProposals] = useState<any[]>([]);
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
   const [isUnstakeModalOpen, setIsUnstakeModalOpen] = useState(false);
+  const [isBonusHistoryModalOpen, setIsBonusHistoryModalOpen] = useState(false);
 
   // Effects
   useEffect(() => {
@@ -236,19 +241,19 @@ export default function ValidatorDetails() {
               </h3>
             </div>
             <p className="stat-value-large">{pool ? pool.score : 0}</p>
-            <div className="stat-subtitle">History coming soon <InfoTooltip content={<div><p>Score history is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-            {/* <div className="stat-trend negative">
-              <i className="fas fa-arrow-down"></i> 10 since 01.01.24
-            </div> */}
-            <div className="stat-actions">
-              <button
-                onClick={() => toast.info("Coming soon!")}
-                className="cta-button coming-soon"
-                title="Coming soon"
-              >
-                History
-              </button>
-            </div>
+            {!isPrivacyMode && (
+              <>
+                <div className="stat-actions">
+                  <button
+                    onClick={() => setIsBonusHistoryModalOpen(true)}
+                    className="cta-button"
+                    title="View bonus score history"
+                  >
+                    History
+                  </button>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="stat-card-wireframe fade-in">
@@ -459,6 +464,13 @@ export default function ValidatorDetails() {
         )}
       </div>
     </section>
+
+    {/* Modals */}
+    <BonusScoreHistoryModal
+      isOpen={isBonusHistoryModalOpen}
+      onClose={() => setIsBonusHistoryModalOpen(false)}
+      validatorAddress={address}
+    />
 </div>
   );
 }

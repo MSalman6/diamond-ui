@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useMemo } from "react";
 import { useWeb3Context } from "@/contexts/Web3";
+import PrivacyModeIndicator from '@/components/PrivacyModeIndicator';
 import RpcConfigurationModal from "@/components/Modals/RPCConfiguration";
 
 export default function Footer() {
@@ -68,6 +68,7 @@ export default function Footer() {
               <i className="fas fa-cog" style={{ marginRight: 8 }}></i>
               RPC: {shortUrl}
             </button>
+            <PrivacyModeIndicator />
           </div>
         </div>
       </div>

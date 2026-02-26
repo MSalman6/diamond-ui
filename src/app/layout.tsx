@@ -1,11 +1,14 @@
 import "./globals.css";
 import "@/components/Header/Header.css";
 import "@/components/InfoTooltip/InfoTooltip.css";
+import "@/components/PrivacyModeIndicator/PrivacyModeIndicator.css";
+import "@/components/PrivacyModeGuard.css";
 import type { Metadata } from "next";
 import { DaoContextProvider } from "@/contexts/DAO";
 import { Geist, Geist_Mono } from "next/font/google";
 import { WalletConnectProvider } from "@/contexts/WalletConnect";
 import { StakingContextProvider } from "@/contexts/Staking";
+import { PrivacyModeProvider } from "@/contexts/PrivacyMode";
 import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -44,13 +47,14 @@ export default async function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning={true}>
         <ThemeProvider>
-          <WalletConnectProvider cookies={cookies}>
-            <Web3ContextProvider>
-              <StakingContextProvider>
-                <DaoContextProvider>
-                  <Header />
-                  {children}
-                  <Footer />
+          <PrivacyModeProvider>
+            <WalletConnectProvider cookies={cookies}>
+              <Web3ContextProvider>
+                <StakingContextProvider>
+                  <DaoContextProvider>
+                    <Header />
+                    {children}
+                    <Footer />
                   <ToastContainer
                     position="bottom-right"
                     autoClose={3000}
@@ -68,6 +72,7 @@ export default async function RootLayout({
               </StakingContextProvider>
             </Web3ContextProvider>
           </WalletConnectProvider>
+          </PrivacyModeProvider>
         </ThemeProvider>
       </body>
     </html>
