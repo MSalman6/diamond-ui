@@ -594,6 +594,27 @@ export default function ProposalDetailsPage() {
                       </div>
                     </div>
                   ))}
+                  {(() => {
+                    const impactData = getProposalImpact(paramFunctionName);
+                    if (!impactData) return null;
+                    
+                    return (
+                      <div className="parameter-impact" style={{ marginTop: '30px' }}>
+                        <h4>Impact Assessment</h4>
+                        <div className="impact-title">{impactData.title}</div>
+                        {impactData.effects.map((effect, index) => (
+                          <div key={index} className="impact-item">
+                            <div className={`impact-icon ${effect.type}`}>
+                              {effect.type === 'positive' ? '+' : '-'}
+                            </div>
+                            <div className="impact-text">
+                              <p>{effect.text}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
                   <div className="parameter-fee" style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
                     <span className="label">Proposal fee:</span>
                     <span className="value">{daoContext?.proposalFee ? BigNumber(daoContext?.proposalFee).dividedBy(1e18).toString() + ' DMD' : '100 DMD'}</span>

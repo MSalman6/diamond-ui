@@ -76,6 +76,10 @@ export const PROPOSAL_IMPACTS: Record<string, ProposalImpact> = {
   },
 };
 
+/**
+ * Get impact data for a specific parameter function name
+ */
 export function getProposalImpact(functionName: string): ProposalImpact | null {
-  return PROPOSAL_IMPACTS[functionName] || null;
+  const cleanFunctionName = functionName.replace(/\(.*\)/, '');
+  return PROPOSAL_IMPACTS[cleanFunctionName] || null;
 }
