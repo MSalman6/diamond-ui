@@ -109,6 +109,7 @@ body.light-theme {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  font-size: 0.7rem !important;
 }
 
 /* Tooltip for info icons (multi-line, bullet points) */

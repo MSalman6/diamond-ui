@@ -433,14 +433,6 @@ export default function ProfilePage() {
                     <div className="stat-value highlight">{myPool?.poolOperatorShare ? BigNumber(myPool.poolOperatorShare).dividedBy(100).toFixed(2) + '%' : '—'}</div>
                     <div className="stat-note copy-address-container">
                       {myPool?.poolOperator ? myPool.poolOperator : '—'}{' '}
-                      <button
-                        className="btnIcon copyBtnIcon"
-                        id="copy-address"
-                        title="Copy Address"
-                        onClick={() => myPool?.poolOperator && copyData(myPool.poolOperator)}
-                      >
-                        <i className="fas fa-copy"></i>
-                      </button>
                     </div>
                     {myPool && <UpdatePoolOperatorModal buttonText="Edit" pool={myPool} />}
                   </div>
