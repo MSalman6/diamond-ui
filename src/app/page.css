@@ -376,8 +376,8 @@
   }
   
   .status-badge.active {
-    background: rgba(110, 231, 183, 0.2);
-    color: #6ee7b7;
+    background: rgba(7, 244, 158, 0.15);
+    color: #07f49e;
   }
   
   .status-badge.valid {

@@ -1056,18 +1056,18 @@ body.light-theme .wallet-address {
 }
 
 body.light-theme .status-active {
-  background: rgba(0, 210, 255, 0.15);
-  color: #0277bd;
+  background: rgba(7, 244, 158, 0.15);
+  color: #07f49e;
 }
 
 body.light-theme .status-valid {
-  background: rgba(7, 244, 158, 0.15);
-  color: #038d5a;
+  background: rgba(0, 210, 255, 0.15);
+  color: #00d2ff;
 }
 
 body.light-theme .status-invalid {
   background: rgba(255, 107, 107, 0.15);
-  color: #d32f2f;
+  color: #ff6b6b;
 }
 
 body.light-theme .status-jailed {
