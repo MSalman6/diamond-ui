@@ -178,7 +178,12 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
 
   // Handle row click navigation
   const handleRowClick = (stakingAddress: string) => {
-    router.push(`/validators/${stakingAddress}`);
+    // For own validator, navigate to profile page
+    if (userWallet.myAddr && stakingAddress.toLowerCase() === userWallet.myAddr.toLowerCase()) {
+      router.push('/profile');
+    } else {
+      router.push(`/validators/${stakingAddress}`);
+    }
   };
 
   // Get sort class names
