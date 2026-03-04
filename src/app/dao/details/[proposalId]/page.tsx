@@ -769,6 +769,12 @@ export default function ProposalDetailsPage() {
                             ) : (
                               <p>You have already voted for the proposal. Do you want to change your decision?</p>
                             )}
+                            {myVote?.reason && (
+                              <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid var(--border-color)' }}>
+                                <strong style={{ fontSize: '0.85rem', opacity: 0.7 }}>Your vote reason:</strong>
+                                <p style={{ marginTop: '4px', fontSize: '0.9rem' }}>{myVote.reason}</p>
+                              </div>
+                            )}
                           </div>
                         )}
                         {/* Vote reason */}
@@ -776,7 +782,7 @@ export default function ProposalDetailsPage() {
                           <div className="form-group" style={{ marginBottom: '10px' }}>
                             <input
                               type="text"
-                              placeholder={myVote?.reason ? myVote.reason : 'Vote Reason'}
+                              placeholder="Vote Reason (optional)"
                               value={voteReason}
                               onChange={(e) => setVoteReason(e.target.value)}
                             />
