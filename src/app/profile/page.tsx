@@ -178,9 +178,11 @@ export default function ProfilePage() {
                           <Link href="/validators?sort=myStake&direction=descending" className="btn-primary btn-sm">Stake/Unstake</Link>
                           <CreatePoolModal buttonText="Create pool" />
                         </div>
-                        <div>
-                          <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
-                        </div>        
+                        {!isPrivacyMode && (
+                          <div>
+                            <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
+                          </div>
+                        )}        
                       </div>
                     </div>
                     
@@ -192,9 +194,11 @@ export default function ProfilePage() {
                         <div className="stat-value highlight">N DMD</div>
                       </div>
                       <div className="stat-note">Estimate coming soon <InfoTooltip content={<div><p>Reward estimation is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-                      <div className="stat-actions">
-                        <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
-                      </div>
+                      {!isPrivacyMode && (
+                        <div className="stat-actions">
+                          <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
+                        </div>
+                      )}
                     </div>
                     
                     <div className="stat-section">
@@ -370,7 +374,9 @@ export default function ProfilePage() {
                             <>
                               <StakeModal buttonText="Stake" pool={myPool} />
                               <UnstakeModal buttonText="Unstake" pool={myPool} />
-                              <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
+                              {!isPrivacyMode && (
+                                <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
+                              )}
                               {myPool && (
                                 <RemoveValidatorModal buttonText="Remove pool" pool={myPool} />
                               )}
@@ -385,7 +391,9 @@ export default function ProfilePage() {
                         <span className="stake-label">Delegated stake to my pool <InfoTooltip content={<div><p>The amount of DMD delegated to your pool by other users (excluding your own stake).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
                         <span className="stake-value highlight">{formatDMDAmount(delegatedStakeWei)}</span>
                       </div>
-                      <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
+                      {!isPrivacyMode && (
+                        <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
+                      )}
                     </div>
                   </div>
                   
@@ -419,7 +427,9 @@ export default function ProfilePage() {
                     <div className="stat-label">Monthly rewards <InfoTooltip content={<div><p>DMD rewards earned this month based on your validator pool total stake.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="stat-value highlight">N DMD</div>
                     <div className="stat-note">Estimate coming soon <InfoTooltip content={<div><p>Reward estimation is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-                    <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">Rewards history</button>
+                    {!isPrivacyMode && (
+                      <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">Rewards history</button>
+                    )}
                   </div>
 
                   <div className="stat-card">
@@ -445,7 +455,9 @@ export default function ProfilePage() {
                     <div className="stat-value highlight">{myPool?.votingPower && myPool.votingPower.toString() !== 'NaN' ? `${myPool.votingPower.toString()}%` : '0%'}</div>
                     <div className="stat-note" style={{display:'none'}}><span className="info-value negative">-</span> since epoch</div>
                     <div className="stat-note">Proposals created: {myProposalsCreated}</div>
-                    <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
+                    {!isPrivacyMode && (
+                      <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
+                    )}
                   </div>
 
                   {/* Score card */}

@@ -306,16 +306,18 @@ export default function ValidatorDetails() {
             </div>
             <p className="stat-value-large">N DMD</p>
             <div className="stat-subtitle">Estimate coming soon <InfoTooltip content={<div><p>Reward estimation is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-            <div className="stat-actions">
-              <button
-                onClick={() => toast.info("Coming soon!")}
-                className="cta-button coming-soon"
-                id="rewards-history-button"
-                title="Coming soon"
-              >
-                History
-              </button>
-            </div>
+            {!isPrivacyMode && (
+              <div className="stat-actions">
+                <button
+                  onClick={() => toast.info("Coming soon!")}
+                  className="cta-button coming-soon"
+                  id="rewards-history-button"
+                  title="Coming soon"
+                >
+                  History
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="stat-card-wireframe fade-in">
