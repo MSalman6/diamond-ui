@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Modal from '@/components/Modal';
 import { clientApiGet } from '@/lib/apiClient';
 import { usePrivacyMode } from '@/contexts/PrivacyMode';
 import './BonusScoreHistoryModal.css';
 import { toast } from 'react-toastify';
+import { LineChart, BarChart, AreaChart } from '@/components/Charts';
+import type { ChartType } from '@/components/Charts';
 
 interface BonusScoreHistoryEntry {
   block_number: number;
@@ -30,6 +32,7 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
   const [history, setHistory] = useState<BonusScoreHistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [chartType, setChartType] = useState<ChartType>('line');
   const { isPrivacyMode } = usePrivacyMode();
 
   useEffect(() => {
@@ -80,12 +83,57 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
     return 'neutral';
   };
 
+  // Prepare chart data from history
+  const chartData = useMemo(() => {
+    if (!history || history.length === 0) return [];
+    
+    // Sort by epoch to ensure chronological order
+    const sortedHistory = [...history].sort((a, b) => a.epoch - b.epoch);
+    
+    return sortedHistory.map((entry) => ({
+      name: `Epoch ${entry.epoch}`,
+      epoch: entry.epoch,
+      score: entry.new_score,
+      change: entry.score_change,
+      previous: entry.previous_score,
+      block: entry.block_number,
+    }));
+  }, [history]);
+
+
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="bonus-history-modal">
       <div className="bonus-history-container">
-        <h2 className="bonus-history-title">
-          Bonus Score History
-        </h2>
+
+        <div className="bonus-history-header">
+          <h2 className="bonus-history-title">
+            <i className="fas fa-chart-line"></i>
+            Bonus Score History
+          </h2>
+
+          <div className="chart-type-selector">
+            <button
+              className={`chart-type-button ${chartType === 'line' ? 'active' : ''}`}
+              onClick={() => setChartType('line')}
+            >
+              <i className="fas fa-chart-line"></i>
+            </button>
+            <button
+              className={`chart-type-button ${chartType === 'bar' ? 'active' : ''}`}
+              onClick={() => setChartType('bar')}
+            >
+              <i className="fas fa-chart-bar"></i>
+            </button>
+            <button
+              className={`chart-type-button ${chartType === 'area' ? 'active' : ''}`}
+              onClick={() => setChartType('area')}
+            >
+              <i className="fas fa-chart-area"></i>
+            </button>
+          </div>
+        </div>
+
         <p className="bonus-history-subtitle">
           Historical changes to the validator's bonus score
         </p>
@@ -112,48 +160,112 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
         )}
 
         {!isLoading && !error && history.length > 0 && (
-          <>
-            <div className="bonus-history-list">
-              {history.map((entry, index) => (
-                <div key={`${entry.block_number}-${index}`} className="history-entry">
-                  <div className="entry-header">
-                    <span className="entry-epoch">
-                      <i className="fas fa-layer-group"></i> Epoch {entry.epoch}
-                    </span>
-                    <span className="entry-block">
-                      Block #{entry.block_number.toLocaleString()}
-                    </span>
-                  </div>
+          <div className="bonus-history-dual-view">
 
-                  <div className="entry-body">
-                    <div className="score-change-container">
-                      <div className="score-display">
-                        <span className="score-label">Previous</span>
-                        <span className="score-value">{entry.previous_score}</span>
-                      </div>
-                      
-                      <div className={`score-arrow ${entry.score_change > 0 ? 'positive' : 'negative'}`}>
-                        <i className={`fas fa-arrow-${entry.score_change > 0 ? 'up' : 'down'}`}></i>
-                        <span className="change-value">
-                          {entry.score_change > 0 ? '+' : ''}{entry.score_change}
-                        </span>
-                      </div>
+            {/* Charts */}
+            <div className="bonus-history-chart-section">
+              <div className="chart-wrapper">
+                {chartType === 'line' && (
+                  <LineChart
+                    data={chartData}
+                    xAxisKey="epoch"
+                    lines={[
+                      {
+                        dataKey: 'score',
+                        name: 'Bonus Score',
+                        strokeWidth: 3,
+                        type: 'monotone',
+                        dot: true,
+                      },
+                    ]}
+                    config={{ height: 250 }}
+                    xAxisLabel="Epoch"
+                    yAxisLabel="Score"
+                    className="chart-fade-in"
+                  />
+                )}
 
-                      <div className="score-display">
-                        <span className="score-label">New</span>
-                        <span className="score-value">{entry.new_score}</span>
-                      </div>
-                    </div>
+                {chartType === 'bar' && (
+                  <BarChart
+                    data={chartData}
+                    xAxisKey="epoch"
+                    bars={[
+                      {
+                        dataKey: 'change',
+                        name: 'Score Change',
+                      },
+                    ]}
+                    config={{ height: 250 }}
+                    xAxisLabel="Epoch"
+                    yAxisLabel="Change"
+                    className="chart-fade-in"
+                  />
+                )}
 
-                    <div className={`entry-reason ${getReasonClass(entry.reason)}`}>
-                      <i className={`fas fa-${entry.score_change > 0 ? 'plus-circle' : 'minus-circle'}`}></i>
-                      <span>{formatReason(entry.reason)}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                {chartType === 'area' && (
+                  <AreaChart
+                    data={chartData}
+                    xAxisKey="epoch"
+                    areas={[
+                      {
+                        dataKey: 'score',
+                        name: 'Bonus Score',
+                        type: 'monotone',
+                      },
+                    ]}
+                    config={{ height: 250 }}
+                    xAxisLabel="Epoch"
+                    yAxisLabel="Score"
+                    className="chart-fade-in"
+                  />
+                )}
+              </div>
             </div>
-          </>
+
+            {/* History List */}
+            <div className="bonus-history-list-section">
+              <div className="bonus-history-list">
+                {history.map((entry, index) => (
+                  <div key={`${entry.block_number}-${index}`} className="history-entry">
+                    <div className="entry-header">
+                      <span className="entry-epoch">
+                        <i className="fas fa-layer-group"></i> Epoch {entry.epoch}
+                      </span>
+                      <span className="entry-block">
+                        Block #{entry.block_number.toLocaleString()}
+                      </span>
+                    </div>
+
+                    <div className="entry-body">
+                      <div className="score-change-container">
+                        <div className="score-display">
+                          <span className="score-label">Previous</span>
+                          <span className="score-value">{entry.previous_score}</span>
+                        </div>
+                        
+                        <div className={`score-arrow ${entry.score_change > 0 ? 'positive' : 'negative'}`}>
+                          <i className={`fas fa-arrow-${entry.score_change > 0 ? 'up' : 'down'}`}></i>
+                          <span className="change-value">
+                            {entry.score_change > 0 ? '+' : ''}{entry.score_change}
+                          </span>
+                        </div>
+
+                        <div className="score-display">
+                          <span className="score-label">New</span>
+                          <span className="score-value">{entry.new_score}</span>
+                        </div>
+                      </div>
+
+                      <div className={`entry-reason ${getReasonClass(entry.reason)}`}>
+                        <i className={`fas fa-${entry.score_change > 0 ? 'plus-circle' : 'minus-circle'}`}></i>
+                        <span>{formatReason(entry.reason)}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </Modal>

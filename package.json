@@ -31,6 +31,7 @@
     "react-dom": "^19.0.0",
     "react-jazzicon": "^1.0.4",
     "react-toastify": "^11.0.5",
+    "recharts": "^3.7.0",
     "typechain": "^8.3.2",
     "viem": "^2.31.4",
     "wagmi": "^2.15.6",
