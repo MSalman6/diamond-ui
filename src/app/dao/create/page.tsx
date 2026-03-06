@@ -306,8 +306,8 @@ export default function CreateProposalPage() {
           }
 
           {
-            // Show appropriate warnings for other proposal types (excluding ecosystem parameter change which doesn't require funds)
-            (proposalType !== "open" && proposalType !== "ecosystem-parameter-change" && daoContext.notEnoughGovernanceFunds) && (
+            // Show appropriate warnings for low majority fill proposal type
+            (proposalType === "low-majority-fill" && daoContext.notEnoughGovernanceFunds) && (
               <p className={styles.warningText}>
                 Warning: The total funding requested by active proposals exceeds the available balance in the governance pot. Please create and vote carefully to ensure optimal fund allocation.
               </p>
