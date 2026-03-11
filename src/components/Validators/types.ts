@@ -1,6 +1,6 @@
 export interface Validator {
   id: string;
-  status: 'active' | 'valid' | 'invalid' | 'jailed';
+  status: 'active' | 'valid' | 'invalid';
   walletAddress: string;
   minerAddress: string;
   publicKey: string;

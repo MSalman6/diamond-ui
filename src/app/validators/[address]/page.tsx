@@ -143,7 +143,7 @@ export default function ValidatorDetails() {
       <div className="validator-main-info">
         <div className="validator-identity">
           <div className="address-section">
-            <span id="validator-status-badge" className={`status-badge ${pool?.isActive ? 'status-active' : (pool?.isToBeElected || pool?.isPendingValidator) ? 'status-valid' : 'status-inactive'}`}>
+            <span id="validator-status-badge" className={`status-badge ${pool?.isActive ? 'status-active' : (pool?.isToBeElected || pool?.isPendingValidator) ? 'status-valid' : 'status-invalid'}`}>
               {pool?.isActive ? "Active" : (pool?.isToBeElected || pool?.isPendingValidator) ? "Valid" : "Invalid"}
             </span>
             <h1 id="validator-address">{address ? truncateAddress(address) : 'Loading...'}</h1>

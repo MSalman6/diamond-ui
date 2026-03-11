@@ -2707,21 +2707,6 @@ body.light-theme .tooltip {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-body.light-theme .status-badge {
-  background-color: #edf2f7;
-  color: #4a5568;
-}
-
-body.light-theme .status-badge.active {
-  background-color: #c6f6d5;
-  color: #2f855a;
-}
-
-body.light-theme .status-badge.pending {
-  background-color: #feebc8;
-  color: #c05621;
-}
-
 body.light-theme .combined-stake-card {
   background-color: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -3101,20 +3086,46 @@ body.light-theme .dao-stat-card .countdown {
 }
 
 body.light-theme .status-badge {
+  background-color: #edf2f7;
+  color: #4a5568;
   font-weight: 600;
   border: 1px solid transparent;
 }
 
 body.light-theme .status-badge.active {
-  background: #c6f6d5;
-  color: #22543d;
-  border-color: #9ae6b4;
+  background: rgba(7, 244, 158, 0.15);
+  color: #07f49e;
+  border-color: rgba(7, 244, 158, 0.3);
 }
 
-body.light-theme .status-badge.inactive {
-  background: #fed7d7;
-  color: #742a2a;
-  border-color: #feb2b2;
+body.light-theme .status-badge.valid {
+  background: rgba(0, 210, 255, 0.15);
+  color: #00d2ff;
+  border-color: rgba(0, 210, 255, 0.3);
+}
+
+body.light-theme .status-badge.invalid {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+  border-color: rgba(255, 107, 107, 0.3);
+}
+
+body.light-theme .status-badge.status-active {
+  background: rgba(7, 244, 158, 0.15);
+  color: #07f49e;
+  border-color: rgba(7, 244, 158, 0.3);
+}
+
+body.light-theme .status-badge.status-valid {
+  background: rgba(0, 210, 255, 0.15);
+  color: #00d2ff;
+  border-color: rgba(0, 210, 255, 0.3);
+}
+
+body.light-theme .status-badge.status-invalid {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+  border-color: rgba(255, 107, 107, 0.3);
 }
 
 body.light-theme .wallet-icon {

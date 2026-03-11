@@ -220,16 +220,19 @@ body.light-theme .btn-icon:hover {
 .status-badge.status-active {
   background: rgba(7, 244, 158, 0.15);
   color: #07f49e;
+  border: 1px solid rgba(7, 244, 158, 0.3);
 }
 
 .status-badge.status-valid {
   background: rgba(0, 210, 255, 0.15);
   color: #00d2ff;
+  border: 1px solid rgba(0, 210, 255, 0.3);
 }
 
-.status-badge.status-inactive {
+.status-badge.status-invalid {
   background: rgba(255, 107, 107, 0.15);
   color: #ff6b6b;
+  border: 1px solid rgba(255, 107, 107, 0.3);
 }
 
 .utility-buttons {
@@ -2164,15 +2167,33 @@ body.light-theme .tooltip::after {
 
 /* Status badge colors */
 .status-active {
-  background: rgba(34, 197, 94, 0.2);
-  color: #22c55e;
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  background: rgba(7, 244, 158, 0.15);
+  color: #07f49e;
+  border: 1px solid rgba(7, 244, 158, 0.3);
 }
 
-.status-inactive {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+.status-invalid {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+body.light-theme .status-badge.status-active {
+  background: rgba(7, 244, 158, 0.15);
+  color: #07f49e;
+  border-color: rgba(7, 244, 158, 0.3);
+}
+
+body.light-theme .status-badge.status-valid {
+  background: rgba(0, 210, 255, 0.15);
+  color: #00d2ff;
+  border-color: rgba(0, 210, 255, 0.3);
+}
+
+body.light-theme .status-badge.status-invalid {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+  border-color: rgba(255, 107, 107, 0.3);
 }
 
 /* Vote badge colors */
