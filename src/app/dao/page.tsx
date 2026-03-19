@@ -1,8 +1,8 @@
 "use client";
 
 import "./dao.css";
+import "../styles/proposal-status.css";
 import React, { useEffect, useMemo, useState, startTransition } from "react";
-import Link from 'next/link';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useFadeInAnimation } from "@/hooks/useFadeInAnimation";

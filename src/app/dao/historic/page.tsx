@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState, startTransition } from "react";
 import Link from "next/link";
 import "./historic-proposals.css";
+import "../../styles/proposal-status.css";
 import { useRouter } from "next/navigation";
 import { useDaoContext } from '@/contexts/DAO';
 import { useWeb3Context } from '@/contexts/Web3';

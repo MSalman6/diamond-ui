@@ -2,6 +2,7 @@
 
 import '../Validators.css';
 import './ValidatorDetails.css';
+import '../../styles/proposal-status.css';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState, startTransition } from 'react';
 import BigNumber from "bignumber.js";
