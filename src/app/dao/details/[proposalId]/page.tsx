@@ -1,7 +1,7 @@
 "use client"
 
 import "./proposal-details.css"
-import "../../styles/proposal-status.css";
+import "../../../styles/proposal-status.css";
 import React, { useEffect, useRef, useState } from "react"
 import InfoTooltip from '@/components/InfoTooltip'
 import Modal from '@/components/Modal'
