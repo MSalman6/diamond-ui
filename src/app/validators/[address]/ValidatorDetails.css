@@ -1121,8 +1121,36 @@ body.light-theme .address-icon {
   border-bottom: none;
 }
 
+.dao-table tbody tr.clickable-row {
+  cursor: pointer;
+}
+
+.dao-table tbody tr.clickable-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
 .proposal-name {
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.creator-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: rgba(255, 215, 0, 0.15);
+  color: #ffd700;
+}
+
+.creator-badge i {
+  font-size: 0.7rem;
 }
 
 .proposal-type {
@@ -1154,11 +1182,17 @@ body.light-theme .address-icon {
 }
 
 .vote-badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
+}
+
+.vote-badge i {
+  font-size: 0.7rem;
 }
 
 .vote-badge.vote-yes {
@@ -1169,6 +1203,16 @@ body.light-theme .address-icon {
 .vote-badge.vote-no {
   background: rgba(255, 107, 107, 0.15);
   color: #ff6b6b;
+}
+
+.vote-badge.vote-none {
+  background: rgba(150, 150, 150, 0.15);
+  color: #999999;
+}
+
+.vote-badge.vote-creator {
+  background: rgba(255, 215, 0, 0.15);
+  color: #ffd700;
 }
 
 .proposal-status {
@@ -1214,6 +1258,10 @@ body.light-theme .dao-table td {
 
 body.light-theme .dao-table tbody tr:hover {
   background: #f8fafc;
+}
+
+body.light-theme .dao-table tbody tr.clickable-row:hover {
+  background: #f1f5f9;
 }
 
 body.light-theme .proposal-type.protocol {

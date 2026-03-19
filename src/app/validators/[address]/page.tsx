@@ -421,7 +421,7 @@ export default function ValidatorDetails() {
                   <th>Proposal Name <i className="fas fa-sort"></i></th>
                   <th>Proposal Type <i className="fas fa-sort"></i></th>
                   <th>Status <i className="fas fa-sort"></i></th>
-                  <th>Action</th>
+                  <th>Vote <i className="fas fa-sort"></i></th>
                 </tr>
               ) : (
                 <tr>
@@ -431,23 +431,52 @@ export default function ValidatorDetails() {
             </thead>
             <tbody>
               {filteredProposals.length ?
-                filteredProposals.map((proposal, i) => (
-                  <tr key={i}>
-                    <td>{timestampToDate(proposal.timestamp)}</td>
-                    <td>
-                      <div className="proposal-name">
-                        <span>{proposal.title}</span>
-                      </div>
-                    </td>
-                    <td><span className="proposal-type protocol">{proposal.proposalType || 'Protocol'}</span></td>
-                    <td><span className={`proposal-status ${proposal.state === '2' ? 'active' : proposal.state === '4' ? 'passed' : proposal.state === '5' ? 'rejected' : proposal.state === '6' ? 'executed' : ''}`}>{getStateString(proposal.state)}</span></td>
-                    <td>
-                      <button onClick={() => navigateToProposal(proposal.id)} className="cta-button">
-                        Details
-                      </button>
-                    </td>
-                  </tr>
-                )) : (
+                filteredProposals.map((proposal, i) => {
+                  const isProposer = String(proposal.proposer || '').toLowerCase() === String(address || '').toLowerCase();
+                  const hasVoted = proposal.myVote !== null && proposal.myVote !== undefined;
+                  const votedYes = hasVoted && proposal.myVote === '1';
+                  const votedNo = hasVoted && proposal.myVote === '0';
+                  
+                  return (
+                    <tr key={i} onClick={() => navigateToProposal(proposal.id)} className="clickable-row">
+                      <td>{timestampToDate(proposal.timestamp)}</td>
+                      <td>
+                        <div className="proposal-name">
+                          <span>{proposal.title}</span>
+                          {isProposer && (
+                            <span className="creator-badge">
+                              <i className="fas fa-user-edit"></i> Creator
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td><span className="proposal-type protocol">{proposal.proposalType || 'Protocol'}</span></td>
+                      <td><span className={`proposal-status ${proposal.state === '2' ? 'active' : proposal.state === '4' ? 'passed' : proposal.state === '5' ? 'rejected' : proposal.state === '6' ? 'executed' : ''}`}>{getStateString(proposal.state)}</span></td>
+                      <td>
+                        {votedYes && (
+                          <span className="vote-badge vote-yes">
+                            <i className="fas fa-check"></i> Yes
+                          </span>
+                        )}
+                        {votedNo && (
+                          <span className="vote-badge vote-no">
+                            <i className="fas fa-times"></i> No
+                          </span>
+                        )}
+                        {!hasVoted && !isProposer && (
+                          <span className="vote-badge vote-none">
+                            <i className="fas fa-minus"></i> Not Voted
+                          </span>
+                        )}
+                        {!hasVoted && isProposer && (
+                          <span className="vote-badge vote-creator">
+                            <i className="fas fa-crown"></i> Creator
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                }) : (
                   <tr>
                     <td colSpan={5}>No DAO participations found</td>
                   </tr>
