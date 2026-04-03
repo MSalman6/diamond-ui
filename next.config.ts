@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Enable standalone output for Docker deployment
+  output: 'standalone',
   // Enable source maps for debugging in production
   productionBrowserSourceMaps: true,
   webpack: (config) => {
