@@ -9,6 +9,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { WalletConnectProvider } from "@/contexts/WalletConnect";
 import { StakingContextProvider } from "@/contexts/Staking";
 import { PrivacyModeProvider } from "@/contexts/PrivacyMode";
+import { RuntimeConfigProvider } from "@/contexts/RuntimeConfig";
 import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -47,32 +48,34 @@ export default async function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning={true}>
         <ThemeProvider>
-          <PrivacyModeProvider>
-            <WalletConnectProvider cookies={cookies}>
-              <Web3ContextProvider>
-                <StakingContextProvider>
-                  <DaoContextProvider>
+          <RuntimeConfigProvider>
+            <PrivacyModeProvider>
+              <WalletConnectProvider cookies={cookies}>
+                <Web3ContextProvider>
+                  <StakingContextProvider>
+                    <DaoContextProvider>
                     <Header />
                     {children}
                     <Footer />
-                  <ToastContainer
-                    position="bottom-right"
-                    autoClose={3000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="dark"
-                  />
-                  <div id="modal-root"></div>
-                </DaoContextProvider>
-              </StakingContextProvider>
-            </Web3ContextProvider>
-          </WalletConnectProvider>
-          </PrivacyModeProvider>
+                    <ToastContainer
+                      position="bottom-right"
+                      autoClose={3000}
+                      hideProgressBar={false}
+                      newestOnTop={false}
+                      closeOnClick
+                      rtl={false}
+                      pauseOnFocusLoss
+                      draggable
+                      pauseOnHover
+                      theme="dark"
+                    />
+                    <div id="modal-root"></div>
+                    </DaoContextProvider>
+                  </StakingContextProvider>
+                </Web3ContextProvider>
+              </WalletConnectProvider>
+            </PrivacyModeProvider>
+          </RuntimeConfigProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -468,9 +468,11 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
         setStakingEpochEndTime(parseInt(globals[10]));
         setCanStakeOrWithdrawNow(true);
 
-        web3.eth.getBalance(process.env.NEXT_PUBLIC_DAO_CONTRACT_ADDRESS || '0xDA0da0da0Da0Da0Da0DA00DA0da0da0DA0DA0dA0').then((daoPotValue) => {
-          setDaoPot(web3.utils.fromWei(daoPotValue, 'ether'));
-        })
+        import('@/lib/config').then(({ default: config }) => {
+          web3.eth.getBalance(config.daoContractAddress).then((daoPotValue) => {
+            setDaoPot(web3.utils.fromWei(daoPotValue, 'ether'));
+          });
+        });
 
         if (contractsManager.stContract) {
           const totalStaked = await contractsManager.stContract?.methods.totalStakedAmount().call();

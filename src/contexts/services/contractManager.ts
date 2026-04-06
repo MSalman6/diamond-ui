@@ -277,7 +277,8 @@ export class ContractManager {
   }
 
   public async getDMDAggregator(): Promise<DMDAggregator> {
-    const contractAddress = process.env.NEXT_PUBLIC_AGGREGATOR_CONTRACT_ADDRESS || '0x9990000000000000000000000000000000000000';
+    const config = await import('@/lib/config').then(m => m.default);
+    const contractAddress = config.aggregatorContractAddress;
 
     const abi = JsonHbbtAggregator.abi as any;
     const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as DMDAggregator;

@@ -6,6 +6,7 @@ import { useWeb3Context } from '@/contexts/Web3';
 import { truncateAddress } from '@/utils/common';
 import { useState, useEffect, useRef } from 'react';
 import { useWalletConnect } from '@/contexts/WalletConnect';
+import { config } from '@/lib/config';
 
 export default function Header() {
   const router = useRouter();
@@ -212,7 +213,7 @@ export default function Header() {
                         </a>
                       </li>
                       <li>
-                        <a href={process.env.NEXT_PUBLIC_EXPLORER_URL} target="_blank" rel="noopener noreferrer">
+                        <a href={config.explorerUrl} target="_blank" rel="noopener noreferrer">
                           DMD Explorer<i className="fas fa-external-link-alt"></i>
                         </a>
                       </li>

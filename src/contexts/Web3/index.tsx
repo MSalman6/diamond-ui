@@ -11,11 +11,12 @@ import { switchChain, watchAccount } from '@wagmi/core';
 import { useWalletConnect } from "@/contexts/WalletConnect";
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { ContractManager } from "@/contexts/services/contractManager";
-import { config as wagmiConfig } from "@/contexts/WalletConnect/config/wagmi";
+import { wagmiConfig } from "@/contexts/WalletConnect/config/wagmi";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { validateRpcUrl } from "@/utils/rpc";
 import { getRPC, saveRPC, clearRPC } from "@/utils/storage";
 import { checkProviderHealth, getGasPriceSafe, isEip1193Provider } from "../../utils/providerHealth";
+import config from '@/lib/config';
 
 import {
   BlockRewardHbbft,
@@ -73,15 +74,15 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
   const [web3Initialized, setWeb3Initialized] = useState<boolean>(false);
 
   // Initialize Web3 with CustomHttpProvider
-  const chainId = process.env.NEXT_PUBLIC_CHAINID || 37373;
+  const chainId = config.chainId || '37373';
   /**
    * The URL is determined using the following precedence:
    * 1. The value stored under the "rpcUrl" key in localStorage.
-   * 2. The environment variable "VITE_APP_RPC_URL" defined via import.meta.env.
+   * 2. Runtime config from /api/config (Docker) or process.env (local dev)
    * 3. A default URL ("https://testnet-rpc.bit.diamonds/") if neither of the above is available.
    */
-  // Prefer cookie/localStorage via storage util, then env, then default
-  const rpcUrl = getRPC() || process.env.NEXT_PUBLIC_RPC_URL || "https://testnet-rpc.bit.diamonds/";
+  // Prefer cookie/localStorage via storage util, then hybrid config
+  const rpcUrl = getRPC() || config.rpcUrl;
   const [wagmiConnector, setWagmiConnector] = useState<WalletConnectProvider | null>(null);
   // Wallet-connected for signing
   const [web3, setWeb3] = useState<Web3>(new Web3(rpcUrl));
@@ -312,7 +313,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
   const resetToDefaultRpc = async () => {
     showLoader(true, "Resetting RPC...");
     clearRPC();
-    const defaultUrl = process.env.NEXT_PUBLIC_RPC_URL || "https://testnet-rpc.bit.diamonds/";
+    const defaultUrl = config.rpcUrl;
     const httpProvider = new Web3(defaultUrl);
     setReadonlyWeb3(httpProvider);
     const cp: any = (web3 as any)?.currentProvider;

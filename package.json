@@ -11,7 +11,16 @@
     "contracts:update-core": "find ../diamond-contracts-core/artifacts/contracts -type f -name '*.json' ! -name '*.dbg.json' -exec cp {} ./src/contracts/abis \\;",
     "contracts:update-all": "npm run contracts:update-dao && npm run contracts:update-core",
     "contracts:typechain": "typechain --target web3-v1 --out-dir src/contracts/types 'src/contracts/abis/**/*.json'",
-    "contracts:build": "npm run contracts:update-all && npm run contracts:typechain"
+    "contracts:build": "npm run contracts:update-all && npm run contracts:typechain",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d --force-recreate",
+    "docker:up:build": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:reload": "docker compose up -d --force-recreate",
+    "docker:dev": "docker compose -f docker-compose.dev.yml up",
+    "docker:dev:build": "docker compose -f docker-compose.dev.yml up --build",
+    "docker:logs": "docker compose logs -f",
+    "docker:config": "curl -s http://localhost:3000/api/config | json_pp || curl -s http://localhost:3000/api/config"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",

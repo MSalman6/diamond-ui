@@ -105,7 +105,20 @@ export type DebugMeta = {
  * 2 -> log all sends/calls start + errors
  */
 export function getDebugLevel(): number {
-  const raw = (process.env.NEXT_PUBLIC_DEBUG_TX_LEVEL ?? process.env.NEXT_PUBLIC_DEBUG_TX ?? '1') as string;
+  let raw = '1';
+  if (typeof window !== 'undefined') {
+    // Try to get from global config (set by RuntimeConfigProvider)
+    const globalConfig = (window as any).__RUNTIME_CONFIG__;
+    if (globalConfig) {
+      raw = globalConfig.debugTxLevel || globalConfig.debugTx || '1';
+    } else {
+      // Fallback to process.env in browser
+      raw = (process.env.NEXT_PUBLIC_DEBUG_TX_LEVEL ?? process.env.NEXT_PUBLIC_DEBUG_TX ?? '1') as string;
+    }
+  } else {
+    // Server-side: always use process.env
+    raw = (process.env.NEXT_PUBLIC_DEBUG_TX_LEVEL ?? process.env.NEXT_PUBLIC_DEBUG_TX ?? '1') as string;
+  }
   const level = Number(raw);
   if (Number.isNaN(level)) return 1;
   return Math.max(0, Math.min(2, level));
