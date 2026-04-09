@@ -16,7 +16,7 @@ export const config = {
     if (typeof window !== 'undefined' && (window as any).__RUNTIME_CONFIG__?.chainId) {
       return (window as any).__RUNTIME_CONFIG__.chainId;
     }
-    return process.env.NEXT_PUBLIC_CHAINID || '37373';
+    return process.env.NEXT_PUBLIC_CHAINID || '17771';
   },
 
   get chainName(): string {
@@ -32,7 +32,7 @@ export const config = {
     if (typeof window !== 'undefined' && (window as any).__RUNTIME_CONFIG__?.rpcUrl) {
       return (window as any).__RUNTIME_CONFIG__.rpcUrl;
     }
-    return process.env.NEXT_PUBLIC_RPC_URL || 'https://testnet-rpc.bit.diamonds/';
+    return process.env.NEXT_PUBLIC_RPC_URL || 'https://rpc.bit.diamonds/';
   },
 
   get wsUrl(): string {
@@ -40,7 +40,7 @@ export const config = {
     if (typeof window !== 'undefined' && (window as any).__RUNTIME_CONFIG__?.wsUrl) {
       return (window as any).__RUNTIME_CONFIG__.wsUrl;
     }
-    return process.env.NEXT_PUBLIC_WS_URL || 'wss://testnet-rpc.bit.diamonds/ws';
+    return process.env.NEXT_PUBLIC_WS_URL || 'wss://rpc.bit.diamonds/ws';
   },
 
   get explorerUrl(): string {
@@ -48,7 +48,7 @@ export const config = {
     if (typeof window !== 'undefined' && (window as any).__RUNTIME_CONFIG__?.explorerUrl) {
       return (window as any).__RUNTIME_CONFIG__.explorerUrl;
     }
-    return process.env.NEXT_PUBLIC_EXPLORER_URL || 'https://testnet-explorer.bit.diamonds/';
+    return process.env.NEXT_PUBLIC_EXPLORER_URL || 'https://explorer.bit.diamonds/';
   },
 
   // Contract Addresses

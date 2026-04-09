@@ -3,9 +3,10 @@
 import Loader from '@/components/Loader';
 import { useAppKit, createAppKit } from '@reown/appkit/react'
 import React, { type ReactNode, useEffect, useState } from 'react'
-import { wagmiAdapter, projectId, networks } from './config/wagmi'
+import { wagmiAdapter, projectId, getNetworks } from './config/wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { cookieToInitialState, WagmiProvider, useAccount, useConnect, useDisconnect, type Config } from 'wagmi'
+import { useRuntimeConfig } from '@/contexts/RuntimeConfig'
 
 // Set up queryClient
 const queryClient = new QueryClient()
@@ -36,6 +37,8 @@ const initializeAppKit = () => {
   if (appKitInitialized) return
 
   try {
+    const networks = getNetworks()
+    
     // Create the modal
     createAppKit({
       adapters: [wagmiAdapter],
@@ -84,11 +87,18 @@ export const WalletConnectProvider: React.FC<WalletConnectProviderProps> = ({
   children, 
   cookies 
 }) => {
+  // Wait for runtime config to load before initializing wallet connection
+  const { config: runtimeConfig, loading: configLoading } = useRuntimeConfig()
   const [isAppKitReady, setIsAppKitReady] = useState(false)
   const [initError, setInitError] = useState<string | null>(null)
   
   useEffect(() => {
-    // Initialize AppKit on client side when environment variables are available
+    // Don't initialize until runtime config is loaded
+    if (configLoading) {
+      return
+    }
+    
+    // Initialize AppKit on client side with loaded runtime config
     const success = initializeAppKit()
     if (success !== false) {
       // Small delay to ensure AppKit is fully ready
@@ -99,9 +109,14 @@ export const WalletConnectProvider: React.FC<WalletConnectProviderProps> = ({
     } else {
       setInitError('Failed to initialize wallet connection')
     }
-  }, [])
+  }, [configLoading])  // Re-run when config loading completes
   
   const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies)
+
+  // Show loading while runtime config is loading
+  if (configLoading) {
+    return <Loader isLoading={true} loadingMessage="Loading configuration..." />
+  }
 
   // Show error if initialization failed
   if (initError) {

@@ -3,9 +3,9 @@ import { cookieStorage, createStorage } from '@wagmi/core'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import config from '@/lib/config'
 
-export const projectId = config.wcProjectId
+export const getProjectId = () => config.wcProjectId
 
-export const networks = [
+export const getNetworks = () => [
     defineChain({
         id: Number(config.chainId) || 37373,
         chainNamespace: 'eip155',
@@ -31,6 +31,8 @@ export const networks = [
     })
 ];
 
+export const projectId = getProjectId()
+export const networks = getNetworks()
 
 // Set up the Wagmi Adapter (Config)
 export const wagmiAdapter = new WagmiAdapter({
@@ -43,3 +45,8 @@ export const wagmiAdapter = new WagmiAdapter({
 })
 
 export const wagmiConfig = wagmiAdapter.wagmiConfig
+
+export function updateWagmiNetworks() {
+  const updatedNetworks = getNetworks()
+  return updatedNetworks
+}
