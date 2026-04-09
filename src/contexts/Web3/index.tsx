@@ -74,7 +74,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
   const [web3Initialized, setWeb3Initialized] = useState<boolean>(false);
 
   // Initialize Web3 with CustomHttpProvider
-  const chainId = config.chainId || '37373';
+  const chainId = config.chainId || '17771';
   /**
    * The URL is determined using the following precedence:
    * 1. The value stored under the "rpcUrl" key in localStorage.
@@ -350,7 +350,39 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
           await switchChain(wagmiConfig, { chainId: Number(chainId) });
           showLoader(false, "");
         } catch (err: any) {
-          if (err.code === 4001 || err.code === 4902) {
+          // Error 4902: Chain not added to wallet yet
+          if (err.code === 4902) {
+            try {
+              showLoader(true, "Adding DMD Network to your wallet...");
+              const rawProvider = await connector.getProvider();
+              
+              // Add the chain to wallet using wallet_addEthereumChain
+              await rawProvider.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                  chainId: `0x${Number(chainId).toString(16)}`,
+                  chainName: config.chainName || 'DMD Diamond',
+                  nativeCurrency: {
+                    name: 'DMD',
+                    symbol: 'DMD',
+                    decimals: 18
+                  },
+                  rpcUrls: [config.rpcUrl],
+                  blockExplorerUrls: [config.explorerUrl]
+                }]
+              });
+              
+              showLoader(false, "");
+              toast.success("DMD Network added successfully!");
+            } catch (addError: any) {
+              console.error("[Wallet Connect] Failed to add chain", addError);
+              showLoader(false, "");
+              await connector.disconnect();
+              disconnect();
+              return toast.warn("Failed to add DMD Network. Please add it manually to continue.");
+            }
+          } else if (err.code === 4001) {
+            // User rejected the request
             showLoader(false, "");
             await connector.disconnect();
             disconnect();

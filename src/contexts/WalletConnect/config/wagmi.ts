@@ -7,9 +7,9 @@ export const getProjectId = () => config.wcProjectId
 
 export const getNetworks = () => [
     defineChain({
-        id: Number(config.chainId) || 37373,
+        id: Number(config.chainId) || 17771,
         chainNamespace: 'eip155',
-        caipNetworkId: `eip155:${Number(config.chainId) || 37373}`,
+        caipNetworkId: `eip155:${Number(config.chainId) || 17771}`,
         name: config.chainName || "DMD Diamond",
         nativeCurrency: {
             name: "DMD",
