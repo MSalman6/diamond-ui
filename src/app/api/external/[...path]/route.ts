@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { makeApiRequest } from '@/lib/serverApiClient';
+import logger from '@/utils/logger';
 
 /**
  * Handle GET requests
@@ -19,7 +20,7 @@ export async function GET(
     const { path: pathSegments } = await params;
     const path = pathSegments.join('/');
     
-    console.log(`[API Route] GET request for path: ${path}`);
+    logger.log(`[API Route] GET request for path: ${path}`);
     
     // Extract query parameters from the URL
     const { searchParams } = new URL(request.url);
@@ -28,14 +29,14 @@ export async function GET(
     // Construct the full endpoint with query parameters
     const endpoint = queryString ? `${path}?${queryString}` : path;
     
-    console.log(`[API Route] Full endpoint: ${endpoint}`);
+    logger.log(`[API Route] Full endpoint: ${endpoint}`);
     
     // Make request to external API with Bearer token
     const response = await makeApiRequest(endpoint, {
       method: 'GET',
     });
     
-    console.log(`[API Route] Response: ${response.ok ? 'OK' : 'ERROR'}, Status: ${response.status}`);
+    logger.log(`[API Route] Response: ${response.ok ? 'OK' : 'ERROR'}, Status: ${response.status}`);
     
     // Return the response to the client (without exposing token)
     if (response.ok) {
@@ -47,7 +48,7 @@ export async function GET(
       );
     }
   } catch (error) {
-    console.error('API route error:', error);
+    logger.error('API route error:', error);
     
     // Return error without leaking sensitive information
     return NextResponse.json(
@@ -87,7 +88,7 @@ export async function POST(
       );
     }
   } catch (error) {
-    console.error('API route error:', error);
+    logger.error('API route error:', error);
     
     return NextResponse.json(
       { 
@@ -126,7 +127,7 @@ export async function PUT(
       );
     }
   } catch (error) {
-    console.error('API route error:', error);
+    logger.error('API route error:', error);
     
     return NextResponse.json(
       { 
@@ -163,7 +164,7 @@ export async function DELETE(
       );
     }
   } catch (error) {
-    console.error('API route error:', error);
+    logger.error('API route error:', error);
     
     return NextResponse.json(
       { 

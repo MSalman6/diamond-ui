@@ -8,6 +8,7 @@ import Modal from '@/components/Modal'
 import { usePathname } from 'next/navigation'
 import BigNumber from 'bignumber.js'
 import { useDaoContext } from '@/contexts/DAO'
+import logger from '@/utils/logger';
 import { useWeb3Context } from '@/contexts/Web3'
 import { useStakingContext } from '@/contexts/Staking'
 import { capitalizeFirstLetter, decodeCallData, extractValueFromCalldata, formatCryptoUnitValue, getFunctionInfoWithAbi, timestampToDate } from '@/utils/common'
@@ -332,7 +333,7 @@ export default function ProposalDetailsPage() {
           }
         }
       } catch (e) {
-        console.error("Failed to dismiss proposal:", e)
+        logger.error("Failed to dismiss proposal:", e)
       }
     }
   }
@@ -389,7 +390,7 @@ export default function ProposalDetailsPage() {
         setTimeout(() => trigger.classList.remove("copied"), 2000)
       }
     } catch (err) {
-      console.error("copy failed", err)
+      logger.error("copy failed", err)
     }
   }
 

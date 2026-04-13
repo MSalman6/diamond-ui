@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useIsPrivacyMode } from '@/contexts/PrivacyMode';
+import logger from '@/utils/logger';
 import type {
   UsePrivacyFetchOptions,
   UsePrivacyFetchResult,
@@ -64,7 +65,7 @@ export function usePrivacyFetch<T>(
         try {
           result = await apiFetcher();
         } catch (apiError) {
-          console.warn('API fetch failed, falling back to blockchain:', apiError);
+          logger.warn('API fetch failed, falling back to blockchain:', apiError);
           result = await blockchainFetcher();
         }
       }
@@ -79,7 +80,7 @@ export function usePrivacyFetch<T>(
         const error = err instanceof Error ? err : new Error('Unknown error occurred');
         setError(error);
         setIsLoading(false);
-        console.error('Fetch error:', error);
+        logger.error('Fetch error:', error);
       }
     } finally {
       if (isMountedRef.current) {

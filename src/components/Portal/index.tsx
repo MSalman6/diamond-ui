@@ -1,3 +1,4 @@
+import logger from '@/utils/logger';
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 
@@ -18,7 +19,7 @@ const Portal: React.FC<PortalProps> = ({ children, target = 'modal-root' }) => {
 
   const element = document.getElementById(target);
   if (!element) {
-    console.warn(`Portal target element with id "${target}" not found`);
+    logger.warn(`Portal target element with id "${target}" not found`);
     return null;
   }
 

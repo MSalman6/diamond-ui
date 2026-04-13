@@ -1,3 +1,4 @@
+import logger from '@/utils/logger';
 import Web3 from 'web3';
 
 /**
@@ -130,7 +131,7 @@ export function getDebugLevel(): number {
 export function logDebugStart(meta: DebugMeta) {
   if (getDebugLevel() >= 2) {
     // eslint-disable-next-line no-console
-    console.info(`[TX] ${meta.contract}.${meta.method}(${meta.args.map(a => JSON.stringify(a)).join(', ')})`);
+    logger.info(`[TX] ${meta.contract}.${meta.method}(${meta.args.map(a => JSON.stringify(a)).join(', ')})`);
   }
 }
 
@@ -138,6 +139,6 @@ export function logDebugError(web3: Web3, abi: any[], meta: DebugMeta, err: any)
   if (getDebugLevel() >= 1) {
     const { reason, selector } = decodeRevertReason(web3, abi, err);
     // eslint-disable-next-line no-console
-    console.error(`[TX ERROR] ${meta.contract}.${meta.method} -> ${reason || err?.message || 'Unknown'}${selector ? ` [${selector}]` : ''}`, err);
+    logger.error(`[TX ERROR] ${meta.contract}.${meta.method} -> ${reason || err?.message || 'Unknown'}${selector ? ` [${selector}]` : ''}`, err);
   }
 }

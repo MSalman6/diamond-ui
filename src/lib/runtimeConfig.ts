@@ -2,6 +2,8 @@
  * Runtime Configuration Manager
  */
 
+import logger from '@/utils/logger';
+
 export interface RuntimeConfig {
   // Blockchain Configuration
   chainId: string;
@@ -58,7 +60,7 @@ export async function getRuntimeConfig(): Promise<RuntimeConfig> {
       return config;
     })
     .catch(error => {
-      console.error('Error fetching runtime config:', error);
+      logger.error('Error fetching runtime config:', error);
       configPromise = null;
       return getDefaultConfig();
     });

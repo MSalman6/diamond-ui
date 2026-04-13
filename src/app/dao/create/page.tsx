@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { isValidAddress } from "@/utils/common";
 import InfoTooltip from "@/components/InfoTooltip";
 import { useDaoContext } from "@/contexts/DAO";
+import logger from '@/utils/logger';
 import { useWeb3Context } from "@/contexts/Web3";
 import { useStakingContext } from "@/contexts/Staking";
 import ProposalStepSlider from "@/components/ProposalStepSlider";
@@ -236,13 +237,13 @@ export default function CreateProposalPage() {
     try {
       const contract = getContractByName(contractName);
       if (!contract) {
-        console.warn(`Contract not available for ${contractName}`);
+        logger.warn(`Contract not available for ${contractName}`);
         setEpcParamRange(["0", "0"]);
         return;
       }
 
       if (!(contract.methods as any).getAllowedParamsRange) {
-        console.warn(`getAllowedParamsRange method not available for ${contractName}`);
+        logger.warn(`getAllowedParamsRange method not available for ${contractName}`);
         setEpcParamRange(["0", "0"]);
         return;
       }
@@ -250,7 +251,7 @@ export default function CreateProposalPage() {
       const parameterData = await (contract.methods as any).getAllowedParamsRange(EcosystemParameters[contractName][methodName].setter).call();
       setEpcParamRange(parameterData.range.length ? parameterData.range : ["0", "0"]);
     } catch (err) {
-      console.log(err);
+      logger.log(err);
       setEpcParamRange(["0", "0"]);
     }
   };

@@ -8,6 +8,7 @@ import './BonusScoreHistoryModal.css';
 import { toast } from 'react-toastify';
 import { LineChart, BarChart, AreaChart } from '@/components/Charts';
 import type { ChartType } from '@/components/Charts';
+import logger from '@/utils/logger';
 
 interface BonusScoreHistoryEntry {
   block_number: number;
@@ -62,7 +63,7 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
 
       setHistory(response.data.data || []);
     } catch (err) {
-      console.error('Error fetching bonus score history:', err);
+      logger.error('Error fetching bonus score history:', err);
       setError(err instanceof Error ? err.message : 'Failed to load history');
     } finally {
       setIsLoading(false);

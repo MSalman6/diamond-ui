@@ -1,3 +1,4 @@
+import logger from '@/utils/logger';
 import BigNumber from "bignumber.js";
 import { toast } from "react-toastify";
 import styles from "./UpdatePoolOperatorModal.module.css";
@@ -79,7 +80,7 @@ const UpdatePoolOperatorModal: React.FC<ModalProps> = ({ buttonText, pool }) => 
       const success = await updatePoolOperatorRewardsShare(pool, nOperatorAddress, nOperatorShare || new BigNumber(0));
       if (success) closeModal();
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       toast.error("Error in updating pool");
       closeModal();
     }

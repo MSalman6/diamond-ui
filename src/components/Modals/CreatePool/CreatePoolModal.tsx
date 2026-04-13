@@ -1,3 +1,4 @@
+import logger from '@/utils/logger';
 import BigNumber from "bignumber.js";
 import { toast } from "react-toastify";
 import styles from "./CreatePoolModal.module.css";
@@ -78,7 +79,7 @@ const CreatePoolModal: React.FC<ModalProps> = ({ buttonText }) => {
         closeModal();
       }
     } catch (err) {
-      console.log(err);
+      logger.log(err);
       toast.error("Error in creating pool");
     }
   };

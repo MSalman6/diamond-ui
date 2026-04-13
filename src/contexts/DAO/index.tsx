@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js';
 import { getFunctionSelector, timestampToDate } from '../../utils/common';
 import { formatTxError } from '@/utils/web3Errors';
 import { useStakingContext } from '@/contexts/Staking';
+import logger from '@/utils/logger';
 BigNumber.config({ EXPONENTIAL_AT: 1e+9 });
 
 interface DaoContextProps {
@@ -92,7 +93,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
 
   const initialize = async () => {
     if (daoInitialized) return;
-    console.log("[INFO] Initializing Dao Context");
+    logger.log("[INFO] Initializing Dao Context");
     setDaoInitialized(true);
 
     web3Context.setContractsManager(web3Context.contractsManager);
@@ -167,7 +168,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
       .trim();
 
     toast.error(errorMessage);
-    console.error('Tx error details:', { message: err.message, cause: err.cause, data: err.data, stack: err.stack });
+    logger.error('Tx error details:', { message: err.message, cause: err.cause, data: err.data, stack: err.stack });
   }
 
   const getProposalTypeFromContract = (contractProposalType: string) => {
@@ -308,7 +309,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
         return block.timestamp as number;
             }
         } catch (error) {
-            console.error(`Error fetching logs with signature ${signature}:`, error);
+            logger.error(`Error fetching logs with signature ${signature}:`, error);
             // Continue to the next signature if there's an error
         }
     }
@@ -342,11 +343,11 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
             return { timestamp: block.timestamp as number, blockNumber };
           }
         } catch (err) {
-          console.error('Error reading ProposalCreated logs:', err);
+          logger.error('Error reading ProposalCreated logs:', err);
         }
       }
     } catch (err) {
-      console.error('getProposalCreationBlock failed:', err);
+      logger.error('getProposalCreationBlock failed:', err);
     }
 
     return null;
@@ -383,7 +384,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
             result.votingEndAt = String(decoded.end || '');
           }
         } catch (err) {
-          console.error('Error fetching SwitchDaoPhase logs:', err);
+          logger.error('Error fetching SwitchDaoPhase logs:', err);
         }
       }
 
@@ -410,7 +411,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
             result.finalizedResult = 'Pending';
           }
         } catch (err) {
-          console.error('Error fetching VotingFinalized logs:', err);
+          logger.error('Error fetching VotingFinalized logs:', err);
         }
       }
 
@@ -432,13 +433,13 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
             result.executedAt = String(block.timestamp as number);
           }
         } catch (err) {
-          console.error('Error fetching ProposalExecuted logs:', err);
+          logger.error('Error fetching ProposalExecuted logs:', err);
         }
       }
 
       return result;
     } catch (err) {
-      console.error('getProposalTimeline failed:', err);
+      logger.error('getProposalTimeline failed:', err);
       return null;
     }
   };
@@ -471,7 +472,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
         await setProposalsState(updatedProposals);
       }
     } catch (error) {
-      console.error('Error updating proposals with same epoch snapshot:', error);
+      logger.error('Error updating proposals with same epoch snapshot:', error);
     }
   }
 
@@ -579,7 +580,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
   }
 
   const getActiveProposals = async () => {
-    console.log("[INFO] Getting active proposals");
+    logger.log("[INFO] Getting active proposals");
     const activePs = await web3Context.contractsManager.daoContract.methods.getCurrentPhaseProposals().call();
     if (!activePs) return;
 
@@ -617,7 +618,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
       setActiveProposals(activeProposalsCopy);
       proposalDetails = activeProposalsCopy;
     }
-    console.log("[INFO] All active proposals fetched and updated");
+    logger.log("[INFO] All active proposals fetched and updated");
     
     // Calculate warning states after all proposals are loaded
     calculateFundingWarnings(proposalDetails);
@@ -653,7 +654,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
   }
 
   const getProposalVotingStats = (proposalId: string): Promise<TotalVotingStats> => {
-    console.log("[INFO] Getting Proposal Voting Stats")
+    logger.log("[INFO] Getting Proposal Voting Stats")
     let stats = { positive: new BigNumber(0), negative: new BigNumber(0), total: new BigNumber(0)};
     return new Promise(async (resolve, reject) => {
         try {
@@ -732,7 +733,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
           toast.success("Proposal Created 💎");
           resolve(proposalId);
         } catch(err: any) {
-          console.log(err);
+          logger.log(err);
           web3Context.showLoader(false, "");
           handleErrorMsg(err, "Proposal creation failed");
           reject("");
@@ -756,7 +757,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
           toast.success("Proposal Dismissed 💎");
           resolve();
         } catch(err: any) {
-          console.error(err);
+          logger.error(err);
           web3Context.showLoader(false, "");
           handleErrorMsg(err, "Proposal dismissal failed");
           reject(err);
@@ -765,7 +766,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
   };
 
   const castVote = async (proposalId: number, vote: number, reason: string) => {
-    console.log("[INFO] Casting vote", proposalId, vote, reason);
+    logger.log("[INFO] Casting vote", proposalId, vote, reason);
     return new Promise<void>(async (resolve, reject) => {
       if (!web3Context.ensureWalletConnection()) return reject("Wallet not connected");
       
@@ -799,7 +800,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
         web3Context.showLoader(false, "");
         resolve();
       } catch(err: any) {
-        console.log(err);
+        logger.log(err);
         web3Context.showLoader(false, "");
         handleErrorMsg(err, "Voting Failed!");
         reject(err);
@@ -818,19 +819,19 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
           
           setDaoPhase((prevPhase: any) => {
             if (prevPhase && phase && prevPhase.phase !== phase.phase) {
-              console.log("Phase changed");
+              logger.log("Phase changed");
               
               try {
                 getActiveProposals();
                 getHistoricProposals();
               } catch (proposalError) {
-                console.error("Error fetching proposals:", proposalError);
+                logger.error("Error fetching proposals:", proposalError);
               }
               
               // Fetch daoPhaseCount with error handling
               web3Context.contractsManager.daoContract.methods.daoPhaseCount().call()
                 .then(count => setDaoPhaseCount(count))
-                .catch(countError => console.error("Error fetching daoPhaseCount:", countError));
+                .catch(countError => logger.error("Error fetching daoPhaseCount:", countError));
   
               return phase;
             }
@@ -839,7 +840,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
   
           setPhaseTimer(phase);
         } catch (error) {
-          console.error("Error fetching daoPhase:", error);
+          logger.error("Error fetching daoPhase:", error);
         }
       }, 5000);
   
@@ -916,7 +917,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
   }
 
   const getHistoricProposals = async () => {
-    console.log("[INFO] Getting historic proposals");
+    logger.log("[INFO] Getting historic proposals");
     const allProposalIds = await getHistoricProposalsEvents();
     if (allProposalIds.length === 0) web3Context.showLoader(false, "");
 
@@ -938,7 +939,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
       setProposalsState(updatedProposals);
     }
 
-    console.log("[INFO] All historic proposals fetched and updated");
+    logger.log("[INFO] All historic proposals fetched and updated");
   };
 
   const setProposalsState = async (proposals: Proposal[]) => {
@@ -987,7 +988,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
           toast.success("Proposal Finalized 💎");
           resolve("success");
         } catch(err: any) {
-          console.error(err);
+          logger.error(err);
           web3Context.showLoader(false, "");
           handleErrorMsg(err, "Proposal finalization failed");
           resolve("failed");
@@ -1022,7 +1023,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
           toast.success("Proposal Executed 💎");
           resolve("success");
         } catch(err: any) {
-          console.error(err);
+          logger.error(err);
           web3Context.showLoader(false, "");
           handleErrorMsg(err, "Proposal execution failed");
           resolve("failed");
@@ -1043,7 +1044,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
           updateFunction: async () => {
             const pFee = await web3Context.contractsManager.daoContract.methods.createProposalFee().call();
             setProposalFee(pFee);
-            console.log(`[INFO] Updated createProposalFee to ${pFee}`);
+            logger.log(`[INFO] Updated createProposalFee to ${pFee}`);
           }
         },
         [getFunctionSelector('setDelegatorMinStake(uint256)')]: {
@@ -1051,27 +1052,27 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
           method: 'delegatorMinStake',
           updateFunction: async () => {
             stakingContext.retrieveGlobalValues();
-            console.log(`[INFO] Updated delegatorMinStake`);
+            logger.log(`[INFO] Updated delegatorMinStake`);
           }
         },
         [getFunctionSelector('setStandByFactor(uint256)')]: {
           contractType: 'bonus-score-system',
           method: 'standByFactor',
           updateFunction: async () => {
-            console.log(`[INFO] Updated standByFactor`);
+            logger.log(`[INFO] Updated standByFactor`);
           }
         },
       };
 
       const parameterInfo = selectorToParameterMap[functionSelector];
       if (parameterInfo) {
-        console.log(`[INFO] Detected ${parameterInfo.method} parameter change on ${parameterInfo.contractType} contract`);
+        logger.log(`[INFO] Detected ${parameterInfo.method} parameter change on ${parameterInfo.contractType} contract`);
         return parameterInfo;
       }
 
       return null;
     } catch (error) {
-      console.error('Error decoding ecosystem parameter calldata:', error);
+      logger.error('Error decoding ecosystem parameter calldata:', error);
       return null;
     }
   };
@@ -1089,10 +1090,10 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
         if (parameterInfo) {
           try {
             await parameterInfo.updateFunction();
-            console.log(`[INFO] Successfully updated ${parameterInfo.method}`);
+            logger.log(`[INFO] Successfully updated ${parameterInfo.method}`);
             return;
           } catch (error) {
-            console.error(`Error updating ${parameterInfo.method}:`, error);
+            logger.error(`Error updating ${parameterInfo.method}:`, error);
           }
         }
       }

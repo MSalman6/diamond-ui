@@ -8,6 +8,7 @@ import { useWeb3Context } from "@/contexts/Web3";
 import { NonPayableTx } from "@/contexts/types/contracts";
 import { getAddressFromPublicKey } from "@/utils/common";
 import { PoolCache, Delegator, Pool } from "@/contexts/types/models";
+import logger from '@/utils/logger';
 
 interface StakingContextProps {
   pools: Pool[];
@@ -104,7 +105,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
 
   useEffect(() => {
     if (pools.filter(pool => pool.miningAddress).length == pools.length) {
-      console.log("[INFO] Updating stake amounts");
+      logger.log("[INFO] Updating stake amounts");
       updateStakeAmounts();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -162,7 +163,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
       .trim();
 
     toast.error(errorMessage);
-    console.error('Tx error details:', { message: err.message, cause: err.cause, data: err.data, stack: err.stack });
+    logger.error('Tx error details:', { message: err.message, cause: err.cause, data: err.data, stack: err.stack });
   }
 
   const getNodeOperatorData = async (pool: Pool) => {
@@ -268,7 +269,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
           }).then((events) => {
             events.forEach(e => allEvents.push(e));
           }).catch((error) => {
-            console.error(`Error fetching events from block ${start} to ${end}:`, error);
+            logger.error(`Error fetching events from block ${start} to ${end}:`, error);
           });
   
         promises.push(promise);
@@ -312,7 +313,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
           }).then((events) => {
             events.forEach(e => allEvents.push(e));
           }).catch((error) => {
-            console.error(`Error fetching events from block ${start} to ${end}:`, error);
+            logger.error(`Error fetching events from block ${start} to ${end}:`, error);
           });
   
         promises.push(promise);
@@ -337,7 +338,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
    * if we are browsing historic data or not.
    */
   const updateEventSubscription = () => {
-    console.log('[INFO] Updating event subscription. Is historic?:', isShowHistoric);
+    logger.log('[INFO] Updating event subscription. Is historic?:', isShowHistoric);
 
     if (isShowHistoric) {
       // if we browse historic, we can safely unsusbscribe from events.
@@ -385,9 +386,9 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
   }
 
   const handleNewBlock = async (blockNumber: number) : Promise<void> => {
-    console.log('[INFO] Handling new block.');
+    logger.log('[INFO] Handling new block.');
     const blockHeader = await web3.eth.getBlock(blockNumber);
-    console.log(`[INFO] Current Block Number:`, currentBlockNumber);
+    logger.log(`[INFO] Current Block Number:`, currentBlockNumber);
 
     setCurrentBlockNumber(Number(blockHeader.number));
     setCurrentTimestamp(blockHeader.timestamp);
@@ -399,11 +400,11 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
     }
 
     // epoch change
-    console.log(`[Info] Updating stakingEpochEndBlock at block ${blockHeader.number}`);
+    logger.log(`[Info] Updating stakingEpochEndBlock at block ${blockHeader.number}`);
     const oldEpoch = stakingEpoch;
     await retrieveGlobalValues();
 
-    console.log("[INFO] Epoch times | Old", oldEpoch, "Latest:", stakingEpoch, oldEpoch !== stakingEpoch);
+    logger.log("[INFO] Epoch times | Old", oldEpoch, "Latest:", stakingEpoch, oldEpoch !== stakingEpoch);
 
     const isNewEpoch = oldEpoch !== stakingEpoch;
 
@@ -434,7 +435,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
   };
 
   const retrieveGlobalValues = async () => {
-    console.log("[INFO] Retrieving Global Values")
+    logger.log("[INFO] Retrieving Global Values")
     const oldStakingEpoch = stakingEpoch;
 
     const latestBlockNumber = await getLatestBlockNumber();
@@ -447,7 +448,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
       setCurrentBlockNumber(web3.eth.defaultBlock);
       web3.defaultBlock = web3.eth.defaultBlock;
     } else {
-      console.warn('Unexpected defaultBlock: ', web3.eth.defaultBlock);
+      logger.warn('Unexpected defaultBlock: ', web3.eth.defaultBlock);
     }
 
     const globals = await contractsManager.aggregator?.methods.getGlobals().call({}, latestBlockNumber);
@@ -499,7 +500,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
       pendingValidatorAddrs = poolsData[6]; // stakingAddresses
     }
 
-    console.log(`[INFO] Syncing Active(${activePoolAddrs.length}) and Inactive(${inactivePoolAddrs.length}) pools...`);
+    logger.log(`[INFO] Syncing Active(${activePoolAddrs.length}) and Inactive(${inactivePoolAddrs.length}) pools...`);
     const allPools = activePoolAddrs.concat(inactivePoolAddrs).concat(toBeElectedPoolAddrs).concat(pendingValidatorAddrs);
 
     // check if there is a new pool that is not tracked yet within the context.
@@ -574,7 +575,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
     // Set the updated pools
     setPools([...updatedPools]);
     setCachedPools(blockNumber, updatedPools);
-    console.log("[INFO] Cached Data:", JSON.parse(localStorage.getItem('poolsData') || '{}'));
+    logger.log("[INFO] Cached Data:", JSON.parse(localStorage.getItem('poolsData') || '{}'));
     await updateStakeAmounts(updatedPools);
     setIsSyncingPools(false);
   }
@@ -671,7 +672,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
         candidateStake = new BigNumber(delegationData[2]);
       }
     } catch (error) {
-      console.error("Couldn't fetch delegation data:", error);
+      logger.error("Couldn't fetch delegation data:", error);
     }
 
     return {delegators, candidateStake, ownStake};
@@ -760,7 +761,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
       }
       return false;
     } catch (err: any) {
-      console.log(err);
+      logger.log(err);
       showLoader(false, "");
       handleErrorMsg(err, "Error in creating pool");
       return false;
@@ -844,7 +845,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
         maxWithdrawOrderAmount = new BigNumber(withdrawableAmounts[1]);
       }
     } catch (error) {
-      console.error("Couldn't fetch withdrawable amounts:", error);
+      logger.error("Couldn't fetch withdrawable amounts:", error);
     }
 
     return { maxWithdrawAmount, maxWithdrawOrderAmount };
@@ -973,12 +974,12 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
         fromBlock: 0,  // You can specify the block range here
         toBlock: 'latest'
       }).then((events) => {
-        console.log(events);
+        logger.log(events);
       }).catch((error) => {
-        console.error(`Error fetching events`, error);
+        logger.error(`Error fetching events`, error);
       });
     } catch (error) {
-      console.error('Error fetching events:', error);
+      logger.error('Error fetching events:', error);
     }
   };
 

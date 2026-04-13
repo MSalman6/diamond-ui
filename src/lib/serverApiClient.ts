@@ -4,6 +4,8 @@
  * This code runs ONLY on the server and has access to API tokens
  */
 
+import logger from '@/utils/logger';
+
 const DB_API_BASE_URL = process.env.DB_API_BASE_URL || 'http://localhost:4000';
 const DB_API_TOKEN = process.env.DB_API_TOKEN || '';
 
@@ -82,7 +84,7 @@ export async function makeApiRequest<T = any>(
       ok: response.ok,
     };
   } catch (error) {
-    console.error('Server API request failed:', error);
+    logger.error('Server API request failed:', error);
     throw error;
   }
 }

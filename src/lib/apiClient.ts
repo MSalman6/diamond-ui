@@ -6,6 +6,8 @@
 
 'use client';
 
+import logger from '@/utils/logger';
+
 export interface ClientApiRequestOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   body?: any;
@@ -102,7 +104,7 @@ export async function makeClientApiRequest<T = any>(
       throw new Error('Request timeout');
     }
     
-    console.error('Client API request failed:', error);
+    logger.error('Client API request failed:', error);
     throw error;
   }
 }

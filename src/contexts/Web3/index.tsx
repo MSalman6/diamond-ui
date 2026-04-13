@@ -17,6 +17,7 @@ import { validateRpcUrl } from "@/utils/rpc";
 import { getRPC, saveRPC, clearRPC } from "@/utils/storage";
 import { checkProviderHealth, getGasPriceSafe, isEip1193Provider } from "../../utils/providerHealth";
 import config from '@/lib/config';
+import logger from '@/utils/logger';
 
 import {
   BlockRewardHbbft,
@@ -105,7 +106,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
   }, [connector, isConnected, status]);
 
   useEffect(() => {
-    console.log("[INFO] Initializing Web3 Context");
+    logger.log("[INFO] Initializing Web3 Context");
     initialize();
     handleCacheReset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -136,7 +137,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
           await reinitializeContractsWithProvider(web3);
           await updateWalletBalance();
         } catch (err) {
-          console.warn('[Provider] chainChanged handling error', err);
+          logger.warn('[Provider] chainChanged handling error', err);
         }
       };
       const onDisconnect = () => {
@@ -197,7 +198,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
                   await reinitializeContractsWithProvider(next);
                   consecutiveFailures = 0;
                 } catch (e) {
-                  console.warn('[Provider] auto-refresh failed', e);
+                  logger.warn('[Provider] auto-refresh failed', e);
                 }
               }
             }
@@ -229,7 +230,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     if (storedAppVersion !== CURRENT_APP_VERSION) {
       if (SHOULD_RESET_CACHE) {
         localStorage.clear();
-        console.log('[INFO] Cache cleared due to app version update');
+        logger.log('[INFO] Cache cleared due to app version update');
       }
       localStorage.setItem('appVersion', CURRENT_APP_VERSION);
     }
@@ -375,7 +376,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
               showLoader(false, "");
               toast.success("DMD Network added successfully!");
             } catch (addError: any) {
-              console.error("[Wallet Connect] Failed to add chain", addError);
+              logger.error("[Wallet Connect] Failed to add chain", addError);
               showLoader(false, "");
               await connector.disconnect();
               disconnect();
@@ -388,7 +389,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
             disconnect();
             return toast.warn("Please connect to the DMD Network to continue");
           } else {
-            console.error("[Wallet Connect] Error", err);
+            logger.error("[Wallet Connect] Error", err);
             showLoader(false, "");
             return undefined;
           }
@@ -412,7 +413,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
         
       return { provider, wallet };
     } catch (err) {
-      console.error(err);
+      logger.error(err);
     }
   }
 
@@ -438,11 +439,11 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
       const { ok, reason } = await checkProviderHealth(web3, { expectedChainId: Number(chainId) });
       if (ok) return true;
 
-      console.log('[Provider] Health check failed:', reason);
+      logger.log('[Provider] Health check failed:', reason);
 
       // Try refreshing via connector
       if (wagmiConnector?.getProvider) {
-        console.log('[Provider] Attempting auto-refresh via connector...');
+        logger.log('[Provider] Attempting auto-refresh via connector...');
         try {
           const p = await wagmiConnector.getProvider();
           const next = new Web3(p);
@@ -452,13 +453,13 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
           // Recheck after refresh
           const recheck = await checkProviderHealth(next, { expectedChainId: Number(chainId) });
           if (recheck.ok) {
-            console.log('[Provider] Auto-refresh successful!');
+            logger.log('[Provider] Auto-refresh successful!');
             toast.success('Wallet connection restored');
             return true;
           }
-          console.log('[Provider] Auto-refresh failed, still unhealthy');
+          logger.log('[Provider] Auto-refresh failed, still unhealthy');
         } catch (refreshErr) {
-          console.warn('[Provider] Auto-refresh error:', refreshErr);
+          logger.warn('[Provider] Auto-refresh error:', refreshErr);
         }
       }
 
@@ -467,7 +468,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
         toast.error('Wallet connection lost, please reconnect after refresh', { autoClose: 4000 });
         // Disconnect after a short delay to allow user to read the message
         setTimeout(() => {
-          console.log('[Provider] Auto-disconnecting stale wallet');
+          logger.log('[Provider] Auto-disconnecting stale wallet');
           disconnect();
           close();
         }, 5000); // 5 seconds
@@ -483,13 +484,13 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
       // Force disconnect and reconnect
       toast.error('Wallet provider unresponsive, please reconnect after refresh', { autoClose: 4000 });
       setTimeout(() => {
-        console.log('[Provider] Auto-disconnecting unresponsive wallet');
+        logger.log('[Provider] Auto-disconnecting unresponsive wallet');
         disconnect();
         close();
       }, 5000); // 5 seconds
       return false;
     } catch (err) {
-      console.warn('[Provider] readiness check failed', err);
+      logger.warn('[Provider] readiness check failed', err);
       toast.error('Wallet connection error. Please disconnect and reconnect your wallet.', { autoClose: 5000 });
       return false;
     }

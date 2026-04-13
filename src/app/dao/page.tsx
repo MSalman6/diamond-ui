@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { useFadeInAnimation } from "@/hooks/useFadeInAnimation";
 import { useRouter } from 'next/navigation';
 import { useDaoContext } from '@/contexts/DAO';
+import logger from '@/utils/logger';
 import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { timestampToDate, truncateAddress } from '@/utils/common';
@@ -668,7 +669,7 @@ export default function DaoPage() {
                                 const tokens = BigNumber(snap).multipliedBy(Number(p.participation)).dividedBy(100).dividedBy(1e18).toFixed(2);
                                 return <span className="participation-value">{p.participation}%</span>;
                               }
-                            } catch (e) {console.log("Error", e);}
+                            } catch (e) {logger.log("Error", e);}
                             return <span className="participation-value">{p.participation}%</span>;
                           })()}
                         </div>

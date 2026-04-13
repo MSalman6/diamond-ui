@@ -3,6 +3,8 @@
  * Prefer cookies; fallback to localStorage when cookies are unavailable.
  */
 
+import logger from '@/utils/logger';
+
 const COOKIE_NAME = 'custom_rpc_endpoint';
 const DEFAULT_MAX_AGE_DAYS = 60; // ~2 months
 
@@ -32,7 +34,7 @@ export function saveRPC(url: string, maxAgeDays = DEFAULT_MAX_AGE_DAYS): boolean
       localStorage.setItem('rpcUrl', url);
       return true;
     } catch (err) {
-      console.error('[Storage] Failed to save RPC', err);
+      logger.error('[Storage] Failed to save RPC', err);
       return false;
     }
   }
@@ -58,7 +60,7 @@ export function clearRPC(): boolean {
     localStorage.removeItem('rpcUrl');
     return true;
   } catch (err) {
-    console.error('[Storage] Failed to clear RPC', err);
+    logger.error('[Storage] Failed to clear RPC', err);
     return false;
   }
 }

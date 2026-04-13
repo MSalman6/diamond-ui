@@ -1,3 +1,5 @@
+import logger from '@/utils/logger';
+
 export const initializeTheme = () => {
   // Ensure we're on the client side
   if (typeof window === 'undefined') return;
@@ -127,7 +129,7 @@ const setupTheme = (themeToggle: HTMLInputElement) => {
         document.body.classList.toggle("light-theme", themeName === "light");
       } catch (error) {
         // Silently handle any errors from browser extensions
-        console.debug("Theme application encountered an extension conflict:", error);
+        logger.debug("Theme application encountered an extension conflict:", error);
       }
     });
 

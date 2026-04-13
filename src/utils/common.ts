@@ -1,3 +1,4 @@
+import logger from '@/utils/logger';
 import axios from "axios";
 import BigNumber from "bignumber.js";
 import ProxyAdmin from "@/contracts/abis/ProxyAdmin.json";
@@ -40,7 +41,7 @@ export const getAbiWithContractAddress = (contractsManager: any, contractAddress
     }
     return [];
   } catch (error) {
-    console.error("Error fetching contract ABI:", error);
+    logger.error("Error fetching contract ABI:", error);
     return [];
   }
 }
@@ -99,7 +100,7 @@ export const getFunctionNameFromDirectory = async (selector: string): Promise<st
       return results[0].text_signature; // Returns the first matching function name
     }
   } catch (error) {
-    console.error("Error fetching function name:", error);
+    logger.error("Error fetching function name:", error);
   }
   return null; // Returns null if no match found
 };
@@ -217,9 +218,9 @@ export const requestPublicKeyMetamask = async (web3: any, address: string) => {
   const publicKeyHex = bufferToHex(publicKey);
   const derivedAddress = bufferToHex(publicToAddress(publicKey));
 
-  console.log(`Address: ${address}`);
-  console.log(`Derived Address: ${derivedAddress}`);
-  console.log(`Public Key: ${publicKeyHex}`);
+  logger.log(`Address: ${address}`);
+  logger.log(`Derived Address: ${derivedAddress}`);
+  logger.log(`Public Key: ${publicKeyHex}`);
 
   return publicKeyHex;
 }

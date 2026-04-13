@@ -7,6 +7,7 @@ import { wagmiAdapter, projectId, getNetworks } from './config/wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { cookieToInitialState, WagmiProvider, useAccount, useConnect, useDisconnect, type Config } from 'wagmi'
 import { useRuntimeConfig } from '@/contexts/RuntimeConfig'
+import logger from '@/utils/logger';
 
 // Set up queryClient
 const queryClient = new QueryClient()
@@ -73,7 +74,7 @@ const initializeAppKit = () => {
     appKitInitialized = true
     return true
   } catch (error) {
-    console.error('❌ Failed to initialize AppKit:', error)
+    logger.error('❌ Failed to initialize AppKit:', error)
     return false
   }
 }

@@ -1,3 +1,5 @@
+import logger from '@/utils/logger';
+
 /**
  * LocalStorage key for privacy mode state
  */
@@ -31,7 +33,7 @@ export function isPrivacyModeActive(): boolean {
     cachedPrivacyModeState = stored === 'true';
     return cachedPrivacyModeState;
   } catch (error) {
-    console.warn('Failed to read privacy mode from localStorage:', error);
+    logger.warn('Failed to read privacy mode from localStorage:', error);
     return DEFAULT_PRIVACY_MODE_STATE;
   }
 }
@@ -49,7 +51,7 @@ export function setPrivacyModeStorage(value: boolean): void {
     localStorage.setItem(PRIVACY_MODE_STORAGE_KEY, value.toString());
     cachedPrivacyModeState = value;
   } catch (error) {
-    console.warn('Failed to save privacy mode to localStorage:', error);
+    logger.warn('Failed to save privacy mode to localStorage:', error);
   }
 }
 
@@ -66,7 +68,7 @@ export function getPrivacyModeStorage(): boolean {
     const stored = localStorage.getItem(PRIVACY_MODE_STORAGE_KEY);
     return stored === 'true';
   } catch (error) {
-    console.warn('Failed to read privacy mode from localStorage:', error);
+    logger.warn('Failed to read privacy mode from localStorage:', error);
     return DEFAULT_PRIVACY_MODE_STATE;
   }
 }
@@ -110,7 +112,7 @@ export async function conditionalFetch<T>(
       return await apiFetcher();
     } catch (error) {
       // Fallback to blockchain if API fails
-      console.warn('API fetch failed, falling back to blockchain:', error);
+      logger.warn('API fetch failed, falling back to blockchain:', error);
       return await blockchainFetcher();
     }
   } else {
