@@ -57,6 +57,15 @@ export default function DaoPage() {
   const [voteModalProgressNoWidth, setVoteModalProgressNoWidth] = useState("0%");
   const [voteModalThresholdLeft, setVoteModalThresholdLeft] = useState<string>("0%");
   const [voteModalStats, setVoteModalStats] = useState<any>(null);
+  const [daoPotBalanceChange, setDaoPotBalanceChange] = useState<{
+    changePercentage: string;
+    direction: string;
+    blocks: number;
+  }>({
+    changePercentage: "0",
+    direction: "positive",
+    blocks: 0
+  });
 
   // Pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -279,6 +288,25 @@ export default function DaoPage() {
     checkPoolValidity();
     return () => { cancelled = true; };
   }, [web3Context.contractsManager?.stContract, web3Context.userWallet?.myAddr, web3Context.web3Initialized, stakingContext?.myPool]);
+
+  // Fetch DAO pot balance change
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchBalanceChange() {
+      try {
+        if (daoContext.getDaoPotBalanceChange) {
+          const res = await daoContext.getDaoPotBalanceChange(100);
+          if (!cancelled && res) {
+            setDaoPotBalanceChange(res as any);
+          }
+        }
+      } catch (e) {
+        logger.log("Error fetching DAO pot balance change:", e);
+      }
+    }
+    fetchBalanceChange();
+    return () => { cancelled = true; };
+  }, [daoContext.allDaoProposals, daoContext.daoPhaseCount]);
 
   // Sorting toggle handler
   function onSort(field: string) {
@@ -541,8 +569,9 @@ export default function DaoPage() {
               </div>
               <div className="stat-content">
                 <p className="stat-value">{daoContext.governancePotBalance ? `${daoContext.governancePotBalance.toFixed(2)} DMD` : '0 DMD'}</p>
-                <div className="stat-trend positive">
-                  <i className="fas fa-arrow-up" /> 3.5% this month
+                <div className={`stat-trend ${daoPotBalanceChange.direction === "positive" ? "positive" : "negative"}`}>
+                  <i className={`fas ${daoPotBalanceChange.direction === "positive" ? "fa-arrow-up" : "fa-arrow-down"}`} />
+                  {daoPotBalanceChange.direction === "positive" ? "+" : ""}{daoPotBalanceChange.changePercentage}% since last {daoPotBalanceChange.blocks} blocks
                 </div>
                 <div className="pot-distribution">
                   <div className="distribution-item">
