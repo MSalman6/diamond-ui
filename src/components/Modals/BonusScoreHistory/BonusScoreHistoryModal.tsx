@@ -101,7 +101,11 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
     }));
   }, [history]);
 
-
+  // Sort history in descending order by block number (latest first)
+  const sortedHistoryForDisplay = useMemo(() => {
+    if (!history || history.length === 0) return [];
+    return [...history].sort((a, b) => b.block_number - a.block_number);
+  }, [history]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="bonus-history-modal">
@@ -226,7 +230,7 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
             {/* History List */}
             <div className="bonus-history-list-section">
               <div className="bonus-history-list">
-                {history.map((entry, index) => (
+                {sortedHistoryForDisplay.map((entry, index) => (
                   <div key={`${entry.block_number}-${index}`} className="history-entry">
                     <div className="entry-header">
                       <span className="entry-epoch">
