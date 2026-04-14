@@ -135,14 +135,14 @@ export default function WikiPage() {
                   </div>
                 </li>
                 
-                <li>
+                {/* <li>
                   <div className="feature-content">
                     <h4>Anonymized Transactions</h4>
                     <p>
                       DMD employs <strong>mixTX</strong> technology for private transactions, enhancing user privacy.
                     </p>
                   </div>
-                </li>
+                </li> */}
                 
                 <li>
                   <div className="feature-content">
