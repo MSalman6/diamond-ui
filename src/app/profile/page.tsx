@@ -193,7 +193,7 @@ export default function ProfilePage() {
                       <div className="stat-value-container">
                         <div className="stat-value highlight">N DMD</div>
                       </div>
-                      <div className="stat-note">Estimate coming soon <InfoTooltip content={<div><p>Reward estimation is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                      {/* <div className="stat-note">Estimate coming soon <InfoTooltip content={<div><p>Reward estimation is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div> */}
                       {!isPrivacyMode && (
                         <div className="stat-actions">
                           <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
@@ -426,7 +426,7 @@ export default function ProfilePage() {
                   <div className="stat-card">
                     <div className="stat-label">Monthly rewards <InfoTooltip content={<div><p>DMD rewards earned this month based on your validator pool total stake.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="stat-value highlight">N DMD</div>
-                    <div className="stat-note">Estimate coming soon <InfoTooltip content={<div><p>Reward estimation is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                    {/* <div className="stat-note">Estimate coming soon <InfoTooltip content={<div><p>Reward estimation is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div> */}
                     {!isPrivacyMode && (
                       <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">Rewards history</button>
                     )}
