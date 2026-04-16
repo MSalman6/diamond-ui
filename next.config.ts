@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   // Enable source maps for debugging in production
   productionBrowserSourceMaps: true,
   webpack: (config) => {
-    config.externals.push("pino-pretty", "lokijs", "encoding");
+    config.externals.push("pino-pretty", "lokijs", "encoding", "accounts");
     return config;
   },
   env: {
