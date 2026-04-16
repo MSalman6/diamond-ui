@@ -17,6 +17,7 @@ import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import InfoTooltip from '@/components/InfoTooltip';
 import BonusScoreHistoryModal from '@/components/Modals/BonusScoreHistory/BonusScoreHistoryModal';
+import StakeHistoryModal from '@/components/Modals/StakeHistory/StakeHistoryModal';
 
 
 export default function ValidatorDetails() {
@@ -36,6 +37,7 @@ export default function ValidatorDetails() {
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
   const [isUnstakeModalOpen, setIsUnstakeModalOpen] = useState(false);
   const [isBonusHistoryModalOpen, setIsBonusHistoryModalOpen] = useState(false);
+  const [isStakeHistoryModalOpen, setIsStakeHistoryModalOpen] = useState(false);
 
   // Effects
   useEffect(() => {
@@ -215,6 +217,17 @@ export default function ValidatorDetails() {
             {/* <div className="stat-trend positive">
               <i className="fas fa-arrow-up"></i> 5 DMD since 01.01.24
             </div> */}
+            {!isPrivacyMode && (
+              <div className="stat-actions">
+                <button
+                  onClick={() => setIsStakeHistoryModalOpen(true)}
+                  className="cta-button"
+                  title="View stake history"
+                >
+                  History
+                </button>
+              </div>
+            )}
             <div className="stat-footer">
               <span className="connectivity-info">
                 Connectivity reports: 0
@@ -502,6 +515,12 @@ export default function ValidatorDetails() {
       isOpen={isBonusHistoryModalOpen}
       onClose={() => setIsBonusHistoryModalOpen(false)}
       validatorAddress={address}
+    />
+    <StakeHistoryModal
+      isOpen={isStakeHistoryModalOpen}
+      onClose={() => setIsStakeHistoryModalOpen(false)}
+      address={address}
+      mode="node"
     />
 </div>
   );

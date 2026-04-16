@@ -21,6 +21,7 @@ import RemoveValidatorModal from '@/components/Modals/RemoveValidator/RemoveVali
 import CreatePoolModal from '@/components/Modals/CreatePool/CreatePoolModal';
 import UpdatePoolOperatorModal from '@/components/Modals/UpdatePoolOperator/UpdatePoolOperatorModal';
 import BonusScoreHistoryModal from '@/components/Modals/BonusScoreHistory/BonusScoreHistoryModal';
+import StakeHistoryModal from '@/components/Modals/StakeHistory/StakeHistoryModal';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -30,6 +31,8 @@ export default function ProfilePage() {
   const { isConnected } = useWalletConnect();
   const { allDaoProposals } = useDaoContext();
   const [isBonusHistoryModalOpen, setIsBonusHistoryModalOpen] = useState(false);
+  const [isStakeHistoryModalOpen, setIsStakeHistoryModalOpen] = useState(false);
+  const [isStakerHistoryModalOpen, setIsStakerHistoryModalOpen] = useState(false);
 
   // Get validators that user has staked with (has myStake > 0)
   const stakedValidators = useMemo(() => {
@@ -180,7 +183,7 @@ export default function ProfilePage() {
                         </div>
                         {!isPrivacyMode && (
                           <div>
-                            <button onClick={() => toast.info("Coming soon!")} className="btn-secondary btn-sm">History</button>
+                            <button onClick={() => setIsStakerHistoryModalOpen(true)} className="btn-secondary btn-sm">History</button>
                           </div>
                         )}        
                       </div>
@@ -375,7 +378,7 @@ export default function ProfilePage() {
                               <StakeModal buttonText="Stake" pool={myPool} />
                               <UnstakeModal buttonText="Unstake" pool={myPool} />
                               {!isPrivacyMode && (
-                                <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
+                                <button onClick={() => setIsStakeHistoryModalOpen(true)}  className="btn-secondary btn-sm">History</button>
                               )}
                               {myPool && (
                                 <RemoveValidatorModal buttonText="Remove pool" pool={myPool} />
@@ -392,7 +395,7 @@ export default function ProfilePage() {
                         <span className="stake-value highlight">{formatDMDAmount(delegatedStakeWei)}</span>
                       </div>
                       {!isPrivacyMode && (
-                        <button onClick={() => toast.info("Coming soon!")}  className="btn-secondary btn-sm">History</button>
+                        <button onClick={() => setIsStakeHistoryModalOpen(true)}  className="btn-secondary btn-sm">History</button>
                       )}
                     </div>
                   </div>
@@ -605,6 +608,18 @@ export default function ProfilePage() {
           isOpen={isBonusHistoryModalOpen}
           onClose={() => setIsBonusHistoryModalOpen(false)}
           validatorAddress={userWallet.myAddr}
+        />
+        <StakeHistoryModal
+          isOpen={isStakeHistoryModalOpen}
+          onClose={() => setIsStakeHistoryModalOpen(false)}
+          address={myPool?.stakingAddress || userWallet.myAddr}
+          mode="node"
+        />
+        <StakeHistoryModal
+          isOpen={isStakerHistoryModalOpen}
+          onClose={() => setIsStakerHistoryModalOpen(false)}
+          address={userWallet.myAddr}
+          mode="staker"
         />
     </div>
   );
