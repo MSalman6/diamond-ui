@@ -319,7 +319,7 @@ export default function ValidatorDetails() {
               </h3>
             </div>
             <p className="stat-value-large">N DMD</p>
-            <div className="stat-subtitle">Estimate coming soon <InfoTooltip content={<div><p>Reward estimation is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+            <div className="stat-subtitle">Coming soon <InfoTooltip content={<div><p>Reward estimation is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
             {!isPrivacyMode && (
               <div className="stat-actions">
                 <button
