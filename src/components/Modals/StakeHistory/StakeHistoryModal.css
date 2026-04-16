@@ -129,7 +129,7 @@ body.light-theme .stake-history-list-section {
   background: rgba(0, 0, 0, 0.02);
 }
 
-.stake-history-list-section .section-header {
+.stake-history-list-section .bs-section-header {
   display: flex;
   min-width: 100%;
   margin-bottom: 8px;

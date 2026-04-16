@@ -75,7 +75,7 @@ body.light-theme .bonus-history-list-section {
   background: rgba(0, 0, 0, 0.02);
 }
 
-.section-header {
+.bs-section-header {
   display: flex;
   min-width: 100%;
   margin-bottom: 8px;

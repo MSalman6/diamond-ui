@@ -248,18 +248,18 @@ body.light-theme .btn-icon:hover {
   transition: background-color 0.5s ease;
 }
 
-.section-title {
+.vd-section-title {
   margin-bottom: 40px;
 }
 
-.section-title h2 {
+.vd-section-title h2 {
   font-size: 2rem;
   margin-bottom: 10px;
   color: var(--text);
   transition: color 0.5s ease;
 }
 
-.section-title p {
+.vd-section-title p {
   color: var(--text-secondary);
   max-width: 600px;
   transition: color 0.5s ease;
@@ -604,11 +604,11 @@ body.light-theme .info-icon {
     padding: 40px 0;
   }
 
-  .section-title {
+  .vd-section-title {
     margin-bottom: 30px;
   }
 
-  .section-title h2 {
+  .vd-section-title h2 {
     font-size: 1.6rem;
   }
 
@@ -1601,7 +1601,7 @@ body.light-theme .cta-button.coming-soon:hover {
     padding: 4px 12px;
   }
 
-  .section-title h2 {
+  .vd-section-title h2 {
     font-size: 1.8rem;
   }
 

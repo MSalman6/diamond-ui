@@ -197,7 +197,7 @@ export default function ValidatorDetails() {
 
     <section className="validator-statistics">
       <div className="container">
-        <div className="section-title">
+        <div className="vd-section-title">
           <h2>Validator Statistics</h2>
         </div>
         <div className="stats-grid-wireframe">
@@ -357,7 +357,7 @@ export default function ValidatorDetails() {
 
     <section className="delegates-section">
       <div className="container">
-        <div className="section-title">
+        <div className="vd-section-title">
           <h2>Delegates</h2>
           <p>Users who have delegated their coins to this validator</p>
         </div>
@@ -422,7 +422,7 @@ export default function ValidatorDetails() {
 
     <section className="dao-section">
       <div className="container">
-        <div className="section-title">
+        <div className="vd-section-title">
           <h2>Validator DAO Participation</h2>
           <p>Governance proposals this validator has participated in</p>
         </div>
