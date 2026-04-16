@@ -329,8 +329,8 @@ export default function Home() {
                     <i className="fas fa-bolt"></i>
                   </div>
                   <div className="feature-text">
-                    <h4>Lightning Fast</h4>
-                    <p>500ms block times</p>
+                    <h4>Fast & Low-Cost Transactions</h4>
+                    <p>Optimized for speed and efficiency</p>
                   </div>
                 </div>
                 <div className="design-feature">
@@ -338,8 +338,8 @@ export default function Home() {
                     <i className="fas fa-lock"></i>
                   </div>
                   <div className="feature-text">
-                    <h4>HBBFT Protocol</h4>
-                    <p>Secure cross-chain transfers</p>
+                    <h4>Enhanced Security</h4>
+                    <p>Censorship-resistant by design</p>
                   </div>
                 </div>
                 <div className="design-feature">
@@ -348,7 +348,7 @@ export default function Home() {
                   </div>
                   <div className="feature-text">
                     <h4>EVM Compatibility</h4>
-                    <p>Build exactly what you need</p>
+                    <p>Deploy Ethereum smart contracts seamlessly</p>
                   </div>
                 </div>
                 <div className="design-feature">
@@ -356,8 +356,8 @@ export default function Home() {
                     <i className="fas fa-server"></i>
                   </div>
                   <div className="feature-text">
-                    <h4>Validator Network</h4>
-                    <p>Decentralized consensus</p>
+                    <h4>DAO-Governed Network</h4>
+                    <p>Fully decentralized and community-driven</p>
                   </div>
                 </div>
               </div>
