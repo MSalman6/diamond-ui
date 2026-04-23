@@ -67,7 +67,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
   const [governancePotBalance, setGovernancePotBalance] = useState<BigNumber>(BigNumber('0'));
   const [claimingContractBalance, setClaimingContractBalance] = useState<BigNumber>(BigNumber('0'));
   const [lowMajorityContractBalance, setLowMajorityContractBalance] = useState<BigNumber>(BigNumber('0'));
-  const [lowMajorityContractAddress, setLowMajorityContractAddress] = useState<string>(process.env.NEXT_PUBLICLOW_MAJORITY_CONTRACT_ADDRESS || "0xf30214ee3Be547E2E5AaaF9B9b6bea26f1Beca37");
+  const [lowMajorityContractAddress, setLowMajorityContractAddress] = useState<string>(process.env.NEXT_PUBLIC_LOW_MAJORITY_CONTRACT_ADDRESS || "0xf30214ee3Be547E2E5AaaF9B9b6bea26f1Beca37");
   const [daoPhase, setDaoPhase] = useState<DaoPhase>({ daoEpoch: '', end: '', phase: '', start: '' });
 
   useEffect(() => {
@@ -110,7 +110,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     const governancePot =  await web3Context.contractsManager.daoContract.methods.governancePot().call();
     setGovernancePotBalance(BigNumber(governancePot).dividedBy(1e18));
 
-    const claimingPot = await web3Context.web3.eth.getBalance(process.env.NEXT_PUBLICCLAIMING_CONTRACT_ADDRESS || "0xe0E6787A55049A90aAa4335D0Ff14fAD26B8e88e");
+    const claimingPot = await web3Context.web3.eth.getBalance(process.env.NEXT_PUBLIC_CLAIMING_CONTRACT_ADDRESS || "0xe0E6787A55049A90aAa4335D0Ff14fAD26B8e88e");
     setClaimingContractBalance(BigNumber(claimingPot).dividedBy(1e18));
 
     const lowMajorityPot = await web3Context.web3.eth.getBalance(lowMajorityContractAddress);
@@ -1106,7 +1106,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     const governancePot =  await web3Context.contractsManager.daoContract.methods.governancePot().call();
     setGovernancePotBalance(BigNumber(governancePot).dividedBy(1e18));
 
-    const claimingPot = await web3Context.web3.eth.getBalance(process.env.NEXT_PUBLICCLAIMING_CONTRACT_ADDRESS || "0xe0E6787A55049A90aAa4335D0Ff14fAD26B8e88e");
+    const claimingPot = await web3Context.web3.eth.getBalance(process.env.NEXT_PUBLIC_CLAIMING_CONTRACT_ADDRESS || "0xe0E6787A55049A90aAa4335D0Ff14fAD26B8e88e");
     setClaimingContractBalance(BigNumber(claimingPot).dividedBy(1e18));
 
     const lowMajorityPot = await web3Context.web3.eth.getBalance(lowMajorityContractAddress);
