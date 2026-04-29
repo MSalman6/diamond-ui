@@ -28,7 +28,7 @@ export default function ValidatorDetails() {
   // Context hooks
   const { userWallet, web3Initialized, showLoader } = useWeb3Context();
   const { activeProposals, getMyVote, getActiveProposals, getStateString } = useDaoContext();
-  const { pools, stakingEpoch, claimOrderedUnstake } = useStakingContext();
+  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake } = useStakingContext();
   const isPrivacyMode = useIsPrivacyMode();
 
   // State
@@ -166,6 +166,7 @@ export default function ValidatorDetails() {
           <div className="staking-buttons">
             {(pool?.isActive || pool?.isToBeElected || pool?.isPendingValidator) && 
             BigNumber(pool?.totalStake || 0).isLessThan(BigNumber(50000).multipliedBy(10**18)) && 
+            BigNumber(50000).multipliedBy(10**18).minus(BigNumber(pool?.totalStake || 0)).isGreaterThanOrEqualTo(delegatorMinStake) &&
             userWallet.myAddr && (
               <StakeModal 
                 pool={pool}

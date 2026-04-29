@@ -42,7 +42,7 @@ interface ValidatorsProps {
 
 export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
   const { userWallet } = useWeb3Context();
-  const { pools, stakingEpoch, claimOrderedUnstake } = useStakingContext();
+  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake } = useStakingContext();
   const router = useRouter();
   const theme = useTheme();
 
@@ -368,7 +368,7 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
           } else if (column.key === 'stakeBtn') {
             return (
               <td key={colIndex} onClick={(e) => e.stopPropagation()}>
-                {(pool.isActive || pool.isToBeElected || pool.isPendingValidator) && BigNumber(pool.totalStake ?? 0).isLessThan(BigNumber(50000).multipliedBy(10**18)) && (
+                {(pool.isActive || pool.isToBeElected || pool.isPendingValidator) && BigNumber(pool.totalStake ?? 0).isLessThan(BigNumber(50000).multipliedBy(10**18)) && BigNumber(50000).multipliedBy(10**18).minus(BigNumber(pool.totalStake ?? 0)).isGreaterThanOrEqualTo(delegatorMinStake) && (
                   <StakeModal buttonText="Stake" pool={pool} />
                 )}
               </td>
