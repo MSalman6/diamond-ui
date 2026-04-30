@@ -525,7 +525,10 @@ export default function ProposalDetailsPage() {
                 <div className="proposal-card funding-request-card" id="funding-request-content">
                   <div className="card-header"><h3>Funding Request</h3></div>
                   <div className="card-content">
-                    <div className="funding-purpose"><h4>{proposal?.title || ''}</h4></div>
+                    <div className="parameter-description">
+                      <h4>Description</h4>
+                      <p>{proposal?.description || ''}</p>
+                    </div>
                     {proposal?.targets?.map((target: string, index: number) => {
                       if (target === '0x0000000000000000000000000000000000000000') return null
                       return (
@@ -556,7 +559,10 @@ export default function ProposalDetailsPage() {
               <div className={`proposal-card contract-upgrade-card ${type !== "contract-upgrade" ? "hidden" : ""}`} id="contract-upgrade-content">
                 <div className="card-header"><h3>Contract Upgrade</h3></div>
                 <div className="card-content">
-                  <div className="upgrade-title"><h4>{proposal?.title || ''}</h4></div>
+                  <div className="parameter-description">
+                    <h4>Description</h4>
+                    <p>{proposal?.description || ''}</p>
+                  </div>
                   {proposal?.targets?.map((target: string, index: number) => (
                     <div key={index} className="technical-details" style={{ marginBottom: index < (proposal.targets?.length || 0) - 1 ? '30px' : '0', paddingBottom: '20px', borderBottom: index < (proposal.targets?.length || 0) - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none' }}>
                       {proposal.targets.length > 1 && <div style={{ marginBottom: '10px', fontWeight: 'bold', color: 'var(--accent)' }}>Transaction {index + 1}</div>}
