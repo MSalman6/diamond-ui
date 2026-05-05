@@ -41,9 +41,10 @@ export async function makeApiRequest<T = any>(
 
   // Ensure endpoint doesn't start with slash
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
-  
+
   // Construct full URL
-  const url = `${DB_API_BASE_URL}${cleanEndpoint}`;
+  const base = DB_API_BASE_URL.endsWith('/') ? DB_API_BASE_URL : `${DB_API_BASE_URL}/`;
+  const url = `${base}${cleanEndpoint}`;
 
   // Prepare headers with Bearer token and required Origin/Referer
   const requestHeaders: Record<string, string> = {
