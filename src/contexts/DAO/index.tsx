@@ -6,6 +6,7 @@ import { useWeb3Context } from "@/contexts/Web3";
 import { DaoPhase, Proposal, TotalVotingStats, Vote } from "@/contexts/types/dao";
 import BigNumber from 'bignumber.js';
 import { getFunctionSelector, timestampToDate } from '../../utils/common';
+import { getRuntimeConfig } from '@/lib/runtimeConfig';
 import { formatTxError } from '@/utils/web3Errors';
 import { useStakingContext } from '@/contexts/Staking';
 import logger from '@/utils/logger';
@@ -67,14 +68,19 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
   const [governancePotBalance, setGovernancePotBalance] = useState<BigNumber>(BigNumber('0'));
   const [claimingContractBalance, setClaimingContractBalance] = useState<BigNumber>(BigNumber('0'));
   const [lowMajorityContractBalance, setLowMajorityContractBalance] = useState<BigNumber>(BigNumber('0'));
-  const [lowMajorityContractAddress, setLowMajorityContractAddress] = useState<string>(process.env.NEXT_PUBLIC_LOW_MAJORITY_CONTRACT_ADDRESS || "0xf30214ee3Be547E2E5AaaF9B9b6bea26f1Beca37");
+  const [lowMajorityContractAddress, setLowMajorityContractAddress] = useState<string>("");
   const [daoPhase, setDaoPhase] = useState<DaoPhase>({ daoEpoch: '', end: '', phase: '', start: '' });
 
   useEffect(() => {
     // localStorage.clear();
-    if (web3Context.web3Initialized) {
-      initialize();
+    async function fetchConfigAndInit() {
+      const config = await getRuntimeConfig();
+      setLowMajorityContractAddress(config.lowMajorityContractAddress || "0xDA0DA0DA0da0dA0Da0DA00da0DA0DA00000DeCaF");
+      if (web3Context.web3Initialized) {
+        initialize(config.lowMajorityContractAddress || "0xDA0DA0DA0da0dA0Da0DA00da0DA0DA00000DeCaF");
+      }
     }
+    fetchConfigAndInit();
   }, [web3Context.userWallet, web3Context.web3Initialized]);
 
   // Refresh proposal types when lowMajorityContractBalance is loaded
@@ -91,13 +97,13 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     }
   }, [governancePotBalance, lowMajorityContractBalance, activeProposals.length]);
 
-  const initialize = async () => {
+  const initialize = async (runtimeLowMajorityAddress?: string) => {
     if (daoInitialized) return;
     logger.log("[INFO] Initializing Dao Context");
     setDaoInitialized(true);
 
     web3Context.setContractsManager(web3Context.contractsManager);
-    
+
     const pFee = await web3Context.contractsManager.daoContract.methods.createProposalFee().call();
     setProposalFee(pFee);
 
@@ -113,7 +119,8 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     const claimingPot = await web3Context.web3.eth.getBalance(process.env.NEXT_PUBLIC_CLAIMING_CONTRACT_ADDRESS || "0xe0E6787A55049A90aAa4335D0Ff14fAD26B8e88e");
     setClaimingContractBalance(BigNumber(claimingPot).dividedBy(1e18));
 
-    const lowMajorityPot = await web3Context.web3.eth.getBalance(lowMajorityContractAddress);
+    const lowMajAddr = runtimeLowMajorityAddress || lowMajorityContractAddress;
+    const lowMajorityPot = await web3Context.web3.eth.getBalance(lowMajAddr);
     setLowMajorityContractBalance(BigNumber(lowMajorityPot).dividedBy(1e18));
 
     subscribeToEvents();
