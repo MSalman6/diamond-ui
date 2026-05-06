@@ -87,7 +87,6 @@ export async function makeClientApiRequest<T = any>(
         data: {} as T,
         status: 429,
         ok: false,
-        error: 'rate_limited',
       };
     }
 
