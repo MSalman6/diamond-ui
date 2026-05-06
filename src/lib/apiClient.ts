@@ -6,6 +6,7 @@
 
 'use client';
 
+import { toast } from 'react-toastify';
 import logger from '@/utils/logger';
 
 export interface ClientApiRequestOptions {
@@ -73,7 +74,23 @@ export async function makeClientApiRequest<T = any>(
     
     let data: T;
     const contentType = response.headers.get('content-type');
-    
+
+    if (response.status === 429) {
+      toast.warn(
+        "You're sending requests a bit too fast. Please wait a moment and try again.",
+        {
+          toastId: 'rate-limit',
+          autoClose: 8000,
+        }
+      );
+      return {
+        data: {} as T,
+        status: 429,
+        ok: false,
+        error: 'rate_limited',
+      };
+    }
+
     if (contentType && contentType.includes('application/json')) {
       const jsonData = await response.json();
       
