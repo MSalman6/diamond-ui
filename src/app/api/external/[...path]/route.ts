@@ -49,10 +49,18 @@ const initPromise: Promise<void> = (async () => {
 })();
 
 function getClientIp(request: NextRequest): string {
+  // cf-connecting-ip: set by Cloudflare
+  const cfIp = request.headers.get('cf-connecting-ip');
+  if (cfIp) return cfIp.trim();
+
+  // x-real-ip: set by nginx via `proxy_set_header X-Real-IP $remote_addr`
+  const realIp = request.headers.get('x-real-ip');
+  if (realIp) return realIp.trim();
+
+  // x-forwarded-for fallback — only reliable in dev (no proxy in front)
   const xff = request.headers.get('x-forwarded-for');
   if (!xff) return 'unknown';
-  const first = xff.split(',')[0].trim();
-  return first || 'unknown';
+  return xff.split(',')[0].trim() || 'unknown';
 }
 
 async function checkRateLimit(
