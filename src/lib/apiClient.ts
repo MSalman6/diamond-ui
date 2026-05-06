@@ -21,6 +21,7 @@ export interface ClientApiResponse<T = any> {
   status: number;
   ok: boolean;
   error?: string;
+  rateLimited?: boolean;
 }
 
 /**
@@ -87,6 +88,7 @@ export async function makeClientApiRequest<T = any>(
         data: {} as T,
         status: 429,
         ok: false,
+        rateLimited: true,
       };
     }
 
