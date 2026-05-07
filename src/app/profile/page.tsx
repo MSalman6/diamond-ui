@@ -31,7 +31,8 @@ export default function ProfilePage() {
   const { isConnected } = useWalletConnect();
   const { allDaoProposals } = useDaoContext();
   const [isBonusHistoryModalOpen, setIsBonusHistoryModalOpen] = useState(false);
-  const [isStakeHistoryModalOpen, setIsStakeHistoryModalOpen] = useState(false);
+  const [isValidatorStakeHistoryModalOpen, setIsValidatorStakeHistoryModalOpen] = useState(false);
+  const [isDelegatedStakeHistoryModalOpen, setIsDelegatedStakeHistoryModalOpen] = useState(false);
   const [isStakerHistoryModalOpen, setIsStakerHistoryModalOpen] = useState(false);
 
   // Get validators that user has staked with (has myStake > 0)
@@ -378,7 +379,7 @@ export default function ProfilePage() {
                               <StakeModal buttonText="Stake" pool={myPool} />
                               <UnstakeModal buttonText="Unstake" pool={myPool} />
                               {!isPrivacyMode && (
-                                <button onClick={() => setIsStakeHistoryModalOpen(true)}  className="btn-secondary btn-sm">History</button>
+                                <button onClick={() => setIsValidatorStakeHistoryModalOpen(true)}  className="btn-secondary btn-sm">History</button>
                               )}
                               {myPool && (
                                 <RemoveValidatorModal buttonText="Remove pool" pool={myPool} />
@@ -395,7 +396,7 @@ export default function ProfilePage() {
                         <span className="stake-value highlight">{formatDMDAmount(delegatedStakeWei)}</span>
                       </div>
                       {!isPrivacyMode && (
-                        <button onClick={() => setIsStakeHistoryModalOpen(true)}  className="btn-secondary btn-sm">History</button>
+                        <button onClick={() => setIsDelegatedStakeHistoryModalOpen(true)}  className="btn-secondary btn-sm">History</button>
                       )}
                     </div>
                   </div>
@@ -610,10 +611,18 @@ export default function ProfilePage() {
           validatorAddress={userWallet.myAddr}
         />
         <StakeHistoryModal
-          isOpen={isStakeHistoryModalOpen}
-          onClose={() => setIsStakeHistoryModalOpen(false)}
+          isOpen={isValidatorStakeHistoryModalOpen}
+          onClose={() => setIsValidatorStakeHistoryModalOpen(false)}
           address={myPool?.stakingAddress || userWallet.myAddr}
           mode="node"
+          delegatorFilter={false}
+        />
+        <StakeHistoryModal
+          isOpen={isDelegatedStakeHistoryModalOpen}
+          onClose={() => setIsDelegatedStakeHistoryModalOpen(false)}
+          address={myPool?.stakingAddress || userWallet.myAddr}
+          mode="node"
+          delegatorFilter={true}
         />
         <StakeHistoryModal
           isOpen={isStakerHistoryModalOpen}

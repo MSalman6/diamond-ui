@@ -38,6 +38,7 @@ interface StakeHistoryModalProps {
   onClose: () => void;
   address: string;
   mode: StakeHistoryMode;
+  delegatorFilter?: boolean;
 }
 
 type ActionFilter = 'all' | string;
@@ -109,6 +110,7 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
   onClose,
   address,
   mode,
+  delegatorFilter,
 }) => {
   const [transactions, setTransactions] = useState<StakeTransaction[]>([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -174,13 +176,19 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
 
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
+  // Apply delegator filter if specified
+  const filteredTransactions = useMemo(() => {
+    if (delegatorFilter === undefined) return transactions;
+    return transactions.filter(tx => tx.is_delegator_stake === delegatorFilter);
+  }, [transactions, delegatorFilter]);
+
   // Aggregate amounts by epoch
   const chartData = useMemo(() => {
-    if (!transactions || transactions.length === 0) return [];
+    if (!filteredTransactions || filteredTransactions.length === 0) return [];
 
     const epochMap = new Map<number, { stakeIn: number; stakeOut: number }>();
 
-    for (const tx of transactions) {
+    for (const tx of filteredTransactions) {
       const epoch = tx.staking_epoch;
       if (!epochMap.has(epoch)) {
         epochMap.set(epoch, { stakeIn: 0, stakeOut: 0 });
@@ -212,13 +220,19 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
 
   // Sort transactions latest first
   const sortedTransactions = useMemo(() => {
-    if (!transactions || transactions.length === 0) return [];
-    return [...transactions].sort((a, b) => b.block_number - a.block_number);
-  }, [transactions]);
+    if (!filteredTransactions || filteredTransactions.length === 0) return [];
+    return [...filteredTransactions].sort((a, b) => b.block_number - a.block_number);
+  }, [filteredTransactions]);
 
-  const title = mode === 'node' ? 'Validator Stake History' : 'My Stake History';
+  const title = mode === 'node'
+    ? (delegatorFilter === true ? 'Delegated Stake History' : delegatorFilter === false ? 'Validator Stake History' : 'Validator Stake History')
+    : 'My Stake History';
   const subtitle = mode === 'node'
-    ? 'All stake events on this validator pool'
+    ? (delegatorFilter === true
+        ? 'Stake/unstake activity from delegators on this pool'
+        : delegatorFilter === false
+          ? 'Stake changes for the validator\'s own wallet'
+          : 'All stake events on this validator pool')
     : 'Your staking activity across all validators';
 
   return (
