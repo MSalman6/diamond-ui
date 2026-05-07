@@ -57,7 +57,7 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
       
       const response = await clientApiGet<{ data: BonusScoreHistoryEntry[] }>(endpoint);
 
-      if (!response.ok) {
+      if (!response.ok && !response.rateLimited) {
         toast.error(response.error || `Failed to fetch history: ${response.status}`);
       }
 

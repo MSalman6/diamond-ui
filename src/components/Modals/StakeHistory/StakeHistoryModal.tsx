@@ -137,7 +137,7 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
 
       const response = await clientApiGet<StakeHistoryResponse>(endpoint);
 
-      if (!response.ok) {
+      if (!response.ok && !response.rateLimited) {
         toast.error(response.error || `Failed to fetch stake history: ${response.status}`);
         setError(response.error || 'Failed to fetch stake history');
         return;
