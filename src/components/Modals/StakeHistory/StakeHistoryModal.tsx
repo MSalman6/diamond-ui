@@ -347,7 +347,7 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
 
             {/* Transaction List */}
             <div className="stake-history-list-section">
-              <div className="section-header">
+              <div className="bs-section-header">
                 <h3 className="section-title">
                   <i className="fas fa-list"></i>
                   Transactions
