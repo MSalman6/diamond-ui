@@ -4,7 +4,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ui2.bit.diamonds';
 
 const MARKDOWN = `# Diamond UI — DMD Diamond Staking Platform
 
-Diamond UI is the official web interface for the DMD blockchain network. It enables token holders to stake DMD, participate in DAO governance, monitor validators, and manage staking positions.
+Decentralized platform for DMD operations, offering tools for validator management, staking, DAO governance, and personalized user profiles to promote trust and stability in the DMD ecosystem.
 
 **Base URL:** ${SITE_URL}
 
@@ -28,20 +28,24 @@ Documentation and reference material for the DMD network and staking mechanics.
 Frequently asked questions covering staking, rewards, governance, and wallet setup.
 
 ### Profile — \`/profile\`
-View your connected wallet's staking positions, pending rewards, and claim history.
+View your connected wallet's staking, rewards, and governance activities.
 
 ---
 
 ## Network
 
-DMD is an EVM-compatible proof-of-stake blockchain. Validators are elected each epoch; stakers delegate tokens to validator pools to earn epoch rewards.
+DMD Diamond is an EVM-compatible delegated proof-of-stake blockchain using HoneyBadgerBFT (HBBFT) consensus together with the POSDAO validator election mechanism.
 
-Key concepts:
+Validators are dynamically elected every epoch, while token holders delegate stake to validator pools to earn staking rewards.
 
-- **Epoch** — A fixed time window after which validator performance is scored and rewards distributed
-- **Staking Pool** — Each validator operates a pool; token holders stake into pools they trust
-- **DAO** — On-chain governance controls protocol parameters via executable proposals
-- **Claiming Contract** — Holds accumulated staking rewards available for withdrawal
+### Key Concepts
+
+- **Epoch** — A fixed validator and reward cycle currently operating on 12-hour intervals. Validator performance is evaluated and rewards are distributed after each epoch.
+- **Staking Pool** — Each validator operates a staking pool where delegators can stake DMD tokens. Delegated funds remain in the on-chain staking contract and are never controlled directly by validators.
+- **POSDAO** — The validator election and staking system used by DMD Diamond. POSDAO dynamically selects active validators from validator candidates based on stake and network rules.
+- **DAO** — On-chain governance system used to manage protocol upgrades, network parameters, treasury decisions, and governance proposals through executable voting.
+- **Staking Contract** — Smart contract responsible for holding delegated validator and delegator stake while distributing staking rewards.
+- **Claiming Contract** — Separate smart contract used for DMDv3-to-DMDv4 migration claims and unclaimed snapshot balances.
 
 ---
 
@@ -59,7 +63,11 @@ Key concepts:
 
 ## Notes
 
-All data displayed in the UI is sourced from the DMD blockchain. Staking and governance actions require a connected Web3 wallet (WalletConnect).
+- All staking, governance, and validator data displayed in Diamond UI is sourced directly from the DMD Diamond blockchain.
+- Staking and governance interactions require a connected Web3 wallet.
+- WalletConnect and EVM-compatible wallets are supported.
+- Delegated staking on DMD Diamond is non-custodial — validators never take custody of user funds.
+- Rewards are distributed on an epoch basis through the staking system.
 `;
 
 export async function GET() {
