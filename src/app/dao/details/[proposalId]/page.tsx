@@ -346,6 +346,13 @@ export default function ProposalDetailsPage() {
       if (!isValid) return
       if (daoContext.castVote) {
         await daoContext.castVote(proposal.id, vote, voteReason)
+        // Refresh vote status, voting stats and proposal details after a successful vote
+        if (daoContext.getMyVote && web3Context.userWallet?.myAddr) {
+          daoContext.getMyVote(proposal.id, web3Context.userWallet.myAddr).then((mv: any) => setMyVote(mv)).catch(() => {})
+        }
+        if (daoContext.getProposalVotingStats) {
+          daoContext.getProposalVotingStats(proposal.id).then((stats: any) => setVotingStats(stats)).catch(() => {})
+        }
         if (daoContext.getProposalDetails) daoContext.getProposalDetails(proposal.id).then((res: any) => setProposal(res)).catch(() => {})
       }
     } catch (e) {}

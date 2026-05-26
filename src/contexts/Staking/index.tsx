@@ -424,7 +424,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
       const minGas = minimumGasFee ? minimumGasFee : new BigNumber(0);
       const finalGasPrice = BigNumber.max(new BigNumber(rpcGasPrice || 0), minGas).toFixed(0);
 
-      const next = { ...defaultTxOpts, gasPrice: finalGasPrice, ...overrides };
+      const next = { ...defaultTxOpts, gasPrice: finalGasPrice, type: '0x0', ...overrides };
       setDefaultTxOpts(prev => ({ ...prev, gasPrice: finalGasPrice }));
       return next;
     } catch (e) {

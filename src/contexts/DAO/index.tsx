@@ -32,7 +32,7 @@ interface DaoContextProps {
   getActiveProposals: () => Promise<void>;
   dismissProposal: (proposalId: string, reason: string) => Promise<void>;
   getStateString: (stateValue: string) => string;
-  castVote: (proposalId: number, vote: number, reason: string) => Promise<void>;
+  castVote: (proposalId: string, vote: number, reason: string) => Promise<void>;
   getProposalVotingStats: (proposalId: string) => Promise<TotalVotingStats>;
   createProposal: (type: string, title: string, discussionUrl: string, targets: string[], values: string[], callDatas: string[], description: string) => Promise<string>;
   getProposalTimestamp: (proposalId: string) => Promise<number>;
@@ -772,7 +772,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     });
   };
 
-  const castVote = async (proposalId: number, vote: number, reason: string) => {
+  const castVote = async (proposalId: string, vote: number, reason: string) => {
     logger.log("[INFO] Casting vote", proposalId, vote, reason);
     return new Promise<void>(async (resolve, reject) => {
       if (!web3Context.ensureWalletConnection()) return reject("Wallet not connected");
@@ -790,16 +790,16 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
         if (hasVotedBefore) {
           // User has voted before - use changeVote function
           const gasPrice = await web3Context.getGasPriceSafe();
-          await web3Context.contractsManager.daoContract.methods.changeVote(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr, gasPrice});
+          await web3Context.contractsManager.daoContract.methods.changeVote(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr, gasPrice, type: '0x0'});
           toast.success(`Vote Changed 💎`);
         } else {
           // First-time voting - use vote or voteWithReason
           if (reason.length > 0) {
             const gasPrice = await web3Context.getGasPriceSafe();
-            await web3Context.contractsManager.daoContract.methods.voteWithReason(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr, gasPrice});
+            await web3Context.contractsManager.daoContract.methods.voteWithReason(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr, gasPrice, type: '0x0'});
           } else {
             const gasPrice = await web3Context.getGasPriceSafe();
-            await web3Context.contractsManager.daoContract.methods.vote(proposalId, vote).send({from: web3Context.userWallet.myAddr, gasPrice});
+            await web3Context.contractsManager.daoContract.methods.vote(proposalId, vote).send({from: web3Context.userWallet.myAddr, gasPrice, type: '0x0'});
           }
           toast.success(`Vote Casted 💎`);
         }
