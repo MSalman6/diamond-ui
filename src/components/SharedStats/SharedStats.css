@@ -47,6 +47,31 @@ body.light-theme .dmd-aep30-badge--green { background: rgba(26, 122, 64, 0.1); c
 body.light-theme .dmd-aep30-badge--yellow { background: rgba(192, 96, 0, 0.1); color: #c06000; }
 body.light-theme .dmd-aep30-badge--red { background: rgba(192, 57, 43, 0.1); color: #c0392b; }
 
+.dmd-aep30-ring {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+.dmd-aep30-ring__svg {
+  display: block;
+}
+.dmd-aep30-ring__track {
+  stroke: var(--border-color, rgba(255, 255, 255, 0.12));
+}
+.dmd-aep30-ring__progress {
+  stroke: var(--accent, #3a7bd5);
+  stroke-linecap: round;
+}
+.dmd-aep30-ring__value {
+  position: absolute;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent, #3a7bd5);
+  line-height: 1;
+}
+
 /* SaturationBar */
 .dmd-sat-bar {
   display: flex;

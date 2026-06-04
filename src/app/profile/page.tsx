@@ -8,7 +8,7 @@ import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { useMemo, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { truncateAddress, parseEpochEndTime } from '@/utils/common';
+import { truncateAddress, parseEpochEndTime, parseDmdAmount } from '@/utils/common';
 import { useWeb3Context } from '@/contexts/Web3';
 import InfoTooltip from '@/components/InfoTooltip';
 import { useStakingContext } from '@/contexts/Staking';
@@ -33,10 +33,9 @@ import {
   getCachedStakerRewards30d,
 } from '@/lib/rewardStatsCache';
 import AreaChart from '@/components/Charts/AreaChart';
-import PieChart from '@/components/Charts/PieChart';
 import '@/components/Charts/Charts.css';
 import ValidatorCell from '@/components/ValidatorCell';
-import Aep30Badge from '@/components/Aep30Badge';
+import Aep30Badge, { Aep30Ring } from '@/components/Aep30Badge';
 import SaturationBar from '@/components/SaturationBar';
 import Rpt30Cell from '@/components/Rpt30Cell';
 
@@ -226,9 +225,9 @@ export default function ProfilePage() {
     const rows: { date: string; rpt: number; score: number; saturation: number; sortKey: number }[] = [];
     for (const e of epochRewards) {
       const endDate = parseEpochEndTime(e.epoch_end_time);
-      const stakeDmd = parseFloat(e.total_staked_snapshot);
+      const stakeDmd = parseDmdAmount(e.total_staked_snapshot);
       if (!endDate || stakeDmd <= 0) continue;
-      const delegatorsReward = parseFloat(e.delegators_total_reward);
+      const delegatorsReward = parseDmdAmount(e.delegators_total_reward);
       rows.push({
         date: endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
         rpt: (delegatorsReward / stakeDmd) * 1000,
@@ -244,7 +243,7 @@ export default function ProfilePage() {
   const validatorChartAreas = useMemo(() => {
     const areas: { dataKey: string; name: string; color: string }[] = [];
     if (chartShowRpt) {
-      areas.push({ dataKey: 'rpt', name: 'RpT30', color: 'var(--accent, #3b82f6)' });
+      areas.push({ dataKey: 'rpt', name: 'RpT30', color: '#3a7bd5' });
     }
     if (chartShowScore) {
       areas.push({ dataKey: 'score', name: 'Score', color: '#8b5cf6' });
@@ -682,30 +681,10 @@ export default function ProfilePage() {
                   <div className="stat-card vp2-analytics-card vp2-analytics-card--donut">
                     <div className="stat-label">AEP30 <InfoTooltip content={<div><p>Percentage of epochs during the last 30 days where this validator was part of the active validator set.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="vp2-donut-wrap">
-                      {validatorRewardStats && (
-                        <PieChart
-                          data={[
-                            { name: 'Active', value: parseFloat((validatorRewardStats.aep30 * 100).toFixed(1)) },
-                            { name: 'Inactive', value: parseFloat(((1 - validatorRewardStats.aep30) * 100).toFixed(1)) },
-                          ]}
-                          dataKey="value"
-                          nameKey="name"
-                          innerRadius={35}
-                          outerRadius={55}
-                          config={{ height: 120 }}
-                          showLegend={false}
-                          showLabels={false}
-                          colors={['#3b82f6', 'var(--border-color, rgba(255,255,255,0.12))']}
-                          centerValue={
-                            isLoadingValidatorStats
-                              ? '...'
-                              : `${((validatorRewardStats?.aep30 ?? 0) * 100).toFixed(0)}%`
-                          }
-                        />
-                      )}
-                      {!validatorRewardStats && (
-                        <div className="stat-value highlight vp2-analytics-value">—</div>
-                      )}
+                      <Aep30Ring
+                        aep30={validatorRewardStats?.aep30 ?? null}
+                        isLoading={isLoadingValidatorStats}
+                      />
                     </div>
                     <div className="vp2-analytics-sub">
                       {validatorRewardStats
@@ -715,7 +694,7 @@ export default function ProfilePage() {
                     <div className="vp2-analytics-footer">Participation during last 30d</div>
                   </div>
                   <div className="stat-card vp2-analytics-card">
-                    <div className="stat-label">VOS30 <InfoTooltip content={<div><p>Validator owner rewards over the last 30 days (20% fixed share). Net includes stake-proportional returns.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                    <div className="stat-label">VOS30 <InfoTooltip content={<div><p>Total validator owner rewards earned during the last 30 days from the 20% validator owner share.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="stat-value highlight vp2-analytics-value">
                       {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.vos30.toFixed(2) + ' DMD' : '—'}
                     </div>
@@ -774,11 +753,11 @@ export default function ProfilePage() {
                   areas={
                     validatorChartAreas.length > 0
                       ? validatorChartAreas
-                      : [{ dataKey: 'rpt', name: 'RpT30', color: 'var(--accent, #3b82f6)' }]
+                      : [{ dataKey: 'rpt', name: 'RpT30', color: '#3a7bd5' }]
                   }
                   config={{ height: 260, margin: { top: 10, right: 20, left: 10, bottom: 0 } }}
                   showLegend={false}
-                  yAxisLabel="DMD per 1000 / 30d"
+                  yAxisLabel="RpT per 1000 DMD"
                   isLoading={isLoadingEpochRewards}
                   emptyMessage="No epoch data available"
                     />

@@ -1,6 +1,7 @@
 'use client';
 
 import { clientApiGet, clientApiPost } from '@/lib/apiClient';
+import { parseEpochEndTime } from '@/utils/common';
 import type {
   BatchNodeRewardStats,
   BatchNodeRewardStatsResponse,
@@ -177,14 +178,18 @@ export async function getCachedNodeEpochRewards(
 
   if (!pendingFetches.has(cacheKey)) {
     const fetchPromise = clientApiGet<NodeEpochRewardsResponse>(
-      `node/${addr}/epoch-rewards?from_time=${fromTime}&limit=100`
+      `node/${addr}/epoch-rewards?limit=100`
     )
       .then(res => {
-        if (res.ok) {
-          writeCache(cacheKey, res.data.data);
-          return res.data.data;
-        }
-        return [] as NodeEpochReward[];
+        if (!res.ok) return [] as NodeEpochReward[];
+        const rows = res.data.data ?? [];
+        const cutoff = fromTime * 1000;
+        const filtered = rows.filter(entry => {
+          const end = parseEpochEndTime(entry.epoch_end_time);
+          return end != null && end.getTime() >= cutoff;
+        });
+        writeCache(cacheKey, filtered);
+        return filtered;
       })
       .catch(() => [] as NodeEpochReward[]);
 

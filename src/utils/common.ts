@@ -203,6 +203,13 @@ export function formatEpochEndDate(value: number | string | null | undefined): s
   return d.toLocaleDateString();
 }
 
+export function parseDmdAmount(value: string | number | null | undefined): number {
+  if (value == null || value === '') return 0;
+  const bn = BigNumber(value);
+  if (!bn.isFinite() || bn.isZero()) return 0;
+  return bn.isGreaterThanOrEqualTo(1e15) ? bn.dividedBy(1e18).toNumber() : bn.toNumber();
+}
+
 export const getAddressFromPublicKey = (publicKey: string): string => {
   let publicKeyCleaned = publicKey;
 

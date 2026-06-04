@@ -197,7 +197,7 @@ const RewardsHistoryModal: React.FC<RewardsHistoryModalProps> = ({
                   disabled={page === 0}
                   onClick={() => setPage(p => p - 1)}
                 >
-                  Previous
+                  <i className="fas fa-chevron-left"></i>
                 </button>
                 <span className="pagination-info">
                   Page {page + 1} of {totalPages} ({totalCount} total)
@@ -207,7 +207,7 @@ const RewardsHistoryModal: React.FC<RewardsHistoryModalProps> = ({
                   disabled={page >= totalPages - 1}
                   onClick={() => setPage(p => p + 1)}
                 >
-                  Next
+                  <i className="fas fa-chevron-right"></i>
                 </button>
               </div>
             )}

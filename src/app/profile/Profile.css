@@ -434,10 +434,13 @@ body.light-theme .vp-rewards-chart-section {
   margin: 0.25rem 0;
 }
 
-.vp2-donut-wrap .donut-center-label .value {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--accent, #3b82f6);
+.vp2-rewards-performance .chart-container {
+  min-height: 300px;
+}
+
+.vp2-rewards-performance .chart-content {
+  min-height: 260px;
+  width: 100%;
 }
 
 .vp2-rewards-performance {

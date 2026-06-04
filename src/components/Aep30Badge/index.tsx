@@ -14,3 +14,50 @@ export default function Aep30Badge({ aep30 }: Aep30BadgeProps) {
     </span>
   );
 }
+
+interface Aep30RingProps {
+  aep30: number | null;
+  isLoading?: boolean;
+}
+
+export function Aep30Ring({ aep30, isLoading }: Aep30RingProps) {
+  const size = 120;
+  const stroke = 8;
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const pct = aep30 != null ? Math.min(100, Math.max(0, aep30 * 100)) : 0;
+  const dashOffset = circumference * (1 - pct / 100);
+
+  let center = '—';
+  if (isLoading) center = '...';
+  else if (aep30 != null) center = `${pct.toFixed(0)}%`;
+
+  return (
+    <div className="dmd-aep30-ring" style={{ width: size, height: size }}>
+      {aep30 != null && !isLoading && (
+        <svg className="dmd-aep30-ring__svg" width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+          <circle
+            className="dmd-aep30-ring__track"
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            strokeWidth={stroke}
+            fill="none"
+          />
+          <circle
+            className="dmd-aep30-ring__progress"
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            strokeWidth={stroke}
+            fill="none"
+            strokeDasharray={circumference}
+            strokeDashoffset={dashOffset}
+            transform={`rotate(-90 ${size / 2} ${size / 2})`}
+          />
+        </svg>
+      )}
+      <span className="dmd-aep30-ring__value">{center}</span>
+    </div>
+  );
+}
