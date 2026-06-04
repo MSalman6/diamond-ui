@@ -13,6 +13,20 @@ import { truncateAddress } from '../../utils/common';
 import { getThemeImagePath } from '../../utils/imageUtils';
 import Image from 'next/image';
 import InfoTooltip from '../InfoTooltip';
+import { useIsPrivacyMode } from '@/contexts';
+import type { BatchNodeRewardStats } from '@/types/rewards';
+import { getCachedBatchNodeStats } from '@/lib/rewardStatsCache';
+import ValidatorCell from '../ValidatorCell';
+import Aep30Badge from '../Aep30Badge';
+import SaturationBar from '../SaturationBar';
+import Rpt30Cell from '../Rpt30Cell';
+
+const SORT_PILLS = [
+  { key: 'rpt30',      label: 'Highest RpT30',       icon: 'fa-trophy',        direction: 'descending' },
+  { key: 'apy',        label: 'Highest APY',          icon: 'fa-percent',       direction: 'descending' },
+  { key: 'saturation', label: 'Lowest Saturation',    icon: 'fa-gauge',         direction: 'ascending'  },
+  { key: 'aep30',      label: 'Most Stable',          icon: 'fa-shield',        direction: 'descending' },
+] as const;
 
 interface TableField {
   key: string;
@@ -24,27 +38,30 @@ interface TableField {
 
 const tableFieldsDefault: TableField[] = [
   { key: "isActive", label: "Status", sortAble: true, updateAble: true, hide: false },
-  { key: "stakingAddress", label: "Wallet address", sortAble: false, updateAble: true, hide: false },
-  { key: "miningAddress", label: "Miner address", sortAble: false, updateAble: true, hide: true },
-  { key: "miningPublicKey", label: "Public Key", sortAble: false, updateAble: true, hide: true },
-  { key: "totalStake", label: "Total Stake", sortAble: true, updateAble: true, hide: false },
-  { key: "votingPower", label: "Voting Power", sortAble: true, updateAble: true, hide: false },
+  { key: "stakingAddress", label: "Validator", sortAble: false, updateAble: true, hide: false },
+  { key: "rpt30", label: "RpT30", sortAble: true, updateAble: true, hide: false },
+  { key: "apy", label: "APY", sortAble: true, updateAble: true, hide: false },
+  { key: "totalStake", label: "Stake", sortAble: true, updateAble: true, hide: false },
   { key: "score", label: "Score", sortAble: true, updateAble: true, hide: false },
-  { key: "connectivityReport", label: "CR", sortAble: true, updateAble: true, hide: false },
+  { key: "aep30", label: "Active Epoch %", sortAble: true, updateAble: true, hide: false },
   { key: "myStake", label: "My Stake", sortAble: true, updateAble: false, hide: false },
   { key: "stakeBtn", label: "", sortAble: false, updateAble: false, hide: false },
   { key: "unstakeClaimBtn", label: "", sortAble: false, updateAble: false, hide: false },
+  // Optional / hidden by default
+  { key: "votingPower", label: "Voting Power", sortAble: true, updateAble: true, hide: true },
+  { key: "connectivityReport", label: "CR", sortAble: true, updateAble: true, hide: true },
+  { key: "vos30", label: "VOS30", sortAble: true, updateAble: true, hide: true },
+  { key: "saturation", label: "Saturation", sortAble: true, updateAble: true, hide: true },
+  { key: "miningAddress", label: "Miner address", sortAble: false, updateAble: true, hide: true },
+  { key: "miningPublicKey", label: "Public Key", sortAble: false, updateAble: true, hide: true },
 ];
 
-interface ValidatorsProps {
-  itemsPerPage?: number;
-}
-
-export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
+export default function Validators() {
   const { userWallet } = useWeb3Context();
   const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake } = useStakingContext();
   const router = useRouter();
   const theme = useTheme();
+  const isPrivacyMode = useIsPrivacyMode();
 
   const getImagePath = (filename: string) => {
     return getThemeImagePath(filename, theme);
@@ -56,16 +73,51 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: string } | null>(null);
   const [tableFields, setTableFields] = useState<TableField[]>(tableFieldsDefault);
+  const [rewardStatsMap, setRewardStatsMap] = useState<Record<string, BatchNodeRewardStats>>({});
+  const [isLoadingRewardStats, setIsLoadingRewardStats] = useState(false);
+  const [itemsPerPage, setItemsPerPage] = useState(100);
+
+  // Persist itemsPerPage from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('validatorsPerPage');
+    const n = saved ? parseInt(saved, 10) : NaN;
+    if ([5, 10, 25, 50, 100].includes(n)) setItemsPerPage(n);
+  }, []);
 
   // Load table fields from localStorage
   useEffect(() => {
     const storedTableFields = localStorage.getItem('validatorFieldsData');
     if (storedTableFields) {
-      setTableFields(JSON.parse(storedTableFields));
+      try {
+        const parsed: TableField[] = JSON.parse(storedTableFields);
+        // Migrate: if old config is missing any new keys, reset to defaults
+        const storedKeys = new Set(parsed.map(f => f.key));
+        const hasNewColumns = ['rpt30', 'apy', 'aep30', 'saturation'].every(k => storedKeys.has(k));
+        if (!hasNewColumns) {
+          localStorage.setItem('validatorFieldsData', JSON.stringify(tableFieldsDefault));
+          setTableFields(tableFieldsDefault);
+        } else {
+          setTableFields(parsed);
+        }
+      } catch {
+        localStorage.setItem('validatorFieldsData', JSON.stringify(tableFieldsDefault));
+        setTableFields(tableFieldsDefault);
+      }
     } else {
       localStorage.setItem('validatorFieldsData', JSON.stringify(tableFieldsDefault));
     }
   }, []);
+
+  // Fetch reward stats for all pools via shared cached layer
+  useEffect(() => {
+    if (!pools.length || isPrivacyMode) return;
+    setIsLoadingRewardStats(true);
+    const addresses = pools.map(p => p.stakingAddress.toLowerCase());
+    getCachedBatchNodeStats(addresses)
+      .then(results => setRewardStatsMap(results))
+      .catch(() => {})
+      .finally(() => setIsLoadingRewardStats(false));
+  }, [pools, isPrivacyMode]);
 
   // Apply filter from URL search params (e.g. ?filter=stakedOn)
   const searchParams = useSearchParams();
@@ -136,25 +188,43 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
 
   // Apply sorting
   if (sortConfig !== null) {
-    poolsCopy.sort((a: any, b: any) => {
-      let keyA, keyB;
+    if (['rpt30', 'apy', 'aep30', 'vos30', 'saturation'].includes(sortConfig.key)) {
+      const getVal = (pool: any): number => {
+        const stats = rewardStatsMap[pool.stakingAddress.toLowerCase()];
+        if (sortConfig.key === 'saturation') {
+          return BigNumber(pool.totalStake || 0).dividedBy(BigNumber(50000).multipliedBy(10 ** 18)).multipliedBy(100).toNumber();
+        }
+        if (!stats) return -Infinity;
+        if (sortConfig.key === 'rpt30') return stats.rpt30;
+        if (sortConfig.key === 'apy') return stats.estimated_apy;
+        if (sortConfig.key === 'aep30') return stats.aep30;
+        if (sortConfig.key === 'vos30') return stats.vos30;
+        return 0;
+      };
+      poolsCopy.sort((a, b) =>
+        sortConfig.direction === 'ascending' ? getVal(a) - getVal(b) : getVal(b) - getVal(a)
+      );
+    } else {
+      poolsCopy.sort((a: any, b: any) => {
+        let keyA, keyB;
 
-      if (sortConfig.key === 'myStake' || sortConfig.key === 'score' || sortConfig.key === 'connectivityReport') {
-        keyA = parseFloat(a[sortConfig.key] || '0');
-        keyB = parseFloat(b[sortConfig.key] || '0');
-      } else {
-        keyA = a[sortConfig.key];
-        keyB = b[sortConfig.key];
-      }
+        if (sortConfig.key === 'myStake' || sortConfig.key === 'score' || sortConfig.key === 'connectivityReport') {
+          keyA = parseFloat(a[sortConfig.key] || '0');
+          keyB = parseFloat(b[sortConfig.key] || '0');
+        } else {
+          keyA = a[sortConfig.key];
+          keyB = b[sortConfig.key];
+        }
 
-      if (keyA < keyB) {
-        return sortConfig.direction === 'ascending' ? -1 : 1;
-      }
-      if (keyA > keyB) {
-        return sortConfig.direction === 'ascending' ? 1 : -1;
-      }
-      return 0;
-    });
+        if (keyA < keyB) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (keyA > keyB) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
   }
 
   // Pagination
@@ -206,8 +276,16 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
       case 'score':
           return "Combined score value, based on the results of generating the shared key, the stability of the validator connection and misbehaviour reports from other validators";
       case 'connectivityReport':
-          return "Connectivity report value, based on how many other active validators did report bad connectivity towards that node";
-      default:
+          return "Connectivity report value, based on how many other active validators did report bad connectivity towards that node";      case 'rpt30':
+          return "Historical staking rewards earned per 1000 DMD delegated to this validator during the last 30 days.";
+      case 'apy':
+          return "Estimated annualised return based on validator rewards over the last 30 days. This is a historical estimate, not a guarantee.";
+      case 'aep30':
+          return "Percentage of epochs during the last 30 days where this validator was part of the active validator set.";
+      case 'vos30':
+          return "Total validator owner rewards earned during the last 30 days from the 20% validator owner share.";
+      case 'saturation':
+          return "Current pool stake as a percentage of the 50,000 DMD maximum. Validators near saturation may have diluted returns for new delegators.";      default:
           return "";
     }
   };
@@ -215,7 +293,20 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
   // Render page numbers
   const renderPageNumbers = () => {
     const pageNumbers: React.ReactElement[] = [];
+    const WINDOW = 2;
+    let prevSkipped = false;
     for (let i = 0; i < pageCount; i++) {
+      const isFirst = i === 0;
+      const isLast = i === pageCount - 1;
+      const near = Math.abs(i - currentPage) <= WINDOW;
+      if (!isFirst && !isLast && !near) {
+        if (!prevSkipped) {
+          pageNumbers.push(<li key={`ell-${i}`} className="pagination-btn pagination-ellipsis" style={{ cursor: 'default', pointerEvents: 'none' }}>…</li>);
+          prevSkipped = true;
+        }
+        continue;
+      }
+      prevSkipped = false;
       pageNumbers.push(
         <li
           key={i}
@@ -294,9 +385,10 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
             return (
               <td key={colIndex} className="wallet-address">
                 {pool.stakingAddress ? (
-                  <div onClick={(e) => copyData(e, pool.stakingAddress, "Copied staking address")}>
-                    {truncateAddress(pool.stakingAddress)}
-                  </div>
+                  <ValidatorCell
+                    address={pool.stakingAddress}
+                    onClick={(e) => { e.stopPropagation(); copyData(e, pool.stakingAddress, 'Copied staking address'); }}
+                  />
                 ) : (
                   <div>Loading...</div>
                 )}
@@ -324,6 +416,49 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
                 ) : (
                   <div>Loading...</div>
                 )}
+              </td>
+            );
+          } else if (column.key === 'rpt30') {
+            const stats = rewardStatsMap[pool.stakingAddress.toLowerCase()];
+            return (
+              <td key={colIndex}>
+                {isPrivacyMode ? '—' : isLoadingRewardStats ? '...' : stats ? (
+                  <Rpt30Cell rpt30={stats.rpt30} rpt30_delta={stats.rpt30_delta} />
+                ) : '—'}
+              </td>
+            );
+          } else if (column.key === 'apy') {
+            const stats = rewardStatsMap[pool.stakingAddress.toLowerCase()];
+            return (
+              <td key={colIndex}>
+                {isPrivacyMode ? '—' : isLoadingRewardStats ? '...' : stats ? (
+                  <div>
+                    <div>{stats.estimated_apy.toFixed(2)}%</div>
+                    <div className="vl-apy-sub">estimated</div>
+                  </div>
+                ) : '—'}
+              </td>
+            );
+          } else if (column.key === 'aep30') {
+            const stats = rewardStatsMap[pool.stakingAddress.toLowerCase()];
+            return (
+              <td key={colIndex}>
+                {isPrivacyMode ? '—' : isLoadingRewardStats ? '...' : stats ? (
+                  <Aep30Badge aep30={stats.aep30} />
+                ) : '—'}
+              </td>
+            );
+          } else if (column.key === 'vos30') {
+            const stats = rewardStatsMap[pool.stakingAddress.toLowerCase()];
+            return (
+              <td key={colIndex}>
+                {isPrivacyMode ? '—' : isLoadingRewardStats ? '...' : stats ? stats.vos30.toFixed(2) + ' DMD' : '—'}
+              </td>
+            );
+          } else if (column.key === 'saturation') {
+            return (
+              <td key={colIndex}>
+                <SaturationBar totalStakeWei={pool.totalStake || '0'} />
               </td>
             );
           } else if (column.key === 'totalStake') {
@@ -460,7 +595,7 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
               </div>
               <div className="filter-container">
                 <select value={filter} onChange={handleFilterChange}>
-                  <option value="default">All</option>
+                  <option value="default">All Statuses</option>
                   <option value="valid">Valid Candidates</option>
                   <option value="active">Active Candidates</option>
                   <option value="invalid">Invalid Candidates</option>
@@ -478,6 +613,21 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
                 defaultFields={tableFieldsDefault}
               />
             </div>
+            <div className="vl-quick-sort-pills">
+              {SORT_PILLS.map(pill => {
+                const active = sortConfig?.key === pill.key;
+                return (
+                  <button
+                    key={pill.key}
+                    className={`vl-pill${active ? ' vl-pill--active' : ''}`}
+                    onClick={() => setSortConfig(active ? null : { key: pill.key, direction: pill.direction })}
+                  >
+                    <i className={`fas ${pill.icon}`} aria-hidden="true"></i>
+                    {pill.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Table */}
@@ -490,32 +640,47 @@ export default function Validators({ itemsPerPage = 1000 }: ValidatorsProps) {
             </table>
           </div>
 
-          {/* Pagination */}
-          {poolsCopy.length > itemsPerPage && (
-            <div className="pagination">
-              <button 
-                className={`pagination-btn ${currentPage === 0 ? 'disabled' : ''}`}
-                onClick={() => {
-                  if (currentPage !== 0) {
-                    handlePageClick(currentPage - 1);
-                  }
+          {/* Pagination footer */}
+          <div className="vl-pagination-footer">
+            <span className="vl-pagination-info">
+              {poolsCopy.length === 0
+                ? 'No results'
+                : `Showing ${offset + 1}–${Math.min(offset + itemsPerPage, poolsCopy.length)} of ${poolsCopy.length}`}
+            </span>
+            {pageCount > 1 && (
+              <div className="pagination">
+                <button
+                  className={`pagination-btn ${currentPage === 0 ? 'disabled' : ''}`}
+                  onClick={() => { if (currentPage !== 0) handlePageClick(currentPage - 1); }}
+                >
+                  <i className="fas fa-chevron-left"></i>
+                </button>
+                {renderPageNumbers()}
+                <button
+                  className={`pagination-btn ${currentPage === pageCount - 1 ? 'disabled' : ''}`}
+                  onClick={() => { if (currentPage !== pageCount - 1) handlePageClick(currentPage + 1); }}
+                >
+                  <i className="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            )}
+            <div className="vl-per-page">
+              <label>Rows:</label>
+              <select
+                value={itemsPerPage}
+                onChange={e => {
+                  const n = parseInt(e.target.value, 10);
+                  setItemsPerPage(n);
+                  localStorage.setItem('validatorsPerPage', String(n));
+                  setCurrentPage(0);
                 }}
               >
-                <i className="fas fa-chevron-left"></i>
-              </button>
-              {renderPageNumbers()}
-              <button 
-                className={`pagination-btn ${currentPage === pageCount - 1 ? 'disabled' : ''}`}
-                onClick={() => {
-                  if (currentPage !== pageCount - 1) {
-                    handlePageClick(currentPage + 1);
-                  }
-                }}
-              >
-                <i className="fas fa-chevron-right"></i>
-              </button>
+                {[5, 10, 25, 50, 100].map(n => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </select>
             </div>
-          )}
+          </div>
         </div>
       </section>
     </>

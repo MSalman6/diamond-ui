@@ -99,7 +99,9 @@
 }
 
 .validators-controls {
+  gap: 1rem;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
@@ -1239,8 +1241,7 @@ body.light-theme .cr-danger {
 }
 
 .validators-table td,
-.validators-table button,
-.validators-table span {
+.validators-table button {
   font-size: 0.95rem !important;
 }
 
@@ -1418,4 +1419,130 @@ body.light-theme .claim-btn {
 
 body.light-theme .claim-btn:hover {
   background: rgba(255, 159, 67, 0.25);
+}
+
+.vl-quick-sort-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  flex: 1 1 auto;
+  align-self: flex-end;
+}
+
+.vl-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 15px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-white);
+  font-size: 0.95rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  line-height: 1;
+}
+.vl-pill i {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+.vl-pill:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(0, 157, 255, 0.2);
+}
+.vl-pill--active {
+  border-color: var(--accent, #3b82f6);
+  box-shadow: 0 0 10px rgba(0, 157, 255, 0.25);
+}
+.vl-pill--active i {
+  opacity: 1;
+  color: var(--accent, #3b82f6);
+}
+body.light-theme .vl-pill {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #121826;
+}
+body.light-theme .vl-pill:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 6px rgba(0, 100, 200, 0.15);
+}
+body.light-theme .vl-pill--active {
+  border-color: #2563eb;
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
+}
+body.light-theme .vl-pill--active i {
+  color: #2563eb;
+}
+
+/* APY subtext */
+.vl-apy-sub {
+  font-size: 0.7rem;
+  color: var(--text-secondary, #aaa);
+  margin-top: 2px;
+}
+body.light-theme .vl-apy-sub { color: #666; }
+
+/* Pagination footer */
+.vl-pagination-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+.vl-pagination-info {
+  font-size: 0.85rem;
+  color: var(--text-secondary, #aaa);
+  white-space: nowrap;
+}
+body.light-theme .vl-pagination-info { color: #6b7280; }
+
+/* Per-page select */
+.vl-per-page {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+.vl-per-page label {
+  color: var(--text-secondary, #aaa);
+  white-space: nowrap;
+}
+.vl-per-page select {
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.vl-per-page select option {
+  background: var(--darker-bg, #0d1b2e);
+  color: var(--text-white, #e0e0e0);
+}
+body.light-theme .vl-per-page label { color: #6b7280; }
+body.light-theme .vl-per-page select {
+  background: #fff;
+  border-color: #d1d5db;
+  color: #374151;
+}
+body.light-theme .vl-per-page select option {
+  background: #fff;
+  color: #374151;
+}
+
+/* Ellipsis pagination button */
+.pagination-ellipsis {
+  cursor: default !important;
+  pointer-events: none;
+  opacity: 0.5;
 }

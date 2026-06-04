@@ -186,6 +186,23 @@ export const timestampToDateTime = (timestamp: number) => {
   return `${day} ${month} ${year} ${hours}:${minutes}:${seconds}`;
 }
 
+export function parseEpochEndTime(value: number | string | null | undefined): Date | null {
+  if (value == null || value === '') return null;
+  if (typeof value === 'number') {
+    const ms = value < 1e12 ? value * 1000 : value;
+    const d = new Date(ms);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  const d = new Date(value);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+export function formatEpochEndDate(value: number | string | null | undefined): string {
+  const d = parseEpochEndTime(value);
+  if (!d) return '—';
+  return d.toLocaleDateString();
+}
+
 export const getAddressFromPublicKey = (publicKey: string): string => {
   let publicKeyCleaned = publicKey;
 

@@ -41,7 +41,6 @@ export interface NonPayableTx {
   maxPriorityFeePerGas?: string | number | BN;
   maxFeePerGas?: string | number | BN;
   gasPrice?: string | number | BN;
-  type?: string | number | BN;
 }
 
 export interface PayableTx extends NonPayableTx {

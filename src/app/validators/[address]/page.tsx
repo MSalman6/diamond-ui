@@ -18,6 +18,9 @@ import { toast } from 'react-toastify';
 import InfoTooltip from '@/components/InfoTooltip';
 import BonusScoreHistoryModal from '@/components/Modals/BonusScoreHistory/BonusScoreHistoryModal';
 import StakeHistoryModal from '@/components/Modals/StakeHistory/StakeHistoryModal';
+import NodeRewardsHistoryModal from '@/components/Modals/NodeRewardsHistory/NodeRewardsHistoryModal';
+import { getCachedNodeRewardStats } from '@/lib/rewardStatsCache';
+import type { NodeRewardStats } from '@/types/rewards';
 
 
 export default function ValidatorDetails() {
@@ -38,6 +41,8 @@ export default function ValidatorDetails() {
   const [isUnstakeModalOpen, setIsUnstakeModalOpen] = useState(false);
   const [isBonusHistoryModalOpen, setIsBonusHistoryModalOpen] = useState(false);
   const [isStakeHistoryModalOpen, setIsStakeHistoryModalOpen] = useState(false);
+  const [isRewardsHistoryModalOpen, setIsRewardsHistoryModalOpen] = useState(false);
+  const [validatorRewardStats, setValidatorRewardStats] = useState<NodeRewardStats | null>(null);
 
   // Effects
   useEffect(() => {
@@ -59,6 +64,13 @@ export default function ValidatorDetails() {
     filterProposals();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address, activeProposals]);
+
+  useEffect(() => {
+    if (!address || isPrivacyMode) return;
+    getCachedNodeRewardStats(address.toLowerCase())
+      .then(data => { if (data) setValidatorRewardStats(data); })
+      .catch(() => {});
+  }, [address, isPrivacyMode]);
 
   // Functions
   async function filterProposals() {
@@ -319,15 +331,15 @@ export default function ValidatorDetails() {
                 </InfoTooltip>
               </h3>
             </div>
-            <p className="stat-value-large">N DMD</p>
-            <div className="stat-subtitle">Coming soon <InfoTooltip content={<div><p>Reward estimation is under development.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+            <p className="stat-value-large">
+              {isPrivacyMode ? '—' : validatorRewardStats ? validatorRewardStats.vos30.toFixed(2) + ' DMD' : '—'}
+            </p>
             {!isPrivacyMode && (
               <div className="stat-actions">
                 <button
-                  onClick={() => toast.info("Coming soon!")}
-                  className="cta-button coming-soon"
+                  onClick={() => setIsRewardsHistoryModalOpen(true)}
+                  className="cta-button"
                   id="rewards-history-button"
-                  title="Coming soon"
                 >
                   History
                 </button>
@@ -522,6 +534,11 @@ export default function ValidatorDetails() {
       onClose={() => setIsStakeHistoryModalOpen(false)}
       address={address}
       mode="node"
+    />
+    <NodeRewardsHistoryModal
+      isOpen={isRewardsHistoryModalOpen}
+      onClose={() => setIsRewardsHistoryModalOpen(false)}
+      validatorAddress={address}
     />
 </div>
   );

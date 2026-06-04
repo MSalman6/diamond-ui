@@ -101,7 +101,7 @@
 
 .validator-actions {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-start !important;
 }
 
 .staking-buttons {
@@ -1563,7 +1563,6 @@ body.light-theme .cta-button.coming-soon:hover {
 
   .validator-actions {
     flex-direction: column;
-    align-items: flex-start;
     gap: 20px;
   }
 
