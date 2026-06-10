@@ -294,6 +294,20 @@ export default function Header() {
                         </a>
                       </li>
                       <li>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (isConnected && userWallet.myAddr) {
+                              router.push(`/dmd-names/${userWallet.myAddr}`);
+                              setActiveDropdown(null);
+                            }
+                          }}
+                        >
+                          <i className="fas fa-tag"></i> My DMD Names
+                        </a>
+                      </li>
+                      <li>
                         <a href="#" onClick={(e) => { e.preventDefault(); handleDisconnect(); }}>
                           <i className="fas fa-sign-out-alt"></i> Disconnect
                         </a>
