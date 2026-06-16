@@ -1,17 +1,19 @@
-import Link from 'next/link';
+import config from '@/lib/config';
 import type { DmdNameAvailabilityResult } from '@/types/dmdNaming';
+import { shortenAddress } from '@/utils/dmdNaming';
 
 type Props = {
   state: 'invalid' | 'available' | 'taken' | 'unavailable';
   name: string;
   rawInput?: string;
   result?: DmdNameAvailabilityResult;
-  onCreateName?: () => void;
+  onRegisterName?: () => void;
 };
 
-export default function DmdNameSearchResult({ state, name, rawInput, result, onCreateName }: Props) {
+export default function DmdNameSearchResult({ state, name, rawInput, result, onRegisterName }: Props) {
   const label = rawInput ?? name;
   const fullName = `${name}.dmd`;
+  const explorerUrl = config.explorerUrl;
 
   if (state === 'invalid') {
     return (
@@ -35,17 +37,19 @@ export default function DmdNameSearchResult({ state, name, rawInput, result, onC
         </div>
         <div className="dmd-search-result-body">
           <p><strong>{fullName} is available</strong></p>
-          {(result?.mintingFee || result?.estimatedGas) && (
+          {(result?.registrationFee || result?.estimatedGas) && (
             <p>
-              {result?.mintingFee && `Minting fee: ${result.mintingFee}`}
-              {result?.mintingFee && result?.estimatedGas && ' · '}
+              {result?.registrationFee && `Registration fee: ${result.registrationFee}`}
+              {result?.registrationFee && result?.estimatedGas && ' · '}
               {result?.estimatedGas && `Estimated gas: ${result.estimatedGas}`}
             </p>
           )}
         </div>
-        <button type="button" className="dmd-btn-create" onClick={onCreateName}>
-          Create name
-        </button>
+        {onRegisterName && (
+          <button type="button" className="dmd-btn-create" onClick={onRegisterName}>
+            Register name
+          </button>
+        )}
       </div>
     );
   }
@@ -58,10 +62,18 @@ export default function DmdNameSearchResult({ state, name, rawInput, result, onC
         </div>
         <div className="dmd-search-result-body">
           <p><strong>{fullName} is already registered</strong></p>
-          <p>
-            {result?.expiresAt && `Expires: ${result.expiresAt} · `}
-            <Link href={`/dmd-names/history/${name}`}>View history</Link>
-          </p>
+          {result?.ownerAddress && (
+            <p>
+              Owner:{' '}
+              <a
+                href={`${explorerUrl}address/${result.ownerAddress}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {shortenAddress(result.ownerAddress)}
+              </a>
+            </p>
+          )}
         </div>
       </div>
     );

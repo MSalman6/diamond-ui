@@ -4,8 +4,7 @@ import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useWeb3Context } from '@/contexts/Web3';
 import { useWalletConnect } from '@/contexts/WalletConnect';
-import DmdNameSearch from '@/components/DMDNames/DmdNameSearch';
-import DmdNamesOwnedTable from '@/components/DMDNames/DmdNamesOwnedTable';
+import MyDmdNamesContent from '@/components/DMDNames/MyDmdNamesContent';
 import '@/components/DMDNames/DmdNames.css';
 
 export default function MyDmdNamesPage() {
@@ -51,44 +50,7 @@ export default function MyDmdNamesPage() {
 
       <section className="dmd-names-content">
         <div className="container">
-          <div className="dmd-names-search-card">
-            <DmdNameSearch variant="page" showExamples />
-          </div>
-
-          <div className="dmd-names-stats">
-            <div className="dmd-names-stats-card">
-              <div className="dmd-names-stats-label">Active name</div>
-              <div className="dmd-names-stats-sub">Publicly linked to this address</div>
-            </div>
-            <div className="dmd-names-stats-card">
-              <div className="dmd-names-stats-label">Names owned</div>
-              <div className="dmd-names-stats-sub">ERC-721 name NFTs</div>
-            </div>
-            <div className="dmd-names-stats-card">
-              <div className="dmd-names-stats-label">Expiring soon</div>
-              <div className="dmd-names-stats-sub">Renewal reminder shown</div>
-            </div>
-          </div>
-
-          <DmdNamesOwnedTable />
-
-          <div className="dmd-names-hints">
-            <h3><i className="fas fa-info-circle"></i> Action hints in UI</h3>
-            <ul>
-              <li>
-                <strong>Activate:</strong> Makes the selected name the public active name for this address;
-                activation fee depends on how many times the active name was changed.
-              </li>
-              <li>
-                <strong>Renew:</strong> Sends a keep-alive transaction and resets the 10-year validity window
-                from that point; the UI provides reminders during the final year.
-              </li>
-              <li>
-                <strong>Transfer:</strong> Moves ownership of the name NFT to another address; Diamond UI shows
-                transfer fee + gas before confirmation.
-              </li>
-            </ul>
-          </div>
+          <MyDmdNamesContent walletAddress={userWallet.myAddr} />
         </div>
       </section>
     </div>

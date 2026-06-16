@@ -17,6 +17,7 @@ export interface RuntimeConfig {
   aggregatorContractAddress: string;
   daoContractAddress: string;
   lowMajorityContractAddress: string;
+  diamondRegistryContractAddress: string;
   
   // WalletConnect
   wcProjectId: string;
@@ -82,6 +83,7 @@ function getDefaultConfig(): RuntimeConfig {
     aggregatorContractAddress: '',
     daoContractAddress: '',
     lowMajorityContractAddress: '',
+    diamondRegistryContractAddress: '',
     wcProjectId: '2cceb4f25f1cb889b967ea3c40bfd7cd',
     siteUrl: '',
     port: '3000',

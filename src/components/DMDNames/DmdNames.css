@@ -311,90 +311,167 @@
   margin-bottom: 28px;
 }
 
-.dmd-names-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-.dmd-names-stats-card {
-  padding: 20px 24px;
+.dmd-names-owned {
+  padding: 24px;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-}
-
-.dmd-names-stats-label {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
-}
-
-.dmd-names-stats-sub {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-.dmd-names-owned {
   margin-bottom: 28px;
 }
 
 .dmd-names-owned h2 {
-  margin: 0 0 16px;
+  margin: 0 0 12px;
   font-size: 1.1rem;
 }
 
-.dmd-names-empty {
-  text-align: center;
-  color: var(--text-secondary);
-  padding: 32px 16px !important;
-}
-
-.dmd-names-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.dmd-status-expiring {
-  background: rgba(255, 165, 0, 0.15);
-  color: #f5a623;
-  border-color: rgba(255, 165, 0, 0.3);
-}
-
-.dmd-names-hints {
-  padding: 20px 24px;
-  background: rgba(58, 123, 213, 0.08);
-  border: 1px solid rgba(58, 123, 213, 0.2);
-  border-radius: 12px;
-}
-
-.dmd-names-hints h3 {
-  margin: 0 0 12px;
-  font-size: 1rem;
-}
-
-.dmd-names-hints h3 i {
-  margin-right: 8px;
+.dmd-names-registered-value {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
   color: var(--accent);
 }
 
-.dmd-names-hints ul {
+.dmd-names-empty {
   margin: 0;
-  padding-left: 20px;
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.6;
 }
 
-.dmd-names-hints li + li {
-  margin-top: 8px;
+.dmd-modal h2 {
+  margin: 0 0 16px;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  padding-right: 24px;
+}
+
+.dmd-modal-fees {
+  margin: 0 0 20px;
+}
+
+.dmd-modal-fees-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.95rem;
+}
+
+.dmd-modal-fees-row:last-child {
+  border-bottom: none;
+}
+
+.dmd-modal-fees-row dt {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.dmd-modal-fees-row dd {
+  margin: 0;
+  font-weight: 500;
+}
+
+.dmd-modal-fees-row-total dd {
+  font-weight: 700;
+}
+
+.dmd-modal-notice {
+  display: flex;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.dmd-modal-notice p {
+  margin: 0;
+}
+
+.dmd-modal-notice i {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.dmd-modal-notice-info {
+  background: rgba(58, 123, 213, 0.1);
+  border: 1px solid rgba(58, 123, 213, 0.25);
+  color: var(--text);
+}
+
+.dmd-modal-notice-info i {
+  color: var(--accent);
+}
+
+.dmd-modal-notice-warn {
+  background: rgba(255, 165, 0, 0.1);
+  border: 1px solid rgba(255, 165, 0, 0.3);
+}
+
+.dmd-modal-notice-warn i {
+  color: #f5a623;
+}
+
+.dmd-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.dmd-modal-pending-card {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.dmd-modal-pending-card i {
+  font-size: 1.25rem;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+.dmd-modal-pending-card p {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.dmd-modal-success-icon,
+.dmd-modal-error-icon {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.dmd-modal-success-icon {
+  color: #07f49e;
+}
+
+.dmd-modal-error-icon {
+  color: #ff6b6b;
+}
+
+.dmd-modal-success h2,
+.dmd-modal-error h2 {
+  text-align: center;
+  font-size: 1.15rem;
+}
+
+.dmd-modal-success p,
+.dmd-modal-error p {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
 }
 
 body.light-theme .dmd-search-widget,
 body.light-theme .dmd-names-search-card,
-body.light-theme .dmd-names-stats-card {
+body.light-theme .dmd-names-owned {
   background: #fff;
   border-color: rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -474,7 +551,14 @@ body.light-theme .dmd-name-search-suffix {
     font-size: 2rem;
   }
 
-  .dmd-names-stats {
-    grid-template-columns: 1fr;
+  .dmd-modal-actions {
+    flex-direction: column;
+  }
+
+  .dmd-modal-actions .btn-primary,
+  .dmd-modal-actions .btn-secondary {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
   }
 }

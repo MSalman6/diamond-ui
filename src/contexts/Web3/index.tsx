@@ -26,6 +26,7 @@ import {
   ConnectivityTrackerHbbft,
   DiamondDao,
   DMDAggregator,
+  DiamondRegistry,
   StakingHbbft,
   TxPermissionHbbft,
   ValidatorSetHbbft,
@@ -41,7 +42,8 @@ interface ContractsState {
   tpContract?: TxPermissionHbbft;
   ctContract?: ConnectivityTrackerHbbft;
   aggregator?: DMDAggregator;
-  bsContract?: BonusScoreSystem
+  bsContract?: BonusScoreSystem;
+  diamondRegistryContract?: DiamondRegistry;
 }
 
 interface Web3ContextProps {
@@ -256,7 +258,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
         brContract,
         ctContract,
         aggregator,
-        bsContract
+        bsContract,
       ] = await Promise.all([
         contractManager.getValidatorSetHbbft(),
         contractManager.getDaoContract(),
@@ -266,8 +268,12 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
         contractManager.getRewardHbbft(),
         contractManager.getConnectivityTracker(),
         contractManager.getDMDAggregator(),
-        contractManager.getBonusScoreSystem()
+        contractManager.getBonusScoreSystem(),
       ]);
+
+      const diamondRegistryContract = config.diamondRegistryContractAddress
+        ? contractManager.getDiamondRegistry()
+        : undefined;
     
       setContractsManager({
         contracts: contractManager,
@@ -279,7 +285,8 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
         tpContract,
         ctContract,
         aggregator,
-        bsContract
+        bsContract,
+        diamondRegistryContract,
       });
     } catch (error: any) {
       toast.warn(`${error.message}`);
