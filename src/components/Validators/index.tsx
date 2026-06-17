@@ -277,9 +277,9 @@ export default function Validators() {
           return "Combined score value, based on the results of generating the shared key, the stability of the validator connection and misbehaviour reports from other validators";
       case 'connectivityReport':
           return "Connectivity report value, based on how many other active validators did report bad connectivity towards that node";      case 'rpt30':
-          return "Historical staking rewards earned per 1000 DMD delegated to this validator during the last 30 days.";
+          return "Historical staking rewards earned per 1000 DMD staked with this validator during the last 30 days. This value excludes the validator owner reward share and represents delegator-focused profitability.";
       case 'apy':
-          return "Estimated annualised return based on validator rewards over the last 30 days. This is a historical estimate, not a guarantee.";
+          return "Historical annualized return based on delegator rewards earned during the last 30 days. This value excludes the validator owner reward share and does not guarantee future rewards.";
       case 'aep30':
           return "Percentage of epochs during the last 30 days where this validator was part of the active validator set.";
       case 'vos30':

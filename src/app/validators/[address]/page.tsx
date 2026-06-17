@@ -326,7 +326,7 @@ export default function ValidatorDetails() {
             <div className="stat-header">
               <h3>
                 Monthly rewards
-                <InfoTooltip placement="bottom" content={<><p>Rewards earned by this validator over the past 30 days.</p> <p>Includes both validator and delegator rewards and depends on uptime, performance, and stake size.</p></>}> 
+                <InfoTooltip placement="bottom" content={<p>Total validator owner rewards earned during the last 30 days from the 20% validator owner share.</p>}>
                   <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                 </InfoTooltip>
               </h3>
@@ -345,6 +345,49 @@ export default function ValidatorDetails() {
                 </button>
               </div>
             )}
+          </div>
+
+          <div className="stat-card-wireframe fade-in">
+            <div className="stat-header">
+              <h3>
+                RpT30
+                <InfoTooltip
+                  placement="bottom"
+                  content={<p>Historical staking rewards earned per 1000 DMD staked with this validator during the last 30 days. This value excludes the validator owner reward share and represents delegator-focused profitability.</p>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
+            </div>
+            <p className="stat-value-large">
+              {isPrivacyMode ? '—' : validatorRewardStats ? validatorRewardStats.rpt30.toFixed(2) + ' DMD' : '—'}
+            </p>
+            {!isPrivacyMode && validatorRewardStats && validatorRewardStats.rpt30_delta != null && (
+              <div className={`stat-trend ${validatorRewardStats.rpt30_delta >= 0 ? 'positive' : 'negative'}`}>
+                <i className={`fas ${validatorRewardStats.rpt30_delta >= 0 ? 'fa-arrow-up' : 'fa-arrow-down'}`} aria-hidden="true"></i>
+                {validatorRewardStats.rpt30_delta >= 0 ? '+' : ''}{validatorRewardStats.rpt30_delta.toFixed(2)} vs previous 30d
+              </div>
+            )}
+            <div className="stat-footer">
+              <span className="proposals-info">per 1000 DMD staked (30d)</span>
+            </div>
+          </div>
+
+          <div className="stat-card-wireframe fade-in">
+            <div className="stat-header">
+              <h3>
+                Active epochs
+                <InfoTooltip
+                  placement="bottom"
+                  content={<p>Percentage of epochs during the last 30 days where this validator was part of the active validator set.</p>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
+            </div>
+            <p className="stat-value-large">
+              {isPrivacyMode ? '—' : validatorRewardStats ? `${(validatorRewardStats.aep30 * 100).toFixed(0)}% active epochs (30d)` : '—'}
+            </p>
           </div>
 
           <div className="stat-card-wireframe fade-in">

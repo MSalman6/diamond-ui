@@ -656,7 +656,7 @@ export default function ProfilePage() {
                 </h2>
                 <div className="vp2-analytics-grid">
                   <div className="stat-card vp2-analytics-card">
-                    <div className="stat-label">RpT30 <InfoTooltip content={<div><p>Historical staking rewards earned per 1000 DMD delegated to this validator during the last 30 days.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                    <div className="stat-label">RpT30 <InfoTooltip content={<div><p>Historical staking rewards earned per 1000 DMD staked with this validator during the last 30 days. This value excludes the validator owner reward share and represents delegator-focused profitability.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="stat-value highlight vp2-analytics-value">
                       {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.rpt30.toFixed(2) + ' DMD' : '—'}
                     </div>
@@ -671,7 +671,7 @@ export default function ProfilePage() {
                     <div className="vp2-analytics-footer">Historical delegator profitability</div>
                   </div>
                   <div className="stat-card vp2-analytics-card">
-                    <div className="stat-label">APY <InfoTooltip content={<div><p>Estimated annualized return based on validator rewards over the last 30 days.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                    <div className="stat-label">APY <InfoTooltip content={<div><p>Historical annualized return based on delegator rewards earned during the last 30 days. This value excludes the validator owner reward share and does not guarantee future rewards.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="stat-value highlight vp2-analytics-value">
                       {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.estimated_apy.toFixed(2) + '%' : '—'}
                     </div>
@@ -774,7 +774,7 @@ export default function ProfilePage() {
               </h2>
               <div className="vp2-stats-grid">
                 <div className="stat-card">
-                  <div className="stat-label">Monthly rewards <InfoTooltip content={<div><p>Total rewards earned from the 20% validator owner fixed share over the past 30 days. This is VOS30 and does not include stake-proportional returns.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                  <div className="stat-label">Monthly rewards <InfoTooltip content={<div><p>Total validator owner rewards earned during the last 30 days from the 20% validator owner share.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                   <div className="stat-value highlight">
                     {isPrivacyMode ? '—' : isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.vos30.toFixed(2) + ' DMD' : '—'}
                   </div>
