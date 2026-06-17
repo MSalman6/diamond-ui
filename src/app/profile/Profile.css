@@ -464,8 +464,14 @@ body.light-theme .vp-rewards-chart-section {
 
 .vp2-rewards-performance-title h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 600;
+  opacity: 0.95;
+}
+
+.vp2-section-title .info-icon,
+.vp2-rewards-performance-title .info-icon {
+  font-size: 1.25rem;
 }
 
 .vp2-rewards-performance-controls {
@@ -550,6 +556,22 @@ body.light-theme .vp-rewards-chart-section {
 .vp2-stats-grid .stat-card {
   min-width: 0;
   overflow: hidden;
+}
+
+.vp2-stats-grid .stat-card .stat-label {
+  display: block;
+  min-height: 2.6rem;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.vp2-stats-grid .stat-card .stat-label .info-tooltip-trigger {
+  display: inline;
+  margin-top: 0;
+}
+
+.vp2-stats-grid .stat-card .stat-label .info-icon {
+  margin-left: 0.25rem;
 }
 
 .vp2-operator-address {

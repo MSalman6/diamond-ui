@@ -92,12 +92,15 @@ const AreaChart: React.FC<AreaChartProps> = ({
           <YAxis
             stroke={theme.textColor}
             tick={{ fill: theme.textColor }}
+            width={yAxisLabel ? 72 : 60}
             label={
               yAxisLabel
                 ? {
                     value: yAxisLabel,
                     angle: -90,
                     position: 'insideLeft',
+                    offset: 0,
+                    style: { textAnchor: 'middle' },
                     fill: theme.textColor,
                   }
                 : undefined

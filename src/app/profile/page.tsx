@@ -71,8 +71,6 @@ export default function ProfilePage() {
   const [isLoadingEpochRewards, setIsLoadingEpochRewards] = useState(false);
   // legend toggles for Rewards Performance chart
   const [chartShowRpt, setChartShowRpt] = useState(true);
-  const [chartShowScore, setChartShowScore] = useState(false);
-  const [chartShowSaturation, setChartShowSaturation] = useState(false);
 
   // Get validators that user has staked with (has myStake > 0)
   const stakedValidators = useMemo(() => {
@@ -219,10 +217,19 @@ export default function ProfilePage() {
     return (validatorRewardStats.rpt30_delta / prev) * 100;
   }, [validatorRewardStats]);
 
-  // chart series derived from epoch-rewards
+  // Monthly rewards (validator owner view): the validator owner share (VOS30, the
+  // 20% owner reward) PLUS the rewards earned on the owner's own staked DMD.
+  // The owner's own stake earns at the same rate as delegators (RpT30 is rewards
+  // per 1,000 DMD), so own-stake reward ≈ rpt30 * (ownStakeDmd / 1000).
+  const monthlyRewards30d = useMemo(() => {
+    if (!validatorRewardStats) return null;
+    const ownStakeDmd = BigNumber(myPool?.myStake || 0).dividedBy(1e18).toNumber();
+    const ownStakeReward = (validatorRewardStats.rpt30 * ownStakeDmd) / 1000;
+    return validatorRewardStats.vos30 + ownStakeReward;
+  }, [validatorRewardStats, myPool?.myStake]);
+
   const validatorChartData = useMemo(() => {
-    const maxStakeDmd = 50000;
-    const rows: { date: string; rpt: number; score: number; saturation: number; sortKey: number }[] = [];
+    const rows: { date: string; rpt: number; sortKey: number }[] = [];
     for (const e of epochRewards) {
       const endDate = parseEpochEndTime(e.epoch_end_time);
       const stakeDmd = parseDmdAmount(e.total_staked_snapshot);
@@ -231,28 +238,24 @@ export default function ProfilePage() {
       rows.push({
         date: endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
         rpt: (delegatorsReward / stakeDmd) * 1000,
-        score: Number(myPool?.score ?? 0),
-        saturation: Math.min(100, (stakeDmd / maxStakeDmd) * 100),
         sortKey: endDate.getTime(),
       });
     }
     rows.sort((a, b) => a.sortKey - b.sortKey);
-    return rows;
-  }, [epochRewards, myPool?.score]);
+    let running = 0;
+    return rows.map((r) => {
+      running += r.rpt;
+      return { date: r.date, rpt: Number(running.toFixed(4)), sortKey: r.sortKey };
+    });
+  }, [epochRewards]);
 
   const validatorChartAreas = useMemo(() => {
     const areas: { dataKey: string; name: string; color: string }[] = [];
     if (chartShowRpt) {
       areas.push({ dataKey: 'rpt', name: 'RpT30', color: '#3a7bd5' });
     }
-    if (chartShowScore) {
-      areas.push({ dataKey: 'score', name: 'Score', color: '#8b5cf6' });
-    }
-    if (chartShowSaturation) {
-      areas.push({ dataKey: 'saturation', name: 'Saturation', color: '#14b8a6' });
-    }
     return areas;
-  }, [chartShowRpt, chartShowScore, chartShowSaturation]);
+  }, [chartShowRpt]);
 
   // APY (delegator view)
   const portfolioApy = useMemo(() => {
@@ -699,9 +702,7 @@ export default function ProfilePage() {
                       {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.vos30.toFixed(2) + ' DMD' : '—'}
                     </div>
                     <div className="vp2-analytics-sub">validator owner rewards</div>
-                    <div className="vp2-analytics-footer">
-                      Net: {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.vos30_net.toFixed(2) + ' DMD' : '—'}
-                    </div>
+                    <div className="vp2-analytics-footer">Last 30d (20% owner share)</div>
                   </div>
                 </div>
                   </section>
@@ -726,22 +727,6 @@ export default function ProfilePage() {
                       >
                         <span className="vp2-legend-dot vp2-legend-dot--rpt" aria-hidden="true" />
                         RpT30
-                      </button>
-                      <button
-                        type="button"
-                        className={`vp2-legend-pill${chartShowScore ? ' vp2-legend-pill--active' : ''}`}
-                        onClick={() => setChartShowScore((v) => !v)}
-                      >
-                        <span className="vp2-legend-dot vp2-legend-dot--score" aria-hidden="true" />
-                        Score
-                      </button>
-                      <button
-                        type="button"
-                        className={`vp2-legend-pill${chartShowSaturation ? ' vp2-legend-pill--active' : ''}`}
-                        onClick={() => setChartShowSaturation((v) => !v)}
-                      >
-                        <span className="vp2-legend-dot vp2-legend-dot--saturation" aria-hidden="true" />
-                        Saturation
                       </button>
                     </div>
                     <span className="vp2-range-pill">30D</span>
@@ -776,7 +761,7 @@ export default function ProfilePage() {
                 <div className="stat-card">
                   <div className="stat-label">Monthly rewards <InfoTooltip content={<div><p>Total validator owner rewards earned during the last 30 days from the 20% validator owner share.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                   <div className="stat-value highlight">
-                    {isPrivacyMode ? '—' : isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.vos30.toFixed(2) + ' DMD' : '—'}
+                    {isPrivacyMode ? '—' : isLoadingValidatorStats ? '...' : monthlyRewards30d != null ? monthlyRewards30d.toFixed(2) + ' DMD' : '—'}
                   </div>
                   {!isPrivacyMode && (
                     <button onClick={() => setIsValidatorRewardsHistoryModalOpen(true)} className="btn-secondary btn-sm">Rewards history</button>
