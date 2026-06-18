@@ -2255,3 +2255,250 @@ body.light-theme .status-badge.status-invalid {
   color: #ef4444;
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
+
+.validator-rewards-analytics {
+  background: var(--bg);
+  position: relative;
+  padding: 60px 0 0;
+  transition: background-color 0.5s ease;
+}
+
+.vd-section-title--analytics {
+  margin-bottom: 1.25rem;
+}
+
+.vd-section-title--analytics h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.vd-analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.vd-analytics-card {
+  min-height: 200px;
+}
+
+.vd-analytics-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+  background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vd-analytics-sub {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  margin-top: 0.15rem;
+}
+
+.vd-analytics-delta {
+  font-size: 0.8rem;
+  margin-top: 0.4rem;
+  font-weight: 500;
+}
+
+.vd-delta-up {
+  color: #07f49e;
+}
+
+.vd-delta-down {
+  color: #ff6b6b;
+}
+
+.vd-analytics-footer {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  opacity: 0.6;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  line-height: 1.35;
+}
+
+.vd-analytics-card .stat-actions {
+  margin-top: 0.75rem;
+}
+
+.vd-analytics-card--donut .vd-analytics-value {
+  display: none;
+}
+
+.vd-donut-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  margin: 0.25rem 0;
+}
+
+/* Rewards Performance chart section */
+.validator-rewards-chart {
+  background: var(--bg);
+  position: relative;
+  padding: 40px 0 60px;
+  transition: background-color 0.5s ease;
+}
+
+.vd-rewards-performance-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.vd-rewards-performance-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vd-rewards-performance-title h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  opacity: 0.95;
+  margin: 0;
+  color: var(--text);
+  transition: color 0.5s ease;
+}
+
+.vd-rewards-performance-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.vd-legend-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.vd-legend-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.vd-legend-pill--active {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.45);
+  color: var(--text);
+}
+
+.vd-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.vd-legend-dot--rpt {
+  background: #3a7bd5;
+}
+
+.vd-legend-pill:not(.vd-legend-pill--active) .vd-legend-dot {
+  opacity: 0.45;
+}
+
+.vd-range-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+.validator-rewards-chart .chart-container {
+  min-height: 300px;
+}
+
+.validator-rewards-chart .chart-content {
+  min-height: 260px;
+  width: 100%;
+}
+
+body.light-theme .vd-analytics-sub,
+body.light-theme .vd-analytics-footer {
+  color: #64748b;
+  opacity: 1;
+}
+
+body.light-theme .vd-delta-up {
+  color: #1a7a40;
+}
+
+body.light-theme .vd-delta-down {
+  color: #c0392b;
+}
+
+body.light-theme .vd-legend-pill {
+  color: #6b7280;
+  border-color: #e2e8f0;
+}
+
+body.light-theme .vd-legend-pill--active {
+  background: rgba(26, 115, 232, 0.08);
+  border-color: rgba(26, 115, 232, 0.35);
+  color: #111827;
+}
+
+body.light-theme .vd-range-pill {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #111827;
+}
+
+body.light-theme .vd-rewards-performance-title h2 {
+  color: #1a202c;
+}
+
+@media (max-width: 1200px) {
+  .vd-analytics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .validator-rewards-analytics {
+    padding: 40px 0 0;
+  }
+  .validator-rewards-chart {
+    padding: 30px 0 40px;
+  }
+}
+
+@media (max-width: 576px) {
+  .vd-analytics-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .vd-rewards-performance-header {
+    flex-direction: column;
+  }
+}

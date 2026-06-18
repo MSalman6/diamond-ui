@@ -841,3 +841,31 @@ body.light-theme .dp2-tfoot-rewards-value {
     border-top-color: #e5e7eb;
   }
 }
+
+.validator-dashboard .validator-header {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px !important;
+}
+
+.validator-dashboard .validator-identity {
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}
+
+.validator-dashboard .validator-details {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.validator-dashboard .validator-details h1 {
+  font-size: 1.3rem;
+  margin: 0;
+  letter-spacing: normal;
+}

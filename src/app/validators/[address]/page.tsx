@@ -3,10 +3,11 @@
 import '../Validators.css';
 import './ValidatorDetails.css';
 import '../../styles/proposal-status.css';
+import '@/components/Charts/Charts.css';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState, startTransition } from 'react';
+import { useEffect, useState, useMemo, startTransition } from 'react';
 import BigNumber from "bignumber.js";
-import { truncateAddress, timestampToDate } from '@/utils/common';
+import { truncateAddress, timestampToDate, parseEpochEndTime, parseDmdAmount } from '@/utils/common';
 import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { useDaoContext } from '@/contexts/DAO';
@@ -16,11 +17,13 @@ import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import InfoTooltip from '@/components/InfoTooltip';
+import { Aep30Ring } from '@/components/Aep30Badge';
+import AreaChart from '@/components/Charts/AreaChart';
 import BonusScoreHistoryModal from '@/components/Modals/BonusScoreHistory/BonusScoreHistoryModal';
 import StakeHistoryModal from '@/components/Modals/StakeHistory/StakeHistoryModal';
 import NodeRewardsHistoryModal from '@/components/Modals/NodeRewardsHistory/NodeRewardsHistoryModal';
-import { getCachedNodeRewardStats } from '@/lib/rewardStatsCache';
-import type { NodeRewardStats } from '@/types/rewards';
+import { getCachedNodeRewardStats, getCachedNodeEpochRewards } from '@/lib/rewardStatsCache';
+import type { NodeRewardStats, NodeEpochReward } from '@/types/rewards';
 
 
 export default function ValidatorDetails() {
@@ -43,6 +46,10 @@ export default function ValidatorDetails() {
   const [isStakeHistoryModalOpen, setIsStakeHistoryModalOpen] = useState(false);
   const [isRewardsHistoryModalOpen, setIsRewardsHistoryModalOpen] = useState(false);
   const [validatorRewardStats, setValidatorRewardStats] = useState<NodeRewardStats | null>(null);
+  const [isLoadingValidatorStats, setIsLoadingValidatorStats] = useState(false);
+  const [epochRewards, setEpochRewards] = useState<NodeEpochReward[]>([]);
+  const [isLoadingEpochRewards, setIsLoadingEpochRewards] = useState(false);
+  const [chartShowRpt, setChartShowRpt] = useState(true);
 
   // Effects
   useEffect(() => {
@@ -67,10 +74,63 @@ export default function ValidatorDetails() {
 
   useEffect(() => {
     if (!address || isPrivacyMode) return;
+    setIsLoadingValidatorStats(true);
     getCachedNodeRewardStats(address.toLowerCase())
       .then(data => { if (data) setValidatorRewardStats(data); })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setIsLoadingValidatorStats(false));
   }, [address, isPrivacyMode]);
+
+  // Epoch rewards history last 30 days
+  useEffect(() => {
+    if (!address || isPrivacyMode) return;
+    const thirtyDaysAgo = Math.floor(Date.now() / 1000) - 30 * 86400;
+    setIsLoadingEpochRewards(true);
+    getCachedNodeEpochRewards(address.toLowerCase(), thirtyDaysAgo)
+      .then(data => setEpochRewards(data))
+      .catch(() => {})
+      .finally(() => setIsLoadingEpochRewards(false));
+  }, [address, isPrivacyMode]);
+
+  // RpT30 change vs previous 30d as a percentage
+  const rpt30DeltaPct = useMemo(() => {
+    if (validatorRewardStats?.rpt30_delta == null || validatorRewardStats?.rpt30_prev30 == null) {
+      return null;
+    }
+    const prev = validatorRewardStats.rpt30_prev30;
+    if (prev === 0) return null;
+    return (validatorRewardStats.rpt30_delta / prev) * 100;
+  }, [validatorRewardStats]);
+
+  // Cumulative RpT per 1,000 DMD per epoch
+  const validatorChartData = useMemo(() => {
+    const rows: { date: string; rpt: number; sortKey: number }[] = [];
+    for (const e of epochRewards) {
+      const endDate = parseEpochEndTime(e.epoch_end_time);
+      const stakeDmd = parseDmdAmount(e.total_staked_snapshot);
+      if (!endDate || stakeDmd <= 0) continue;
+      const delegatorsReward = parseDmdAmount(e.delegators_total_reward);
+      rows.push({
+        date: endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        rpt: (delegatorsReward / stakeDmd) * 1000,
+        sortKey: endDate.getTime(),
+      });
+    }
+    rows.sort((a, b) => a.sortKey - b.sortKey);
+    let running = 0;
+    return rows.map((r) => {
+      running += r.rpt;
+      return { date: r.date, rpt: Number(running.toFixed(4)), sortKey: r.sortKey };
+    });
+  }, [epochRewards]);
+
+  const validatorChartAreas = useMemo(() => {
+    const areas: { dataKey: string; name: string; color: string }[] = [];
+    if (chartShowRpt) {
+      areas.push({ dataKey: 'rpt', name: 'RpT30', color: '#3a7bd5' });
+    }
+    return areas;
+  }, [chartShowRpt]);
 
   // Functions
   async function filterProposals() {
@@ -210,7 +270,7 @@ export default function ValidatorDetails() {
 
     <section className="validator-statistics">
       <div className="container">
-        <div className="vd-section-title">
+        <div className="vd-section-title vd-section-title--analytics">
           <h2>Validator Statistics</h2>
         </div>
         <div className="stats-grid-wireframe">
@@ -326,7 +386,10 @@ export default function ValidatorDetails() {
             <div className="stat-header">
               <h3>
                 Monthly rewards
-                <InfoTooltip placement="bottom" content={<p>Total validator owner rewards earned during the last 30 days from the 20% validator owner share.</p>}>
+                <InfoTooltip
+                  placement="bottom"
+                  content={<p>Total validator owner rewards earned during the last 30 days from the 20% validator owner share.</p>}
+                >
                   <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                 </InfoTooltip>
               </h3>
@@ -341,53 +404,10 @@ export default function ValidatorDetails() {
                   className="cta-button"
                   id="rewards-history-button"
                 >
-                  History
+                  Rewards history
                 </button>
               </div>
             )}
-          </div>
-
-          <div className="stat-card-wireframe fade-in">
-            <div className="stat-header">
-              <h3>
-                RpT30
-                <InfoTooltip
-                  placement="bottom"
-                  content={<p>Historical staking rewards earned per 1000 DMD staked with this validator during the last 30 days. This value excludes the validator owner reward share and represents delegator-focused profitability.</p>}
-                >
-                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
-                </InfoTooltip>
-              </h3>
-            </div>
-            <p className="stat-value-large">
-              {isPrivacyMode ? '—' : validatorRewardStats ? validatorRewardStats.rpt30.toFixed(2) + ' DMD' : '—'}
-            </p>
-            {!isPrivacyMode && validatorRewardStats && validatorRewardStats.rpt30_delta != null && (
-              <div className={`stat-trend ${validatorRewardStats.rpt30_delta >= 0 ? 'positive' : 'negative'}`}>
-                <i className={`fas ${validatorRewardStats.rpt30_delta >= 0 ? 'fa-arrow-up' : 'fa-arrow-down'}`} aria-hidden="true"></i>
-                {validatorRewardStats.rpt30_delta >= 0 ? '+' : ''}{validatorRewardStats.rpt30_delta.toFixed(2)} vs previous 30d
-              </div>
-            )}
-            <div className="stat-footer">
-              <span className="proposals-info">per 1000 DMD staked (30d)</span>
-            </div>
-          </div>
-
-          <div className="stat-card-wireframe fade-in">
-            <div className="stat-header">
-              <h3>
-                Active epochs
-                <InfoTooltip
-                  placement="bottom"
-                  content={<p>Percentage of epochs during the last 30 days where this validator was part of the active validator set.</p>}
-                >
-                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
-                </InfoTooltip>
-              </h3>
-            </div>
-            <p className="stat-value-large">
-              {isPrivacyMode ? '—' : validatorRewardStats ? `${(validatorRewardStats.aep30 * 100).toFixed(0)}% active epochs (30d)` : '—'}
-            </p>
           </div>
 
           <div className="stat-card-wireframe fade-in">
@@ -411,9 +431,155 @@ export default function ValidatorDetails() {
       </div>
     </section>
 
+    {!isPrivacyMode && (
+    <section className="validator-rewards-analytics">
+      <div className="container">
+        <div className="vd-section-title vd-section-title--analytics">
+          <h2>Performance Analytics</h2>
+          <p>Reward and participation metrics for this validator over the last 30 days</p>
+        </div>
+        <div className="vd-analytics-grid">
+          <div className="stat-card-wireframe vd-analytics-card fade-in">
+            <div className="stat-header">
+              <h3>
+                RpT30
+                <InfoTooltip
+                  placement="bottom"
+                  content={<p>Historical staking rewards earned per 1000 DMD staked with this validator during the last 30 days. This value excludes the validator owner reward share and represents delegator-focused profitability.</p>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
+            </div>
+            <p className="stat-value-large vd-analytics-value">
+              {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.rpt30.toFixed(2) + ' DMD' : '—'}
+            </p>
+            <div className="vd-analytics-sub">per 1000 / 30d</div>
+            {rpt30DeltaPct != null && (
+              <div className={`vd-analytics-delta ${rpt30DeltaPct >= 0 ? 'vd-delta-up' : 'vd-delta-down'}`}>
+                {rpt30DeltaPct >= 0 ? '↑' : '↓'}{' '}
+                {rpt30DeltaPct >= 0 ? '+' : ''}{Math.abs(rpt30DeltaPct).toFixed(1)}% vs previous 30d
+              </div>
+            )}
+            <div className="vd-analytics-footer">Historical delegator profitability</div>
+          </div>
+
+          <div className="stat-card-wireframe vd-analytics-card fade-in">
+            <div className="stat-header">
+              <h3>
+                APY
+                <InfoTooltip
+                  placement="bottom"
+                  content={<p>Historical annualized return based on delegator rewards earned during the last 30 days. This value excludes the validator owner reward share and does not guarantee future rewards.</p>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
+            </div>
+            <p className="stat-value-large vd-analytics-value">
+              {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.estimated_apy.toFixed(2) + '%' : '—'}
+            </p>
+            <div className="vd-analytics-sub">estimated APY</div>
+            <div className="vd-analytics-footer">Based on last 30d rewards</div>
+          </div>
+
+          <div className="stat-card-wireframe vd-analytics-card vd-analytics-card--donut fade-in">
+            <div className="stat-header">
+              <h3>
+                AEP30
+                <InfoTooltip
+                  placement="bottom"
+                  content={<p>Percentage of epochs during the last 30 days where this validator was part of the active validator set.</p>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
+            </div>
+            <div className="vd-donut-wrap">
+              <Aep30Ring
+                aep30={validatorRewardStats?.aep30 ?? null}
+                isLoading={isLoadingValidatorStats}
+              />
+            </div>
+            <div className="vd-analytics-sub">
+              {validatorRewardStats
+                ? `${validatorRewardStats.active_epoch_count} / ${validatorRewardStats.total_epochs_in_window} active epochs`
+                : 'active epochs'}
+            </div>
+            <div className="vd-analytics-footer">Participation during last 30d</div>
+          </div>
+
+          <div className="stat-card-wireframe vd-analytics-card fade-in">
+            <div className="stat-header">
+              <h3>
+                VOS30
+                <InfoTooltip
+                  placement="bottom"
+                  content={<p>Total validator owner rewards earned during the last 30 days from the 20% validator owner share.</p>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
+            </div>
+            <p className="stat-value-large vd-analytics-value">
+              {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.vos30.toFixed(2) + ' DMD' : '—'}
+            </p>
+            <div className="vd-analytics-sub">validator owner rewards</div>
+            <div className="vd-analytics-footer">Last 30d (20% owner share)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    )}
+
+    {!isPrivacyMode && (
+    <section className="validator-rewards-chart">
+      <div className="container">
+        <div className="vd-rewards-performance-header">
+          <div className="vd-rewards-performance-title">
+            <h2>Rewards Performance</h2>
+            <InfoTooltip
+              placement="bottom"
+              content={<p>Per-epoch reward per 1,000 DMD staked (approximated from epoch data).</p>}
+            >
+              <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+            </InfoTooltip>
+          </div>
+          <div className="vd-rewards-performance-controls">
+            <div className="vd-legend-pills" role="group" aria-label="Chart series">
+              <button
+                type="button"
+                className={`vd-legend-pill${chartShowRpt ? ' vd-legend-pill--active' : ''}`}
+                onClick={() => setChartShowRpt((v) => !v)}
+              >
+                <span className="vd-legend-dot vd-legend-dot--rpt" aria-hidden="true" />
+                RpT30
+              </button>
+            </div>
+            <span className="vd-range-pill">30D</span>
+          </div>
+        </div>
+        <AreaChart
+          data={validatorChartData}
+          xAxisKey="date"
+          areas={
+            validatorChartAreas.length > 0
+              ? validatorChartAreas
+              : [{ dataKey: 'rpt', name: 'RpT30', color: '#3a7bd5' }]
+          }
+          config={{ height: 260, margin: { top: 10, right: 20, left: 10, bottom: 0 } }}
+          showLegend={false}
+          yAxisLabel="RpT per 1000 DMD"
+          isLoading={isLoadingEpochRewards}
+          emptyMessage="No epoch data available"
+        />
+      </div>
+    </section>
+    )}
+
     <section className="delegates-section">
       <div className="container">
-        <div className="vd-section-title">
+        <div className="vd-section-title vd-section-title--analytics">
           <h2>Delegates</h2>
           <p>Users who have delegated their coins to this validator</p>
         </div>
@@ -478,7 +644,7 @@ export default function ValidatorDetails() {
 
     <section className="dao-section">
       <div className="container">
-        <div className="vd-section-title">
+        <div className="vd-section-title vd-section-title--analytics">
           <h2>Validator DAO Participation</h2>
           <p>Governance proposals this validator has participated in</p>
         </div>
