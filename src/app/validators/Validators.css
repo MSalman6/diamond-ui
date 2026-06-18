@@ -190,6 +190,11 @@
   transform: translateY(-2px);
 }
 
+.validators-table-wrapper {
+  position: relative;
+  margin-bottom: 30px;
+}
+
 .validators-table-container {
   background: var(--card-bg);
   border-radius: 8px;
@@ -197,13 +202,58 @@
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  margin-bottom: 30px;
+}
+
+.vl-table-scroll-btn {
+  position: fixed;
+  transform: translateY(-50%);
+  z-index: 50;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-white);
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  opacity: 0.95;
+  transition: opacity 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+.vl-table-scroll-btn:hover {
+  background: var(--card-hover);
+  opacity: 1;
+}
+.vl-table-scroll-btn:active {
+  transform: translateY(-50%) scale(0.92);
+}
+.vl-table-scroll-btn--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+body.light-theme .vl-table-scroll-btn {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #121826;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+body.light-theme .vl-table-scroll-btn:hover {
+  background: #f3f4f6;
 }
 
 .validators-table {
   width: 100%;
   border-collapse: collapse;
   min-width: 900px;
+}
+
+.validators-table th.vl-action-cell,
+.validators-table td.vl-action-cell {
+  width: 1%;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .validators-table th {

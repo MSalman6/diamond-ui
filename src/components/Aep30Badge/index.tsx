@@ -15,6 +15,27 @@ export default function Aep30Badge({ aep30 }: Aep30BadgeProps) {
   );
 }
 
+interface Aep30BarProps {
+  aep30: number; // 0.0 – 1.0
+}
+
+export function Aep30Bar({ aep30 }: Aep30BarProps) {
+  const pct = Math.min(100, Math.max(0, aep30 * 100));
+  const tier = pct >= 80 ? 'green' : pct >= 50 ? 'yellow' : 'red';
+  return (
+    <div className="dmd-aep30-bar">
+      <div className="dmd-aep30-bar__track">
+        <div
+          className={`dmd-aep30-bar__fill dmd-aep30-bar__fill--${tier}`}
+          style={{ width: `${pct}%` }}
+        />
+        <span className="dmd-aep30-bar__value">{pct.toFixed(0)}%</span>
+      </div>
+      <span className="dmd-aep30-bar__sub">active epochs</span>
+    </div>
+  );
+}
+
 interface Aep30RingProps {
   aep30: number | null;
   isLoading?: boolean;

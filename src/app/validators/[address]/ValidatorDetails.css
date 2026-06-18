@@ -354,12 +354,12 @@ body.light-theme .btn-icon:hover {
   flex: 1 1 auto;
 }
 
-.btn-stake {
+.staking-buttons .btn-stake {
   width: 100px !important;
   height: 40px !important;
 }
 
-.btn-unstake {
+.staking-buttons .btn-unstake {
   width: 100px !important;
   height: 40px !important;
 }
