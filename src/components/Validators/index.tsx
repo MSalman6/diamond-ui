@@ -197,14 +197,31 @@ export default function Validators() {
   useEffect(() => {
     const el = tableScrollRef.current;
     if (!el) return;
-    updateScrollAffordance();
+
+    const rafIds: number[] = [];
+    rafIds.push(requestAnimationFrame(() => {
+      updateScrollAffordance();
+      rafIds.push(requestAnimationFrame(() => updateScrollAffordance()));
+    }));
+
     el.addEventListener('scroll', updateScrollAffordance, { passive: true });
     window.addEventListener('scroll', updateScrollAffordance, { passive: true });
     window.addEventListener('resize', updateScrollAffordance);
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => updateScrollAffordance());
+      ro.observe(el);
+      const innerTable = el.querySelector('table');
+      if (innerTable) ro.observe(innerTable);
+    }
+
     return () => {
+      rafIds.forEach(id => cancelAnimationFrame(id));
       el.removeEventListener('scroll', updateScrollAffordance);
       window.removeEventListener('scroll', updateScrollAffordance);
       window.removeEventListener('resize', updateScrollAffordance);
+      if (ro) ro.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateScrollAffordance, tableFields, pools, filter, itemsPerPage, currentPage, searchTerm, sortConfig]);

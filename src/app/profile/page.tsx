@@ -346,16 +346,12 @@ export default function ProfilePage() {
                           <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                         </InfoTooltip>
                       </div>
-                      <div className="dp2-stat-value">
+                      <div className="dp2-stat-value dp2-stat-value--teal">
                         {isPrivacyMode ? '—' : myDelegatedStakeWei.isZero()
                           ? '0 DMD'
                           : myDelegatedStakeWei.dividedBy(1e18).toFormat(4, BigNumber.ROUND_DOWN) + ' DMD'}
                       </div>
                       <div className="dp2-stat-sub">across {stakedValidators.length} validator{stakedValidators.length !== 1 ? 's' : ''}</div>
-                      <div className="dp2-stat-actions">
-                        <Link href="/validators?sort=myStake&direction=descending" className="btn-primary btn-sm">Stake/Unstake</Link>
-                        <CreatePoolModal buttonText="Create pool" />
-                      </div>
                     </div>
 
                     <div className="dp2-stat-item dp2-stat-item--sep">
@@ -374,11 +370,11 @@ export default function ProfilePage() {
                     <div className="dp2-stat-item dp2-stat-item--sep">
                       <div className="dp2-stat-label">
                         Portfolio APY
-                        <InfoTooltip content={<div><p>Estimated annualized return based on validator rewards over the last 30 days.</p></div>}>
+                        <InfoTooltip content={<div><p>Historical annualized return based on the delegator rewards earned by your staking portfolio during the last 30 days. This value excludes validator owner reward shares and does not guarantee future rewards.</p></div>}>
                           <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                         </InfoTooltip>
                       </div>
-                      <div className="dp2-stat-value">
+                      <div className="dp2-stat-value dp2-stat-value--teal">
                         {isPrivacyMode ? '—' : isLoadingStakerStats ? '...' : portfolioApy != null ? portfolioApy + '%' : '—'}
                       </div>
                       <div className="dp2-stat-sub">estimated</div>
@@ -387,7 +383,7 @@ export default function ProfilePage() {
                     <div className="dp2-stat-item dp2-stat-item--sep">
                       <div className="dp2-stat-label">
                         Avg RpT30
-                        <InfoTooltip content={<div><p>Average rewards per 1,000 DMD staked across all your validators over the last 30 days.</p></div>}>
+                        <InfoTooltip content={<div><p>Average historical rewards earned per 1000 DMD across the validators you delegated to during the last 30 days. This value is based on delegator rewards only and excludes validator owner reward shares.</p></div>}>
                           <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                         </InfoTooltip>
                       </div>
@@ -415,6 +411,11 @@ export default function ProfilePage() {
                     </div>
                   </div>
 
+                  <div className="dp2-card-actions">
+                    <Link href="/validators?sort=myStake&direction=descending" className="btn-primary btn-sm">Stake/Unstake</Link>
+                    <CreatePoolModal buttonText="Create pool" />
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -428,9 +429,10 @@ export default function ProfilePage() {
                 {!isPrivacyMode && (
                   <button
                     onClick={() => setIsRewardsHistoryModalOpen(true)}
-                    className="btn-secondary btn-sm"
+                    className="btn-secondary btn-sm dp2-rewards-history-btn"
                   >
-                    History
+                    <i className="fas fa-history" aria-hidden="true"></i>
+                    Rewards History
                   </button>
                 )}
               </div>
