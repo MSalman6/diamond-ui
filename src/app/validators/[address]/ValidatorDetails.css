@@ -354,12 +354,12 @@ body.light-theme .btn-icon:hover {
   flex: 1 1 auto;
 }
 
-.btn-stake {
+.staking-buttons .btn-stake {
   width: 100px !important;
   height: 40px !important;
 }
 
-.btn-unstake {
+.staking-buttons .btn-unstake {
   width: 100px !important;
   height: 40px !important;
 }
@@ -2255,3 +2255,653 @@ body.light-theme .status-badge.status-invalid {
   color: #ef4444;
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
+
+.validator-rewards-analytics {
+  background: var(--bg);
+  position: relative;
+  padding: 60px 0 0;
+  transition: background-color 0.5s ease;
+}
+
+.vd-section-title--analytics {
+  margin-bottom: 1.25rem;
+}
+
+.vd-section-title--analytics h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.vd-analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.vd-analytics-card {
+  min-height: 200px;
+}
+
+.vd-analytics-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+  background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vd-analytics-sub {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  margin-top: 0.15rem;
+}
+
+.vd-analytics-delta {
+  font-size: 0.8rem;
+  margin-top: 0.4rem;
+  font-weight: 500;
+}
+
+.vd-delta-up {
+  color: #07f49e;
+}
+
+.vd-delta-down {
+  color: #ff6b6b;
+}
+
+.vd-analytics-footer {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  opacity: 0.6;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  line-height: 1.35;
+}
+
+.vd-analytics-card .stat-actions {
+  margin-top: 0.75rem;
+}
+
+.vd-analytics-card--donut .vd-analytics-value {
+  display: none;
+}
+
+.vd-donut-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  margin: 0.25rem 0;
+}
+
+/* Rewards Performance chart section */
+.validator-rewards-chart {
+  background: var(--bg);
+  position: relative;
+  padding: 40px 0 60px;
+  transition: background-color 0.5s ease;
+}
+
+.vd-rewards-performance-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.vd-rewards-performance-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vd-rewards-performance-title h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  opacity: 0.95;
+  margin: 0;
+  color: var(--text);
+  transition: color 0.5s ease;
+}
+
+.vd-rewards-performance-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.vd-legend-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.vd-legend-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.vd-legend-pill--active {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.45);
+  color: var(--text);
+}
+
+.vd-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.vd-legend-dot--rpt {
+  background: #3a7bd5;
+}
+
+.vd-legend-pill:not(.vd-legend-pill--active) .vd-legend-dot {
+  opacity: 0.45;
+}
+
+.vd-range-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+.validator-rewards-chart .chart-container {
+  min-height: 300px;
+}
+
+.validator-rewards-chart .chart-content {
+  min-height: 260px;
+  width: 100%;
+}
+
+body.light-theme .vd-analytics-sub,
+body.light-theme .vd-analytics-footer {
+  color: #64748b;
+  opacity: 1;
+}
+
+body.light-theme .vd-delta-up {
+  color: #1a7a40;
+}
+
+body.light-theme .vd-delta-down {
+  color: #c0392b;
+}
+
+body.light-theme .vd-legend-pill {
+  color: #6b7280;
+  border-color: #e2e8f0;
+}
+
+body.light-theme .vd-legend-pill--active {
+  background: rgba(26, 115, 232, 0.08);
+  border-color: rgba(26, 115, 232, 0.35);
+  color: #111827;
+}
+
+body.light-theme .vd-range-pill {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #111827;
+}
+
+body.light-theme .vd-rewards-performance-title h2 {
+  color: #1a202c;
+}
+
+@media (max-width: 1200px) {
+  .vd-analytics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .validator-rewards-analytics {
+    padding: 40px 0 0;
+  }
+  .validator-rewards-chart {
+    padding: 30px 0 40px;
+  }
+}
+
+@media (max-width: 576px) {
+  .vd-analytics-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .vd-rewards-performance-header {
+    flex-direction: column;
+  }
+}
+
+/* Compact detail header */
+.validator-hero--detail {
+  min-height: auto;
+  padding-top: 110px;
+  padding-bottom: 30px;
+}
+
+.validator-hero--detail .validator-hero-content {
+  padding-top: 20px;
+}
+
+.vd-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.vd-detail-identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.vd-detail-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #6ee7b7, #3b82f6);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+.vd-detail-id {
+  min-width: 0;
+}
+
+.vd-detail-id-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.vd-detail-address {
+  font-size: 1.6rem !important;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.3px;
+  color: var(--text);
+  transition: color 0.5s ease;
+}
+
+.vd-detail-totalpool {
+  text-align: right;
+  margin-left: auto;
+}
+
+.vd-detail-totalpool-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.1;
+  transition: color 0.5s ease;
+}
+
+.vd-detail-totalpool-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+/* Pool Overview section */
+.validator-pool-overview {
+  background: var(--darker-bg);
+  position: relative;
+  padding: 60px 0;
+  transition: background-color 0.5s ease;
+}
+
+.vd-pool-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.vd-pool-value {
+  color: #3b82f6;
+}
+
+.vd-pool-sub {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  margin-bottom: 15px;
+}
+
+.vd-mystake-action {
+  width: 100%;
+}
+
+.vd-mystake-action .btn-stake {
+  width: 100%;
+  background: #3b82f6;
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-right: 0;
+}
+
+.vd-mystake-action .btn-stake:hover {
+  background: #2563eb;
+}
+
+.vd-mystake-action .btn-unstake,
+.vd-mystake-action .btn-claim-hero {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+/* Stake Distribution section */
+.validator-stake-distribution {
+  background: var(--bg);
+  position: relative;
+  padding: 60px 0;
+  transition: background-color 0.5s ease;
+}
+
+.vd-dist-bar {
+  display: flex;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(127, 127, 127, 0.15);
+}
+
+.vd-dist-self {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  transition: width 1s ease-in-out;
+}
+
+.vd-dist-delegated {
+  height: 100%;
+  background: linear-gradient(90deg, #a855f7, #7c3aed);
+  transition: width 1s ease-in-out;
+}
+
+.vd-dist-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+  gap: 16px;
+}
+
+.vd-dist-label--right {
+  text-align: right;
+}
+
+.vd-dist-pct {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.vd-dist-pct--self {
+  color: #22c55e;
+}
+
+.vd-dist-pct--delegated {
+  color: #a855f7;
+}
+
+.vd-dist-amount {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  opacity: 0.75;
+  margin-top: 2px;
+}
+
+/* Validator Statistics — horizontal cards */
+.vd-vstats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.vd-vstat-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  opacity: 0.75;
+  margin-bottom: 12px;
+}
+
+.vd-vstat-body {
+  margin-bottom: 15px;
+}
+
+.vd-vstat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #3b82f6;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.vd-vstat-sub {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.vd-vstat-action {
+  margin-top: auto;
+}
+
+.vd-vstat-action .cta-button {
+  width: 100%;
+}
+
+/* DAO participation — description + action cells */
+.vd-dao-desc {
+  color: var(--text-secondary);
+  opacity: 0.85;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  display: inline-block;
+  max-width: 480px;
+}
+
+.vd-dao-action {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.vd-dao-action--for {
+  color: #07f49e;
+}
+
+.vd-dao-action--against {
+  color: #ff6b6b;
+}
+
+.vd-dao-action--none {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.vd-dao-action--creator {
+  color: #ffd700;
+}
+
+/* Light theme */
+body.light-theme .vd-pool-value {
+  color: #2563eb;
+}
+
+body.light-theme .vd-vstat-value {
+  color: #2563eb;
+}
+
+body.light-theme .vd-pool-sub,
+body.light-theme .vd-vstat-label,
+body.light-theme .vd-vstat-sub,
+body.light-theme .vd-detail-totalpool-label,
+body.light-theme .vd-dist-amount {
+  color: #64748b;
+  opacity: 1;
+}
+
+body.light-theme .vd-detail-totalpool-value,
+body.light-theme .vd-detail-address {
+  color: #0f172a;
+}
+
+body.light-theme .vd-dist-bar {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .vd-dist-pct--self {
+  color: #15803d;
+}
+
+body.light-theme .vd-dist-pct--delegated {
+  color: #7c3aed;
+}
+
+body.light-theme .vd-dao-desc {
+  color: #475569;
+  opacity: 1;
+}
+
+body.light-theme .vd-dao-action--for {
+  color: #038d5a;
+}
+
+body.light-theme .vd-dao-action--against {
+  color: #d32f2f;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .vd-pool-overview-grid,
+  .vd-vstats-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .vd-detail-header {
+    align-items: flex-start;
+  }
+
+  .vd-detail-totalpool {
+    text-align: left;
+    margin-left: 0;
+  }
+
+  .vd-detail-address {
+    font-size: 1.3rem !important;
+  }
+}
+
+.validator-pool-overview,
+.validator-stake-distribution,
+.validator-rewards-analytics,
+.validator-rewards-chart,
+.validator-statistics,
+.delegates-section,
+.dao-section {
+  background: var(--bg);
+  padding: 32px 0;
+}
+
+.vd-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px 30px;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.light-theme .vd-panel {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.vd-section-title--analytics {
+  display: block;
+  margin-bottom: 24px;
+}
+
+.validator-detail-page .vd-section-title--analytics h2,
+.validator-detail-page .vd-rewards-performance-title h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.vd-section-title--analytics p {
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  max-width: none;
+}
+
+.vd-rewards-performance-header {
+  margin-bottom: 24px;
+}
+
+.validator-detail-page .delegates-section,
+.validator-detail-page .dao-section,
+body.light-theme .validator-detail-page .delegates-section,
+body.light-theme .validator-detail-page .dao-section {
+  background: var(--bg);
+}
+
+@media (max-width: 768px) {
+  .validator-pool-overview,
+  .validator-stake-distribution,
+  .validator-rewards-analytics,
+  .validator-rewards-chart,
+  .validator-statistics,
+  .delegates-section,
+  .dao-section {
+    padding: 32px 0;
+  }
+}
+

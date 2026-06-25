@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useRouter, useSearchParams } from 'next/navigation';
 import copy from 'copy-to-clipboard';
@@ -17,7 +17,7 @@ import { useIsPrivacyMode } from '@/contexts';
 import type { BatchNodeRewardStats } from '@/types/rewards';
 import { getCachedBatchNodeStats } from '@/lib/rewardStatsCache';
 import ValidatorCell from '../ValidatorCell';
-import Aep30Badge from '../Aep30Badge';
+import { Aep30Bar } from '../Aep30Badge';
 import SaturationBar from '../SaturationBar';
 import Rpt30Cell from '../Rpt30Cell';
 
@@ -41,17 +41,17 @@ const tableFieldsDefault: TableField[] = [
   { key: "stakingAddress", label: "Validator", sortAble: false, updateAble: true, hide: false },
   { key: "rpt30", label: "RpT30", sortAble: true, updateAble: true, hide: false },
   { key: "apy", label: "APY", sortAble: true, updateAble: true, hide: false },
+  { key: "aep30", label: "AEP30", sortAble: true, updateAble: true, hide: false },
   { key: "totalStake", label: "Stake", sortAble: true, updateAble: true, hide: false },
-  { key: "score", label: "Score", sortAble: true, updateAble: true, hide: false },
-  { key: "aep30", label: "Active Epoch %", sortAble: true, updateAble: true, hide: false },
+  { key: "saturation", label: "Saturation", sortAble: true, updateAble: true, hide: false },
   { key: "myStake", label: "My Stake", sortAble: true, updateAble: false, hide: false },
   { key: "stakeBtn", label: "", sortAble: false, updateAble: false, hide: false },
   { key: "unstakeClaimBtn", label: "", sortAble: false, updateAble: false, hide: false },
   // Optional / hidden by default
+  { key: "score", label: "Score", sortAble: true, updateAble: true, hide: true },
   { key: "votingPower", label: "Voting Power", sortAble: true, updateAble: true, hide: true },
   { key: "connectivityReport", label: "CR", sortAble: true, updateAble: true, hide: true },
   { key: "vos30", label: "VOS30", sortAble: true, updateAble: true, hide: true },
-  { key: "saturation", label: "Saturation", sortAble: true, updateAble: true, hide: true },
   { key: "miningAddress", label: "Miner address", sortAble: false, updateAble: true, hide: true },
   { key: "miningPublicKey", label: "Public Key", sortAble: false, updateAble: true, hide: true },
 ];
@@ -77,6 +77,49 @@ export default function Validators() {
   const [isLoadingRewardStats, setIsLoadingRewardStats] = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(100);
 
+  // Horizontal scroll affordances for the table on narrow viewports
+  const tableScrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  // Fixed-position coordinates for the floating scroll buttons so they stay
+  // pinned to the table's edges and centered in the viewport while scrolling.
+  const [scrollBtnPos, setScrollBtnPos] = useState<{ left: number; right: number; top: number; inView: boolean }>({
+    left: 0,
+    right: 0,
+    top: 0,
+    inView: false,
+  });
+
+  const updateScrollAffordance = useCallback(() => {
+    const el = tableScrollRef.current;
+    if (!el) return;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setCanScrollLeft(el.scrollLeft > 2);
+    setCanScrollRight(el.scrollLeft < maxScroll - 2);
+
+    const rect = el.getBoundingClientRect();
+    const vw = window.innerWidth || document.documentElement.clientWidth;
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    // Center the buttons on the portion of the table that is currently visible
+    // in the viewport, so they always stay within the table's vertical bounds.
+    const visibleTop = Math.max(rect.top, 0);
+    const visibleBottom = Math.min(rect.bottom, vh);
+    const EDGE_INSET = 10; // keep the buttons just inside the table edges
+    setScrollBtnPos({
+      left: rect.left + EDGE_INSET,
+      right: Math.max(0, vw - rect.right) + EDGE_INSET,
+      top: (visibleTop + visibleBottom) / 2,
+      inView: visibleBottom - visibleTop > 60,
+    });
+  }, []);
+
+  const scrollTable = (direction: 1 | -1) => {
+    const el = tableScrollRef.current;
+    if (!el) return;
+    const amount = Math.max(240, Math.round(el.clientWidth * 0.6));
+    el.scrollBy({ left: direction * amount, behavior: 'smooth' });
+  };
+
   // Persist itemsPerPage from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem('validatorsPerPage');
@@ -84,27 +127,30 @@ export default function Validators() {
     if ([5, 10, 25, 50, 100].includes(n)) setItemsPerPage(n);
   }, []);
 
-  // Load table fields from localStorage
+  // Load table fields from localStorage.
   useEffect(() => {
-    const storedTableFields = localStorage.getItem('validatorFieldsData');
+    const STORAGE_KEY = 'validatorFieldsData_v2';
+    localStorage.removeItem('validatorFieldsData');
+    const storedTableFields = localStorage.getItem(STORAGE_KEY);
     if (storedTableFields) {
       try {
         const parsed: TableField[] = JSON.parse(storedTableFields);
-        // Migrate: if old config is missing any new keys, reset to defaults
+        // If stored config doesn't match the current set of keys, reset to defaults.
         const storedKeys = new Set(parsed.map(f => f.key));
-        const hasNewColumns = ['rpt30', 'apy', 'aep30', 'saturation'].every(k => storedKeys.has(k));
-        if (!hasNewColumns) {
-          localStorage.setItem('validatorFieldsData', JSON.stringify(tableFieldsDefault));
+        const defaultKeys = tableFieldsDefault.map(f => f.key);
+        const keysMatch = defaultKeys.length === parsed.length && defaultKeys.every(k => storedKeys.has(k));
+        if (!keysMatch) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(tableFieldsDefault));
           setTableFields(tableFieldsDefault);
         } else {
           setTableFields(parsed);
         }
       } catch {
-        localStorage.setItem('validatorFieldsData', JSON.stringify(tableFieldsDefault));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(tableFieldsDefault));
         setTableFields(tableFieldsDefault);
       }
     } else {
-      localStorage.setItem('validatorFieldsData', JSON.stringify(tableFieldsDefault));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tableFieldsDefault));
     }
   }, []);
 
@@ -144,8 +190,41 @@ export default function Validators() {
 
   // Update localStorage when table fields change
   useEffect(() => {
-    localStorage.setItem('validatorFieldsData', JSON.stringify(tableFields));
+    localStorage.setItem('validatorFieldsData_v2', JSON.stringify(tableFields));
   }, [tableFields]);
+
+  // Keep horizontal scroll buttons in sync with the table's scroll state
+  useEffect(() => {
+    const el = tableScrollRef.current;
+    if (!el) return;
+
+    const rafIds: number[] = [];
+    rafIds.push(requestAnimationFrame(() => {
+      updateScrollAffordance();
+      rafIds.push(requestAnimationFrame(() => updateScrollAffordance()));
+    }));
+
+    el.addEventListener('scroll', updateScrollAffordance, { passive: true });
+    window.addEventListener('scroll', updateScrollAffordance, { passive: true });
+    window.addEventListener('resize', updateScrollAffordance);
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => updateScrollAffordance());
+      ro.observe(el);
+      const innerTable = el.querySelector('table');
+      if (innerTable) ro.observe(innerTable);
+    }
+
+    return () => {
+      rafIds.forEach(id => cancelAnimationFrame(id));
+      el.removeEventListener('scroll', updateScrollAffordance);
+      window.removeEventListener('scroll', updateScrollAffordance);
+      window.removeEventListener('resize', updateScrollAffordance);
+      if (ro) ro.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateScrollAffordance, tableFields, pools, filter, itemsPerPage, currentPage, searchTerm, sortConfig]);
 
   // Handle filter changes
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -268,24 +347,26 @@ export default function Validators() {
   const getTooltipText = (key: string) => {
     switch (key) {
       case 'isActive':
-          return "Active candidate is part of the active set; Valid - is not part of the active set, but can be elected; Invalid - a candidate who is flagged unavailable on the blockchain or has not enough stake";
+          return "Active candidate is part of the active set; Valid - is not part of the active set, but can be elected; Invalid - a candidate who is flagged unavailable on the blockchain or has not enough stake.";
       case 'totalStake':
-          return "Total delegated DMD (self-staked DMD + delegates' stake)";
+          return "Total delegated DMD (self-staked DMD + delegates' stake).";
       case 'votingPower':
-          return "Value that approximates a node’s influence in the DAO participation";
+          return "Value that approximates a node’s influence in the DAO participation.";
       case 'score':
-          return "Combined score value, based on the results of generating the shared key, the stability of the validator connection and misbehaviour reports from other validators";
+          return "Combined score value, based on the results of generating the shared key, the stability of the validator connection and misbehaviour reports from other validators.";
       case 'connectivityReport':
-          return "Connectivity report value, based on how many other active validators did report bad connectivity towards that node";      case 'rpt30':
-          return "Historical staking rewards earned per 1000 DMD delegated to this validator during the last 30 days.";
+          return "Connectivity report value, based on how many other active validators did report bad connectivity towards that node.";
+      case 'rpt30':
+          return "Historical staking rewards earned per 1000 DMD staked with this validator during the last 30 days. This value excludes the validator owner reward share and represents delegator-focused profitability.";
       case 'apy':
-          return "Estimated annualised return based on validator rewards over the last 30 days. This is a historical estimate, not a guarantee.";
+          return "Historical annualized return based on delegator rewards earned during the last 30 days. This value excludes the validator owner reward share and does not guarantee future rewards.";
       case 'aep30':
           return "Percentage of epochs during the last 30 days where this validator was part of the active validator set.";
       case 'vos30':
           return "Total validator owner rewards earned during the last 30 days from the 20% validator owner share.";
       case 'saturation':
-          return "Current pool stake as a percentage of the 50,000 DMD maximum. Validators near saturation may have diluted returns for new delegators.";      default:
+          return "Current pool stake as a percentage of the 50,000 DMD maximum. Validators near saturation may have diluted returns for new delegators.";
+      default:
           return "";
     }
   };
@@ -330,10 +411,11 @@ export default function Validators() {
             if ((column.key === 'myStake' || column.key === 'stakeBtn' || column.key === 'unstakeClaimBtn') && !userWallet.myAddr) {
               return null;
             }
+            const isActionCol = column.key === 'stakeBtn' || column.key === 'unstakeClaimBtn';
             return (
               <th
                 key={index}
-                className={getClassNamesFor(column.key)}
+                className={[getClassNamesFor(column.key), isActionCol ? 'vl-action-cell' : ''].filter(Boolean).join(' ') || undefined}
                 onClick={() => column.sortAble && requestSort(column.key)}
                 style={{ cursor: column.sortAble ? 'pointer' : 'default' }}
               >
@@ -444,7 +526,7 @@ export default function Validators() {
             return (
               <td key={colIndex}>
                 {isPrivacyMode ? '—' : isLoadingRewardStats ? '...' : stats ? (
-                  <Aep30Badge aep30={stats.aep30} />
+                  <Aep30Bar aep30={stats.aep30} />
                 ) : '—'}
               </td>
             );
@@ -502,7 +584,7 @@ export default function Validators() {
             );
           } else if (column.key === 'stakeBtn') {
             return (
-              <td key={colIndex} onClick={(e) => e.stopPropagation()}>
+              <td key={colIndex} className="vl-action-cell" onClick={(e) => e.stopPropagation()}>
                 {(pool.isActive || pool.isToBeElected || pool.isPendingValidator) && BigNumber(pool.totalStake ?? 0).isLessThan(BigNumber(50000).multipliedBy(10**18)) && BigNumber(50000).multipliedBy(10**18).minus(BigNumber(pool.totalStake ?? 0)).isGreaterThanOrEqualTo(delegatorMinStake) && (
                   <StakeModal buttonText="Stake" pool={pool} />
                 )}
@@ -510,7 +592,7 @@ export default function Validators() {
             );
           } else if (column.key === 'unstakeClaimBtn') {
             return (
-              <td key={colIndex} onClick={(e) => e.stopPropagation()}>
+              <td key={colIndex} className="vl-action-cell" onClick={(e) => e.stopPropagation()}>
                 {BigNumber(pool.orderedWithdrawAmount).isGreaterThan(0) && BigNumber(pool.orderedWithdrawUnlockEpoch).isLessThanOrEqualTo(stakingEpoch) ? (
                   <button className="btn-stake claim-btn" onClick={(e) => {e.stopPropagation(); claimOrderedUnstake(pool)}}>Claim</button>
                 ) : (
@@ -631,13 +713,33 @@ export default function Validators() {
           </div>
 
           {/* Table */}
-          <div className="validators-table-container">
-            <table className="validators-table">
-              {renderHeaders()}
-              <tbody>
-                {renderRows(currentItems)}
-              </tbody>
-            </table>
+          <div className="validators-table-wrapper">
+            <button
+              type="button"
+              className={`vl-table-scroll-btn vl-table-scroll-btn--left${canScrollLeft && scrollBtnPos.inView ? '' : ' vl-table-scroll-btn--hidden'}`}
+              style={{ left: `${scrollBtnPos.left}px`, top: `${scrollBtnPos.top}px` }}
+              onClick={() => scrollTable(-1)}
+              aria-label="Scroll table left"
+            >
+              <i className="fas fa-chevron-left"></i>
+            </button>
+            <button
+              type="button"
+              className={`vl-table-scroll-btn vl-table-scroll-btn--right${canScrollRight && scrollBtnPos.inView ? '' : ' vl-table-scroll-btn--hidden'}`}
+              style={{ right: `${scrollBtnPos.right}px`, top: `${scrollBtnPos.top}px` }}
+              onClick={() => scrollTable(1)}
+              aria-label="Scroll table right"
+            >
+              <i className="fas fa-chevron-right"></i>
+            </button>
+            <div className="validators-table-container" ref={tableScrollRef}>
+              <table className="validators-table">
+                {renderHeaders()}
+                <tbody>
+                  {renderRows(currentItems)}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {/* Pagination footer */}

@@ -3,10 +3,11 @@
 import '../Validators.css';
 import './ValidatorDetails.css';
 import '../../styles/proposal-status.css';
+import '@/components/Charts/Charts.css';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState, startTransition } from 'react';
+import { useEffect, useState, useMemo, startTransition } from 'react';
 import BigNumber from "bignumber.js";
-import { truncateAddress, timestampToDate } from '@/utils/common';
+import { truncateAddress, timestampToDate, parseEpochEndTime, parseDmdAmount } from '@/utils/common';
 import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { useDaoContext } from '@/contexts/DAO';
@@ -16,11 +17,13 @@ import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import InfoTooltip from '@/components/InfoTooltip';
+import { Aep30Ring } from '@/components/Aep30Badge';
+import AreaChart from '@/components/Charts/AreaChart';
 import BonusScoreHistoryModal from '@/components/Modals/BonusScoreHistory/BonusScoreHistoryModal';
 import StakeHistoryModal from '@/components/Modals/StakeHistory/StakeHistoryModal';
 import NodeRewardsHistoryModal from '@/components/Modals/NodeRewardsHistory/NodeRewardsHistoryModal';
-import { getCachedNodeRewardStats } from '@/lib/rewardStatsCache';
-import type { NodeRewardStats } from '@/types/rewards';
+import { getCachedNodeRewardStats, getCachedNodeEpochRewards } from '@/lib/rewardStatsCache';
+import type { NodeRewardStats, NodeEpochReward } from '@/types/rewards';
 
 
 export default function ValidatorDetails() {
@@ -30,7 +33,7 @@ export default function ValidatorDetails() {
   
   // Context hooks
   const { userWallet, web3Initialized, showLoader } = useWeb3Context();
-  const { activeProposals, getMyVote, getActiveProposals, getStateString } = useDaoContext();
+  const { activeProposals, getMyVote, getActiveProposals } = useDaoContext();
   const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake } = useStakingContext();
   const isPrivacyMode = useIsPrivacyMode();
 
@@ -41,8 +44,13 @@ export default function ValidatorDetails() {
   const [isUnstakeModalOpen, setIsUnstakeModalOpen] = useState(false);
   const [isBonusHistoryModalOpen, setIsBonusHistoryModalOpen] = useState(false);
   const [isStakeHistoryModalOpen, setIsStakeHistoryModalOpen] = useState(false);
+  const [isDelegatedStakeHistoryModalOpen, setIsDelegatedStakeHistoryModalOpen] = useState(false);
   const [isRewardsHistoryModalOpen, setIsRewardsHistoryModalOpen] = useState(false);
   const [validatorRewardStats, setValidatorRewardStats] = useState<NodeRewardStats | null>(null);
+  const [isLoadingValidatorStats, setIsLoadingValidatorStats] = useState(false);
+  const [epochRewards, setEpochRewards] = useState<NodeEpochReward[]>([]);
+  const [isLoadingEpochRewards, setIsLoadingEpochRewards] = useState(false);
+  const [chartShowRpt, setChartShowRpt] = useState(true);
 
   // Effects
   useEffect(() => {
@@ -67,10 +75,93 @@ export default function ValidatorDetails() {
 
   useEffect(() => {
     if (!address || isPrivacyMode) return;
+    setIsLoadingValidatorStats(true);
     getCachedNodeRewardStats(address.toLowerCase())
       .then(data => { if (data) setValidatorRewardStats(data); })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setIsLoadingValidatorStats(false));
   }, [address, isPrivacyMode]);
+
+  // Epoch rewards history last 30 days
+  useEffect(() => {
+    if (!address || isPrivacyMode) return;
+    const thirtyDaysAgo = Math.floor(Date.now() / 1000) - 30 * 86400;
+    setIsLoadingEpochRewards(true);
+    getCachedNodeEpochRewards(address.toLowerCase(), thirtyDaysAgo)
+      .then(data => setEpochRewards(data))
+      .catch(() => {})
+      .finally(() => setIsLoadingEpochRewards(false));
+  }, [address, isPrivacyMode]);
+
+  // RpT30 change vs previous 30d as a percentage
+  const rpt30DeltaPct = useMemo(() => {
+    if (validatorRewardStats?.rpt30_delta == null || validatorRewardStats?.rpt30_prev30 == null) {
+      return null;
+    }
+    const prev = validatorRewardStats.rpt30_prev30;
+    if (prev === 0) return null;
+    return (validatorRewardStats.rpt30_delta / prev) * 100;
+  }, [validatorRewardStats]);
+
+  // Cumulative RpT per 1,000 DMD per epoch
+  const validatorChartData = useMemo(() => {
+    const rows: { date: string; rpt: number; sortKey: number }[] = [];
+    for (const e of epochRewards) {
+      const endDate = parseEpochEndTime(e.epoch_end_time);
+      const stakeDmd = parseDmdAmount(e.total_staked_snapshot);
+      if (!endDate || stakeDmd <= 0) continue;
+      const delegatorsReward = parseDmdAmount(e.delegators_total_reward);
+      rows.push({
+        date: endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        rpt: (delegatorsReward / stakeDmd) * 1000,
+        sortKey: endDate.getTime(),
+      });
+    }
+    rows.sort((a, b) => a.sortKey - b.sortKey);
+    let running = 0;
+    return rows.map((r) => {
+      running += r.rpt;
+      return { date: r.date, rpt: Number(running.toFixed(4)), sortKey: r.sortKey };
+    });
+  }, [epochRewards]);
+
+  const validatorChartAreas = useMemo(() => {
+    const areas: { dataKey: string; name: string; color: string }[] = [];
+    if (chartShowRpt) {
+      areas.push({ dataKey: 'rpt', name: 'RpT30', color: '#3a7bd5' });
+    }
+    return areas;
+  }, [chartShowRpt]);
+
+  // Pool stake breakdown: validator self stake vs delegated stake, plus the
+  // connected user's own stake with this validator.
+  const totalStakeWei = BigNumber(pool?.totalStake || 0);
+  const selfStakeWei = BigNumber(pool?.ownStake || 0);
+  const delegatedStakeWei = BigNumber.max(totalStakeWei.minus(selfStakeWei), 0);
+  const myStakeWei = BigNumber(pool?.myStake || 0);
+
+  const stakePct = (partWei: BigNumber) =>
+    totalStakeWei.isGreaterThan(0)
+      ? partWei.multipliedBy(100).dividedBy(totalStakeWei).toFixed(1)
+      : '0.0';
+
+  const selfStakePct = stakePct(selfStakeWei);
+  const delegatedStakePct = stakePct(delegatedStakeWei);
+  const myStakePct = stakePct(myStakeWei);
+
+  const formatStakeDmd = (wei: BigNumber) => wei.dividedBy(10 ** 18).toFormat(4, BigNumber.ROUND_DOWN);
+
+  // Monthly rewards: validator owner share (VOS30) plus the rewards earned on the
+  // validator's own staked DMD (own stake earns at the RpT30 rate per 1,000 DMD).
+  const monthlyRewards30d = useMemo(() => {
+    if (!validatorRewardStats) return null;
+    const selfStakeDmd = selfStakeWei.dividedBy(10 ** 18).toNumber();
+    const selfStakeReward = (validatorRewardStats.rpt30 * selfStakeDmd) / 1000;
+    return validatorRewardStats.vos30 + selfStakeReward;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [validatorRewardStats, pool?.ownStake]);
+
+  const proposalsCreatedCount = filteredProposals.filter(p => String(p.proposer || '').toLowerCase() === String(address || '').toLowerCase()).length;
 
   // Functions
   async function filterProposals() {
@@ -137,8 +228,8 @@ export default function ValidatorDetails() {
   }
 
   return (
-    <div>
-      <section className="validator-hero">
+    <div className="validator-detail-page">
+      <section className="validator-hero validator-hero--detail">
         <div className="cosmic-grid"></div>
         <div className="cosmic-elements">
           <div className="diamond diamond-1"></div>
@@ -154,160 +245,55 @@ export default function ValidatorDetails() {
                 <i className="fas fa-arrow-left"></i> Back to Validators
               </a>
             </div>
-            <div className="validator-header">
-      <div className="validator-main-info">
-        <div className="validator-identity">
-          <div className="address-section">
-            <span id="validator-status-badge" className={`status-badge ${pool?.isActive ? 'status-active' : (pool?.isToBeElected || pool?.isPendingValidator) ? 'status-valid' : 'status-invalid'}`}>
-              {pool?.isActive ? "Active" : (pool?.isToBeElected || pool?.isPendingValidator) ? "Valid" : "Invalid"}
-            </span>
-            <h1 id="validator-address">{address ? truncateAddress(address) : 'Loading...'}</h1>
-            <div className="address-actions">
-              <button className="btn-icon" id="copy-address" title="Copy Address" onClick={() => copyData(address || "")}>
-                <i className="fas fa-copy"></i>
-              </button>
-              <a target="_blank" rel="noopener noreferrer" href={`https://explorer.bit.diamonds/address/${address}`}>
-                <button className="btn-icon" id="view-explorer" title="View in Explorer">
-                  <i className="fas fa-external-link-alt"></i>
-                </button>
-              </a>
+            <div className="vd-detail-header">
+              <div className="vd-detail-identity">
+                <div className="vd-detail-avatar" aria-hidden="true"></div>
+                <div className="vd-detail-id">
+                  <div className="vd-detail-id-top">
+                    <h1 id="validator-address" className="vd-detail-address">{address ? truncateAddress(address) : 'Loading...'}</h1>
+                    <span id="validator-status-badge" className={`status-badge ${pool?.isActive ? 'status-active' : (pool?.isToBeElected || pool?.isPendingValidator) ? 'status-valid' : 'status-invalid'}`}>
+                      {pool?.isActive ? "Active" : (pool?.isToBeElected || pool?.isPendingValidator) ? "Valid" : "Invalid"}
+                    </span>
+                    <div className="address-actions">
+                      <button className="btn-icon" id="copy-address" title="Copy Address" onClick={() => copyData(address || "")}>
+                        <i className="fas fa-copy"></i>
+                      </button>
+                      <a target="_blank" rel="noopener noreferrer" href={`https://explorer.bit.diamonds/address/${address}`}>
+                        <button className="btn-icon" id="view-explorer" title="View in Explorer">
+                          <i className="fas fa-external-link-alt"></i>
+                        </button>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="vd-detail-totalpool">
+                <div className="vd-detail-totalpool-value">{pool ? BigNumber(pool.totalStake).dividedBy(10**18).toFormat(4, BigNumber.ROUND_DOWN) : 0} DMD</div>
+                <div className="vd-detail-totalpool-label">Total pool stake</div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="validator-actions">
-          <div className="staking-buttons">
-            {(pool?.isActive || pool?.isToBeElected || pool?.isPendingValidator) && 
-            BigNumber(pool?.totalStake || 0).isLessThan(BigNumber(50000).multipliedBy(10**18)) && 
-            BigNumber(50000).multipliedBy(10**18).minus(BigNumber(pool?.totalStake || 0)).isGreaterThanOrEqualTo(delegatorMinStake) &&
-            userWallet.myAddr && (
-              <StakeModal 
-                pool={pool}
-                buttonText="Stake"
-              />
-            )}
-            {pool && 
-            BigNumber(pool.orderedWithdrawAmount || 0).isGreaterThan(0) && 
-            BigNumber(pool.orderedWithdrawUnlockEpoch || 0).isLessThanOrEqualTo(stakingEpoch) && 
-            userWallet.myAddr ? (
-              <button className="btn-primary btn-claim-hero" id="claim-button" onClick={handleClaimClick}>
-                <i className="fas fa-coins"></i> Claim
-              </button>
-            ) : pool && 
-                BigNumber(pool.myStake || 0).isGreaterThan(0) && 
-                userWallet.myAddr && (
-              <UnstakeModal 
-                pool={pool}
-                buttonText="Unstake"
-              />
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
           </div>
         </div>
       </section>
 
-    <section className="validator-statistics">
+    <section className="validator-pool-overview">
       <div className="container">
-        <div className="vd-section-title">
-          <h2>Validator Statistics</h2>
+        <div className="vd-section-title vd-section-title--analytics">
+          <h2>
+            Pool Overview
+            <InfoTooltip
+              placement="bottom"
+              content={<p>Total amount of DMD staked on this validator, including both the validator’s own stake and delegated stake from others.</p>}
+            >
+              <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+            </InfoTooltip>
+          </h2>
         </div>
-        <div className="stats-grid-wireframe">
+        <div className="vd-pool-overview-grid">
           <div className="stat-card-wireframe fade-in">
             <div className="stat-header">
               <h3>
-                Pool stake
-                <InfoTooltip
-                  placement="bottom"
-                  content={<p>Total amount of DMD staked on this validator, including both the validator’s own stake and delegated stake from others.</p>}
-                >
-                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
-                </InfoTooltip>
-              </h3>
-            </div>
-            <p className="stat-value-large">{pool ? BigNumber(pool.totalStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : 0} DMD</p>
-            {/* <div className="stat-trend positive">
-              <i className="fas fa-arrow-up"></i> 5 DMD since 01.01.24
-            </div> */}
-            {!isPrivacyMode && (
-              <div className="stat-actions">
-                <button
-                  onClick={() => setIsStakeHistoryModalOpen(true)}
-                  className="cta-button"
-                  title="View stake history"
-                >
-                  History
-                </button>
-              </div>
-            )}
-            <div className="stat-footer">
-              <span className="connectivity-info">
-                Connectivity reports: 0
-                <InfoTooltip
-                  placement="bottom"
-                  content={
-                  <div>
-                    <p>Number of detected connectivity issues for this validator.</p>
-                  </div>
-                  }
-                >
-                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
-                </InfoTooltip>
-              </span>
-            </div>
-          </div>
-
-          <div className="stat-card-wireframe fade-in">
-            <div className="stat-header">
-              <h3>Score<InfoTooltip
-                placement="bottom"
-                content={<><p>Bonus Score earned by this validator through uptime and availability.</p> <p>Higher scores increase the chances of being selected for the active validator set in future epochs.</p></>}>
-                <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
-              </InfoTooltip>
-              </h3>
-            </div>
-            <p className="stat-value-large">{pool ? pool.score : 0}</p>
-            {!isPrivacyMode && (
-              <>
-                <div className="stat-actions">
-                  <button
-                    onClick={() => setIsBonusHistoryModalOpen(true)}
-                    className="cta-button"
-                    title="View bonus score history"
-                  >
-                    History
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-
-          <div className="stat-card-wireframe fade-in">
-            <div className="stat-header">
-              <h3>
-                Voting power
-                <InfoTooltip
-                  placement="bottom"
-                  content={<><p>Share of DAO voting influence held by this validator.</p><p>Voting power is based on total stake and affects how strongly a validator can influence governance proposals.</p></>}
-                >
-                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
-                </InfoTooltip>
-              </h3>
-            </div>
-            <p className="stat-value-large">{pool ? pool.votingPower?.toString() : 0}%</p>
-            {/* <div className="stat-trend negative">
-              <i className="fas fa-arrow-down"></i> 0.01% since 01.01.24
-            </div> */}
-            <div className="stat-footer">
-              <span className="proposals-info">Proposals created: {filteredProposals.filter(p => p.proposer === address).length}</span>
-            </div>
-          </div>
-
-          <div className="stat-card-wireframe fade-in">
-            <div className="stat-header">
-              <h3>
-                Validator stake
+                Validator self stake
                 <InfoTooltip
                   placement="bottom"
                   content={<span>Amount of DMD staked by the validator themselves, excluding delegations.</span>}
@@ -316,26 +302,295 @@ export default function ValidatorDetails() {
                 </InfoTooltip>
               </h3>
             </div>
-            <p className="stat-value-large">{pool ? BigNumber(pool.ownStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : 0} DMD</p>
-            {/* <div className="stat-trend positive">
-              <i className="fas fa-arrow-up"></i> 5 DMD since 01.01.24
-            </div> */}
+            <p className="stat-value-large vd-pool-value">{pool ? formatStakeDmd(selfStakeWei) : 0} DMD</p>
+            <div className="vd-pool-sub">{selfStakePct}% of pool</div>
+            {!isPrivacyMode && (
+              <div className="stat-actions">
+                <button
+                  onClick={() => setIsStakeHistoryModalOpen(true)}
+                  className="cta-button"
+                  title="View validator stake history"
+                >
+                  History
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="stat-card-wireframe fade-in">
             <div className="stat-header">
               <h3>
-                Monthly rewards
-                <InfoTooltip placement="bottom" content={<><p>Rewards earned by this validator over the past 30 days.</p> <p>Includes both validator and delegator rewards and depends on uptime, performance, and stake size.</p></>}> 
+                Delegated stake to this pool
+                <InfoTooltip
+                  placement="bottom"
+                  content={<span>Total amount of DMD delegated to this validator by other users.</span>}
+                >
                   <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                 </InfoTooltip>
               </h3>
             </div>
-            <p className="stat-value-large">
-              {isPrivacyMode ? '—' : validatorRewardStats ? validatorRewardStats.vos30.toFixed(2) + ' DMD' : '—'}
-            </p>
+            <p className="stat-value-large vd-pool-value">{pool ? formatStakeDmd(delegatedStakeWei) : 0} DMD</p>
+            <div className="vd-pool-sub">{delegatedStakePct}% of pool</div>
             {!isPrivacyMode && (
               <div className="stat-actions">
+                <button
+                  onClick={() => setIsDelegatedStakeHistoryModalOpen(true)}
+                  className="cta-button"
+                  title="View delegated stake history"
+                >
+                  History
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="stat-card-wireframe fade-in">
+            <div className="stat-header">
+              <h3>
+                My stake with this validator
+                <InfoTooltip
+                  placement="bottom"
+                  content={<span>Amount of DMD you have currently staked with this validator.</span>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
+            </div>
+            <p className="stat-value-large">{pool ? formatStakeDmd(myStakeWei) : 0} DMD</p>
+            <div className="vd-pool-sub">{myStakePct}% of pool</div>
+            <div className="stat-actions vd-mystake-action">
+              {(pool?.isActive || pool?.isToBeElected || pool?.isPendingValidator) &&
+              BigNumber(pool?.totalStake || 0).isLessThan(BigNumber(50000).multipliedBy(10**18)) &&
+              BigNumber(50000).multipliedBy(10**18).minus(BigNumber(pool?.totalStake || 0)).isGreaterThanOrEqualTo(delegatorMinStake) &&
+              userWallet.myAddr && pool && (
+                <StakeModal
+                  pool={pool}
+                  buttonText="Delegate"
+                />
+              )}
+              {pool &&
+              BigNumber(pool.orderedWithdrawAmount || 0).isGreaterThan(0) &&
+              BigNumber(pool.orderedWithdrawUnlockEpoch || 0).isLessThanOrEqualTo(stakingEpoch) &&
+              userWallet.myAddr ? (
+                <button className="btn-primary btn-claim-hero" id="claim-button" onClick={handleClaimClick}>
+                  <i className="fas fa-coins"></i> Claim
+                </button>
+              ) : pool &&
+                  BigNumber(pool.myStake || 0).isGreaterThan(0) &&
+                  userWallet.myAddr && (
+                <UnstakeModal
+                  pool={pool}
+                  buttonText="Unstake"
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className="validator-stake-distribution">
+      <div className="container">
+        <div className="vd-section-title vd-section-title--analytics">
+          <h2>
+            Stake Distribution
+            <InfoTooltip
+              placement="bottom"
+              content={<p>Visual breakdown showing the ratio between the validator’s own stake and delegated stake in this pool.</p>}
+            >
+              <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+            </InfoTooltip>
+          </h2>
+        </div>
+        <div className="vd-panel">
+          <div className="vd-dist-bar">
+            <div className="vd-dist-self" style={{ width: `${selfStakePct}%` }} title={`${selfStakePct}% self stake`} />
+            <div className="vd-dist-delegated" style={{ width: `${delegatedStakePct}%` }} title={`${delegatedStakePct}% delegated`} />
+          </div>
+          <div className="vd-dist-labels">
+            <div className="vd-dist-label vd-dist-label--left">
+              <div className="vd-dist-pct vd-dist-pct--self">{selfStakePct}% self stake</div>
+              <div className="vd-dist-amount">{pool ? formatStakeDmd(selfStakeWei) : 0} DMD</div>
+            </div>
+            <div className="vd-dist-label vd-dist-label--right">
+              <div className="vd-dist-pct vd-dist-pct--delegated">{delegatedStakePct}% delegated stake</div>
+              <div className="vd-dist-amount">{pool ? formatStakeDmd(delegatedStakeWei) : 0} DMD</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {!isPrivacyMode && (
+    <section className="validator-rewards-analytics">
+      <div className="container">
+        <div className="vd-section-title vd-section-title--analytics">
+          <h2>Performance Analytics</h2>
+          <p>Reward and participation metrics for this validator over the last 30 days</p>
+        </div>
+        <div className="vd-analytics-grid">
+          <div className="stat-card-wireframe vd-analytics-card fade-in">
+            <div className="stat-header">
+              <h3>
+                RpT30
+                <InfoTooltip
+                  placement="bottom"
+                  content={<p>Historical staking rewards earned per 1000 DMD staked with this validator during the last 30 days. This value excludes the validator owner reward share and represents delegator-focused profitability.</p>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
+            </div>
+            <p className="stat-value-large vd-analytics-value">
+              {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.rpt30.toFixed(2) + ' DMD' : '—'}
+            </p>
+            <div className="vd-analytics-sub">per 1000 / 30d</div>
+            {rpt30DeltaPct != null && (
+              <div className={`vd-analytics-delta ${rpt30DeltaPct >= 0 ? 'vd-delta-up' : 'vd-delta-down'}`}>
+                {rpt30DeltaPct >= 0 ? '↑' : '↓'}{' '}
+                {rpt30DeltaPct >= 0 ? '+' : ''}{Math.abs(rpt30DeltaPct).toFixed(1)}% vs previous 30d
+              </div>
+            )}
+            <div className="vd-analytics-footer">Historical delegator profitability</div>
+          </div>
+
+          <div className="stat-card-wireframe vd-analytics-card fade-in">
+            <div className="stat-header">
+              <h3>
+                APY
+                <InfoTooltip
+                  placement="bottom"
+                  content={<p>Historical annualized return based on delegator rewards earned during the last 30 days. This value excludes the validator owner reward share and does not guarantee future rewards.</p>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
+            </div>
+            <p className="stat-value-large vd-analytics-value">
+              {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.estimated_apy.toFixed(2) + '%' : '—'}
+            </p>
+            <div className="vd-analytics-sub">estimated APY</div>
+            <div className="vd-analytics-footer">Based on last 30d rewards</div>
+          </div>
+
+          <div className="stat-card-wireframe vd-analytics-card vd-analytics-card--donut fade-in">
+            <div className="stat-header">
+              <h3>
+                AEP30
+                <InfoTooltip
+                  placement="bottom"
+                  content={<p>Percentage of epochs during the last 30 days where this validator was part of the active validator set.</p>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
+            </div>
+            <div className="vd-donut-wrap">
+              <Aep30Ring
+                aep30={validatorRewardStats?.aep30 ?? null}
+                isLoading={isLoadingValidatorStats}
+              />
+            </div>
+            <div className="vd-analytics-sub">
+              {validatorRewardStats
+                ? `${validatorRewardStats.active_epoch_count} / ${validatorRewardStats.total_epochs_in_window} active epochs`
+                : 'active epochs'}
+            </div>
+            <div className="vd-analytics-footer">Participation during last 30d</div>
+          </div>
+
+          <div className="stat-card-wireframe vd-analytics-card fade-in">
+            <div className="stat-header">
+              <h3>
+                VOS30
+                <InfoTooltip
+                  placement="bottom"
+                  content={<p>Total validator owner rewards earned during the last 30 days from the 20% validator owner share.</p>}
+                >
+                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                </InfoTooltip>
+              </h3>
+            </div>
+            <p className="stat-value-large vd-analytics-value">
+              {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.vos30.toFixed(2) + ' DMD' : '—'}
+            </p>
+            <div className="vd-analytics-sub">validator owner rewards</div>
+            <div className="vd-analytics-footer">Last 30d (20% owner share)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    )}
+
+    {!isPrivacyMode && (
+    <section className="validator-rewards-chart">
+      <div className="container">
+        <div className="vd-rewards-performance-header">
+          <div className="vd-rewards-performance-title">
+            <h2>Rewards Performance</h2>
+            <InfoTooltip
+              placement="bottom"
+              content={<p>Per-epoch reward per 1,000 DMD staked (approximated from epoch data).</p>}
+            >
+              <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+            </InfoTooltip>
+          </div>
+          <div className="vd-rewards-performance-controls">
+            <div className="vd-legend-pills" role="group" aria-label="Chart series">
+              <button
+                type="button"
+                className={`vd-legend-pill${chartShowRpt ? ' vd-legend-pill--active' : ''}`}
+                onClick={() => setChartShowRpt((v) => !v)}
+              >
+                <span className="vd-legend-dot vd-legend-dot--rpt" aria-hidden="true" />
+                RpT30
+              </button>
+            </div>
+            <span className="vd-range-pill">30D</span>
+          </div>
+        </div>
+        <AreaChart
+          data={validatorChartData}
+          xAxisKey="date"
+          areas={
+            validatorChartAreas.length > 0
+              ? validatorChartAreas
+              : [{ dataKey: 'rpt', name: 'RpT30', color: '#3a7bd5' }]
+          }
+          config={{ height: 260, margin: { top: 10, right: 20, left: 10, bottom: 0 } }}
+          showLegend={false}
+          yAxisLabel="RpT per 1000 DMD"
+          isLoading={isLoadingEpochRewards}
+          emptyMessage="No epoch data available"
+        />
+      </div>
+    </section>
+    )}
+
+    <section className="validator-statistics">
+      <div className="container">
+        <div className="vd-section-title vd-section-title--analytics">
+          <h2>Validator Statistics</h2>
+        </div>
+        <div className="vd-vstats-grid">
+          <div className="vd-vstat-card stat-card-wireframe fade-in">
+            <div className="vd-vstat-label">
+              Monthly rewards
+              <InfoTooltip
+                placement="bottom"
+                content={<p>Total validator owner rewards earned during the last 30 days from the 20% validator owner share.</p>}
+              >
+                <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+              </InfoTooltip>
+            </div>
+            <div className="vd-vstat-body">
+              <div className="vd-vstat-value">
+                {isPrivacyMode ? '—' : isLoadingValidatorStats ? '...' : monthlyRewards30d != null ? monthlyRewards30d.toFixed(2) + ' DMD' : '—'}
+              </div>
+              <div className="vd-vstat-sub">Based on last 30d</div>
+            </div>
+            {!isPrivacyMode && (
+              <div className="vd-vstat-action">
                 <button
                   onClick={() => setIsRewardsHistoryModalOpen(true)}
                   className="cta-button"
@@ -347,22 +602,50 @@ export default function ValidatorDetails() {
             )}
           </div>
 
-          <div className="stat-card-wireframe fade-in">
-            <div className="stat-header">
-              <h3>
-                Delegated stake
-                <InfoTooltip
-                  placement="bottom"
-                  content={<span>Total amount of DMD delegated to this validator by other users.</span>}
-                >
-                  <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
-                </InfoTooltip>
-              </h3>
+          <div className="vd-vstat-card stat-card-wireframe fade-in">
+            <div className="vd-vstat-label">
+              Voting power
+              <InfoTooltip
+                placement="bottom"
+                content={<><p>Share of DAO voting influence held by this validator.</p><p>Voting power is based on total stake and affects how strongly a validator can influence governance proposals.</p></>}
+              >
+                <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+              </InfoTooltip>
             </div>
-            <p className="stat-value-large">{pool ? BigNumber(pool.totalStake).minus(pool.ownStake).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN) : 0} DMD</p>
-            {/* <div className="stat-trend positive">
-              <i className="fas fa-arrow-up"></i> 5 DMD since 01.01.24
-            </div> */}
+            <div className="vd-vstat-body">
+              <div className="vd-vstat-value">{pool ? pool.votingPower?.toString() : 0}%</div>
+              <div className="vd-vstat-sub">Proposals created: {proposalsCreatedCount}</div>
+            </div>
+            <div className="vd-vstat-action">
+              <button onClick={() => toast.info('Coming soon!')} className="cta-button">History</button>
+            </div>
+          </div>
+
+          <div className="vd-vstat-card stat-card-wireframe fade-in">
+            <div className="vd-vstat-label">
+              Score
+              <InfoTooltip
+                placement="bottom"
+                content={<><p>Bonus Score earned by this validator through uptime and availability.</p> <p>Higher scores increase the chances of being selected for the active validator set in future epochs.</p></>}
+              >
+                <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+              </InfoTooltip>
+            </div>
+            <div className="vd-vstat-body">
+              <div className="vd-vstat-value">{pool?.score !== undefined && pool?.score !== null ? Number(pool.score).toFixed(1) : 0}</div>
+              <div className="vd-vstat-sub">Based on network score</div>
+            </div>
+            {!isPrivacyMode && (
+              <div className="vd-vstat-action">
+                <button
+                  onClick={() => setIsBonusHistoryModalOpen(true)}
+                  className="cta-button"
+                  title="View bonus score history"
+                >
+                  History
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -370,16 +653,16 @@ export default function ValidatorDetails() {
 
     <section className="delegates-section">
       <div className="container">
-        <div className="vd-section-title">
+        <div className="vd-section-title vd-section-title--analytics">
           <h2>Delegates</h2>
-          <p>Users who have delegated their coins to this validator</p>
+          <p>Users who have delegated their DMD to this validator</p>
         </div>
         <div className="delegates-table-container">
           <table className="delegates-table">
             <thead>
               {pool && pool.delegators && pool.delegators.length ? (
                 <tr>
-                  <th>Wallet Address <i className="fas fa-sort"></i></th>
+                  <th>Delegator <i className="fas fa-sort"></i></th>
                   <th>Delegated Stake <i className="fas fa-sort"></i></th>
                   <th>Percentage <i className="fas fa-sort"></i></th>
                   <th>Since <i className="fas fa-sort"></i></th>
@@ -405,7 +688,7 @@ export default function ValidatorDetails() {
                           <span>{truncateAddress(delegator.address)}</span>
                         </div>
                       </td>
-                      <td>{delegatedAmount.toFixed(4, BigNumber.ROUND_DOWN)} DMD</td>
+                      <td>{delegatedAmount.toFormat(4, BigNumber.ROUND_DOWN)} DMD</td>
                       <td>{percentage}%</td>
                       <td>Unknown</td>
                     </tr>
@@ -435,7 +718,7 @@ export default function ValidatorDetails() {
 
     <section className="dao-section">
       <div className="container">
-        <div className="vd-section-title">
+        <div className="vd-section-title vd-section-title--analytics">
           <h2>Validator DAO Participation</h2>
           <p>Governance proposals this validator has participated in</p>
         </div>
@@ -444,11 +727,10 @@ export default function ValidatorDetails() {
             <thead>
               {filteredProposals.length ? (
                 <tr>
+                  <th>Proposal <i className="fas fa-sort"></i></th>
+                  <th>Description <i className="fas fa-sort"></i></th>
+                  <th>Action <i className="fas fa-sort"></i></th>
                   <th>Date <i className="fas fa-sort"></i></th>
-                  <th>Proposal Name <i className="fas fa-sort"></i></th>
-                  <th>Proposal Type <i className="fas fa-sort"></i></th>
-                  <th>Status <i className="fas fa-sort"></i></th>
-                  <th>Vote <i className="fas fa-sort"></i></th>
                 </tr>
               ) : (
                 <tr>
@@ -463,10 +745,9 @@ export default function ValidatorDetails() {
                   const hasVoted = proposal.myVote !== null && proposal.myVote !== undefined;
                   const votedYes = hasVoted && proposal.myVote === '1';
                   const votedNo = hasVoted && proposal.myVote === '0';
-                  
+
                   return (
                     <tr key={i} onClick={() => navigateToProposal(proposal.id)} className="clickable-row">
-                      <td>{timestampToDate(proposal.timestamp)}</td>
                       <td>
                         <div className="proposal-name">
                           <span>{proposal.title}</span>
@@ -477,35 +758,27 @@ export default function ValidatorDetails() {
                           )}
                         </div>
                       </td>
-                      <td><span className="proposal-type protocol">{proposal.proposalType || 'Protocol'}</span></td>
-                      <td><span className={`proposal-status ${proposal.state === '2' ? 'active' : proposal.state === '4' ? 'passed' : proposal.state === '5' ? 'rejected' : proposal.state === '6' ? 'executed' : ''}`}>{getStateString(proposal.state)}</span></td>
+                      <td><span className="vd-dao-desc">{proposal.description || '—'}</span></td>
                       <td>
                         {votedYes && (
-                          <span className="vote-badge vote-yes">
-                            <i className="fas fa-check"></i> Yes
-                          </span>
+                          <span className="vd-dao-action vd-dao-action--for">For</span>
                         )}
                         {votedNo && (
-                          <span className="vote-badge vote-no">
-                            <i className="fas fa-times"></i> No
-                          </span>
+                          <span className="vd-dao-action vd-dao-action--against">Against</span>
                         )}
                         {!hasVoted && !isProposer && (
-                          <span className="vote-badge vote-none">
-                            <i className="fas fa-minus"></i> Not Voted
-                          </span>
+                          <span className="vd-dao-action vd-dao-action--none">Not Voted</span>
                         )}
                         {!hasVoted && isProposer && (
-                          <span className="vote-badge vote-creator">
-                            <i className="fas fa-crown"></i> Creator
-                          </span>
+                          <span className="vd-dao-action vd-dao-action--creator">Creator</span>
                         )}
                       </td>
+                      <td>{timestampToDate(proposal.timestamp)}</td>
                     </tr>
                   );
                 }) : (
                   <tr>
-                    <td colSpan={5}>No DAO participations found</td>
+                    <td colSpan={4}>No DAO participations found</td>
                   </tr>
                 )
               }
@@ -534,6 +807,14 @@ export default function ValidatorDetails() {
       onClose={() => setIsStakeHistoryModalOpen(false)}
       address={address}
       mode="node"
+      delegatorFilter={false}
+    />
+    <StakeHistoryModal
+      isOpen={isDelegatedStakeHistoryModalOpen}
+      onClose={() => setIsDelegatedStakeHistoryModalOpen(false)}
+      address={address}
+      mode="node"
+      delegatorFilter={true}
     />
     <NodeRewardsHistoryModal
       isOpen={isRewardsHistoryModalOpen}
