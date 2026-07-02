@@ -429,10 +429,23 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
-.dmd-modal-pending-card i {
-  font-size: 1.25rem;
-  color: var(--accent);
+.dmd-modal-spinner {
+  flex-shrink: 0;
+  display: block;
+  width: 22px;
+  height: 22px;
   margin-top: 2px;
+  border: 2px solid var(--border-color);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  transform-origin: center;
+  animation: dmd-modal-spin 0.7s linear infinite;
+}
+
+@keyframes dmd-modal-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .dmd-modal-pending-card p {

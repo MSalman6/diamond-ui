@@ -107,7 +107,7 @@ export default function RegisterNameModal({
 
         {submitting ? (
           <div className="dmd-modal-pending-card">
-            <i className="fas fa-spinner fa-spin"></i>
+            <span className="dmd-modal-spinner" aria-hidden="true"></span>
             <div>
               <strong>Waiting for wallet</strong>
               <p>Confirm the transaction to register this name.</p>

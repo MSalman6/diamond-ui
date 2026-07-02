@@ -11,3 +11,4 @@ export { default as CertifierHbbft } from './CertifierHbbft.json';
 export { default as ConnectivityTrackerHbbft } from './ConnectivityTrackerHbbft.json';
 export { default as DMDAggregator } from './DMDAggregator.json';
 export { default as DiamondRegistry } from './DiamondRegistry.json';
+export { default as DMDRegistrarController } from './DMDRegistrarController.json';

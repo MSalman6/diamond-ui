@@ -1,22 +1,22 @@
 import BigNumber from 'bignumber.js';
-import type Web3 from 'web3';
-import type { DiamondRegistry } from '@/contracts/types';
+import Web3 from 'web3';
+import type { DMDRegistrarController } from '@/contracts/types';
 import type { DmdNameAvailabilityResult } from '@/types/dmdNaming';
 import { formatDmdAmount } from '@/utils/dmdNaming';
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export async function getWalletDmdName(
-  contract: DiamondRegistry,
+  contract: DMDRegistrarController,
   walletAddress: string,
 ): Promise<string | null> {
-  const raw = await contract.methods.name(walletAddress).call();
-  const name = typeof raw === 'string' ? raw.trim() : '';
+  const raw = await contract.methods.names(walletAddress).call();
+  const name = raw && raw !== '0x' ? Web3.utils.hexToUtf8(raw).trim() : '';
   return name || null;
 }
 
 export async function checkNameAvailability(
-  contract: DiamondRegistry,
+  contract: DMDRegistrarController,
   web3: Web3,
   name: string,
   walletAddress?: string,
@@ -31,7 +31,8 @@ export async function checkNameAvailability(
     if (!isAvailable) {
       let ownerAddress: string | undefined;
       try {
-        const owner = await contract.methods.getAddressOfName(name).call();
+        const labelHash = await contract.methods.getHashOfName(name).call();
+        const owner = await contract.methods.namesReverse(labelHash).call();
         if (owner && owner.toLowerCase() !== ZERO_ADDRESS) {
           ownerAddress = owner;
         }
@@ -41,9 +42,7 @@ export async function checkNameAvailability(
       return { status: 'taken', ownerAddress };
     }
 
-    const registrationFeeWei = walletAddress
-      ? await contract.methods.getSetNameCost(walletAddress).call()
-      : await contract.methods.maximumCosts().call();
+    const registrationFeeWei = await contract.methods.mintingFee().call();
 
     const registrationFee = formatDmdAmount(web3, registrationFeeWei);
 
@@ -51,7 +50,7 @@ export async function checkNameAvailability(
     let totalEstimatedCost: string | undefined;
     if (walletAddress) {
       try {
-        const gas = await contract.methods.setOwnName(name).estimateGas({
+        const gas = await contract.methods.register(name).estimateGas({
           from: walletAddress,
           value: registrationFeeWei,
         });
@@ -81,7 +80,7 @@ export async function checkNameAvailability(
 }
 
 export async function setOwnName(
-  contract: DiamondRegistry,
+  contract: DMDRegistrarController,
   web3: Web3,
   from: string,
   name: string,
@@ -90,7 +89,7 @@ export async function setOwnName(
 ): Promise<{ success: boolean }> {
   try {
     const gasPrice = await getGasPrice();
-    await contract.methods.setOwnName(name).send({
+    await contract.methods.register(name).send({
       from,
       value: valueWei,
       gasPrice,

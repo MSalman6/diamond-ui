@@ -17,7 +17,7 @@ import {
   CertifierHbbft as JsonCertifierHbbft,
   ConnectivityTrackerHbbft as JsonConnectivityTrackerHbbft,
   DMDAggregator as JsonHbbtAggregator,
-  DiamondRegistry as JsonDiamondRegistry,
+  DMDRegistrarController as JsonDMDRegistrarController,
 } from '@/contracts/abis';
 
 // Contract Types
@@ -34,7 +34,7 @@ import {
   KeyGenHistory, 
   Registry, 
   RandomHbbft,
-  DiamondRegistry,
+  DMDRegistrarController,
 } from '@/contracts/types';
 
 export enum KeyGenMode {
@@ -62,7 +62,7 @@ export class ContractManager {
   private cachedKeyGenHistory?: KeyGenHistory;
   private cachedRewardContract?: BlockRewardHbbft;
   private cachedPermission?: TxPermissionHbbft;
-  private cachedDiamondRegistry?: DiamondRegistry;
+  private cachedDiamondRegistry?: DMDRegistrarController;
 
   public constructor(public web3: Web3) {}
 
@@ -149,15 +149,15 @@ export class ContractManager {
     return this.wrapContract<Registry>('Registry', abi, raw);
   }
 
-  public getDiamondRegistry(): DiamondRegistry {
+  public getDiamondRegistry(): DMDRegistrarController {
     if (this.cachedDiamondRegistry) {
       return this.cachedDiamondRegistry;
     }
 
     const contractAddress = config.diamondRegistryContractAddress;
-    const abi = JsonDiamondRegistry.abi as any;
-    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as DiamondRegistry;
-    const wrapped = this.wrapContract<DiamondRegistry>('DiamondRegistry', abi, raw);
+    const abi = JsonDMDRegistrarController as any;
+    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as DMDRegistrarController;
+    const wrapped = this.wrapContract<DMDRegistrarController>('DMDRegistrarController', abi, raw);
     this.cachedDiamondRegistry = wrapped;
     return wrapped;
   }

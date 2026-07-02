@@ -26,7 +26,7 @@ import {
   ConnectivityTrackerHbbft,
   DiamondDao,
   DMDAggregator,
-  DiamondRegistry,
+  DMDRegistrarController,
   StakingHbbft,
   TxPermissionHbbft,
   ValidatorSetHbbft,
@@ -43,7 +43,7 @@ interface ContractsState {
   ctContract?: ConnectivityTrackerHbbft;
   aggregator?: DMDAggregator;
   bsContract?: BonusScoreSystem;
-  diamondRegistryContract?: DiamondRegistry;
+  diamondRegistryContract?: DMDRegistrarController;
 }
 
 interface Web3ContextProps {
