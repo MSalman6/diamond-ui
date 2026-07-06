@@ -40,6 +40,14 @@ export function formatDmdAmount(web3: Web3, wei: string): string {
   return `${amount.toFormat(4, BigNumber.ROUND_DOWN).replace(/\.?0+$/, '')} DMD`;
 }
 
+export function formatDmdDate(timestampSeconds: number): string {
+  return new Date(timestampSeconds * 1000).toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+}
+
 export function shortenAddress(address: string): string {
   if (address.length < 10) {
     return address;

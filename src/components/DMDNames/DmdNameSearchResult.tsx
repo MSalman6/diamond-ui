@@ -1,6 +1,7 @@
+import Link from 'next/link';
 import config from '@/lib/config';
 import type { DmdNameAvailabilityResult } from '@/types/dmdNaming';
-import { shortenAddress } from '@/utils/dmdNaming';
+import { formatDmdDate, shortenAddress } from '@/utils/dmdNaming';
 
 type Props = {
   state: 'invalid' | 'available' | 'taken' | 'unavailable';
@@ -62,6 +63,11 @@ export default function DmdNameSearchResult({ state, name, rawInput, result, onR
         </div>
         <div className="dmd-search-result-body">
           <p><strong>{fullName} is already registered</strong></p>
+          <p>
+            {result?.expiresAt && `Expires: ${formatDmdDate(result.expiresAt)}`}
+            {result?.expiresAt && ' · '}
+            <Link href={`/names/${name}`}>View history</Link>
+          </p>
           {result?.ownerAddress && (
             <p>
               Owner:{' '}

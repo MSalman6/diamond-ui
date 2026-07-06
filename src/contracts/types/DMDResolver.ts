@@ -58,6 +58,11 @@ export interface DMDResolver extends BaseContract {
 
     registry(): NonPayableTransactionObject<string>;
 
+    resolve(
+      arg0: string | number[],
+      data: string | number[]
+    ): NonPayableTransactionObject<string>;
+
     setAddr(
       node: string | number[],
       a: string

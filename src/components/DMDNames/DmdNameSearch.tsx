@@ -71,6 +71,7 @@ export default function DmdNameSearch({
         readonlyWeb3,
         normalized,
         userWallet.myAddr || undefined,
+        contractsManager.diamondNamesContract,
       );
       setSearchState({ type: 'result', name: normalized, result });
     } catch {

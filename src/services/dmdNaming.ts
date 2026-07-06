@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
-import type { DMDRegistrarController } from '@/contracts/types';
+import type { DMDRegistrarController, DMDNames } from '@/contracts/types';
 import type { DmdNameAvailabilityResult } from '@/types/dmdNaming';
 import { formatDmdAmount } from '@/utils/dmdNaming';
 
@@ -20,6 +20,7 @@ export async function checkNameAvailability(
   web3: Web3,
   name: string,
   walletAddress?: string,
+  namesContract?: DMDNames,
 ): Promise<DmdNameAvailabilityResult> {
   try {
     const isValid = await contract.methods.valid(name).call();
@@ -30,16 +31,31 @@ export async function checkNameAvailability(
     const isAvailable = await contract.methods.available(name).call();
     if (!isAvailable) {
       let ownerAddress: string | undefined;
+      let expiresAt: number | undefined;
       try {
         const labelHash = await contract.methods.getHashOfName(name).call();
-        const owner = await contract.methods.namesReverse(labelHash).call();
-        if (owner && owner.toLowerCase() !== ZERO_ADDRESS) {
-          ownerAddress = owner;
+
+        try {
+          const owner = await contract.methods.namesReverse(labelHash).call();
+          if (owner && owner.toLowerCase() !== ZERO_ADDRESS) {
+            ownerAddress = owner;
+          }
+        } catch {
+          ownerAddress = undefined;
+        }
+
+        if (namesContract) {
+          try {
+            const expiry = await namesContract.methods.nameExpires(labelHash).call();
+            expiresAt = Number(expiry);
+          } catch {
+            expiresAt = undefined;
+          }
         }
       } catch {
         ownerAddress = undefined;
       }
-      return { status: 'taken', ownerAddress };
+      return { status: 'taken', ownerAddress, expiresAt };
     }
 
     const registrationFeeWei = await contract.methods.mintingFee().call();

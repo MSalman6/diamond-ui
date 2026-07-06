@@ -27,6 +27,7 @@ import {
   DiamondDao,
   DMDAggregator,
   DMDRegistrarController,
+  DMDNames,
   StakingHbbft,
   TxPermissionHbbft,
   ValidatorSetHbbft,
@@ -44,6 +45,7 @@ interface ContractsState {
   aggregator?: DMDAggregator;
   bsContract?: BonusScoreSystem;
   diamondRegistryContract?: DMDRegistrarController;
+  diamondNamesContract?: DMDNames;
 }
 
 interface Web3ContextProps {
@@ -274,7 +276,11 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
       const diamondRegistryContract = config.diamondRegistryContractAddress
         ? contractManager.getDiamondRegistry()
         : undefined;
-    
+
+      const diamondNamesContract = diamondRegistryContract
+        ? await contractManager.getDiamondNames().catch(() => undefined)
+        : undefined;
+
       setContractsManager({
         contracts: contractManager,
         vsContract,
@@ -287,6 +293,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
         aggregator,
         bsContract,
         diamondRegistryContract,
+        diamondNamesContract,
       });
     } catch (error: any) {
       toast.warn(`${error.message}`);
