@@ -365,7 +365,7 @@ export default function Validators() {
       case 'vos30':
           return "Total validator owner rewards earned during the last 30 days from the 20% validator owner share.";
       case 'saturation':
-          return "Current pool stake as a percentage of the 50,000 DMD maximum. Validators near saturation may have diluted returns for new delegators.";
+          return "Current pool stake as a percentage of the 50,000 DMD maximum.";
       default:
           return "";
     }
