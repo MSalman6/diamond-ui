@@ -98,6 +98,19 @@ async function checkRateLimit(
   return { allowed: entry.count <= RATE_LIMIT, remaining };
 }
 
+// Allow-list of upstream endpoints
+const HEX_ADDRESS = '0x[a-fA-F0-9]{40}';
+const ALLOWED_ENDPOINTS: { method: string; pattern: RegExp }[] = [
+  { method: 'GET', pattern: new RegExp(`^node/${HEX_ADDRESS}/bonus-score-reasons-history/?$`) },
+  { method: 'GET', pattern: new RegExp(`^node/${HEX_ADDRESS}/(stake-transactions|epoch-rewards|reward-stats)$`) },
+  { method: 'GET', pattern: new RegExp(`^staker/${HEX_ADDRESS}/(stake-transactions|rewards|reward-stats)$`) },
+  { method: 'POST', pattern: /^nodes\/reward-stats$/ },
+];
+
+function isAllowedRequest(method: string, path: string): boolean {
+  return ALLOWED_ENDPOINTS.some((e) => e.method === method && e.pattern.test(path));
+}
+
 /**
  * Handle GET requests
  */
@@ -105,18 +118,22 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> }
 ) {
-  const { allowed, remaining } = await checkRateLimit(request);
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Too Many Requests' },
-      { status: 429, headers: { 'Retry-After': '60' } }
-    );
-  }
-
   try {
     const { path: pathSegments } = await params;
     const path = pathSegments.join('/');
-    
+
+    if (!isAllowedRequest('GET', path)) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    }
+
+    const { allowed, remaining } = await checkRateLimit(request);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too Many Requests' },
+        { status: 429, headers: { 'Retry-After': '60' } }
+      );
+    }
+
     logger.log(`[API Route] GET request for path: ${path}`);
     
     // Extract query parameters from the URL
@@ -172,8 +189,13 @@ export async function POST(
     // Await params before accessing properties
     const { path: pathSegments } = await params;
     const path = pathSegments.join('/');
+
+    if (!isAllowedRequest('POST', path)) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    }
+
     const body = await request.json().catch(() => null);
-    
+
     const response = await makeApiRequest(path, {
       method: 'POST',
       body,
@@ -211,8 +233,13 @@ export async function PUT(
     // Await params before accessing properties
     const { path: pathSegments } = await params;
     const path = pathSegments.join('/');
+
+    if (!isAllowedRequest('PUT', path)) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    }
+
     const body = await request.json().catch(() => null);
-    
+
     const response = await makeApiRequest(path, {
       method: 'PUT',
       body,
@@ -250,7 +277,11 @@ export async function DELETE(
     // Await params before accessing properties
     const { path: pathSegments } = await params;
     const path = pathSegments.join('/');
-    
+
+    if (!isAllowedRequest('DELETE', path)) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    }
+
     const response = await makeApiRequest(path, {
       method: 'DELETE',
     });
