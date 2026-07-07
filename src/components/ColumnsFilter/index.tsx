@@ -90,71 +90,37 @@ const ColumnsFilterModal: React.FC<ColumnsFilterModalProps> = ({
   };
 
   const handleColumnsChange = () => {
-    const updatedTableFields = [...tableFields];
+    const selectedSet = new Set(tempSelectedColumns);
 
-    // Update the hide property for updateable fields
-    updatedTableFields.forEach((field) => {
-      if (field.updateAble && field.label) {
-        field.hide = !tempSelectedColumns.includes(field.label);
-      }
-    });
+    // Visible, customizable columns
+    const selectedFields = tempSelectedColumns
+      .map((label) => tableFields.find((f) => f.updateAble && f.label === label))
+      .filter((f): f is TableField => !!f)
+      .map((f) => ({ ...f, hide: false }));
 
-    // Filter out the updateable fields and sort them based on the tempSelectedColumns order
-    const updateableFields = updatedTableFields.filter((field) => field.updateAble && field.label);
-    updateableFields.sort((a, b) => tempSelectedColumns.indexOf(a.label) - tempSelectedColumns.indexOf(b.label));
+    // Customizable columns the user didn't pick — order among themselves doesn't
+    // matter since they're hidden, so just keep their existing relative order.
+    const hiddenFields = tableFields
+      .filter((f) => f.updateAble && f.label && !selectedSet.has(f.label))
+      .map((f) => ({ ...f, hide: true }));
 
-    // Merge the sorted updateable fields back into their original positions
-    let updateableIndex = 0;
-    const finalTableFields = updatedTableFields.map((field) => {
-      if (field.updateAble && field.label) {
-        return updateableFields[updateableIndex++];
-      }
-      return field;
-    });
+    // Fixed columns (e.g. My Stake / stake buttons) aren't user-reorderable.
+    const fixedFields = tableFields.filter((f) => !(f.updateAble && f.label));
 
-    setTableFields(finalTableFields);
+    setTableFields([...selectedFields, ...fixedFields, ...hiddenFields]);
     setSelectedColumns(tempSelectedColumns);
     closeModal();
   };
 
   const handleResetToDefault = () => {
-    const updatedTableFields = [...tableFields];
-    const defaultUpdateableFields = defaultFields.filter((f) => f.updateAble && f.label);
+    const resetFields = defaultFields.map((f) => ({ ...f }));
+    const newSelected = resetFields
+      .filter((f) => f.updateAble && f.label && !f.hide)
+      .map((f) => f.label);
 
-    const defaultIndexOf = (field: TableField) => {
-      const idx = defaultUpdateableFields.findIndex((d) => d.key === field.key || d.label === field.label);
-      return idx === -1 ? Number.MAX_SAFE_INTEGER : idx;
-    };
-
-    updatedTableFields.forEach((field) => {
-      if (field.updateAble && field.label) {
-        const def = defaultUpdateableFields.find((d) => d.key === field.key || d.label === field.label);
-        if (def) {
-          field.hide = def.hide;
-        }
-      }
-    });
-
-    // Sort updateable fields using the default order
-    const updateableFields = updatedTableFields.filter((f) => f.updateAble && f.label);
-    updateableFields.sort((a, b) => defaultIndexOf(a) - defaultIndexOf(b));
-
-    let updateableIndex = 0;
-    const finalTableFields = updatedTableFields.map((field) => {
-      if (field.updateAble && field.label) {
-        return updateableFields[updateableIndex++];
-      }
-      return field;
-    });
-
-    setTableFields(finalTableFields);
-
-    // Update selected columns to match defaults
-    const newSelected = defaultUpdateableFields.filter((f) => !f.hide).map((f) => f.label);
+    setTableFields(resetFields);
     setSelectedColumns(newSelected);
     setTempSelectedColumns(newSelected);
-
-    // Close modal after saving
     closeModal();
   };
 
