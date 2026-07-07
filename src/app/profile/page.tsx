@@ -107,14 +107,6 @@ export default function ProfilePage() {
     }
   }, [isConnected, userWallet.myAddr, router]);
 
-  // Calculate voting power as percentage of total DAO stake
-  const calculateVotingPower = (totalStake: BigNumber) => {
-    if (!totalDaoStake || totalDaoStake.isZero()) {
-      return '0.0';
-    }
-    return BigNumber(totalStake).dividedBy(totalDaoStake).multipliedBy(100).toFixed(1);
-  };
-
   // Format DMD amounts with proper decimals and commas
   const formatDMDAmount = (amount: BigNumber) => {
     const dmdAmount = amount.dividedBy(1e18);
@@ -151,24 +143,24 @@ export default function ProfilePage() {
 
   const hasValidator = Boolean(myPool);
 
-  // Staker reward stats (delegator view)
+  // Staker reward stats (used by "Staked With" tables in both views)
   useEffect(() => {
-    if (hasValidator || !userWallet.myAddr || isPrivacyMode) return;
+    if (!userWallet.myAddr || isPrivacyMode) return;
     setIsLoadingStakerStats(true);
     getCachedStakerRewardStats(userWallet.myAddr)
       .then(data => { if (data) setStakerRewardStats(data); })
       .catch(() => {})
       .finally(() => setIsLoadingStakerStats(false));
-  }, [hasValidator, userWallet.myAddr, isPrivacyMode]);
+  }, [userWallet.myAddr, isPrivacyMode]);
 
-  // Per-staked-validator node stats (delegator view)
+  // Per-staked-validator node stats (used by "Staked With" tables in both views)
   useEffect(() => {
-    if (hasValidator || !stakedValidators.length || isPrivacyMode) return;
+    if (!stakedValidators.length || isPrivacyMode) return;
     const addresses = stakedValidators.map(p => p.stakingAddress.toLowerCase());
     getCachedBatchNodeStats(addresses)
       .then(data => setStakerNodeStatsMap(data))
       .catch(() => {});
-  }, [hasValidator, stakedValidators, isPrivacyMode]);
+  }, [stakedValidators, isPrivacyMode]);
 
   // Validator reward stats (validator view)
   useEffect(() => {
@@ -180,22 +172,22 @@ export default function ProfilePage() {
       .finally(() => setIsLoadingValidatorStats(false));
   }, [hasValidator, myPool?.stakingAddress, isPrivacyMode]);
 
-  // Per-pool rewards 30d for delegator view
+  // Per-pool rewards 30d (used by "Staked With" tables in both views)
   useEffect(() => {
-    if (hasValidator || !userWallet.myAddr || isPrivacyMode) return;
+    if (!userWallet.myAddr || isPrivacyMode) return;
     getCachedStakerRewards30d(userWallet.myAddr)
       .then(map => setPerPoolRewards30d(map))
       .catch(() => {});
-  }, [hasValidator, userWallet.myAddr, isPrivacyMode]);
+  }, [userWallet.myAddr, isPrivacyMode]);
 
-  // Top validators stats (delegator view)
+  // Top validators stats (used by "Top Validators" tables in both views)
   useEffect(() => {
-    if (hasValidator || !topValidators.length || isPrivacyMode) return;
+    if (!topValidators.length || isPrivacyMode) return;
     const addresses = topValidators.map(p => p.stakingAddress.toLowerCase());
     getCachedBatchNodeStats(addresses)
       .then(data => setTopValidatorStatsMap(data))
       .catch(() => {});
-  }, [hasValidator, topValidators, isPrivacyMode]);
+  }, [topValidators, isPrivacyMode]);
 
   // Epoch rewards history (validator view) — GET /node/:address/epoch-rewards
   useEffect(() => {
@@ -237,16 +229,12 @@ export default function ProfilePage() {
       const delegatorsReward = parseDmdAmount(e.delegators_total_reward);
       rows.push({
         date: endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        rpt: (delegatorsReward / stakeDmd) * 1000,
+        rpt: Number(((delegatorsReward / stakeDmd) * 1000).toFixed(4)),
         sortKey: endDate.getTime(),
       });
     }
     rows.sort((a, b) => a.sortKey - b.sortKey);
-    let running = 0;
-    return rows.map((r) => {
-      running += r.rpt;
-      return { date: r.date, rpt: Number(running.toFixed(4)), sortKey: r.sortKey };
-    });
+    return rows;
   }, [epochRewards]);
 
   const validatorChartAreas = useMemo(() => {
@@ -761,7 +749,7 @@ export default function ProfilePage() {
               </h2>
               <div className="vp2-stats-grid">
                 <div className="stat-card">
-                  <div className="stat-label">Monthly rewards <InfoTooltip content={<div><p>Total validator owner rewards earned during the last 30 days from the 20% validator owner share.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
+                  <div className="stat-label">Monthly rewards <InfoTooltip content={<div><p>Total rewards earned during the last 30 days, including validator owner rewards (20% owner share) and rewards from delegated stake.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                   <div className="stat-value highlight">
                     {isPrivacyMode ? '—' : isLoadingValidatorStats ? '...' : monthlyRewards30d != null ? monthlyRewards30d.toFixed(2) + ' DMD' : '—'}
                   </div>
@@ -828,50 +816,84 @@ export default function ProfilePage() {
           {/* Staked With Section */}
           <section className="validators-staked">
             <div className="container">
-              <h2>Staked With</h2>
+              <div className="dp-section-header">
+                <h2>Staked With</h2>
+                {!isPrivacyMode && (
+                  <button
+                    onClick={() => setIsRewardsHistoryModalOpen(true)}
+                    className="btn-secondary btn-sm dp2-rewards-history-btn"
+                  >
+                    <i className="fas fa-history" aria-hidden="true"></i>
+                    Rewards History
+                  </button>
+                )}
+              </div>
               <div className="table-container">
                 <table className="validators-table">
                   <thead>
                     <tr>
                       <th>Validator</th>
-                      <th>Total Stake</th>
+                      {!isPrivacyMode && <th>RpT30</th>}
+                      {!isPrivacyMode && <th>APY</th>}
+                      {!isPrivacyMode && <th>AEP30</th>}
+                      <th>Saturation</th>
                       <th>My Stake</th>
-                      <th>Voting Power</th>
-                      <th>Score</th>
+                      {!isPrivacyMode && <th>Rewards 30d</th>}
                     </tr>
                   </thead>
                   <tbody>
                     {stakedValidators.length > 0 ? (
-                      stakedValidators.map((validator, index) => (
-                        <tr key={validator.stakingAddress}>
-                          <td>
-                            <div className="validator-info">
-                              <div className="wallet-icon">
-                                <div className="wallet-icon-inner" style={{
-                                  background: `linear-gradient(45deg, ${
-                                    index % 3 === 0 ? '#FF5E62, #FF9966' :
-                                    index % 3 === 1 ? '#56CCF2, #2F80ED' :
-                                    '#6EE7B7, #3B82F6'
-                                  })`
-                                }}></div>
-                              </div>
-                              <span>{truncateAddress(validator.stakingAddress)}</span>
-                            </div>
-                          </td>
-                          <td>{validator.totalStake ? `${BigNumber(validator.totalStake).dividedBy(1e18).toFixed(0)} DMD` : '0 DMD'}</td>
-                          <td>{validator.myStake ? `${BigNumber(validator.myStake).dividedBy(1e18).toFixed(0)} DMD` : '0 DMD'}</td>
-                          <td>{calculateVotingPower(validator.totalStake || new BigNumber(0))}%</td>
-                          <td>{validator.score !== undefined && validator.score !== null ? Number(validator.score).toFixed(1) : 'N/A'}</td>
-                        </tr>
-                      ))
+                      stakedValidators.map((validator) => {
+                        const stats = stakerNodeStatsMap[validator.stakingAddress.toLowerCase()];
+                        const rewards30d = perPoolRewards30d[validator.stakingAddress.toLowerCase()];
+                        return (
+                          <tr key={validator.stakingAddress}>
+                            <td><ValidatorCell address={validator.stakingAddress} /></td>
+                            {!isPrivacyMode && <td>{stats ? <Rpt30Cell rpt30={stats.rpt30} rpt30_delta={stats.rpt30_delta} /> : '—'}</td>}
+                            {!isPrivacyMode && <td>{stats ? stats.estimated_apy.toFixed(2) + '%' : '—'}</td>}
+                            {!isPrivacyMode && <td>{stats ? <Aep30Badge aep30={stats.aep30} /> : '—'}</td>}
+                            <td><SaturationBar totalStakeWei={validator.totalStake || '0'} /></td>
+                            <td>{validator.myStake ? BigNumber(validator.myStake).dividedBy(1e18).toFormat(4, BigNumber.ROUND_DOWN) + ' DMD' : '0 DMD'}</td>
+                            {!isPrivacyMode && <td className="dp2-rewards-cell">{rewards30d != null ? rewards30d.toFixed(1) + ' DMD' : '—'}</td>}
+                          </tr>
+                        );
+                      })
                     ) : (
                       <tr>
-                        <td colSpan={5} style={{ textAlign: 'center', padding: '2rem' }}>
+                        <td colSpan={isPrivacyMode ? 3 : 7} style={{ textAlign: 'center', padding: '2rem' }}>
                           You haven't staked with any validators yet
                         </td>
                       </tr>
                     )}
                   </tbody>
+                  {stakedValidators.length > 0 && (
+                    <tfoot>
+                      <tr className="dp2-tfoot-row">
+                        <td>
+                          <span className="dp2-tfoot-count">
+                            <i className="fas fa-chart-bar" aria-hidden="true"></i>
+                            {' '}{stakedValidators.length} validator{stakedValidators.length !== 1 ? 's' : ''}
+                          </span>
+                        </td>
+                        {!isPrivacyMode && <td></td>}
+                        {!isPrivacyMode && <td></td>}
+                        {!isPrivacyMode && <td></td>}
+                        <td></td>
+                        <td className="dp2-tfoot-total">
+                          <span>Total Delegated:</span>{' '}
+                          <strong>{isPrivacyMode ? '—' : myOutgoingDelegationsWei.dividedBy(1e18).toFormat(4, BigNumber.ROUND_DOWN) + ' DMD'}</strong>
+                        </td>
+                        {!isPrivacyMode && (
+                          <td className="dp2-tfoot-rewards">
+                            <span>Total Rewards 30d:</span>{' '}
+                            <strong className="dp2-tfoot-rewards-value">
+                              {stakerRewardStats ? stakerRewardStats.total_rewards_30d.toFixed(1) + ' DMD' : '—'}
+                            </strong>
+                          </td>
+                        )}
+                      </tr>
+                    </tfoot>
+                  )}
                 </table>
               </div>
             </div>
@@ -886,41 +908,33 @@ export default function ProfilePage() {
                   <thead>
                     <tr>
                       <th>Validator</th>
-                      <th>Total Stake</th>
-                      <th>Voting Power</th>
+                      {!isPrivacyMode && <th>RpT30</th>}
+                      {!isPrivacyMode && <th>APY</th>}
+                      <th>Saturation</th>
                       <th>Score</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {topValidators.map((validator, index) => (
-                      <tr key={validator.stakingAddress} className={validator.stakingAddress === userWallet.myAddr ? "current-user" : ""}>
-                        <td>
-                          <div className="validator-info">
-                            <div className="wallet-icon">
-                              <div className="wallet-icon-inner" style={{
-                                background: `linear-gradient(45deg, ${
-                                  index % 3 === 0 ? '#FF5E62, #FF9966' :
-                                  index % 3 === 1 ? '#56CCF2, #2F80ED' :
-                                  '#6EE7B7, #3B82F6'
-                                })`
-                              }}></div>
-                            </div>
-                            <span>
-                              {validator.stakingAddress === userWallet.myAddr 
-                                ? `${truncateAddress(validator.stakingAddress)} (You)` 
-                                : truncateAddress(validator.stakingAddress)
-                              }
-                            </span>
-                          </div>
-                        </td>
-                        <td>{validator.totalStake ? `${BigNumber(validator.totalStake).dividedBy(1e18).toFixed(0)} DMD` : '0 DMD'}</td>
-                        <td>{calculateVotingPower(validator.totalStake || new BigNumber(0))}%</td>
-                        <td>{validator.score !== undefined && validator.score !== null ? Number(validator.score).toFixed(1) : 'N/A'}</td>
-                      </tr>
-                    ))}
+                    {topValidators.map((validator) => {
+                      const stats = topValidatorStatsMap[validator.stakingAddress.toLowerCase()];
+                      return (
+                        <tr key={validator.stakingAddress} className={validator.stakingAddress === userWallet.myAddr ? "current-user" : ""}>
+                          <td>
+                            <ValidatorCell
+                              address={validator.stakingAddress}
+                              subtext={validator.stakingAddress === userWallet.myAddr ? '(You)' : undefined}
+                            />
+                          </td>
+                          {!isPrivacyMode && <td>{stats ? <Rpt30Cell rpt30={stats.rpt30} rpt30_delta={stats.rpt30_delta} /> : '—'}</td>}
+                          {!isPrivacyMode && <td>{stats ? stats.estimated_apy.toFixed(2) + '%' : '—'}</td>}
+                          <td><SaturationBar totalStakeWei={validator.totalStake || '0'} /></td>
+                          <td>{validator.score !== undefined && validator.score !== null ? Number(validator.score).toFixed(1) : 'N/A'}</td>
+                        </tr>
+                      );
+                    })}
                     {topValidators.length === 0 && (
                       <tr>
-                        <td colSpan={4} style={{ textAlign: 'center', padding: '2rem' }}>
+                        <td colSpan={isPrivacyMode ? 3 : 5} style={{ textAlign: 'center', padding: '2rem' }}>
                           No validator data available
                         </td>
                       </tr>
@@ -929,7 +943,7 @@ export default function ProfilePage() {
                 </table>
               </div>
               <div className="validators-actions">
-                <Link href="/validators" className="btn-primary">See the list <i className="fas fa-arrow-right"></i></Link>
+                <Link href="/validators" className="dp-view-all-link btn-primary">See the list <i className="fas fa-arrow-right"></i></Link>
               </div>
             </div>
           </section>
