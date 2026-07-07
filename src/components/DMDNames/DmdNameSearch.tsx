@@ -116,11 +116,10 @@ export default function DmdNameSearch({
             disabled={searchState.type === 'loading'}
           >
             {searchState.type === 'loading' ? (
-              <>
-                <i className="fas fa-spinner fa-spin"></i> Searching…
-              </>
-            ) : isHomepage ? (
-              'Search names'
+              <span className="dmd-name-search-submit-loading">
+                <i className="fas fa-spinner fa-spin"></i>
+                <span>Searching…</span>
+              </span>
             ) : (
               'Search'
             )}

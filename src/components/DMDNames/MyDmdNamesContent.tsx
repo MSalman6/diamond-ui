@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useWeb3Context } from '@/contexts/Web3';
 import DmdNameSearch from './DmdNameSearch';
-import DmdNamesOwnedTable from './DmdNamesOwnedTable';
+import OwnedNamesSection from './OwnedNamesSection';
 import RegisterNameModal from './RegisterNameModal';
 import { getWalletDmdName } from '@/services/dmdNaming';
 import type { DmdNameAvailabilityResult } from '@/types/dmdNaming';
@@ -45,7 +45,7 @@ export default function MyDmdNamesContent({ walletAddress }: Props) {
         <DmdNameSearch variant="page" showExamples onRegisterName={openRegister} />
       </div>
 
-      <DmdNamesOwnedTable registeredName={registeredName} />
+      <OwnedNamesSection walletAddress={walletAddress} activeName={registeredName} />
 
       <RegisterNameModal
         isOpen={registerOpen}
@@ -53,7 +53,6 @@ export default function MyDmdNamesContent({ walletAddress }: Props) {
         name={registerName}
         availability={registerAvailability}
         currentName={registeredName}
-        walletAddress={walletAddress}
         onComplete={reloadRegisteredName}
       />
     </>

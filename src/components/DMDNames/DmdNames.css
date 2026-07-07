@@ -39,13 +39,13 @@
 }
 
 .dmd-search-widget h3 {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   font-size: 1.1rem;
   font-weight: 600;
 }
 
 .dmd-search-widget > p {
-  margin: 0 0 16px;
+  margin: 0 0 22px;
   font-size: 0.9rem;
   color: var(--text-secondary);
 }
@@ -64,7 +64,7 @@
 }
 
 .dmd-search-widget-note {
-  margin: 16px 0 0;
+  margin: 24px 0 0;
   font-size: 0.85rem;
   color: var(--text-secondary);
 }
@@ -149,6 +149,9 @@
 }
 
 .dmd-name-search-submit {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
   border-radius: 0 !important;
   margin: 0 !important;
   white-space: nowrap;
@@ -158,6 +161,12 @@
 
 .dmd-name-search-submit::after {
   display: none !important;
+}
+
+.dmd-name-search-submit-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .dmd-name-search--homepage .dmd-name-search-submit {
@@ -311,29 +320,207 @@
   margin-bottom: 28px;
 }
 
-.dmd-names-owned {
-  padding: 24px;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+/* Stat cards: Active name / Names owned / Expiring soon */
+.dmd-stat-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
   margin-bottom: 28px;
 }
 
-.dmd-names-owned h2 {
-  margin: 0 0 12px;
-  font-size: 1.1rem;
+.dmd-stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
 }
 
-.dmd-names-registered-value {
-  margin: 0;
+.dmd-stat-card h3 {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.dmd-stat-value {
+  margin: 0 0 4px;
   font-size: 1.5rem;
   font-weight: 700;
+}
+
+.dmd-stat-value--link {
   color: var(--accent);
 }
 
-.dmd-names-empty {
+.dmd-stat-sub {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.dmd-owned-names {
+  margin-bottom: 24px;
+}
+
+.dmd-owned-names h2 {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+}
+
+.dmd-owned-table-wrapper {
+  overflow-x: auto;
+}
+
+.dmd-owned-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.dmd-owned-table th {
+  text-align: left;
+  padding: 10px 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.8rem;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.dmd-owned-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.dmd-owned-table tr:last-child td {
+  border-bottom: none;
+}
+
+.dmd-owned-name-cell a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.dmd-owned-actions-cell {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.dmd-owned-empty,
+.dmd-owned-loading,
+.dmd-owned-error {
   margin: 0;
   color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Status pill: Active / Inactive / Expiring soon / Expired */
+.dmd-status-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.dmd-status-pill--active {
+  background: rgba(7, 244, 158, 0.15);
+  color: #07f49e;
+}
+
+.dmd-status-pill--inactive {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+}
+
+.dmd-status-pill--expiring-soon {
+  background: rgba(255, 165, 0, 0.15);
+  color: #f5a623;
+}
+
+.dmd-status-pill--expired {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff6b6b;
+}
+
+.dmd-table-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dmd-table-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dmd-table-btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #030014;
+}
+
+.dmd-manage {
+  position: relative;
+  display: inline-block;
+}
+
+.dmd-manage-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 150px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  z-index: 20;
+  padding: 6px;
+}
+
+.dmd-manage-menu button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.85rem;
+  text-align: left;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.dmd-manage-menu button:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dmd-action-hints-title {
+  margin: 0 0 8px;
+}
+
+.dmd-action-hints ul {
+  list-style: disc; /* globals.css resets ul { list-style: none } app-wide */
+  margin: 0;
+  padding-left: 18px;
+}
+
+.dmd-action-hints li {
+  margin-bottom: 4px;
+}
+
+.dmd-action-hints li:last-child {
+  margin-bottom: 0;
 }
 
 .dmd-modal h2 {
@@ -412,6 +599,15 @@
   color: #f5a623;
 }
 
+.dmd-modal-notice-success {
+  background: rgba(7, 244, 158, 0.1);
+  border: 1px solid rgba(7, 244, 158, 0.3);
+}
+
+.dmd-modal-notice-success i {
+  color: #07f49e;
+}
+
 .dmd-modal-actions {
   display: flex;
   flex-wrap: wrap;
@@ -484,10 +680,21 @@
 
 body.light-theme .dmd-search-widget,
 body.light-theme .dmd-names-search-card,
-body.light-theme .dmd-names-owned {
+body.light-theme .dmd-stat-card,
+body.light-theme .dmd-manage-menu {
   background: #fff;
   border-color: rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .dmd-status-pill--inactive {
+  background: #edf2f7;
+  color: #4a5568;
+}
+
+body.light-theme .dmd-table-btn:hover,
+body.light-theme .dmd-manage-menu button:hover {
+  background: rgba(0, 0, 0, 0.04);
 }
 
 body.light-theme .dmd-name-search-input-group {
@@ -573,5 +780,9 @@ body.light-theme .dmd-name-search-suffix {
     width: 100%;
     text-align: center;
     justify-content: center;
+  }
+
+  .dmd-stat-cards {
+    grid-template-columns: 1fr;
   }
 }
