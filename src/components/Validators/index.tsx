@@ -25,7 +25,7 @@ const SORT_PILLS = [
   { key: 'rpt30',      label: 'Highest RpT30',       icon: 'fa-trophy',        direction: 'descending' },
   { key: 'apy',        label: 'Highest APY',          icon: 'fa-percent',       direction: 'descending' },
   { key: 'saturation', label: 'Lowest Saturation',    icon: 'fa-gauge',         direction: 'ascending'  },
-  { key: 'aep30',      label: 'Most Stable',          icon: 'fa-shield',        direction: 'descending' },
+  { key: 'aep30',      label: 'Most Active',          icon: 'fa-shield',        direction: 'descending' },
 ] as const;
 
 interface TableField {

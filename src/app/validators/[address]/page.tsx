@@ -103,7 +103,7 @@ export default function ValidatorDetails() {
     return (validatorRewardStats.rpt30_delta / prev) * 100;
   }, [validatorRewardStats]);
 
-  // Cumulative RpT per 1,000 DMD per epoch
+  // Per-epoch RpT per 1,000 DMD (not cumulative — reflects that epoch's actual reward rate)
   const validatorChartData = useMemo(() => {
     const rows: { date: string; rpt: number; sortKey: number }[] = [];
     for (const e of epochRewards) {
@@ -113,16 +113,12 @@ export default function ValidatorDetails() {
       const delegatorsReward = parseDmdAmount(e.delegators_total_reward);
       rows.push({
         date: endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        rpt: (delegatorsReward / stakeDmd) * 1000,
+        rpt: Number(((delegatorsReward / stakeDmd) * 1000).toFixed(4)),
         sortKey: endDate.getTime(),
       });
     }
     rows.sort((a, b) => a.sortKey - b.sortKey);
-    let running = 0;
-    return rows.map((r) => {
-      running += r.rpt;
-      return { date: r.date, rpt: Number(running.toFixed(4)), sortKey: r.sortKey };
-    });
+    return rows;
   }, [epochRewards]);
 
   const validatorChartAreas = useMemo(() => {
@@ -303,7 +299,6 @@ export default function ValidatorDetails() {
               </h3>
             </div>
             <p className="stat-value-large vd-pool-value">{pool ? formatStakeDmd(selfStakeWei) : 0} DMD</p>
-            <div className="vd-pool-sub">{selfStakePct}% of pool</div>
             {!isPrivacyMode && (
               <div className="stat-actions">
                 <button
@@ -330,7 +325,6 @@ export default function ValidatorDetails() {
               </h3>
             </div>
             <p className="stat-value-large vd-pool-value">{pool ? formatStakeDmd(delegatedStakeWei) : 0} DMD</p>
-            <div className="vd-pool-sub">{delegatedStakePct}% of pool</div>
             {!isPrivacyMode && (
               <div className="stat-actions">
                 <button
@@ -578,7 +572,7 @@ export default function ValidatorDetails() {
               Monthly rewards
               <InfoTooltip
                 placement="bottom"
-                content={<p>Total validator owner rewards earned during the last 30 days from the 20% validator owner share.</p>}
+                content={<p>Total rewards earned during the last 30 days, including validator owner rewards (20% owner share) and rewards from delegated stake.</p>}
               >
                 <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
               </InfoTooltip>
