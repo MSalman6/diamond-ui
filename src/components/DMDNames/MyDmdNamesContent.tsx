@@ -18,6 +18,7 @@ export default function MyDmdNamesContent({ walletAddress }: Props) {
   const [registerOpen, setRegisterOpen] = useState(false);
   const [registerName, setRegisterName] = useState('');
   const [registerAvailability, setRegisterAvailability] = useState<DmdNameAvailabilityResult | null>(null);
+  const [searchResetKey, setSearchResetKey] = useState(0);
 
   const reloadRegisteredName = useCallback(() => {
     const contract = contractsManager.diamondRegistryContract;
@@ -39,10 +40,15 @@ export default function MyDmdNamesContent({ walletAddress }: Props) {
     setRegisterOpen(true);
   };
 
+  const handleRegistered = () => {
+    reloadRegisteredName();
+    setSearchResetKey((key) => key + 1);
+  };
+
   return (
     <>
       <div className="dmd-names-search-card">
-        <DmdNameSearch variant="page" showExamples onRegisterName={openRegister} />
+        <DmdNameSearch key={searchResetKey} variant="page" showExamples onRegisterName={openRegister} />
       </div>
 
       <OwnedNamesSection walletAddress={walletAddress} activeName={registeredName} />
@@ -53,7 +59,7 @@ export default function MyDmdNamesContent({ walletAddress }: Props) {
         name={registerName}
         availability={registerAvailability}
         currentName={registeredName}
-        onComplete={reloadRegisteredName}
+        onComplete={handleRegistered}
       />
     </>
   );
