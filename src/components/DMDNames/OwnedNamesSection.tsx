@@ -7,6 +7,7 @@ import { getOwnedNames } from '@/services/dmdNaming';
 import { formatDmdDate, formatDmdName } from '@/utils/dmdNaming';
 import type { OwnedDmdName, OwnedDmdNameStatus } from '@/types/dmdNaming';
 import ActivateNameModal from './ActivateNameModal';
+import RenewNameModal from './RenewNameModal';
 
 type Props = {
   walletAddress: string;
@@ -29,7 +30,9 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
   const [names, setNames] = useState<OwnedDmdName[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activateTarget, setActivateTarget] = useState<string | null>(null);
+  const [renewTarget, setRenewTarget] = useState<OwnedDmdName | null>(null);
   const [openMenuFor, setOpenMenuFor] = useState<string | null>(null);
+  const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   const reload = useCallback(() => {
@@ -63,8 +66,13 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
         setOpenMenuFor(null);
       }
     };
+    const close = () => setOpenMenuFor(null);
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    window.addEventListener('resize', close);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('resize', close);
+    };
   }, [openMenuFor]);
 
   // On error `names` is set to [] just so the table can render an empty body — that must
@@ -140,25 +148,44 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
                     <Link href={`/names/${entry.name}?from=my-names`} className="dmd-table-btn">
                       History
                     </Link>
-                    {entry.status === 'inactive' && (
+                    {entry.status !== 'expired' && (
                       <div className="dmd-manage" ref={openMenuFor === entry.name ? menuRef : undefined}>
                         <button
                           type="button"
                           className="dmd-table-btn"
-                          onClick={() => setOpenMenuFor(openMenuFor === entry.name ? null : entry.name)}
+                          onClick={(e) => {
+                            if (openMenuFor === entry.name) {
+                              setOpenMenuFor(null);
+                              return;
+                            }
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            setMenuPos({ top: rect.bottom + 6, left: rect.right - 150 });
+                            setOpenMenuFor(entry.name);
+                          }}
                         >
                           Manage <i className="fas fa-chevron-down"></i>
                         </button>
-                        {openMenuFor === entry.name && (
-                          <div className="dmd-manage-menu">
+                        {openMenuFor === entry.name && menuPos && (
+                          <div className="dmd-manage-menu" style={{ top: menuPos.top, left: menuPos.left }}>
+                            {entry.status === 'inactive' && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setActivateTarget(entry.name);
+                                  setOpenMenuFor(null);
+                                }}
+                              >
+                                <i className="fas fa-bolt"></i> Activate
+                              </button>
+                            )}
                             <button
                               type="button"
                               onClick={() => {
-                                setActivateTarget(entry.name);
+                                setRenewTarget(entry);
                                 setOpenMenuFor(null);
                               }}
                             >
-                              <i className="fas fa-bolt"></i> Activate
+                              <i className="fas fa-rotate"></i> Renew
                             </button>
                           </div>
                         )}
@@ -200,6 +227,17 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
         currentActiveName={activeName}
         onComplete={() => {
           setActivateTarget(null);
+          reload();
+        }}
+      />
+
+      <RenewNameModal
+        isOpen={!!renewTarget}
+        onClose={() => setRenewTarget(null)}
+        name={renewTarget?.name ?? ''}
+        currentExpiresAt={renewTarget?.expiresAt}
+        onComplete={() => {
+          setRenewTarget(null);
           reload();
         }}
       />

@@ -202,6 +202,42 @@ export async function activateName(
   await tx;
 }
 
+export async function getRenewEstimate(
+  contract: DMDRegistrarController,
+  web3: Web3,
+  name: string,
+  walletAddress: string,
+): Promise<{ estimatedGas?: string; totalEstimatedCost?: string }> {
+  try {
+    const gas = await contract.methods.renew(name).estimateGas({ from: walletAddress });
+    const gasPrice = await web3.eth.getGasPrice();
+    const gasWei = new BigNumber(gas).times(gasPrice).toFixed(0);
+    const cost = formatDmdAmount(web3, gasWei);
+    return { estimatedGas: cost, totalEstimatedCost: cost };
+  } catch {
+    return {};
+  }
+}
+
+export async function renewName(
+  contract: DMDRegistrarController,
+  from: string,
+  name: string,
+  getGasPrice: () => Promise<string>,
+  onTransactionHash?: () => void,
+): Promise<void> {
+  const gasPrice = await getGasPrice();
+  const tx = contract.methods.renew(name).send({
+    from,
+    gasPrice,
+    type: '0x0',
+  });
+  if (onTransactionHash) {
+    tx.once('transactionHash', onTransactionHash);
+  }
+  await tx;
+}
+
 /**
  * Names owned by a wallet, for the "Owned names" table.
  */

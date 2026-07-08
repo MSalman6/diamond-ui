@@ -5,33 +5,25 @@ import Link from 'next/link';
 import { toast } from 'react-toastify';
 import Modal from '@/components/Modal';
 import { useWeb3Context } from '@/contexts/Web3';
-import { activateName, getActivationEstimate, getActivationFeeSchedule } from '@/services/dmdNaming';
+import { renewName, getRenewEstimate } from '@/services/dmdNaming';
 import { formatTxError } from '@/utils/web3Errors';
-import { formatDmdName } from '@/utils/dmdNaming';
-import type { ActivationFeeTier } from '@/types/dmdNaming';
+import { formatDmdDate, formatDmdName } from '@/utils/dmdNaming';
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   name: string;
-  currentActiveName?: string | null;
+  currentExpiresAt?: number;
   onComplete?: () => void;
 };
 
-type Estimate = { feeWei: string; fee: string; estimatedGas?: string; totalEstimatedCost: string };
+type Estimate = { estimatedGas?: string; totalEstimatedCost?: string };
 type PendingStage = 'confirm' | 'mining' | null;
 
-export default function ActivateNameModal({
-  isOpen,
-  onClose,
-  name,
-  currentActiveName,
-  onComplete,
-}: Props) {
+export default function RenewNameModal({ isOpen, onClose, name, currentExpiresAt, onComplete }: Props) {
   const { contractsManager, web3, userWallet, ensureWalletConnection, ensureProviderReady, getGasPriceSafe } = useWeb3Context();
   const [estimate, setEstimate] = useState<Estimate | null>(null);
   const [loadingEstimate, setLoadingEstimate] = useState(false);
-  const [feeSchedule, setFeeSchedule] = useState<ActivationFeeTier[] | null>(null);
   const [pendingStage, setPendingStage] = useState<PendingStage>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -46,7 +38,6 @@ export default function ActivateNameModal({
     setError(null);
     setSuccess(false);
     setEstimate(null);
-    setFeeSchedule(null);
 
     const contract = contractsManager.diamondRegistryContract;
     const from = userWallet.myAddr;
@@ -55,14 +46,10 @@ export default function ActivateNameModal({
     }
 
     setLoadingEstimate(true);
-    getActivationEstimate(contract, web3, name, from)
+    getRenewEstimate(contract, web3, name, from)
       .then(setEstimate)
       .catch(() => setEstimate(null))
       .finally(() => setLoadingEstimate(false));
-
-    getActivationFeeSchedule(contract, web3, from)
-      .then(setFeeSchedule)
-      .catch(() => setFeeSchedule(null));
   }, [isOpen, name, contractsManager.diamondRegistryContract, userWallet.myAddr, web3]);
 
   const handleClose = () => {
@@ -73,7 +60,7 @@ export default function ActivateNameModal({
     const contract = contractsManager.diamondRegistryContract;
     const from = userWallet.myAddr;
 
-    if (!contract || !from || !estimate) {
+    if (!contract || !from) {
       setError('Wallet not ready. Please reconnect and try again.');
       return;
     }
@@ -91,8 +78,8 @@ export default function ActivateNameModal({
     setError(null);
 
     try {
-      await activateName(contract, from, name, estimate.feeWei, getGasPriceSafe, () => setPendingStage('mining'));
-      toast.success(`${fullName} is now active 💎`);
+      await renewName(contract, from, name, getGasPriceSafe, () => setPendingStage('mining'));
+      toast.success(`${fullName} renewed 💎`);
       setPendingStage(null);
       setSuccess(true);
       onComplete?.();
@@ -102,7 +89,7 @@ export default function ActivateNameModal({
         web3,
         (contract.options.jsonInterface as any[]) || [],
         err,
-        'Activation failed. Please try again.',
+        'Renewal failed. Please try again.',
       );
       setError(message);
       toast.error(message);
@@ -116,13 +103,13 @@ export default function ActivateNameModal({
           <div className="dmd-modal-success-icon">
             <i className="fas fa-check-circle"></i>
           </div>
-          <h2>The name &quot;{fullName}&quot; is now active.</h2>
-          <p>Your active public name has been updated.</p>
-          {currentActiveName && (
-            <p>
-              Previous active name ({formatDmdName(currentActiveName)}) stays owned, but is no longer the active one.
-            </p>
-          )}
+          <h2>&quot;{fullName}&quot; renewed successfully.</h2>
+          <p>The 10-year validity window has been reset.</p>
+          <p>New expiration: 10 years from the renewal date</p>
+          <div className="dmd-modal-notice dmd-modal-notice-success">
+            <i className="fas fa-check-circle"></i>
+            <p>Keep-alive recorded on-chain.</p>
+          </div>
           <div className="dmd-modal-actions">
             <Link
               href={userWallet.myAddr ? `/dmd-names/${userWallet.myAddr}` : '#'}
@@ -131,8 +118,8 @@ export default function ActivateNameModal({
             >
               Go to My DMD Names
             </Link>
-            <Link href="/profile" className="btn-secondary" onClick={handleClose}>
-              View Profile
+            <Link href={`/names/${name}?from=my-names`} className="btn-secondary" onClick={handleClose}>
+              View history
             </Link>
           </div>
         </div>
@@ -143,7 +130,7 @@ export default function ActivateNameModal({
   return (
     <Modal isOpen={isOpen} onClose={handleClose} closable={!pendingStage}>
       <div className="dmd-modal">
-        <h2>Activate &quot;{fullName}&quot;</h2>
+        <h2>Renew &quot;{fullName}&quot;</h2>
 
         {pendingStage ? (
           <div className="dmd-modal-pending-card">
@@ -155,22 +142,21 @@ export default function ActivateNameModal({
               </div>
             ) : (
               <div>
-                <strong>Activating name</strong>
-                <p>You are activating &quot;{fullName}&quot;. This may take up to 1 minute. Do not close the window until the transaction is completed.</p>
+                <strong>Renewal pending</strong>
+                <p>You are renewing &quot;{fullName}&quot;. This may take up to 1 minute. Do not close the window until the transaction is completed.</p>
               </div>
             )}
           </div>
         ) : (
           <>
-            <div className="dmd-modal-notice dmd-modal-notice-info">
-              <i className="fas fa-info-circle"></i>
-              <p>Activating this name will replace your current active name. Only one active name is allowed per address.</p>
-            </div>
-
             <dl className="dmd-modal-fees">
               <div className="dmd-modal-fees-row">
-                <dt>Activation fee</dt>
-                <dd>{loadingEstimate ? '…' : estimate?.fee ?? '—'}</dd>
+                <dt>Current expiration</dt>
+                <dd>{currentExpiresAt ? formatDmdDate(currentExpiresAt) : '—'}</dd>
+              </div>
+              <div className="dmd-modal-fees-row">
+                <dt>Renewal action</dt>
+                <dd>Keep-alive transaction</dd>
               </div>
               <div className="dmd-modal-fees-row">
                 <dt>Estimated gas fee</dt>
@@ -182,22 +168,10 @@ export default function ActivateNameModal({
               </div>
             </dl>
 
-            {feeSchedule && (
-              <div className="dmd-fee-schedule">
-                <h4>Activation fee schedule</h4>
-                <dl>
-                  {feeSchedule.map((tier) => (
-                    <div
-                      key={tier.label}
-                      className={`dmd-fee-schedule-row${tier.isCurrent ? ' dmd-fee-schedule-row--current' : ''}`}
-                    >
-                      <dt>{tier.label}</dt>
-                      <dd>{tier.amount}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-            )}
+            <div className="dmd-modal-notice dmd-modal-notice-info">
+              <i className="fas fa-info-circle"></i>
+              <p>Renew sends a keep-alive transaction and resets the 10-year validity window from the time of confirmation.</p>
+            </div>
 
             {error && (
               <div className="dmd-modal-notice dmd-modal-notice-warn">
@@ -208,15 +182,10 @@ export default function ActivateNameModal({
 
             <div className="dmd-modal-actions">
               <button type="button" className="btn-secondary" onClick={handleClose}>
-                Later
+                Cancel
               </button>
-              <button
-                type="button"
-                className="btn-primary"
-                onClick={handleConfirm}
-                disabled={loadingEstimate || !estimate}
-              >
-                {error ? 'Try again' : 'Activate'}
+              <button type="button" className="btn-primary" onClick={handleConfirm}>
+                {error ? 'Try again' : 'Confirm & Renew'}
               </button>
             </div>
           </>
