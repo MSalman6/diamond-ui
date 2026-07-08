@@ -10,7 +10,11 @@ import DateField from './DateField';
 import SelectField from './SelectField';
 import { getNamesDirectory, getBlacklistedNames, getWalletDmdName } from '@/services/dmdNaming';
 import { formatDmdDate, formatDmdName, shortenAddress } from '@/utils/dmdNaming';
+import { useHiddenNames } from '@/hooks/useHiddenNames';
+import serverHiddenNames from '@/config/hidden-names.json';
 import type { DmdDirectoryEntry, DmdDirectoryQuery, DmdNameAvailabilityResult, OwnedDmdNameStatus } from '@/types/dmdNaming';
+
+const SERVER_HIDDEN_NAMES = new Set<string>(serverHiddenNames as string[]);
 
 const STATUS_LABELS: Record<OwnedDmdNameStatus, string> = {
   active: 'Active',
@@ -73,6 +77,7 @@ export default function DmdNamesDirectory() {
   const [total, setTotal] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [blacklisted, setBlacklisted] = useState<Set<string>>(new Set());
+  const { hideName, unhideName, isLocallyHidden } = useHiddenNames();
 
   const [registeredName, setRegisteredName] = useState<string | null>(null);
   const [registerOpen, setRegisterOpen] = useState(false);
@@ -206,25 +211,30 @@ export default function DmdNamesDirectory() {
               <th>Status</th>
               <th>Created On</th>
               <th>Expires On</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {entries === null && !error && (
-              <tr><td colSpan={5} className="dmd-owned-loading">Loading DMD names…</td></tr>
+              <tr><td colSpan={6} className="dmd-owned-loading">Loading DMD names…</td></tr>
             )}
             {error && (
-              <tr><td colSpan={5} className="dmd-owned-error">{error}</td></tr>
+              <tr><td colSpan={6} className="dmd-owned-error">{error}</td></tr>
             )}
             {entries !== null && !error && entries.length === 0 && (
-              <tr><td colSpan={5} className="dmd-owned-empty">No DMD names found.</td></tr>
+              <tr><td colSpan={6} className="dmd-owned-empty">No DMD names found.</td></tr>
             )}
             {entries?.map((entry) => {
-              const isHidden = blacklisted.has(entry.name);
+              const isModerated = blacklisted.has(entry.name) || SERVER_HIDDEN_NAMES.has(entry.name);
+              const isUserHidden = isLocallyHidden(entry.name);
+              const isHidden = isModerated || isUserHidden;
               return (
                 <tr key={entry.name}>
                   <td className="dmd-owned-name-cell">
                     {isHidden ? (
-                      <span title="This name is hidden pending DAO moderation">{shortenAddress(entry.ownerAddress)}</span>
+                      <span title={isModerated ? 'This name is hidden pending DAO moderation' : 'You have hidden this name locally'}>
+                        {shortenAddress(entry.ownerAddress)}
+                      </span>
                     ) : (
                       <Link href={`/names/${entry.name}`}>{formatDmdName(entry.name)}</Link>
                     )}
@@ -237,6 +247,18 @@ export default function DmdNamesDirectory() {
                   </td>
                   <td>{formatDmdDate(entry.createdAt)}</td>
                   <td>{formatDmdDate(entry.expiresAt)}</td>
+                  <td className="dmd-owned-actions-cell">
+                    {!isModerated && (
+                      <button
+                        type="button"
+                        className="dmd-table-btn"
+                        title={isUserHidden ? 'Unhide this name for yourself' : 'Hide this name for yourself'}
+                        onClick={() => (isUserHidden ? unhideName(entry.name) : hideName(entry.name))}
+                      >
+                        <i className={`fas ${isUserHidden ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                      </button>
+                    )}
+                  </td>
                 </tr>
               );
             })}
