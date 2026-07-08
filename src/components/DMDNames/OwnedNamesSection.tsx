@@ -8,6 +8,7 @@ import { formatDmdDate, formatDmdName } from '@/utils/dmdNaming';
 import type { OwnedDmdName, OwnedDmdNameStatus } from '@/types/dmdNaming';
 import ActivateNameModal from './ActivateNameModal';
 import RenewNameModal from './RenewNameModal';
+import TransferNameModal from './TransferNameModal';
 
 type Props = {
   walletAddress: string;
@@ -31,6 +32,7 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
   const [error, setError] = useState<string | null>(null);
   const [activateTarget, setActivateTarget] = useState<string | null>(null);
   const [renewTarget, setRenewTarget] = useState<OwnedDmdName | null>(null);
+  const [transferTarget, setTransferTarget] = useState<OwnedDmdName | null>(null);
   const [openMenuFor, setOpenMenuFor] = useState<string | null>(null);
   const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -187,6 +189,15 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
                             >
                               <i className="fas fa-rotate"></i> Renew
                             </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setTransferTarget(entry);
+                                setOpenMenuFor(null);
+                              }}
+                            >
+                              <i className="fas fa-right-left"></i> Transfer
+                            </button>
                           </div>
                         )}
                       </div>
@@ -238,6 +249,17 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
         currentExpiresAt={renewTarget?.expiresAt}
         onComplete={() => {
           setRenewTarget(null);
+          reload();
+        }}
+      />
+
+      <TransferNameModal
+        isOpen={!!transferTarget}
+        onClose={() => setTransferTarget(null)}
+        name={transferTarget?.name ?? ''}
+        isActiveName={!!transferTarget && transferTarget.name === activeName}
+        onComplete={() => {
+          setTransferTarget(null);
           reload();
         }}
       />

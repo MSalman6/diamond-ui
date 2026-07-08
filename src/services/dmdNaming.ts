@@ -238,6 +238,63 @@ export async function renewName(
   await tx;
 }
 
+export async function getTransferFee(
+  namesContract: DMDNames,
+  web3: Web3,
+): Promise<{ transferFeeWei: string; transferFee: string }> {
+  const transferFeeWei = await namesContract.methods.transferFee().call();
+  return { transferFeeWei, transferFee: formatDmdAmount(web3, transferFeeWei) };
+}
+
+export async function getTransferGasEstimate(
+  registrarContract: DMDRegistrarController,
+  namesContract: DMDNames,
+  web3: Web3,
+  name: string,
+  from: string,
+  to: string,
+  transferFeeWei: string,
+): Promise<{ estimatedGas?: string; totalEstimatedCost?: string }> {
+  try {
+    const labelHash = await registrarContract.methods.getHashOfName(name).call();
+    const gas = await namesContract.methods
+      .transferFrom(from, to, labelHash)
+      .estimateGas({ from, value: transferFeeWei });
+    const gasPrice = await web3.eth.getGasPrice();
+    const gasWei = new BigNumber(gas).times(gasPrice).toFixed(0);
+    return {
+      estimatedGas: formatDmdAmount(web3, gasWei),
+      totalEstimatedCost: formatDmdAmount(web3, new BigNumber(transferFeeWei).plus(gasWei).toFixed(0)),
+    };
+  } catch {
+    return {};
+  }
+}
+
+export async function transferName(
+  registrarContract: DMDRegistrarController,
+  namesContract: DMDNames,
+  from: string,
+  to: string,
+  name: string,
+  transferFeeWei: string,
+  getGasPrice: () => Promise<string>,
+  onTransactionHash?: () => void,
+): Promise<void> {
+  const labelHash = await registrarContract.methods.getHashOfName(name).call();
+  const gasPrice = await getGasPrice();
+  const tx = namesContract.methods.transferFrom(from, to, labelHash).send({
+    from,
+    value: transferFeeWei,
+    gasPrice,
+    type: '0x0',
+  });
+  if (onTransactionHash) {
+    tx.once('transactionHash', onTransactionHash);
+  }
+  await tx;
+}
+
 /**
  * Names owned by a wallet, for the "Owned names" table.
  */

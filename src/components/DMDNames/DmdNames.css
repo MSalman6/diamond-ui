@@ -529,6 +529,35 @@
   padding-right: 24px;
 }
 
+.dmd-form-label {
+  display: block;
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.dmd-form-input {
+  width: 100%;
+  background: var(--darker-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 9px 12px;
+  color: var(--text);
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.dmd-form-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.dmd-form-error {
+  margin: 0 0 16px;
+  font-size: 0.8rem;
+  color: #e05252;
+}
+
 .dmd-modal-fees {
   margin: 0 0 20px;
 }
@@ -728,7 +757,8 @@ body.light-theme .dmd-directory-table-wrapper,
 body.light-theme .dmd-datefield-input,
 body.light-theme .dmd-datefield-popover,
 body.light-theme .dmd-selectfield-input,
-body.light-theme .dmd-selectfield-popover {
+body.light-theme .dmd-selectfield-popover,
+body.light-theme .dmd-form-input {
   background: #fff;
   border-color: rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
