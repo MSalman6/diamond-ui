@@ -1,7 +1,15 @@
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import type { DMDRegistrarController, DMDNames } from '@/contracts/types';
-import type { DmdNameAvailabilityResult, OwnedDmdName } from '@/types/dmdNaming';
+import type {
+  DmdNameAvailabilityResult,
+  OwnedDmdName,
+  OwnedDmdNameStatus,
+  DmdDirectoryEntry,
+  DmdDirectoryQuery,
+  DmdDirectoryResponse,
+  DmdNameHistory,
+} from '@/types/dmdNaming';
 import { formatDmdAmount } from '@/utils/dmdNaming';
 import { clientApiGet } from '@/lib/apiClient';
 
@@ -183,4 +191,97 @@ export async function getOwnedNames(walletAddress: string): Promise<OwnedDmdName
     return payload;
   }
   return (payload as { data?: OwnedDmdName[] })?.data ?? [];
+}
+
+/**
+ * Indexed history timeline for a single DMD name.
+ */
+export async function getNameHistory(name: string): Promise<DmdNameHistory> {
+  const response = await clientApiGet<DmdNameHistory>(`name/${name}/history`);
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error('NOT_FOUND');
+    }
+    throw new Error(response.error || `Failed to fetch name history (${response.status})`);
+  }
+
+  return response.data;
+}
+
+/**
+ * Normalizes a single directory row from the indexed backend.
+ */
+function normalizeDirectoryEntry(raw: any): DmdDirectoryEntry {
+  const ownerAddress = raw.ownerAddress ?? raw.owner ?? raw.address ?? '';
+  const createdAt = Number(raw.createdAt ?? raw.created_at ?? raw.registeredAt ?? 0);
+  const expiresAt = Number(raw.expiresAt ?? raw.expires_at ?? raw.expiry ?? 0);
+  const rawStatus = raw.status as string | undefined;
+  const knownStatuses: OwnedDmdNameStatus[] = ['active', 'inactive', 'expiring-soon', 'expired'];
+  const status: OwnedDmdNameStatus = knownStatuses.includes(rawStatus as OwnedDmdNameStatus)
+    ? (rawStatus as OwnedDmdNameStatus)
+    : expiresAt && expiresAt * 1000 < Date.now() ? 'expired' : 'inactive';
+
+  return { name: raw.name, ownerAddress, status, createdAt, expiresAt };
+}
+
+/**
+ * Paginated/filterable public directory of all DMD names.
+ */
+export async function getNamesDirectory(query: DmdDirectoryQuery = {}): Promise<DmdDirectoryResponse> {
+  const page = query.page ?? 1;
+  const pageSize = query.pageSize ?? 20;
+  const offset = (page - 1) * pageSize;
+
+  const params = new URLSearchParams();
+  if (query.q) params.set('q', query.q);
+  if (query.status) params.set('status', query.status);
+  if (query.createdFrom) params.set('createdFrom', String(query.createdFrom));
+  if (query.createdTo) params.set('createdTo', String(query.createdTo));
+  if (query.expiresFrom) params.set('expiresFrom', String(query.expiresFrom));
+  if (query.expiresTo) params.set('expiresTo', String(query.expiresTo));
+  if (query.sortBy) params.set('sortBy', query.sortBy);
+  if (query.order) params.set('order', query.order);
+  params.set('limit', String(pageSize));
+  params.set('offset', String(offset));
+
+  const response = await clientApiGet<{ data: any[]; count: number; limit: number; offset: number } | any[]>(
+    `names?${params.toString()}`,
+  );
+
+  if (!response.ok) {
+    throw new Error(response.error || `Failed to fetch DMD names directory (${response.status})`);
+  }
+
+  const payload = response.data as unknown;
+  const rows = Array.isArray(payload) ? payload : (payload as { data?: any[] })?.data ?? [];
+  const count = Array.isArray(payload) ? rows.length : (payload as { count?: number })?.count ?? rows.length;
+
+  return {
+    items: rows.map(normalizeDirectoryEntry),
+    total: count,
+    page,
+    pageSize,
+  };
+}
+
+/**
+ * Names hidden via DAO moderation.
+ */
+export async function getBlacklistedNames(): Promise<Set<string>> {
+  try {
+    const response = await clientApiGet<string[] | { name: string }[] | { data: unknown[] }>('names/blacklisted');
+    if (!response.ok) {
+      return new Set();
+    }
+
+    const payload = response.data as unknown;
+    const list = Array.isArray(payload) ? payload : (payload as { data?: unknown[] })?.data ?? [];
+    const names = list
+      .map((entry) => (typeof entry === 'string' ? entry : (entry as { name?: string })?.name))
+      .filter((n): n is string => !!n);
+    return new Set(names);
+  } catch {
+    return new Set();
+  }
 }

@@ -217,6 +217,11 @@ export default function Header() {
                           DMD Explorer<i className="fas fa-external-link-alt"></i>
                         </a>
                       </li>
+                      <li>
+                        <Link href="/names" onClick={handleRegularLinkClick}>
+                          <i className="fas fa-search"></i> DMD Names
+                        </Link>
+                      </li>
                     </ul>
                   </div>
                 </div>

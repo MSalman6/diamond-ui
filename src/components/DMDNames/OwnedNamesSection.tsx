@@ -127,7 +127,7 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
               {names?.map((entry) => (
                 <tr key={entry.name}>
                   <td className="dmd-owned-name-cell">
-                    <Link href={`/names/${entry.name}`}>{formatDmdName(entry.name)}</Link>
+                    <Link href={`/names/${entry.name}?from=my-names`}>{formatDmdName(entry.name)}</Link>
                   </td>
                   <td><StatusPill status={entry.status} /></td>
                   <td>{formatDmdDate(entry.expiresAt)}</td>
@@ -137,7 +137,7 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
                       : '—'}
                   </td>
                   <td className="dmd-owned-actions-cell">
-                    <Link href={`/names/${entry.name}`} className="dmd-table-btn">
+                    <Link href={`/names/${entry.name}?from=my-names`} className="dmd-table-btn">
                       History
                     </Link>
                     {entry.status === 'inactive' && (
