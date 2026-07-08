@@ -561,6 +561,45 @@
   font-weight: 700;
 }
 
+.dmd-fee-schedule {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.dmd-fee-schedule h4 {
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.dmd-fee-schedule dl {
+  margin: 0;
+}
+
+.dmd-fee-schedule-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.dmd-fee-schedule-row dt,
+.dmd-fee-schedule-row dd {
+  margin: 0;
+}
+
+.dmd-fee-schedule-row--current {
+  color: var(--text);
+  font-weight: 600;
+}
+
 .dmd-modal-notice {
   display: flex;
   gap: 10px;

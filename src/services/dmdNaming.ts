@@ -9,6 +9,7 @@ import type {
   DmdDirectoryQuery,
   DmdDirectoryResponse,
   DmdNameHistory,
+  ActivationFeeTier,
 } from '@/types/dmdNaming';
 import { formatDmdAmount } from '@/utils/dmdNaming';
 import { clientApiGet } from '@/lib/apiClient';
@@ -151,6 +152,33 @@ export async function getActivationEstimate(
   }
 
   return { feeWei, fee, estimatedGas, totalEstimatedCost };
+}
+
+const ACTIVATION_FEE_TIERS = [
+  { label: 'First activation', numerator: 0 },
+  { label: '1st change', numerator: 1 },
+  { label: '2nd change', numerator: 2 },
+  { label: '3rd & later', numerator: 3 },
+];
+
+export async function getActivationFeeSchedule(
+  contract: DMDRegistrarController,
+  web3: Web3,
+  walletAddress: string,
+): Promise<ActivationFeeTier[]> {
+  const [mintingFeeWei, activationsRaw] = await Promise.all([
+    contract.methods.mintingFee().call(),
+    contract.methods.activations(walletAddress).call(),
+  ]);
+  const activationsCount = Math.min(Number(activationsRaw), 3);
+
+  return ACTIVATION_FEE_TIERS.map((tier) => ({
+    label: tier.label,
+    amount: tier.numerator === 0
+      ? 'Free (gas only)'
+      : formatDmdAmount(web3, new BigNumber(mintingFeeWei).times(tier.numerator).dividedBy(10).toFixed(0)),
+    isCurrent: activationsCount === tier.numerator,
+  }));
 }
 
 export async function activateName(

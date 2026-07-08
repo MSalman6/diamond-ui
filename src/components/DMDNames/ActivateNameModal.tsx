@@ -5,9 +5,10 @@ import Link from 'next/link';
 import { toast } from 'react-toastify';
 import Modal from '@/components/Modal';
 import { useWeb3Context } from '@/contexts/Web3';
-import { activateName, getActivationEstimate } from '@/services/dmdNaming';
+import { activateName, getActivationEstimate, getActivationFeeSchedule } from '@/services/dmdNaming';
 import { formatTxError } from '@/utils/web3Errors';
 import { formatDmdName } from '@/utils/dmdNaming';
+import type { ActivationFeeTier } from '@/types/dmdNaming';
 
 type Props = {
   isOpen: boolean;
@@ -30,6 +31,7 @@ export default function ActivateNameModal({
   const { contractsManager, web3, userWallet, ensureWalletConnection, ensureProviderReady, getGasPriceSafe } = useWeb3Context();
   const [estimate, setEstimate] = useState<Estimate | null>(null);
   const [loadingEstimate, setLoadingEstimate] = useState(false);
+  const [feeSchedule, setFeeSchedule] = useState<ActivationFeeTier[] | null>(null);
   const [pendingStage, setPendingStage] = useState<PendingStage>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -44,6 +46,7 @@ export default function ActivateNameModal({
     setError(null);
     setSuccess(false);
     setEstimate(null);
+    setFeeSchedule(null);
 
     const contract = contractsManager.diamondRegistryContract;
     const from = userWallet.myAddr;
@@ -56,6 +59,10 @@ export default function ActivateNameModal({
       .then(setEstimate)
       .catch(() => setEstimate(null))
       .finally(() => setLoadingEstimate(false));
+
+    getActivationFeeSchedule(contract, web3, from)
+      .then(setFeeSchedule)
+      .catch(() => setFeeSchedule(null));
   }, [isOpen, name, contractsManager.diamondRegistryContract, userWallet.myAddr, web3]);
 
   const handleClose = () => {
@@ -174,6 +181,23 @@ export default function ActivateNameModal({
                 <dd>{loadingEstimate ? '…' : estimate?.totalEstimatedCost ?? '—'}</dd>
               </div>
             </dl>
+
+            {feeSchedule && (
+              <div className="dmd-fee-schedule">
+                <h4>Activation fee schedule</h4>
+                <dl>
+                  {feeSchedule.map((tier) => (
+                    <div
+                      key={tier.label}
+                      className={`dmd-fee-schedule-row${tier.isCurrent ? ' dmd-fee-schedule-row--current' : ''}`}
+                    >
+                      <dt>{tier.label}</dt>
+                      <dd>{tier.amount}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )}
 
             {error && (
               <div className="dmd-modal-notice dmd-modal-notice-warn">

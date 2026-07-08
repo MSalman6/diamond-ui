@@ -87,3 +87,9 @@ export interface DmdNameHistory {
   timeline: DmdNameHistoryEvent[];
   transfers: DmdNameTransfer[];
 }
+
+export interface ActivationFeeTier {
+  label: string;
+  amount: string;
+  isCurrent: boolean;
+}
