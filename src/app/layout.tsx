@@ -14,6 +14,7 @@ import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WebMCP from "@/components/WebMCP";
+import DaoVotingPhaseNotice from "@/components/DaoVotingPhaseNotice";
 import { headers } from 'next/headers';
 import { Web3ContextProvider } from "@/contexts/Web3";
 import { ToastContainer } from 'react-toastify';
@@ -72,6 +73,7 @@ export default async function RootLayout({
                     />
                     <div id="modal-root"></div>
                     <WebMCP />
+                    <DaoVotingPhaseNotice />
                     </DaoContextProvider>
                   </StakingContextProvider>
                 </Web3ContextProvider>

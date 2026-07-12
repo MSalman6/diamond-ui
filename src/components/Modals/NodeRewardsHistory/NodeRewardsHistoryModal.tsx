@@ -4,8 +4,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import Modal from '@/components/Modal';
 import { clientApiGet } from '@/lib/apiClient';
 import { usePrivacyMode } from '@/contexts/PrivacyMode';
-import { AreaChart } from '@/components/Charts';
-import { truncateAddress, parseEpochEndTime, formatEpochEndDate } from '@/utils/common';
+import { truncateAddress, formatEpochEndDate } from '@/utils/common';
 import logger from '@/utils/logger';
 import type { NodeEpochReward, NodeEpochRewardsResponse } from '@/types/rewards';
 import '../RewardsHistory/RewardsHistoryModal.css';
@@ -78,20 +77,6 @@ const NodeRewardsHistoryModal: React.FC<NodeRewardsHistoryModalProps> = ({
     }
   }, [isOpen]);
 
-  const chartData = useMemo(() => {
-    const rows: { epoch: number; totalReward: number; ownerReward: number }[] = [];
-    for (const e of rewards) {
-      if (!parseEpochEndTime(e.epoch_end_time)) continue;
-      rows.push({
-        epoch: e.epoch,
-        totalReward: parseFloat(e.total_pool_reward),
-        ownerReward: parseFloat(e.owner_reward),
-      });
-    }
-    rows.sort((a, b) => a.epoch - b.epoch);
-    return rows;
-  }, [rewards]);
-
   const totalPages = Math.ceil(totalCount / LIMIT);
 
   const formatDmd = (val: string) => {
@@ -136,25 +121,6 @@ const NodeRewardsHistoryModal: React.FC<NodeRewardsHistoryModalProps> = ({
 
         {!isLoading && !error && rewards.length > 0 && (
           <div className="rewards-history-dual-view">
-            {chartData.length > 0 && (
-              <div className="rewards-history-chart-section">
-                <div className="chart-wrapper">
-                  <AreaChart
-                    data={chartData}
-                    xAxisKey="epoch"
-                    areas={[
-                      { dataKey: 'totalReward', name: 'Pool reward', type: 'monotone' },
-                      { dataKey: 'ownerReward', name: 'Owner share', type: 'monotone' },
-                    ]}
-                    config={{ height: 250 }}
-                    xAxisLabel="Epoch"
-                    yAxisLabel="DMD"
-                    className="chart-fade-in"
-                  />
-                </div>
-              </div>
-            )}
-
             <div className="rewards-history-list-section">
               <table className="rewards-history-table">
                 <thead>

@@ -7,7 +7,7 @@ import '@/components/Charts/Charts.css';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useMemo, startTransition } from 'react';
 import BigNumber from "bignumber.js";
-import { truncateAddress, timestampToDate, parseEpochEndTime, parseDmdAmount } from '@/utils/common';
+import { truncateAddress, timestampToDate } from '@/utils/common';
 import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { useDaoContext } from '@/contexts/DAO';
@@ -18,12 +18,14 @@ import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import InfoTooltip from '@/components/InfoTooltip';
 import { Aep30Ring } from '@/components/Aep30Badge';
-import AreaChart from '@/components/Charts/AreaChart';
+import ComposedChart from '@/components/Charts/ComposedChart';
 import BonusScoreHistoryModal from '@/components/Modals/BonusScoreHistory/BonusScoreHistoryModal';
 import StakeHistoryModal from '@/components/Modals/StakeHistory/StakeHistoryModal';
 import NodeRewardsHistoryModal from '@/components/Modals/NodeRewardsHistory/NodeRewardsHistoryModal';
-import { getCachedNodeRewardStats, getCachedNodeEpochRewards } from '@/lib/rewardStatsCache';
-import type { NodeRewardStats, NodeEpochReward } from '@/types/rewards';
+import { getCachedNodeRewardStats, getCachedNodeDailyRewards } from '@/lib/rewardStatsCache';
+import type { RewardsRange } from '@/lib/rewardStatsCache';
+import { mapDailyRewardsToChartPoints } from '@/utils/rewardAggregation';
+import type { NodeRewardStats, NodeDailyReward } from '@/types/rewards';
 
 
 export default function ValidatorDetails() {
@@ -48,9 +50,12 @@ export default function ValidatorDetails() {
   const [isRewardsHistoryModalOpen, setIsRewardsHistoryModalOpen] = useState(false);
   const [validatorRewardStats, setValidatorRewardStats] = useState<NodeRewardStats | null>(null);
   const [isLoadingValidatorStats, setIsLoadingValidatorStats] = useState(false);
-  const [epochRewards, setEpochRewards] = useState<NodeEpochReward[]>([]);
+  const [dailyRewards, setDailyRewards] = useState<NodeDailyReward[]>([]);
   const [isLoadingEpochRewards, setIsLoadingEpochRewards] = useState(false);
+  const [chartRange, setChartRange] = useState<RewardsRange>('30d');
   const [chartShowRpt, setChartShowRpt] = useState(true);
+  const [chartShowPoolReward, setChartShowPoolReward] = useState(true);
+  const [chartShowOwnerShare, setChartShowOwnerShare] = useState(true);
 
   // Effects
   useEffect(() => {
@@ -82,16 +87,14 @@ export default function ValidatorDetails() {
       .finally(() => setIsLoadingValidatorStats(false));
   }, [address, isPrivacyMode]);
 
-  // Epoch rewards history last 30 days
   useEffect(() => {
     if (!address || isPrivacyMode) return;
-    const thirtyDaysAgo = Math.floor(Date.now() / 1000) - 30 * 86400;
     setIsLoadingEpochRewards(true);
-    getCachedNodeEpochRewards(address.toLowerCase(), thirtyDaysAgo)
-      .then(data => setEpochRewards(data))
+    getCachedNodeDailyRewards(address.toLowerCase(), chartRange)
+      .then(data => setDailyRewards(data))
       .catch(() => {})
       .finally(() => setIsLoadingEpochRewards(false));
-  }, [address, isPrivacyMode]);
+  }, [address, isPrivacyMode, chartRange]);
 
   // RpT30 change vs previous 30d as a percentage
   const rpt30DeltaPct = useMemo(() => {
@@ -103,31 +106,21 @@ export default function ValidatorDetails() {
     return (validatorRewardStats.rpt30_delta / prev) * 100;
   }, [validatorRewardStats]);
 
-  // Per-epoch RpT per 1,000 DMD (not cumulative — reflects that epoch's actual reward rate)
-  const validatorChartData = useMemo(() => {
-    const rows: { date: string; rpt: number; sortKey: number }[] = [];
-    for (const e of epochRewards) {
-      const endDate = parseEpochEndTime(e.epoch_end_time);
-      const stakeDmd = parseDmdAmount(e.total_staked_snapshot);
-      if (!endDate || stakeDmd <= 0) continue;
-      const delegatorsReward = parseDmdAmount(e.delegators_total_reward);
-      rows.push({
-        date: endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        rpt: Number(((delegatorsReward / stakeDmd) * 1000).toFixed(4)),
-        sortKey: endDate.getTime(),
-      });
-    }
-    rows.sort((a, b) => a.sortKey - b.sortKey);
-    return rows;
-  }, [epochRewards]);
+  const validatorChartData = useMemo(() => mapDailyRewardsToChartPoints(dailyRewards), [dailyRewards]);
 
-  const validatorChartAreas = useMemo(() => {
-    const areas: { dataKey: string; name: string; color: string }[] = [];
-    if (chartShowRpt) {
-      areas.push({ dataKey: 'rpt', name: 'RpT30', color: '#3a7bd5' });
+  const validatorChartElements = useMemo(() => {
+    const elements: { type: 'area'; dataKey: string; name: string; color: string; yAxisId: 'left' | 'right'; dot: boolean; curveType: 'linear' }[] = [];
+    if (chartShowPoolReward) {
+      elements.push({ type: 'area', dataKey: 'totalReward', name: 'Pool reward', color: '#22c55e', yAxisId: 'right', dot: true, curveType: 'linear' });
     }
-    return areas;
-  }, [chartShowRpt]);
+    if (chartShowOwnerShare) {
+      elements.push({ type: 'area', dataKey: 'ownerReward', name: 'Owner share', color: '#f59e0b', yAxisId: 'right', dot: true, curveType: 'linear' });
+    }
+    if (chartShowRpt) {
+      elements.push({ type: 'area', dataKey: 'rpt', name: 'RpT30', color: '#3a7bd5', yAxisId: 'left', dot: true, curveType: 'linear' });
+    }
+    return elements;
+  }, [chartShowRpt, chartShowPoolReward, chartShowOwnerShare]);
 
   // Pool stake breakdown: validator self stake vs delegated stake, plus the
   // connected user's own stake with this validator.
@@ -539,21 +532,46 @@ export default function ValidatorDetails() {
                 <span className="vd-legend-dot vd-legend-dot--rpt" aria-hidden="true" />
                 RpT30
               </button>
+              <button
+                type="button"
+                className={`vd-legend-pill${chartShowPoolReward ? ' vd-legend-pill--active' : ''}`}
+                onClick={() => setChartShowPoolReward((v) => !v)}
+              >
+                <span className="vd-legend-dot vd-legend-dot--pool" aria-hidden="true" />
+                Pool reward
+              </button>
+              <button
+                type="button"
+                className={`vd-legend-pill${chartShowOwnerShare ? ' vd-legend-pill--active' : ''}`}
+                onClick={() => setChartShowOwnerShare((v) => !v)}
+              >
+                <span className="vd-legend-dot vd-legend-dot--owner" aria-hidden="true" />
+                Owner share
+              </button>
             </div>
-            <span className="vd-range-pill">30D</span>
+            <div className="vd-range-pills" role="group" aria-label="Chart range">
+              {(['30d', '1y', 'all'] as RewardsRange[]).map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  className={`vd-range-pill${chartRange === r ? ' vd-range-pill--active' : ''}`}
+                  onClick={() => setChartRange(r)}
+                >
+                  {r === '30d' ? '30D' : r === '1y' ? '1Y' : 'All'}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-        <AreaChart
+        <ComposedChart
           data={validatorChartData}
           xAxisKey="date"
-          areas={
-            validatorChartAreas.length > 0
-              ? validatorChartAreas
-              : [{ dataKey: 'rpt', name: 'RpT30', color: '#3a7bd5' }]
-          }
+          elements={validatorChartElements}
           config={{ height: 260, margin: { top: 10, right: 20, left: 10, bottom: 0 } }}
           showLegend={false}
           yAxisLabel="RpT per 1000 DMD"
+          showSecondaryYAxis
+          secondaryYAxisLabel="DMD"
           isLoading={isLoadingEpochRewards}
           emptyMessage="No epoch data available"
         />

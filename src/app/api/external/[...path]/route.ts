@@ -102,7 +102,7 @@ async function checkRateLimit(
 const HEX_ADDRESS = '0x[a-fA-F0-9]{40}';
 const ALLOWED_ENDPOINTS: { method: string; pattern: RegExp }[] = [
   { method: 'GET', pattern: new RegExp(`^node/${HEX_ADDRESS}/bonus-score-reasons-history/?$`) },
-  { method: 'GET', pattern: new RegExp(`^node/${HEX_ADDRESS}/(stake-transactions|epoch-rewards|reward-stats)$`) },
+  { method: 'GET', pattern: new RegExp(`^node/${HEX_ADDRESS}/(stake-transactions|epoch-rewards|epoch-rewards/daily|reward-stats)$`) },
   { method: 'GET', pattern: new RegExp(`^staker/${HEX_ADDRESS}/(stake-transactions|rewards|reward-stats)$`) },
   { method: 'POST', pattern: /^nodes\/reward-stats$/ },
 ];

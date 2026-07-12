@@ -8,7 +8,7 @@ import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { useMemo, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { truncateAddress, parseEpochEndTime, parseDmdAmount } from '@/utils/common';
+import { truncateAddress } from '@/utils/common';
 import { useWeb3Context } from '@/contexts/Web3';
 import InfoTooltip from '@/components/InfoTooltip';
 import { useStakingContext } from '@/contexts/Staking';
@@ -24,15 +24,17 @@ import BonusScoreHistoryModal from '@/components/Modals/BonusScoreHistory/BonusS
 import StakeHistoryModal from '@/components/Modals/StakeHistory/StakeHistoryModal';
 import RewardsHistoryModal from '@/components/Modals/RewardsHistory/RewardsHistoryModal';
 import NodeRewardsHistoryModal from '@/components/Modals/NodeRewardsHistory/NodeRewardsHistoryModal';
-import type { BatchNodeRewardStats, NodeRewardStats, StakerRewardStats, NodeEpochReward } from '@/types/rewards';
+import type { BatchNodeRewardStats, NodeRewardStats, StakerRewardStats, NodeDailyReward } from '@/types/rewards';
 import {
   getCachedBatchNodeStats,
   getCachedNodeRewardStats,
-  getCachedNodeEpochRewards,
+  getCachedNodeDailyRewards,
   getCachedStakerRewardStats,
   getCachedStakerRewards30d,
 } from '@/lib/rewardStatsCache';
-import AreaChart from '@/components/Charts/AreaChart';
+import type { RewardsRange } from '@/lib/rewardStatsCache';
+import { mapDailyRewardsToChartPoints } from '@/utils/rewardAggregation';
+import ComposedChart from '@/components/Charts/ComposedChart';
 import '@/components/Charts/Charts.css';
 import ValidatorCell from '@/components/ValidatorCell';
 import Aep30Badge, { Aep30Ring } from '@/components/Aep30Badge';
@@ -42,7 +44,7 @@ import Rpt30Cell from '@/components/Rpt30Cell';
 export default function ProfilePage() {
   const router = useRouter();
   const { userWallet } = useWeb3Context();
-  const { myPool, pools, totalDaoStake, myTotalStake, myCandidateStake } = useStakingContext();
+  const { myPool, pools, totalDaoStake, myTotalStake, myCandidateStake, delegatorMinStake } = useStakingContext();
   const isPrivacyMode = useIsPrivacyMode();
   const { isConnected } = useWalletConnect();
   const { allDaoProposals } = useDaoContext();
@@ -66,11 +68,14 @@ export default function ProfilePage() {
   const [perPoolRewards30d, setPerPoolRewards30d] = useState<Record<string, number>>({});
   // Top validators stats map (delegator view)
   const [topValidatorStatsMap, setTopValidatorStatsMap] = useState<Record<string, BatchNodeRewardStats>>({});
-  // Epoch rewards (validator view)
-  const [epochRewards, setEpochRewards] = useState<NodeEpochReward[]>([]);
+  // Daily reward series (validator view)
+  const [dailyRewards, setDailyRewards] = useState<NodeDailyReward[]>([]);
   const [isLoadingEpochRewards, setIsLoadingEpochRewards] = useState(false);
+  const [chartRange, setChartRange] = useState<RewardsRange>('30d');
   // legend toggles for Rewards Performance chart
   const [chartShowRpt, setChartShowRpt] = useState(true);
+  const [chartShowPoolReward, setChartShowPoolReward] = useState(true);
+  const [chartShowOwnerShare, setChartShowOwnerShare] = useState(true);
 
   // Get validators that user has staked with (has myStake > 0)
   const stakedValidators = useMemo(() => {
@@ -81,24 +86,28 @@ export default function ProfilePage() {
     );
   }, [pools, userWallet.myAddr]);
 
-  // Get top 5 validators by total stake and score
+  // Pools with room for at least delegatorMinStake more DMD
+  const eligibleTopValidators = useMemo(() => {
+    const poolMaxWei = BigNumber(50000).multipliedBy(10 ** 18);
+    return pools.filter(pool => {
+      if (!pool.totalStake || !BigNumber(pool.totalStake).isGreaterThan(0)) return false;
+      if (!(pool.isActive || pool.isToBeElected || pool.isPendingValidator)) return false;
+      const totalStakeWei = BigNumber(pool.totalStake);
+      if (!totalStakeWei.isLessThan(poolMaxWei)) return false;
+      return poolMaxWei.minus(totalStakeWei).isGreaterThanOrEqualTo(delegatorMinStake);
+    });
+  }, [pools, delegatorMinStake]);
+
+  // Top 5 eligible validators by highest RpT30
   const topValidators = useMemo(() => {
-    const validatorsWithData = pools.filter(pool => 
-      pool.totalStake && 
-      BigNumber(pool.totalStake).isGreaterThan(0) && 
-      pool.score !== undefined && 
-      pool.score !== null
-    );
-    
-    // Sort by total stake (descending) and then by score (descending)
-    return validatorsWithData
+    return [...eligibleTopValidators]
       .sort((a, b) => {
-        const stakeComparison = BigNumber(b.totalStake).minus(a.totalStake).toNumber();
-        if (stakeComparison !== 0) return stakeComparison;
-        return b.score - a.score;
+        const aRpt = topValidatorStatsMap[a.stakingAddress.toLowerCase()]?.rpt30 ?? -Infinity;
+        const bRpt = topValidatorStatsMap[b.stakingAddress.toLowerCase()]?.rpt30 ?? -Infinity;
+        return bRpt - aRpt;
       })
       .slice(0, 5);
-  }, [pools]);
+  }, [eligibleTopValidators, topValidatorStatsMap]);
 
   // Redirect to home if wallet is not connected
   useEffect(() => {
@@ -111,6 +120,14 @@ export default function ProfilePage() {
   const formatDMDAmount = (amount: BigNumber) => {
     const dmdAmount = amount.dividedBy(1e18);
     return dmdAmount.toFormat(0, BigNumber.ROUND_DOWN) + ' DMD';
+  };
+
+  const handleValidatorRowClick = (stakingAddress: string) => {
+    if (userWallet.myAddr && stakingAddress.toLowerCase() === userWallet.myAddr.toLowerCase()) {
+      router.push('/profile');
+    } else {
+      router.push(`/validators/${stakingAddress}`);
+    }
   };
 
   const myDelegatedStakeWei = useMemo(() => {
@@ -180,25 +197,24 @@ export default function ProfilePage() {
       .catch(() => {});
   }, [userWallet.myAddr, isPrivacyMode]);
 
-  // Top validators stats (used by "Top Validators" tables in both views)
+  // Stats for all eligible candidates, used to rank topValidators by RpT30
   useEffect(() => {
-    if (!topValidators.length || isPrivacyMode) return;
-    const addresses = topValidators.map(p => p.stakingAddress.toLowerCase());
+    if (!eligibleTopValidators.length || isPrivacyMode) return;
+    const addresses = eligibleTopValidators.map(p => p.stakingAddress.toLowerCase());
     getCachedBatchNodeStats(addresses)
       .then(data => setTopValidatorStatsMap(data))
       .catch(() => {});
-  }, [topValidators, isPrivacyMode]);
+  }, [eligibleTopValidators, isPrivacyMode]);
 
-  // Epoch rewards history (validator view) — GET /node/:address/epoch-rewards
+  // Daily reward series (validator view) — GET /node/:address/epoch-rewards/daily
   useEffect(() => {
     if (!hasValidator || !myPool?.stakingAddress || isPrivacyMode) return;
-    const thirtyDaysAgo = Math.floor(Date.now() / 1000) - 30 * 86400;
     setIsLoadingEpochRewards(true);
-    getCachedNodeEpochRewards(myPool.stakingAddress, thirtyDaysAgo)
-      .then(data => setEpochRewards(data))
+    getCachedNodeDailyRewards(myPool.stakingAddress, chartRange)
+      .then(data => setDailyRewards(data))
       .catch(() => {})
       .finally(() => setIsLoadingEpochRewards(false));
-  }, [hasValidator, myPool?.stakingAddress, isPrivacyMode]);
+  }, [hasValidator, myPool?.stakingAddress, isPrivacyMode, chartRange]);
 
   const rpt30DeltaPct = useMemo(() => {
     if (validatorRewardStats?.rpt30_delta == null || validatorRewardStats?.rpt30_prev30 == null) {
@@ -220,30 +236,21 @@ export default function ProfilePage() {
     return validatorRewardStats.vos30 + ownStakeReward;
   }, [validatorRewardStats, myPool?.myStake]);
 
-  const validatorChartData = useMemo(() => {
-    const rows: { date: string; rpt: number; sortKey: number }[] = [];
-    for (const e of epochRewards) {
-      const endDate = parseEpochEndTime(e.epoch_end_time);
-      const stakeDmd = parseDmdAmount(e.total_staked_snapshot);
-      if (!endDate || stakeDmd <= 0) continue;
-      const delegatorsReward = parseDmdAmount(e.delegators_total_reward);
-      rows.push({
-        date: endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        rpt: Number(((delegatorsReward / stakeDmd) * 1000).toFixed(4)),
-        sortKey: endDate.getTime(),
-      });
-    }
-    rows.sort((a, b) => a.sortKey - b.sortKey);
-    return rows;
-  }, [epochRewards]);
+  const validatorChartData = useMemo(() => mapDailyRewardsToChartPoints(dailyRewards), [dailyRewards]);
 
-  const validatorChartAreas = useMemo(() => {
-    const areas: { dataKey: string; name: string; color: string }[] = [];
-    if (chartShowRpt) {
-      areas.push({ dataKey: 'rpt', name: 'RpT30', color: '#3a7bd5' });
+  const validatorChartElements = useMemo(() => {
+    const elements: { type: 'area'; dataKey: string; name: string; color: string; yAxisId: 'left' | 'right'; dot: boolean; curveType: 'linear' }[] = [];
+    if (chartShowPoolReward) {
+      elements.push({ type: 'area', dataKey: 'totalReward', name: 'Pool reward', color: '#22c55e', yAxisId: 'right', dot: true, curveType: 'linear' });
     }
-    return areas;
-  }, [chartShowRpt]);
+    if (chartShowOwnerShare) {
+      elements.push({ type: 'area', dataKey: 'ownerReward', name: 'Owner share', color: '#f59e0b', yAxisId: 'right', dot: true, curveType: 'linear' });
+    }
+    if (chartShowRpt) {
+      elements.push({ type: 'area', dataKey: 'rpt', name: 'RpT30', color: '#3a7bd5', yAxisId: 'left', dot: true, curveType: 'linear' });
+    }
+    return elements;
+  }, [chartShowRpt, chartShowPoolReward, chartShowOwnerShare]);
 
   // APY (delegator view)
   const portfolioApy = useMemo(() => {
@@ -514,7 +521,12 @@ export default function ProfilePage() {
                     {topValidators.map((validator) => {
                       const stats = topValidatorStatsMap[validator.stakingAddress.toLowerCase()];
                       return (
-                        <tr key={validator.stakingAddress} className={validator.stakingAddress === userWallet.myAddr ? "current-user" : ""}>
+                        <tr
+                          key={validator.stakingAddress}
+                          className={`validators-table-row${validator.stakingAddress === userWallet.myAddr ? " current-user" : ""}`}
+                          onClick={() => handleValidatorRowClick(validator.stakingAddress)}
+                          style={{ cursor: 'pointer' }}
+                        >
                           <td>
                             <ValidatorCell
                               address={validator.stakingAddress}
@@ -588,7 +600,11 @@ export default function ProfilePage() {
                         {
                           myPool && (
                             <>
-                              <StakeModal buttonText="Stake" pool={myPool} />
+                              {(myPool.isActive || myPool.isToBeElected || myPool.isPendingValidator) &&
+                                BigNumber(myPool.totalStake ?? 0).isLessThan(BigNumber(50000).multipliedBy(10 ** 18)) &&
+                                BigNumber(50000).multipliedBy(10 ** 18).minus(BigNumber(myPool.totalStake ?? 0)).isGreaterThanOrEqualTo(delegatorMinStake) && (
+                                  <StakeModal buttonText="Stake" pool={myPool} />
+                                )}
                               <UnstakeModal buttonText="Unstake" pool={myPool} />
                               {!isPrivacyMode && (
                                 <button onClick={() => setIsValidatorStakeHistoryModalOpen(true)}  className="btn-secondary btn-sm">History</button>
@@ -718,21 +734,46 @@ export default function ProfilePage() {
                         <span className="vp2-legend-dot vp2-legend-dot--rpt" aria-hidden="true" />
                         RpT30
                       </button>
+                      <button
+                        type="button"
+                        className={`vp2-legend-pill${chartShowPoolReward ? ' vp2-legend-pill--active' : ''}`}
+                        onClick={() => setChartShowPoolReward((v) => !v)}
+                      >
+                        <span className="vp2-legend-dot vp2-legend-dot--pool" aria-hidden="true" />
+                        Pool reward
+                      </button>
+                      <button
+                        type="button"
+                        className={`vp2-legend-pill${chartShowOwnerShare ? ' vp2-legend-pill--active' : ''}`}
+                        onClick={() => setChartShowOwnerShare((v) => !v)}
+                      >
+                        <span className="vp2-legend-dot vp2-legend-dot--owner" aria-hidden="true" />
+                        Owner share
+                      </button>
                     </div>
-                    <span className="vp2-range-pill">30D</span>
+                    <div className="vp2-range-pills" role="group" aria-label="Chart range">
+                      {(['30d', '1y', 'all'] as RewardsRange[]).map((r) => (
+                        <button
+                          key={r}
+                          type="button"
+                          className={`vp2-range-pill${chartRange === r ? ' vp2-range-pill--active' : ''}`}
+                          onClick={() => setChartRange(r)}
+                        >
+                          {r === '30d' ? '30D' : r === '1y' ? '1Y' : 'All'}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <AreaChart
+                <ComposedChart
                   data={validatorChartData}
                   xAxisKey="date"
-                  areas={
-                    validatorChartAreas.length > 0
-                      ? validatorChartAreas
-                      : [{ dataKey: 'rpt', name: 'RpT30', color: '#3a7bd5' }]
-                  }
+                  elements={validatorChartElements}
                   config={{ height: 260, margin: { top: 10, right: 20, left: 10, bottom: 0 } }}
                   showLegend={false}
                   yAxisLabel="RpT per 1000 DMD"
+                  showSecondaryYAxis
+                  secondaryYAxisLabel="DMD"
                   isLoading={isLoadingEpochRewards}
                   emptyMessage="No epoch data available"
                     />
@@ -755,14 +796,6 @@ export default function ProfilePage() {
                   </div>
                   {!isPrivacyMode && (
                     <button onClick={() => setIsValidatorRewardsHistoryModalOpen(true)} className="btn-secondary btn-sm">Rewards history</button>
-                  )}
-                </div>
-
-                <div className="stat-card">
-                  <div className="stat-label">My outgoing delegations <InfoTooltip content={<div><p>Amount of DMD you've delegated to other validators from your account (if any).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-                  <div className="stat-value highlight">{formatDMDAmount(myOutgoingDelegationsWei)}</div>
-                  {!isPrivacyMode && (
-                    <button onClick={() => toast.info('Coming soon!')} className="btn-secondary btn-sm">Delegations history</button>
                   )}
                 </div>
 
@@ -918,7 +951,12 @@ export default function ProfilePage() {
                     {topValidators.map((validator) => {
                       const stats = topValidatorStatsMap[validator.stakingAddress.toLowerCase()];
                       return (
-                        <tr key={validator.stakingAddress} className={validator.stakingAddress === userWallet.myAddr ? "current-user" : ""}>
+                        <tr
+                          key={validator.stakingAddress}
+                          className={`validators-table-row${validator.stakingAddress === userWallet.myAddr ? " current-user" : ""}`}
+                          onClick={() => handleValidatorRowClick(validator.stakingAddress)}
+                          style={{ cursor: 'pointer' }}
+                        >
                           <td>
                             <ValidatorCell
                               address={validator.stakingAddress}
