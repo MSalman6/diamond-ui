@@ -40,11 +40,14 @@ import ValidatorCell from '@/components/ValidatorCell';
 import Aep30Badge, { Aep30Ring } from '@/components/Aep30Badge';
 import SaturationBar from '@/components/SaturationBar';
 import Rpt30Cell from '@/components/Rpt30Cell';
+import ProfileIdentityHeader from '@/components/DMDNames/ProfileIdentityHeader';
+import { useWalletDmdName } from '@/hooks/useWalletDmdName';
 
 export default function ProfilePage() {
   const router = useRouter();
   const { userWallet } = useWeb3Context();
-  const { myPool, pools, totalDaoStake, myTotalStake, myCandidateStake, delegatorMinStake } = useStakingContext();
+  const walletDmdName = useWalletDmdName();
+  const { myPool, pools, totalDaoStake, myTotalStake, myCandidateStake } = useStakingContext();
   const isPrivacyMode = useIsPrivacyMode();
   const { isConnected } = useWalletConnect();
   const { allDaoProposals } = useDaoContext();
@@ -322,15 +325,10 @@ export default function ProfilePage() {
               <div className="user-dashboard">
                 <div className="user-info-card">
                   <div className="user-info-header">
-                    <div className="user-wallet">
-                      <div className="wallet-icon large">
-                        <div className="wallet-icon-inner"></div>
-                      </div>
-                      <div className="wallet-details">
-                        <h1>{userWallet.myAddr}</h1>
-                        <p>User Account</p>
-                      </div>
-                    </div>
+                    <ProfileIdentityHeader address={userWallet.myAddr} activeName={walletDmdName} />
+                    <Link href={`/dmd-names/${userWallet.myAddr}`} className="btn-secondary profile-dmd-names-btn">
+                      My DMD Names
+                    </Link>
                   </div>
                   
                   <div className="dp2-stats-bar">
@@ -569,17 +567,22 @@ export default function ProfilePage() {
             <div className="container">
               <div className="validator-dashboard">
                 <div className="validator-header">
-                  <div className="validator-identity">
-                    <div className="wallet-icon large">
-                      <div className="wallet-icon-inner" style={{background: "linear-gradient(45deg, #6EE7B7, #3B82F6)"}}></div>
-                    </div>
-                    <div className="validator-details">
-                      <h1>{userWallet.myAddr}</h1>
-                      {myValidatorStatus && (
-                        <span className={`status-badge ${myValidatorStatus.className}`}>{myValidatorStatus.label}</span>
-                      )}
-                    </div>
-                  </div>
+                  <ProfileIdentityHeader
+                    address={userWallet.myAddr}
+                    activeName={walletDmdName}
+                    wrapperClass="validator-identity"
+                    subtitle=""
+                    statusBadge={
+                      myValidatorStatus ? (
+                        <span className={`status-badge ${myValidatorStatus.className}`}>
+                          {myValidatorStatus.label}
+                        </span>
+                      ) : undefined
+                    }
+                  />
+                  <Link href={`/dmd-names/${userWallet.myAddr}`} className="btn-secondary profile-dmd-names-btn">
+                    My DMD Names
+                  </Link>
                 </div>
                 
                 <div className="combined-stake-card">

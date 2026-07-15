@@ -7,20 +7,21 @@ interface ModalProps {
   onClose: () => void;
   children: React.ReactNode;
   className?: string;
+  closable?: boolean;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, className = '' }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, className = '', closable = true }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === 'Escape' && closable) {
         onClose();
       }
     };
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      if (closable && modalRef.current && !modalRef.current.contains(event.target as Node)) {
         onClose();
       }
     };
@@ -37,28 +38,30 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, className = ''
       document.removeEventListener('mousedown', handleClickOutside);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, closable]);
 
   if (!isOpen) return null;
 
   return (
     <Portal>
-      <div 
+      <div
         className={`${styles.modalOverlay} ${className}`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div 
+        <div
           className={styles.modalContent}
           ref={modalRef}
           onClick={(e) => e.stopPropagation()}
         >
-          <button 
-            className={styles.modalClose} 
-            onClick={onClose}
-            aria-label="Close modal"
-          >
-            &times;
-          </button>
+          {closable && (
+            <button
+              className={styles.modalClose}
+              onClick={onClose}
+              aria-label="Close modal"
+            >
+              &times;
+            </button>
+          )}
           {children}
         </div>
       </div>
