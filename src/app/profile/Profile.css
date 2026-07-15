@@ -536,20 +536,45 @@ body.light-theme .vp-rewards-chart-section {
   background: #14b8a6;
 }
 
+.vp2-legend-dot--pool {
+  background: #22c55e;
+}
+
+.vp2-legend-dot--owner {
+  background: #f59e0b;
+}
+
 .vp2-legend-pill:not(.vp2-legend-pill--active) .vp2-legend-dot {
   opacity: 0.45;
+}
+
+.vp2-range-pills {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg, rgba(255, 255, 255, 0.03));
 }
 
 .vp2-range-pill {
   display: inline-flex;
   align-items: center;
-  padding: 0.35rem 0.75rem;
+  padding: 0.3rem 0.7rem;
   font-size: 0.8rem;
   font-weight: 600;
   border-radius: 6px;
-  border: 1px solid var(--border-color);
-  background: var(--card-bg, rgba(255, 255, 255, 0.03));
-  color: var(--text);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.vp2-range-pill--active {
+  background: rgba(59, 130, 246, 0.16);
+  color: var(--text, #fff);
 }
 
 .vp2-validator-statistics {
@@ -558,7 +583,7 @@ body.light-theme .vp-rewards-chart-section {
 
 .vp2-stats-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.75rem;
 }
 
@@ -632,9 +657,17 @@ body.light-theme .vp2-legend-pill--active {
   color: #111827;
 }
 
-body.light-theme .vp2-range-pill {
+body.light-theme .vp2-range-pills {
   background: #fff;
   border-color: #e5e7eb;
+}
+
+body.light-theme .vp2-range-pill {
+  color: #6b7280;
+}
+
+body.light-theme .vp2-range-pill--active {
+  background: rgba(26, 115, 232, 0.1);
   color: #111827;
 }
 

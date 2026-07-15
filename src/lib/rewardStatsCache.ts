@@ -1,21 +1,22 @@
 'use client';
 
 import { clientApiGet, clientApiPost } from '@/lib/apiClient';
-import { parseEpochEndTime } from '@/utils/common';
 import type {
   BatchNodeRewardStats,
   BatchNodeRewardStatsResponse,
   NodeRewardStats,
-  NodeEpochReward,
-  NodeEpochRewardsResponse,
+  NodeDailyReward,
+  NodeDailyRewardsResponse,
+  RewardsRange,
   StakerRewardStats,
   StakerRewardsListResponse,
 } from '@/types/rewards';
 
+export type { RewardsRange } from '@/types/rewards';
+
 const CACHE_BLOCK_KEY = 'dmd_reward_cache_block';
 const CACHE_BATCH_KEY = 'dmd_reward_cache_batch';
 const CACHE_NODE_PREFIX = 'dmd_reward_cache_node_';
-const CACHE_EPOCH_PREFIX = 'dmd_reward_cache_epoch_';
 const CACHE_STAKER_STATS_PREFIX = 'dmd_reward_cache_staker_stats_';
 const CACHE_STAKER_REWARDS_PREFIX = 'dmd_reward_cache_staker_rewards_';
 const BLOCK_REFERENCE_KEY = 'contractLatestBlockN';
@@ -164,34 +165,31 @@ export async function getCachedNodeRewardStats(
   return pendingFetches.get(cacheKey)!;
 }
 
-export async function getCachedNodeEpochRewards(
+const CACHE_DAILY_PREFIX = 'dmd_reward_cache_daily_';
+
+export async function getCachedNodeDailyRewards(
   address: string,
-  fromTime: number
-): Promise<NodeEpochReward[]> {
+  range: RewardsRange
+): Promise<NodeDailyReward[]> {
   const addr = address.toLowerCase();
 
   clearStaleCache();
 
-  const cacheKey = CACHE_EPOCH_PREFIX + addr + '_' + fromTime;
-  const cached = readCache<NodeEpochReward[]>(cacheKey);
+  const cacheKey = CACHE_DAILY_PREFIX + addr + '_' + range;
+  const cached = readCache<NodeDailyReward[]>(cacheKey);
   if (cached !== null) return cached;
 
   if (!pendingFetches.has(cacheKey)) {
-    const fetchPromise = clientApiGet<NodeEpochRewardsResponse>(
-      `node/${addr}/epoch-rewards?limit=100`
+    const fetchPromise = clientApiGet<NodeDailyRewardsResponse>(
+      `node/${addr}/epoch-rewards/daily?range=${range}`
     )
       .then(res => {
-        if (!res.ok) return [] as NodeEpochReward[];
+        if (!res.ok) return [] as NodeDailyReward[];
         const rows = res.data.data ?? [];
-        const cutoff = fromTime * 1000;
-        const filtered = rows.filter(entry => {
-          const end = parseEpochEndTime(entry.epoch_end_time);
-          return end != null && end.getTime() >= cutoff;
-        });
-        writeCache(cacheKey, filtered);
-        return filtered;
+        writeCache(cacheKey, rows);
+        return rows;
       })
-      .catch(() => [] as NodeEpochReward[]);
+      .catch(() => [] as NodeDailyReward[]);
 
     pendingFetches.set(cacheKey, fetchPromise);
     fetchPromise.finally(() => pendingFetches.delete(cacheKey));

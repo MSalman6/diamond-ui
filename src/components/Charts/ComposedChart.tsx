@@ -46,8 +46,8 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
 
   const renderElement = (element: any, index: number) => {
     const color = element.color || getAccentColor(index, theme);
+    const elementKey = `${element.type}-${element.dataKey}`;
     const commonProps = {
-      key: `${element.type}-${element.dataKey}`,
       dataKey: element.dataKey,
       name: element.name || element.dataKey,
       yAxisId: element.yAxisId || 'left',
@@ -58,6 +58,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
       case 'line':
         return (
           <Line
+            key={elementKey}
             {...commonProps}
             type={element.curveType || 'monotone'}
             stroke={color}
@@ -68,6 +69,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
       case 'bar':
         return (
           <Bar
+            key={elementKey}
             {...commonProps}
             fill={color}
             radius={[4, 4, 0, 0]}
@@ -77,11 +79,14 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
       case 'area':
         return (
           <Area
+            key={elementKey}
             {...commonProps}
             type={element.curveType || 'monotone'}
             stroke={color}
+            strokeWidth={element.strokeWidth || 2}
             fill={color}
             fillOpacity={0.3}
+            dot={element.dot ? { r: 3, fill: color, strokeWidth: 0 } : false}
           />
         );
       default:
@@ -124,12 +129,15 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
             yAxisId="left"
             stroke={theme.textColor}
             tick={{ fill: theme.textColor }}
+            width={yAxisLabel ? 72 : 60}
             label={
               yAxisLabel
                 ? {
                     value: yAxisLabel,
                     angle: -90,
                     position: 'insideLeft',
+                    offset: 0,
+                    style: { textAnchor: 'middle' },
                     fill: theme.textColor,
                   }
                 : undefined
@@ -141,12 +149,15 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
               orientation="right"
               stroke={theme.textColor}
               tick={{ fill: theme.textColor }}
+              width={secondaryYAxisLabel ? 72 : 60}
               label={
                 secondaryYAxisLabel
                   ? {
                       value: secondaryYAxisLabel,
                       angle: 90,
                       position: 'insideRight',
+                      offset: 0,
+                      style: { textAnchor: 'middle' },
                       fill: theme.textColor,
                     }
                   : undefined

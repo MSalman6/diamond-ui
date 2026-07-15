@@ -68,3 +68,16 @@ export interface NodeEpochRewardsResponse {
   limit: number;
   offset: number;
 }
+export type RewardsRange = '30d' | '1y' | 'all';
+export interface NodeDailyReward {
+  date: string;
+  rpt30: number;
+  total_pool_reward_sum: string;
+  owner_reward_sum: string;
+  epoch_count: number;
+}
+export interface NodeDailyRewardsResponse {
+  data: NodeDailyReward[];
+  range: RewardsRange;
+  count: number;
+}
