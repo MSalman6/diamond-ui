@@ -7,9 +7,8 @@ interface Aep30BadgeProps {
 
 export default function Aep30Badge({ aep30 }: Aep30BadgeProps) {
   const pct = aep30 * 100;
-  const tier = pct >= 80 ? 'green' : pct >= 50 ? 'yellow' : 'red';
   return (
-    <span className={`dmd-aep30-badge dmd-aep30-badge--${tier}`}>
+    <span className="dmd-aep30-badge">
       {pct.toFixed(0)}%
     </span>
   );
@@ -21,12 +20,11 @@ interface Aep30BarProps {
 
 export function Aep30Bar({ aep30 }: Aep30BarProps) {
   const pct = Math.min(100, Math.max(0, aep30 * 100));
-  const tier = pct >= 80 ? 'green' : pct >= 50 ? 'yellow' : 'red';
   return (
     <div className="dmd-aep30-bar">
       <div className="dmd-aep30-bar__track">
         <div
-          className={`dmd-aep30-bar__fill dmd-aep30-bar__fill--${tier}`}
+          className="dmd-aep30-bar__fill"
           style={{ width: `${pct}%` }}
         />
         <span className="dmd-aep30-bar__value">{pct.toFixed(0)}%</span>

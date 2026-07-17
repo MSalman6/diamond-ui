@@ -30,22 +30,10 @@ body.light-theme .dmd-validator-cell__sub--red { color: #c0392b; }
   font-size: 0.8rem;
   font-weight: 600;
   white-space: nowrap;
+  background: rgba(58, 123, 213, 0.15);
+  color: var(--accent, #3a7bd5);
 }
-.dmd-aep30-badge--green {
-  background: rgba(46, 213, 115, 0.15);
-  color: #2ed573;
-}
-.dmd-aep30-badge--yellow {
-  background: rgba(255, 165, 2, 0.15);
-  color: #ffa502;
-}
-.dmd-aep30-badge--red {
-  background: rgba(255, 71, 87, 0.15);
-  color: #ff4757;
-}
-body.light-theme .dmd-aep30-badge--green { background: rgba(26, 122, 64, 0.1); color: #1a7a40; }
-body.light-theme .dmd-aep30-badge--yellow { background: rgba(192, 96, 0, 0.1); color: #c06000; }
-body.light-theme .dmd-aep30-badge--red { background: rgba(192, 57, 43, 0.1); color: #c0392b; }
+body.light-theme .dmd-aep30-badge { background: rgba(26, 115, 232, 0.1); color: #1a73e8; }
 
 /* Aep30Bar (table cell) */
 .dmd-aep30-bar {
@@ -68,10 +56,8 @@ body.light-theme .dmd-aep30-badge--red { background: rgba(192, 57, 43, 0.1); col
   height: 100%;
   border-radius: 999px;
   transition: width 0.3s ease;
+  background: rgba(58, 123, 213, 0.35);
 }
-.dmd-aep30-bar__fill--green { background: rgba(46, 213, 115, 0.25); }
-.dmd-aep30-bar__fill--yellow { background: rgba(255, 165, 2, 0.28); }
-.dmd-aep30-bar__fill--red { background: rgba(255, 71, 87, 0.28); }
 .dmd-aep30-bar__value {
   position: absolute;
   top: 0;
@@ -92,9 +78,7 @@ body.light-theme .dmd-aep30-badge--red { background: rgba(192, 57, 43, 0.1); col
   white-space: nowrap;
 }
 body.light-theme .dmd-aep30-bar__track { background: rgba(0, 0, 0, 0.08); }
-body.light-theme .dmd-aep30-bar__fill--green { background: rgba(26, 122, 64, 0.22); }
-body.light-theme .dmd-aep30-bar__fill--yellow { background: rgba(192, 96, 0, 0.22); }
-body.light-theme .dmd-aep30-bar__fill--red { background: rgba(192, 57, 43, 0.22); }
+body.light-theme .dmd-aep30-bar__fill { background: rgba(26, 115, 232, 0.3); }
 body.light-theme .dmd-aep30-bar__value { color: #1a2230; }
 body.light-theme .dmd-aep30-bar__sub { color: #666; }
 
