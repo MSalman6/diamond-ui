@@ -13,17 +13,6 @@ import { useWeb3Context } from "@/contexts/Web3";
 import { useStakingContext } from "@/contexts/Staking";
 import ProposalStepSlider from "@/components/ProposalStepSlider";
 import { EcosystemParameters } from "@/utils/ecosystemParameters";
-import { normalizeDmdNameInput, stripDmdSuffix, validateDmdName } from "@/utils/dmdNaming";
-
-const USERNAME_MODERATION_REASONS = [
-  { value: "offensive-abusive", label: "Offensive / abusive language" },
-  { value: "hate-speech", label: "Hate speech or discrimination" },
-  { value: "scam-phishing", label: "Scam / phishing impersonation" },
-  { value: "brand-impersonation", label: "Brand or identity impersonation" },
-  { value: "sexual-content", label: "Sexual or explicit content" },
-  { value: "illegal-activity", label: "Illegal activity reference" },
-  { value: "other", label: "Other" },
-];
 
 BigNumber.config({ EXPONENTIAL_AT: 1e+9 });
 
@@ -49,11 +38,6 @@ export default function CreateProposalPage() {
   const [contractUpgradeFields, setContractUpgradeFields] = useState<{ contractAddress: string; contractCalldata: string }[]>([
     { contractAddress: "", contractCalldata: "" },
   ]);
-
-  const [umUsername, setUmUsername] = useState("");
-  const [umOwnerAddress, setUmOwnerAddress] = useState("");
-  const [umReasonCategory, setUmReasonCategory] = useState("");
-  const [umEvidence, setUmEvidence] = useState("");
 
   const [totalRequestedAmount, setTotalRequestedAmount] = useState<BigNumber>(BigNumber("0"));
   const [isLowMajorityEligible, setIsLowMajorityEligible] = useState<boolean>(true);
@@ -82,8 +66,6 @@ export default function CreateProposalPage() {
       setEpcMethodDescription("The portion of the governance pot allocated to rewards.");
     } else if (epcMethodName === "Report Disallow Period") {
       setEpcMethodDescription("Timeframe during which a node announces maintenance to avoid penalties.");
-    } else if (epcMethodName === "Minting Fee") {
-      setEpcMethodDescription("Fee required to mint/register a new DMD name. Gas fees are paid separately.");
     }
   }, [epcMethodName]);
 
@@ -158,8 +140,6 @@ export default function CreateProposalPage() {
         return web3Context.contractsManager.ctContract;
       case "Bonus Score System":
         return web3Context.contractsManager.bsContract;
-      case "DMD Names":
-        return web3Context.contractsManager.diamondRegistryContract;
       default:
         return web3Context.contractsManager.stContract;
     }
@@ -171,7 +151,6 @@ export default function CreateProposalPage() {
     let targets: string[] = [];
     let values: string[] = [];
     let calldatas: string[] = [];
-    let descriptionSuffix = "";
 
     try {
       if (proposalType === "open" || proposalType === "low-majority-fill") {
@@ -210,7 +189,7 @@ export default function CreateProposalPage() {
         const epcContractVal = await getEpcContractValue(contractName, methodName);
         if (new BigNumber(epcValue).isEqualTo(epcContractVal)) return toast.warn("Cannot propose the same value");
 
-        if (["Staking", "Block Reward", "Connectivity Tracker", "Bonus Score System", "DMD Names"].includes(epcContractName) && new BigNumber(epcValue).isNaN()) throw new Error(`Invalid ${methodSetter} value`);
+        if (["Staking", "Block Reward", "Connectivity Tracker", "Bonus Score System"].includes(epcContractName) && new BigNumber(epcValue).isNaN()) throw new Error(`Invalid ${methodSetter} value`);
 
         const contract = getContractByName(epcContractName);
         const contractAddress = contract?.options.address;
@@ -219,38 +198,13 @@ export default function CreateProposalPage() {
         targets = [contractAddress as string];
         values = ["0"];
         calldatas = [encodedCallData as string];
-      } else if (proposalType === "username-moderation") {
-        const normalizedUsername = normalizeDmdNameInput(stripDmdSuffix(umUsername));
-        const nameError = validateDmdName(normalizedUsername);
-        if (nameError) throw new Error(nameError);
-        if (!isValidAddress(umOwnerAddress)) throw new Error("Invalid owner address");
-        if (!umReasonCategory) throw new Error("Select a reason category");
-        if (umReasonCategory === "other" && !umEvidence.trim()) throw new Error("Evidence/Notes is required for \"Other\"");
-
-        const reasonLabel = USERNAME_MODERATION_REASONS.find((r) => r.value === umReasonCategory)?.label ?? umReasonCategory;
-        const contract = web3Context.contractsManager.diamondRegistryContract;
-        const contractAddress = contract?.options.address;
-        const encodedCallData = (contract?.methods as any).blockName(normalizedUsername, umOwnerAddress).encodeABI();
-
-        targets = [contractAddress as string];
-        values = ["0"];
-        calldatas = [encodedCallData as string];
-        descriptionSuffix = `\n\n---\nUsername: ${normalizedUsername}.dmd\nOwner Address: ${umOwnerAddress}\nReason category: ${reasonLabel}\nEvidence/Notes: ${umEvidence.trim() || "N/A"}`;
       }
     } catch (err: any) {
       return toast.error(err.message);
     }
 
     await daoContext
-      .createProposal(
-        proposalType === "username-moderation" ? "contract-upgrade" : proposalType,
-        title,
-        discussionUrl,
-        targets,
-        values,
-        calldatas,
-        description + descriptionSuffix,
-      )
+      .createProposal(proposalType, title, discussionUrl, targets, values, calldatas, description)
       .then((proposalId) => {
         daoContext.getActiveProposals().then(async () => {
           if (proposalId) {
@@ -330,7 +284,6 @@ export default function CreateProposalPage() {
             <option value="contract-upgrade">Contract upgrade</option>
             {lowMajorityContractAddress && <option value="low-majority-fill">Low Majority Balance Fill</option>}
             <option value="ecosystem-parameter-change">Ecosystem parameter change</option>
-            <option value="username-moderation">Username Moderation</option>
           </select>
         </div>
 
@@ -520,50 +473,6 @@ export default function CreateProposalPage() {
 
                 <ProposalStepSlider parameterName={epcMethodName} paramsRange={epcParamRange} state={epcValue} setState={setEpcValue} />
               </div>
-            </>
-          )}
-
-          {proposalType === "username-moderation" && (
-            <>
-              <p>
-                Submits a moderation proposal against a DMD name. If the proposal passes, the name is blocked and its active-name link is removed on-chain.
-              </p>
-
-              <input
-                type="text"
-                value={umUsername}
-                onChange={(e) => setUmUsername(e.target.value)}
-                placeholder="Username (e.g. example.dmd)"
-                className={styles.formInput}
-                required
-              />
-              <input
-                type="text"
-                value={umOwnerAddress}
-                onChange={(e) => setUmOwnerAddress(e.target.value)}
-                placeholder="Owner Address"
-                className={styles.formInput}
-                required
-              />
-              <select
-                className={styles.epcSelect}
-                value={umReasonCategory}
-                onChange={(e) => setUmReasonCategory(e.target.value)}
-                required
-              >
-                <option value="" disabled>Reason category</option>
-                {USERNAME_MODERATION_REASONS.map((reason) => (
-                  <option key={reason.value} value={reason.value}>{reason.label}</option>
-                ))}
-              </select>
-              <textarea
-                value={umEvidence}
-                onChange={(e) => setUmEvidence(e.target.value)}
-                placeholder={umReasonCategory === "other" ? "Evidence/Notes (required for \"Other\")" : "Evidence/Notes (optional)"}
-                className={styles.formInput}
-                style={{ height: "auto", minHeight: 80, resize: "vertical" }}
-                required={umReasonCategory === "other"}
-              />
             </>
           )}
 

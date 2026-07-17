@@ -4,7 +4,6 @@ import "./page.css";
 import Link from "next/link";
 import Image from "next/image";
 import FAQ from '../components/FAQ';
-import DmdNameSearchWidget from '@/components/DMDNames/DmdNameSearchWidget';
 import { useTheme } from '../hooks';
 import { getThemeImagePath } from '../utils/imageUtils';
 import { useWalletConnect } from "@/contexts/WalletConnect";
@@ -48,35 +47,31 @@ export default function Home() {
     }
   };
 
-  const showHeroSearch = isConnected && !!userWallet.myAddr;
-
   return (
     <div>
         {/* Unauthenticated View */}
         <div id="unauthenticated-view">
           {/* Hero Section */}
-          <section className={`hero${showHeroSearch ? ' hero--with-search' : ''}`}>
+          <section className="hero">
             <div className="cosmic-grid"></div>
             <div className="cosmic-elements">
               <div className="glow glow-1"></div>
               <div className="glow glow-2"></div>
             </div>
             <div className="container">
-              <div className="hero-top">
-                <div className="hero-content">
-                  <h1>Become DMD Chain Participant</h1>
-                  <p>
-                    Welcome to the DMD Diamond Staking Platform – your gateway to earning rewards while contributing to the security and functionality of the DMD network. Embark on your staking adventure with us and unlock the full potential of your digital assets.
-                  </p>
-                  <div className="hero-buttons">
-                    {
-                      isConnected && userWallet.myAddr ?
-                        <Link href="/validators" className="btn-primary" id="stake-now-btn">Stake Now <i className="fas fa-arrow-right"></i></Link>
-                      :
-                        <a href="#" onClick={handleWalletConnect} className="btn-primary" id="connect-wallet-btn">Connect wallet <i className="fas fa-arrow-right"></i></a>
-                    }
-                    <a href="https://github.com/DMDcoin/whitepaper/wiki/A.-Home" target="_blank" className="btn-secondary">GitHub Whitepaper <i className="fas fa-arrow-right"></i></a>
-                  </div>
+              <div className="hero-content">
+                <h1>Become DMD Chain Participant</h1>
+                <p>
+                  Welcome to the DMD Diamond Staking Platform – your gateway to earning rewards while contributing to the security and functionality of the DMD network. Embark on your staking adventure with us and unlock the full potential of your digital assets.
+                </p>
+                <div className="hero-buttons">
+                  {
+                    isConnected && userWallet.myAddr ?
+                      <Link href="/validators" className="btn-primary" id="stake-now-btn">Stake Now <i className="fas fa-arrow-right"></i></Link>
+                    :
+                      <a href="#" onClick={handleWalletConnect} className="btn-primary" id="connect-wallet-btn">Connect wallet <i className="fas fa-arrow-right"></i></a>
+                  }
+                  <a href="https://github.com/DMDcoin/whitepaper/wiki/A.-Home" target="_blank" className="btn-secondary">GitHub Whitepaper <i className="fas fa-arrow-right"></i></a>
                 </div>
               </div>
               <div className="hero-visual">
@@ -86,11 +81,6 @@ export default function Home() {
                 <div className="glow-custom glow-custom-1"></div>
                 <div className="glow-custom glow-custom-2"></div>
               </div>
-              {showHeroSearch && (
-                <div className="hero-search-section">
-                  <DmdNameSearchWidget />
-                </div>
-              )}
             </div>
             <div className="partners-bar">
               <div className="slider">

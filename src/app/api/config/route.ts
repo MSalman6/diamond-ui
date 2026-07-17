@@ -16,7 +16,6 @@ export async function GET() {
     aggregatorContractAddress: process.env.NEXT_PUBLIC_AGGREGATOR_CONTRACT_ADDRESS || '',
     daoContractAddress: process.env.NEXT_PUBLIC_DAO_CONTRACT_ADDRESS || '',
     lowMajorityContractAddress: process.env.NEXT_PUBLIC_LOW_MAJORITY_CONTRACT_ADDRESS || '',
-    diamondRegistryContractAddress: process.env.NEXT_PUBLIC_DIAMOND_REGISTRY_CONTRACT_ADDRESS || '',
     // WalletConnect
     wcProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || '2cceb4f25f1cb889b967ea3c40bfd7cd',
     siteUrl: process.env.NEXT_PUBLIC_SITE_URL || '',

@@ -86,16 +86,6 @@ export const config = {
     return process.env.NEXT_PUBLIC_LOW_MAJORITY_CONTRACT_ADDRESS || '';
   },
 
-  get diamondRegistryContractAddress(): string {
-    if (runtimeConfigCache?.diamondRegistryContractAddress) {
-      return runtimeConfigCache.diamondRegistryContractAddress;
-    }
-    if (typeof window !== 'undefined' && (window as any).__RUNTIME_CONFIG__?.diamondRegistryContractAddress) {
-      return (window as any).__RUNTIME_CONFIG__.diamondRegistryContractAddress;
-    }
-    return process.env.NEXT_PUBLIC_DIAMOND_REGISTRY_CONTRACT_ADDRESS || '';
-  },
-
   // WalletConnect
   get wcProjectId(): string {
     if (runtimeConfigCache?.wcProjectId) return runtimeConfigCache.wcProjectId;

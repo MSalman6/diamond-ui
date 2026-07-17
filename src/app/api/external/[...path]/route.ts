@@ -105,10 +105,6 @@ const ALLOWED_ENDPOINTS: { method: string; pattern: RegExp }[] = [
   { method: 'GET', pattern: new RegExp(`^node/${HEX_ADDRESS}/(stake-transactions|epoch-rewards|epoch-rewards/daily|reward-stats)$`) },
   { method: 'GET', pattern: new RegExp(`^staker/${HEX_ADDRESS}/(stake-transactions|rewards|reward-stats)$`) },
   { method: 'POST', pattern: /^nodes\/reward-stats$/ },
-  { method: 'GET', pattern: new RegExp(`^owner/${HEX_ADDRESS}/names/?$`) },
-  { method: 'GET', pattern: /^name\/[a-z0-9-]+\/history\/?$/ },
-  { method: 'GET', pattern: /^names\/blacklisted\/?$/ },
-  { method: 'GET', pattern: /^names\/?$/ },
 ];
 
 function isAllowedRequest(method: string, path: string): boolean {

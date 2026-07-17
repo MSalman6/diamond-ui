@@ -1,6 +1,5 @@
 import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
-import config from '@/lib/config';
 import { formatTxError, logDebugError, logDebugStart, getDebugLevel } from '@/utils/web3Errors';
 
 // Contract ABIs
@@ -16,9 +15,7 @@ import {
   DiamondDao as JsonDiamonDao,
   CertifierHbbft as JsonCertifierHbbft,
   ConnectivityTrackerHbbft as JsonConnectivityTrackerHbbft,
-  DMDAggregator as JsonHbbtAggregator,
-  DMDRegistrarController as JsonDMDRegistrarController,
-  DMDNames as JsonDMDNames,
+  DMDAggregator as JsonHbbtAggregator
 } from '@/contracts/abis';
 
 // Contract Types
@@ -34,9 +31,7 @@ import {
   StakingHbbft, 
   KeyGenHistory, 
   Registry, 
-  RandomHbbft,
-  DMDRegistrarController,
-  DMDNames,
+  RandomHbbft 
 } from '@/contracts/types';
 
 export enum KeyGenMode {
@@ -64,8 +59,6 @@ export class ContractManager {
   private cachedKeyGenHistory?: KeyGenHistory;
   private cachedRewardContract?: BlockRewardHbbft;
   private cachedPermission?: TxPermissionHbbft;
-  private cachedDiamondRegistry?: DMDRegistrarController;
-  private cachedDiamondNames?: DMDNames;
 
   public constructor(public web3: Web3) {}
 
@@ -150,33 +143,6 @@ export class ContractManager {
     const abi = JsonRegistry.abi as any;
     const raw = new this.web3.eth.Contract(abi, '0x6000000000000000000000000000000000000000') as unknown as Registry;
     return this.wrapContract<Registry>('Registry', abi, raw);
-  }
-
-  public getDiamondRegistry(): DMDRegistrarController {
-    if (this.cachedDiamondRegistry) {
-      return this.cachedDiamondRegistry;
-    }
-
-    const contractAddress = config.diamondRegistryContractAddress;
-    const abi = JsonDMDRegistrarController as any;
-    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as DMDRegistrarController;
-    const wrapped = this.wrapContract<DMDRegistrarController>('DMDRegistrarController', abi, raw);
-    this.cachedDiamondRegistry = wrapped;
-    return wrapped;
-  }
-
-  public async getDiamondNames(): Promise<DMDNames> {
-    if (this.cachedDiamondNames) {
-      return this.cachedDiamondNames;
-    }
-
-    const contractAddress = await this.getDiamondRegistry().methods.diamondNames().call();
-
-    const abi = JsonDMDNames as any;
-    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as DMDNames;
-    const wrapped = this.wrapContract<DMDNames>('DMDNames', abi, raw);
-    this.cachedDiamondNames = wrapped;
-    return wrapped;
   }
 
   public async getRewardHbbft() : Promise<BlockRewardHbbft> {

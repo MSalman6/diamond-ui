@@ -217,11 +217,6 @@ export default function Header() {
                           DMD Explorer<i className="fas fa-external-link-alt"></i>
                         </a>
                       </li>
-                      <li>
-                        <Link href="/names" onClick={handleRegularLinkClick}>
-                          <i className="fas fa-search"></i> DMD Names
-                        </Link>
-                      </li>
                     </ul>
                   </div>
                 </div>
@@ -296,20 +291,6 @@ export default function Header() {
                       <li>
                         <a href="#" onClick={(e) => { e.preventDefault(); handleProfileClick(); }}>
                           <i className="fas fa-user"></i> Profile
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (isConnected && userWallet.myAddr) {
-                              router.push(`/dmd-names/${userWallet.myAddr}`);
-                              setActiveDropdown(null);
-                            }
-                          }}
-                        >
-                          <i className="fas fa-tag"></i> My DMD Names
                         </a>
                       </li>
                       <li>
