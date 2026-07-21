@@ -26,6 +26,7 @@ services:
       # Server-side only variables
       - DB_API_BASE_URL=${DB_API_BASE_URL}
       - DB_API_TOKEN=${DB_API_TOKEN}
+      - SITE_URL=${SITE_URL}
     restart: unless-stopped
     env_file:
       - .env

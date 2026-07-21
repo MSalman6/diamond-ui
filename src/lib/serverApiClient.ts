@@ -8,6 +8,7 @@ import logger from '@/utils/logger';
 
 const DB_API_BASE_URL = process.env.DB_API_BASE_URL || 'http://localhost:4000';
 const DB_API_TOKEN = process.env.DB_API_TOKEN || '';
+const SITE_URL = process.env.SITE_URL || 'http://localhost:3003';
 
 export interface ApiRequestOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
@@ -50,8 +51,8 @@ export async function makeApiRequest<T = any>(
   const requestHeaders: Record<string, string> = {
     'Authorization': `Bearer ${DB_API_TOKEN}`,
     'Content-Type': 'application/json',
-    'Origin': process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3003',
-    'Referer': process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3003',
+    'Origin': SITE_URL,
+    'Referer': SITE_URL,
     ...headers,
   };
 
