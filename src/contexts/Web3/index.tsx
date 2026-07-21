@@ -58,6 +58,7 @@ interface Web3ContextProps {
   setUserWallet: (newUserWallet: UserWallet) => void;
   setContractsManager: (newContractsManager: ContractsState) => void;
   ensureWalletConnection: () => boolean;
+  retryWalletConnection: () => Promise<void>;
   showLoader: (loading: boolean, loadingMsg: string) => void;
   getUpdatedBalance: () => Promise<BigNumber>;
   updateWalletBalance: () => Promise<void>;
@@ -104,7 +105,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
 
   useEffect(() => {
     if (connector?.getProvider && isConnected && status === 'connected') {
-      InitializeWagmiWallet(connector);
+      connectAndInitialize(connector);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connector, isConnected, status]);
@@ -126,9 +127,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
           setUserWallet(new UserWallet("", new BigNumber(0)));
           setWeb3(readonlyWeb3);
         } else {
-          try {
-            await InitializeWagmiWallet(wagmiConnector || { getProvider: async () => provider, disconnect: async () => {}, name: provider?.name });
-          } catch {}
+          await connectAndInitialize(wagmiConnector || { getProvider: async () => provider, disconnect: async () => {}, name: provider?.name });
         }
       };
       const onChainChanged = async (_chainId: string) => {
@@ -167,7 +166,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
       const unwatch = watchAccount(wagmiConfig, {
         onChange(account) { 
           if (account.address) {
-            InitializeWagmiWallet(wagmiConnector);
+            connectAndInitialize(wagmiConnector);
           } else {
             window.location.reload();
           }
@@ -405,7 +404,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
           } else {
             logger.error("[Wallet Connect] Error", err);
             showLoader(false, "");
-            return undefined;
+            throw err;
           }
         }
       }
@@ -427,9 +426,57 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
         
       return { provider, wallet };
     } catch (err) {
-      logger.error(err);
+      logger.error("[Wallet Connect] Initialization error", err);
+      throw err;
     }
   }
+
+  /**
+   * Fully tear down the wallet session so app state and the reown/wagmi
+   * connection can't drift apart. Falls back to the read-only provider so the
+   * app stays usable.
+   */
+  const resetWalletSession = async (activeConnector?: any) => {
+    try { await activeConnector?.disconnect?.(); } catch {}
+    try { disconnect(); } catch { /* not connected */ }
+    setUserWallet(new UserWallet("", new BigNumber(0)));
+    setWagmiConnector(null);
+    setWeb3(readonlyWeb3);
+    showLoader(false, "");
+  };
+
+  /**
+   * Connect + initialize with one silent retry.
+   * if the retry also fails the session is reset and the user is asked to retry.
+   */
+  const connectAndInitialize = async (connector: any, allowRetry = true): Promise<any> => {
+    try {
+      return await InitializeWagmiWallet(connector);
+    } catch (err) {
+      logger.error("[Wallet Connect] Initialization failed", err);
+      if (allowRetry) {
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        return connectAndInitialize(connector, false);
+      }
+      await resetWalletSession(connector);
+      toast.error("Wallet connection failed. Please try again.", { toastId: "wallet-connect-failed" });
+      return undefined;
+    }
+  };
+
+  /**
+   * Re-runs init on the existing connector; used by
+   * the header so the reown Disconnect modal is never the recovery path.
+   */
+  const retryWalletConnection = async () => {
+    if (connector?.getProvider) {
+      showLoader(true, "Reconnecting wallet...");
+      await connectAndInitialize(connector);
+      showLoader(false, "");
+    } else {
+      await resetWalletSession(connector);
+    }
+  };
 
   const updateWalletBalance = async () => {
     if (!userWallet || !web3) return;
@@ -540,6 +587,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     getUpdatedBalance,
     updateWalletBalance,
     ensureWalletConnection,
+    retryWalletConnection,
     ensureProviderReady,
     applyCustomRpc,
     resetToDefaultRpc,

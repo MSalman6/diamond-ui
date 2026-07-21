@@ -11,7 +11,7 @@ import { config } from '@/lib/config';
 export default function Header() {
   const router = useRouter();
   const { open: openWalletModal, address, isConnected, disconnect } = useWalletConnect();
-  const { userWallet } = useWeb3Context();
+  const { userWallet, retryWalletConnection } = useWeb3Context();
   
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -21,8 +21,11 @@ export default function Header() {
 
   // Handle wallet connect button click
   const handleWalletConnect = () => {
-    if (!isConnected || !userWallet.myAddr) {
-      // If not connected, open wallet modal
+    if (isConnected && !userWallet.myAddr) {
+      retryWalletConnection();
+      return;
+    }
+    if (!isConnected) {
       openWalletModal();
     }
   };
