@@ -12,6 +12,7 @@ import logger from '@/utils/logger';
 import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { timestampToDate, truncateAddress } from '@/utils/common';
+import InfoTooltip from '@/components/InfoTooltip';
 
 type ProposalType = "parameter" | "open" | "contract upgrade";
 
@@ -562,7 +563,20 @@ export default function DaoPage() {
 
             <div className="dao-stat-card governance-pot-card">
               <div className="stat-header">
-                <h3>Governance Pot</h3>
+                <h3>
+                  Governance Pot
+                  <InfoTooltip
+                    placement="bottom"
+                    content={
+                      <>
+                        <p>Treasury pool used to fund DAO-approved proposals, ecosystem development, protocol upgrades, and governance-related initiatives.</p>
+                        <p>The Governance Pot receives a percentage of epoch rewards before validator reward distribution.</p>
+                      </>
+                    }
+                  >
+                    <i className="fas fa-info-circle info-icon" aria-hidden="true" />
+                  </InfoTooltip>
+                </h3>
                 <div className="stat-icon">
                   <i className="fas fa-coins" />
                 </div>
@@ -575,7 +589,20 @@ export default function DaoPage() {
                 </div>
                 <div className="pot-distribution">
                   <div className="distribution-item">
-                    <span className="distribution-label">Low Majority Pot</span>
+                    <span className="distribution-label">
+                      Low Majority Pot
+                      <InfoTooltip
+                        placement="bottom"
+                        content={
+                          <>
+                            <p>Special treasury reserve used for proposals requiring lower governance participation thresholds.</p>
+                            <p>Open proposals draw funds from the Low Majority Pot first before accessing the main Governance Pot.</p>
+                          </>
+                        }
+                      >
+                        <i className="fas fa-info-circle info-icon" aria-hidden="true" />
+                      </InfoTooltip>
+                    </span>
                     <span className="distribution-value">{daoContext.lowMajorityContractBalance ? `${daoContext.lowMajorityContractBalance.toFixed(2)} DMD` : '0 DMD'}</span>
                     {/* <div className="distribution-bar">
                       <div className="distribution-progress community" style={{ width: `40%` }} />
