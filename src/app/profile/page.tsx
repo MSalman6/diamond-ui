@@ -47,7 +47,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const { userWallet } = useWeb3Context();
   const walletDmdName = useWalletDmdName();
-  const { myPool, pools, totalDaoStake, myTotalStake, myCandidateStake } = useStakingContext();
+  const { myPool, pools, totalDaoStake, myTotalStake, myCandidateStake, delegatorMinStake } = useStakingContext();
   const isPrivacyMode = useIsPrivacyMode();
   const { isConnected } = useWalletConnect();
   const { allDaoProposals } = useDaoContext();
