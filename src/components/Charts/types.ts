@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 export type ChartType = 'line' | 'bar' | 'area' | 'pie' | 'donut' | 'scatter' | 'composed';
 
 export interface BaseChartData {
@@ -45,6 +47,7 @@ export interface LineChartProps extends BaseChartProps {
   }[];
   xAxisLabel?: string;
   yAxisLabel?: string;
+  tooltipLabelFormatter?: (label: any) => ReactNode;
 }
 
 export interface BarChartProps extends BaseChartProps {

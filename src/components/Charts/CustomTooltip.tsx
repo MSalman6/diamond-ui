@@ -7,14 +7,17 @@ interface CustomTooltipProps {
   active?: boolean;
   payload?: any[];
   label?: string;
+  labelFormatter?: (label: any) => React.ReactNode;
 }
 
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label }) => {
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, labelFormatter }) => {
   const theme = useChartTheme();
 
   if (!active || !payload || payload.length === 0) {
     return null;
   }
+
+  const displayLabel = labelFormatter && label !== undefined ? labelFormatter(label) : label;
 
   return (
     <div
@@ -27,7 +30,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label })
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
       }}
     >
-      {label && (
+      {displayLabel && (
         <div
           className="tooltip-label"
           style={{
@@ -37,7 +40,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label })
             fontSize: '0.9rem',
           }}
         >
-          {label}
+          {displayLabel}
         </div>
       )}
       {payload.map((entry, index) => (

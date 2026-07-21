@@ -6,8 +6,7 @@ import { clientApiGet } from '@/lib/apiClient';
 import { usePrivacyMode } from '@/contexts/PrivacyMode';
 import './BonusScoreHistoryModal.css';
 import { toast } from 'react-toastify';
-import { LineChart, BarChart, AreaChart } from '@/components/Charts';
-import type { ChartType } from '@/components/Charts';
+import { LineChart } from '@/components/Charts';
 import logger from '@/utils/logger';
 
 interface BonusScoreHistoryEntry {
@@ -33,7 +32,6 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
   const [history, setHistory] = useState<BonusScoreHistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [chartType, setChartType] = useState<ChartType>('line');
   const { isPrivacyMode } = usePrivacyMode();
 
   useEffect(() => {
@@ -116,27 +114,6 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
             <i className="fas fa-chart-line"></i>
             Bonus Score History
           </h2>
-
-          <div className="chart-type-selector">
-            <button
-              className={`chart-type-button ${chartType === 'line' ? 'active' : ''}`}
-              onClick={() => setChartType('line')}
-            >
-              <i className="fas fa-chart-line"></i>
-            </button>
-            <button
-              className={`chart-type-button ${chartType === 'bar' ? 'active' : ''}`}
-              onClick={() => setChartType('bar')}
-            >
-              <i className="fas fa-chart-bar"></i>
-            </button>
-            <button
-              className={`chart-type-button ${chartType === 'area' ? 'active' : ''}`}
-              onClick={() => setChartType('area')}
-            >
-              <i className="fas fa-chart-area"></i>
-            </button>
-          </div>
         </div>
 
         <p className="bonus-history-subtitle">
@@ -170,60 +147,24 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
             {/* Charts */}
             <div className="bonus-history-chart-section">
               <div className="chart-wrapper">
-                {chartType === 'line' && (
-                  <LineChart
-                    data={chartData}
-                    xAxisKey="epoch"
-                    lines={[
-                      {
-                        dataKey: 'score',
-                        name: 'Bonus Score',
-                        strokeWidth: 3,
-                        type: 'monotone',
-                        dot: true,
-                      },
-                    ]}
-                    config={{ height: 250 }}
-                    xAxisLabel="Epoch"
-                    yAxisLabel="Score"
-                    className="chart-fade-in"
-                  />
-                )}
-
-                {chartType === 'bar' && (
-                  <BarChart
-                    data={chartData}
-                    xAxisKey="epoch"
-                    bars={[
-                      {
-                        dataKey: 'change',
-                        name: 'Score Change',
-                      },
-                    ]}
-                    config={{ height: 250 }}
-                    xAxisLabel="Epoch"
-                    yAxisLabel="Change"
-                    className="chart-fade-in"
-                  />
-                )}
-
-                {chartType === 'area' && (
-                  <AreaChart
-                    data={chartData}
-                    xAxisKey="epoch"
-                    areas={[
-                      {
-                        dataKey: 'score',
-                        name: 'Bonus Score',
-                        type: 'monotone',
-                      },
-                    ]}
-                    config={{ height: 250 }}
-                    xAxisLabel="Epoch"
-                    yAxisLabel="Score"
-                    className="chart-fade-in"
-                  />
-                )}
+                <LineChart
+                  data={chartData}
+                  xAxisKey="epoch"
+                  lines={[
+                    {
+                      dataKey: 'score',
+                      name: 'Bonus Score',
+                      strokeWidth: 3,
+                      type: 'monotone',
+                      dot: true,
+                    },
+                  ]}
+                  config={{ height: 250 }}
+                  xAxisLabel="Epoch"
+                  yAxisLabel="Score"
+                  tooltipLabelFormatter={(value) => `Epoch ${value}`}
+                  className="chart-fade-in"
+                />
               </div>
             </div>
 

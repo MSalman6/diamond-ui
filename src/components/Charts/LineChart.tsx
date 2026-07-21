@@ -30,6 +30,7 @@ const LineChart: React.FC<LineChartProps> = ({
   emptyMessage = 'No data to display',
   xAxisLabel,
   yAxisLabel,
+  tooltipLabelFormatter,
 }) => {
   const theme = useChartTheme();
   const hasData = data && data.length > 0;
@@ -86,7 +87,10 @@ const LineChart: React.FC<LineChartProps> = ({
             }
           />
           {showTooltip && (
-            <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3' }} />
+            <Tooltip
+              content={<CustomTooltip labelFormatter={tooltipLabelFormatter} />}
+              cursor={{ strokeDasharray: '3 3' }}
+            />
           )}
           {showLegend && (
             <Legend
