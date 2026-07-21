@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 import { useRouter, useSearchParams } from 'next/navigation';
 import copy from 'copy-to-clipboard';
@@ -58,10 +58,23 @@ const tableFieldsDefault: TableField[] = [
 
 export default function Validators() {
   const { userWallet } = useWeb3Context();
-  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake } = useStakingContext();
+  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake, candidateMinStake } = useStakingContext();
   const router = useRouter();
   const theme = useTheme();
   const isPrivacyMode = useIsPrivacyMode();
+
+  /**
+   * Pools holding less than the minimum candidate stake are hidden from the
+   * list and its counters, but remain visible to the owner and delegates.
+   */
+  const visiblePools = useMemo(() => {
+    const myAddr = userWallet.myAddr?.toLowerCase();
+    return pools.filter(pool =>
+      BigNumber(pool.totalStake ?? 0).isGreaterThanOrEqualTo(candidateMinStake) ||
+      BigNumber(pool.myStake ?? 0).isGreaterThan(0) ||
+      (!!myAddr && pool.stakingAddress?.toLowerCase() === myAddr)
+    );
+  }, [pools, candidateMinStake, userWallet.myAddr]);
 
   const getImagePath = (filename: string) => {
     return getThemeImagePath(filename, theme);
@@ -156,14 +169,14 @@ export default function Validators() {
 
   // Fetch reward stats for all pools via shared cached layer
   useEffect(() => {
-    if (!pools.length || isPrivacyMode) return;
+    if (!visiblePools.length || isPrivacyMode) return;
     setIsLoadingRewardStats(true);
-    const addresses = pools.map(p => p.stakingAddress.toLowerCase());
+    const addresses = visiblePools.map(p => p.stakingAddress.toLowerCase());
     getCachedBatchNodeStats(addresses)
       .then(results => setRewardStatsMap(results))
       .catch(() => {})
       .finally(() => setIsLoadingRewardStats(false));
-  }, [pools, isPrivacyMode]);
+  }, [visiblePools, isPrivacyMode]);
 
   // Apply filter from URL search params (e.g. ?filter=stakedOn)
   const searchParams = useSearchParams();
@@ -223,8 +236,7 @@ export default function Validators() {
       window.removeEventListener('resize', updateScrollAffordance);
       if (ro) ro.disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateScrollAffordance, tableFields, pools, filter, itemsPerPage, currentPage, searchTerm, sortConfig]);
+  }, [updateScrollAffordance, tableFields, visiblePools, filter, itemsPerPage, currentPage, searchTerm, sortConfig]);
 
   // Handle filter changes
   const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -246,7 +258,7 @@ export default function Validators() {
   }, []);
 
   // Filter and process pools
-  let poolsCopy = [...pools];
+  let poolsCopy = [...visiblePools];
 
   if (filter === 'valid') {
     poolsCopy = poolsCopy.filter(pool => pool.isToBeElected && !pool.isActive);
@@ -620,7 +632,7 @@ export default function Validators() {
                 <Image src={getImagePath("top-validators.png")} alt="" width={100} height={100} />
               </div>
               <div className='metric-content'>
-                <p className="metric-value">{pools.length}</p>
+                <p className="metric-value">{visiblePools.length}</p>
                 <h3>Total Validators</h3>
               </div>
               <Image className="ellipse-bottom" src={getImagePath("ellipse-bottom.png")} alt="" width={0} height={0} />
@@ -630,7 +642,7 @@ export default function Validators() {
                 <Image src={getImagePath("active-validators.png")} alt="" width={100} height={100} />
               </div>
               <div className='metric-content'>
-                <p className="metric-value">{pools.filter((p) => p.isActive).length}</p>
+                <p className="metric-value">{visiblePools.filter((p) => p.isActive).length}</p>
                 <h3>Active Validators</h3>
               </div>
               <Image className="ellipse-bottom" src={getImagePath("ellipse-bottom.png")} alt="" width={0} height={0} />
@@ -640,7 +652,7 @@ export default function Validators() {
                 <Image src={getImagePath("valid-validators.png")} alt="" width={100} height={100} />
               </div>
               <div className='metric-content'>
-                <p className="metric-value">{pools.filter((p) => p.isToBeElected && !p.isActive).length}</p>
+                <p className="metric-value">{visiblePools.filter((p) => p.isToBeElected && !p.isActive).length}</p>
                 <h3>Valid Validators</h3>
               </div>
               <Image className="ellipse-bottom" src={getImagePath("ellipse-bottom.png")} alt="" width={0} height={0} />
@@ -650,7 +662,7 @@ export default function Validators() {
                 <Image src={getImagePath("invalid-validators.png")} alt="" width={100} height={100} />
               </div>
               <div className='metric-content'>
-                <p className="metric-value">{pools.filter((p) => !p.isActive && !p.isToBeElected).length}</p>
+                <p className="metric-value">{visiblePools.filter((p) => !p.isActive && !p.isToBeElected).length}</p>
                 <h3>Invalid Validators</h3>
               </div>
               <Image className="ellipse-bottom" src={getImagePath("ellipse-bottom.png")} alt="" width={0} height={0} />
