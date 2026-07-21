@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js';
 import { getFunctionSelector, timestampToDate } from '../../utils/common';
 import { getRuntimeConfig } from '@/lib/runtimeConfig';
 import { formatTxError } from '@/utils/web3Errors';
+import { buildTxOptions } from '@/utils/txOptions';
 import { useStakingContext } from '@/contexts/Staking';
 import logger from '@/utils/logger';
 BigNumber.config({ EXPONENTIAL_AT: 1e+9 });
@@ -724,7 +725,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
           }
 
           const gasPrice = await web3Context.getGasPriceSafe();
-          await web3Context.contractsManager.daoContract.methods.propose(
+          const method = web3Context.contractsManager.daoContract.methods.propose(
             targets,
             values,
             callDatas,
@@ -732,7 +733,8 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
             description,
             discussionUrl,
             proposalTypeEnum
-          ).send({from: web3Context.userWallet.myAddr, value: proposalFee, gasPrice});
+          );
+          await method.send(await buildTxOptions(method, { from: web3Context.userWallet.myAddr, gasPrice, value: proposalFee }));
           const proposalId = await web3Context.contractsManager.daoContract.methods.hashProposal(
             targets, values, callDatas, description
           ).call();
@@ -759,7 +761,8 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
         web3Context.showLoader(true, "Dismissing proposal 💎");
         try {       
           const gasPrice = await web3Context.getGasPriceSafe();
-          await web3Context.contractsManager.daoContract.methods.cancel(proposalId, reason).send({from: web3Context.userWallet.myAddr, gasPrice});
+          const method = web3Context.contractsManager.daoContract.methods.cancel(proposalId, reason);
+          await method.send(await buildTxOptions(method, { from: web3Context.userWallet.myAddr, gasPrice }));
           web3Context.showLoader(false, "");
           toast.success("Proposal Dismissed 💎");
           resolve();
@@ -787,19 +790,22 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
         const existingVote = await getMyVote(proposalId.toString(), web3Context.userWallet.myAddr);
         const hasVotedBefore = Number(existingVote.timestamp) > 0;
 
+        const gasPrice = await web3Context.getGasPriceSafe();
+        const from = web3Context.userWallet.myAddr;
+
         if (hasVotedBefore) {
           // User has voted before - use changeVote function
-          const gasPrice = await web3Context.getGasPriceSafe();
-          await web3Context.contractsManager.daoContract.methods.changeVote(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr, gasPrice, type: '0x0'});
+          const method = web3Context.contractsManager.daoContract.methods.changeVote(proposalId, vote, reason);
+          await method.send(await buildTxOptions(method, { from, gasPrice }));
           toast.success(`Vote Changed 💎`);
         } else {
           // First-time voting - use vote or voteWithReason
           if (reason.length > 0) {
-            const gasPrice = await web3Context.getGasPriceSafe();
-            await web3Context.contractsManager.daoContract.methods.voteWithReason(proposalId, vote, reason).send({from: web3Context.userWallet.myAddr, gasPrice, type: '0x0'});
+            const method = web3Context.contractsManager.daoContract.methods.voteWithReason(proposalId, vote, reason);
+            await method.send(await buildTxOptions(method, { from, gasPrice }));
           } else {
-            const gasPrice = await web3Context.getGasPriceSafe();
-            await web3Context.contractsManager.daoContract.methods.vote(proposalId, vote).send({from: web3Context.userWallet.myAddr, gasPrice, type: '0x0'});
+            const method = web3Context.contractsManager.daoContract.methods.vote(proposalId, vote);
+            await method.send(await buildTxOptions(method, { from, gasPrice }));
           }
           toast.success(`Vote Casted 💎`);
         }

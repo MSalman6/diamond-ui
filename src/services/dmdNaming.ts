@@ -13,6 +13,7 @@ import type {
 } from '@/types/dmdNaming';
 import { formatDmdAmount } from '@/utils/dmdNaming';
 import { clientApiGet } from '@/lib/apiClient';
+import { buildTxOptions } from '@/utils/txOptions';
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -115,12 +116,8 @@ export async function setOwnName(
   onTransactionHash?: () => void,
 ): Promise<void> {
   const gasPrice = await getGasPrice();
-  const tx = contract.methods.register(name).send({
-    from,
-    value: valueWei,
-    gasPrice,
-    type: '0x0',
-  });
+  const method = contract.methods.register(name);
+  const tx = method.send(await buildTxOptions(method, { from, gasPrice, value: valueWei }));
   if (onTransactionHash) {
     tx.once('transactionHash', onTransactionHash);
   }
@@ -190,12 +187,8 @@ export async function activateName(
   onTransactionHash?: () => void,
 ): Promise<void> {
   const gasPrice = await getGasPrice();
-  const tx = contract.methods.activate(name).send({
-    from,
-    value: valueWei,
-    gasPrice,
-    type: '0x0',
-  });
+  const method = contract.methods.activate(name);
+  const tx = method.send(await buildTxOptions(method, { from, gasPrice, value: valueWei }));
   if (onTransactionHash) {
     tx.once('transactionHash', onTransactionHash);
   }
@@ -227,11 +220,8 @@ export async function renewName(
   onTransactionHash?: () => void,
 ): Promise<void> {
   const gasPrice = await getGasPrice();
-  const tx = contract.methods.renew(name).send({
-    from,
-    gasPrice,
-    type: '0x0',
-  });
+  const method = contract.methods.renew(name);
+  const tx = method.send(await buildTxOptions(method, { from, gasPrice }));
   if (onTransactionHash) {
     tx.once('transactionHash', onTransactionHash);
   }
@@ -283,12 +273,8 @@ export async function transferName(
 ): Promise<void> {
   const labelHash = await registrarContract.methods.getHashOfName(name).call();
   const gasPrice = await getGasPrice();
-  const tx = namesContract.methods.transferFrom(from, to, labelHash).send({
-    from,
-    value: transferFeeWei,
-    gasPrice,
-    type: '0x0',
-  });
+  const method = namesContract.methods.transferFrom(from, to, labelHash);
+  const tx = method.send(await buildTxOptions(method, { from, gasPrice, value: transferFeeWei }));
   if (onTransactionHash) {
     tx.once('transactionHash', onTransactionHash);
   }
