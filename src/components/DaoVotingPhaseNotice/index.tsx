@@ -8,22 +8,20 @@ import { useStakingContext } from '@/contexts/Staking';
 
 const STORAGE_KEY = 'dmd_dao_voting_phase_notice_seen';
 
-function readSeenMap(): Record<string, string> {
+function readSeenPhase(): string | null {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    return localStorage.getItem(STORAGE_KEY);
   } catch {
-    return {};
+    return null;
   }
 }
 
-function writeSeenMap(map: Record<string, string>): void {
+function writeSeenPhase(phaseCount: string): void {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
+    localStorage.setItem(STORAGE_KEY, phaseCount);
   } catch {}
 }
 
-// Renders nothing; toasts a validator owner's votable-proposal count once per
-// daoPhaseCount (dismissal tracked per wallet in localStorage).
 export default function DaoVotingPhaseNotice() {
   const { daoPhase, daoPhaseCount, activeProposals, getMyVote } = useDaoContext();
   const { userWallet } = useWeb3Context();
@@ -32,11 +30,10 @@ export default function DaoVotingPhaseNotice() {
   const isValidatorOwner = Boolean(myPool);
 
   const [votedByMe, setVotedByMe] = useState<Record<string, boolean>>({});
-  const shownForKeyRef = useRef<string | null>(null);
+  const shownForPhaseRef = useRef<string | null>(null);
 
   useEffect(() => {
     setVotedByMe({});
-    shownForKeyRef.current = null;
   }, [myAddr]);
 
   const isVotingPhase = Boolean(daoPhase?.phase) && daoPhase.phase !== '0';
@@ -84,24 +81,21 @@ export default function DaoVotingPhaseNotice() {
     const allResolved = votableProposals.every((p) => votedByMe[String(p.id)] !== undefined);
     if (!allResolved) return;
 
-    if (shownForKeyRef.current === daoPhaseCount) return;
+    if (shownForPhaseRef.current === daoPhaseCount) return;
 
-    const seenMap = readSeenMap();
-    const addrKey = myAddr.toLowerCase();
-    if (seenMap[addrKey] === daoPhaseCount) {
-      shownForKeyRef.current = daoPhaseCount;
+    if (readSeenPhase() === daoPhaseCount) {
+      shownForPhaseRef.current = daoPhaseCount;
       return;
     }
 
     const votableCount = votableProposals.filter((p) => !votedByMe[String(p.id)]).length;
-    shownForKeyRef.current = daoPhaseCount;
-    seenMap[addrKey] = daoPhaseCount;
-    writeSeenMap(seenMap);
+    shownForPhaseRef.current = daoPhaseCount;
+    writeSeenPhase(daoPhaseCount);
 
     if (votableCount > 0) {
       toast.info(
         `New DAO voting phase started — ${votableCount} proposal${votableCount === 1 ? '' : 's'} you can vote on.`,
-        { autoClose: false }
+        { autoClose: false, toastId: `dao-voting-phase-${daoPhaseCount}` }
       );
     }
   }, [myAddr, isValidatorOwner, isVotingPhase, daoPhaseCount, votableProposals, votedByMe]);
