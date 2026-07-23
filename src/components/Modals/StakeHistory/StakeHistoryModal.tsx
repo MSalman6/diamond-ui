@@ -224,6 +224,10 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
     return [...filteredTransactions].sort((a, b) => b.block_number - a.block_number);
   }, [filteredTransactions]);
 
+  // display count of filtered set
+  // instead of the raw server total
+  const displayedCount = delegatorFilter === undefined ? totalCount : filteredTransactions.length;
+
   const title = mode === 'node'
     ? (delegatorFilter === true ? 'Delegated Stake History' : delegatorFilter === false ? 'Validator Stake History' : 'Validator Stake History')
     : 'My Stake History';
@@ -298,14 +302,14 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
           </div>
         )}
 
-        {!isLoading && !error && transactions.length === 0 && (
+        {!isLoading && !error && displayedCount === 0 && (
           <div className="stake-history-empty">
             <i className="fas fa-inbox"></i>
             <p>No stake history available</p>
           </div>
         )}
 
-        {!isLoading && !error && transactions.length > 0 && (
+        {!isLoading && !error && displayedCount > 0 && (
           <div className="stake-history-dual-view">
 
             {/* Chart Section */}
@@ -352,7 +356,7 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
                   <i className="fas fa-list"></i>
                   Transactions
                 </h3>
-                <span className="event-count">{totalCount} total</span>
+                <span className="event-count">{displayedCount} total</span>
               </div>
               <div className="stake-history-list">
                 {sortedTransactions.map((tx, index) => (
