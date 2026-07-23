@@ -269,6 +269,39 @@ export default function Header() {
                 DAO
               </Link>
             </li>
+
+            <li className={`dropdown ${activeDropdown === 'knowledgebase' ? 'active' : ''}`}>
+              <a
+                href="#"
+                className="dropdown-toggle"
+                onClick={(e) => handleDropdownToggle('knowledgebase', e)}
+              >
+                Knowledge Base <i className="fas fa-chevron-down"></i>
+              </a>
+              <div className="dropdown-menu">
+                <div className="dropdown-content">
+                  <div className="dropdown-section">
+                    <ul>
+                      <li>
+                        <Link href="/wiki" onClick={handleRegularLinkClick}>
+                          <i className="fas fa-info-circle"></i> About DMD
+                        </Link>
+                      </li>
+                      <li>
+                        <a href="https://github.com/DMDcoin/whitepaper/wiki" target="_blank" rel="noopener noreferrer">
+                          <i className="fas fa-file-alt"></i> GitHub Whitepaper
+                        </a>
+                      </li>
+                      <li>
+                        <Link href="/faqs" onClick={handleRegularLinkClick}>
+                          <i className="fas fa-question-circle"></i> FAQ
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </li>
           </ul>
         </nav>
         
