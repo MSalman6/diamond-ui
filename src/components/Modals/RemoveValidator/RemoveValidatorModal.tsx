@@ -80,7 +80,7 @@ const RemoveValidatorModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
               <span className={styles.importantIcon} aria-hidden>⚠️</span>
               <span className={styles.importantLabel}>Important:</span>
               <p className={styles.importantText}>You can only remove your entire stake from this pool.</p>
-              <p className={styles.importantText}>Once the node is removed from the validator candidate list, you will not be able to reuse this address to create a new pool in the future.</p>
+              <p className={styles.importantText}>Once the node is removed from the validator candidate list, neither the miner address nor the wallet address connected to Diamond UI can be reused to create a new pool in the future.</p>
             </div>
 
             <form className={styles.form} onSubmit={handleRemovePool}>
@@ -97,7 +97,7 @@ const RemoveValidatorModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                   type="checkbox"
                   checked={confirmed}
                   onChange={(e) => setConfirmed(e.target.checked)}
-                /> I understand that this action is irreversible and the address cannot be reused.
+                /> I understand that this action is irreversible and that neither the miner address nor the connected wallet address can be reused for a new pool.
               </label>
 
               <button className={"btn-primary " + styles.formSubmit} type="submit">

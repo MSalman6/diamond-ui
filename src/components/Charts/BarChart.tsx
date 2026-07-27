@@ -31,6 +31,7 @@ const BarChart: React.FC<BarChartProps> = ({
   emptyMessage = 'No data to display',
   xAxisLabel,
   yAxisLabel,
+  tooltipLabelFormatter,
 }) => {
   const theme = useChartTheme();
   const hasData = data && data.length > 0;
@@ -90,7 +91,10 @@ const BarChart: React.FC<BarChartProps> = ({
             }
           />
           {showTooltip && (
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(128, 128, 128, 0.1)' }} />
+            <Tooltip
+              content={<CustomTooltip labelFormatter={tooltipLabelFormatter} />}
+              cursor={{ fill: 'rgba(128, 128, 128, 0.1)' }}
+            />
           )}
           {showLegend && (
             <Legend

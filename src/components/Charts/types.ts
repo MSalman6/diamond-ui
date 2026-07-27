@@ -61,6 +61,7 @@ export interface BarChartProps extends BaseChartProps {
   layout?: 'horizontal' | 'vertical';
   xAxisLabel?: string;
   yAxisLabel?: string;
+  tooltipLabelFormatter?: (label: any) => ReactNode;
 }
 
 export interface AreaChartProps extends BaseChartProps {

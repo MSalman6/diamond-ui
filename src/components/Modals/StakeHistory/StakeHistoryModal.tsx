@@ -6,8 +6,7 @@ import { clientApiGet } from '@/lib/apiClient';
 import { usePrivacyMode } from '@/contexts/PrivacyMode';
 import './StakeHistoryModal.css';
 import { toast } from 'react-toastify';
-import { BarChart, AreaChart } from '@/components/Charts';
-import type { ChartType } from '@/components/Charts';
+import { BarChart } from '@/components/Charts';
 import logger from '@/utils/logger';
 
 interface StakeTransaction {
@@ -116,7 +115,6 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [chartType, setChartType] = useState<ChartType>('bar');
   const [actionFilter, setActionFilter] = useState<ActionFilter>('all');
   const [currentPage, setCurrentPage] = useState(0);
   const { isPrivacyMode } = usePrivacyMode();
@@ -224,6 +222,10 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
     return [...filteredTransactions].sort((a, b) => b.block_number - a.block_number);
   }, [filteredTransactions]);
 
+  // display count of filtered set
+  // instead of the raw server total
+  const displayedCount = delegatorFilter === undefined ? totalCount : filteredTransactions.length;
+
   const title = mode === 'node'
     ? (delegatorFilter === true ? 'Delegated Stake History' : delegatorFilter === false ? 'Validator Stake History' : 'Validator Stake History')
     : 'My Stake History';
@@ -244,21 +246,6 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
             <i className="fas fa-history"></i>
             {title}
           </h2>
-
-          <div className="chart-type-selector">
-            <button
-              className={`chart-type-button ${chartType === 'bar' ? 'active' : ''}`}
-              onClick={() => setChartType('bar')}
-            >
-              <i className="fas fa-chart-bar"></i>
-            </button>
-            <button
-              className={`chart-type-button ${chartType === 'area' ? 'active' : ''}`}
-              onClick={() => setChartType('area')}
-            >
-              <i className="fas fa-chart-area"></i>
-            </button>
-          </div>
         </div>
 
         <p className="stake-history-subtitle">{subtitle}</p>
@@ -298,49 +285,33 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
           </div>
         )}
 
-        {!isLoading && !error && transactions.length === 0 && (
+        {!isLoading && !error && displayedCount === 0 && (
           <div className="stake-history-empty">
             <i className="fas fa-inbox"></i>
             <p>No stake history available</p>
           </div>
         )}
 
-        {!isLoading && !error && transactions.length > 0 && (
+        {!isLoading && !error && displayedCount > 0 && (
           <div className="stake-history-dual-view">
 
             {/* Chart Section */}
             {chartData.length > 0 && (
               <div className="stake-history-chart-section">
                 <div className="chart-wrapper">
-                  {chartType === 'bar' && (
-                    <BarChart
-                      data={chartData}
-                      xAxisKey="epoch"
-                      bars={[
-                        { dataKey: 'stakeIn', name: 'Stake In (DMD)' },
-                        { dataKey: 'stakeOut', name: 'Stake Out (DMD)' },
-                      ]}
-                      config={{ height: 250 }}
-                      xAxisLabel="Epoch"
-                      yAxisLabel="DMD"
-                      className="chart-fade-in"
-                    />
-                  )}
-
-                  {chartType === 'area' && (
-                    <AreaChart
-                      data={chartData}
-                      xAxisKey="epoch"
-                      areas={[
-                        { dataKey: 'stakeIn', name: 'Stake In (DMD)', type: 'monotone' },
-                        { dataKey: 'stakeOut', name: 'Stake Out (DMD)', type: 'monotone' },
-                      ]}
-                      config={{ height: 250 }}
-                      xAxisLabel="Epoch"
-                      yAxisLabel="DMD"
-                      className="chart-fade-in"
-                    />
-                  )}
+                  <BarChart
+                    data={chartData}
+                    xAxisKey="epoch"
+                    bars={[
+                      { dataKey: 'stakeIn', name: 'Stake In (DMD)' },
+                      { dataKey: 'stakeOut', name: 'Stake Out (DMD)' },
+                    ]}
+                    config={{ height: 250 }}
+                    xAxisLabel="Epoch"
+                    yAxisLabel="DMD"
+                    tooltipLabelFormatter={(value) => `Epoch ${value}`}
+                    className="chart-fade-in"
+                  />
                 </div>
               </div>
             )}
@@ -352,7 +323,7 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
                   <i className="fas fa-list"></i>
                   Transactions
                 </h3>
-                <span className="event-count">{totalCount} total</span>
+                <span className="event-count">{displayedCount} total</span>
               </div>
               <div className="stake-history-list">
                 {sortedTransactions.map((tx, index) => (

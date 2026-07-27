@@ -138,7 +138,7 @@ export const faqData: FAQItem[] = [
   },
   {
     question: "Removing a pool, how can I do it?",
-    answer: "It is possible to remove a pool, but the validator candidate must not be a part of active set. A new pool can never be setup with the same address that was used in a previous pool (by removing empty pools we can exclude them for all data collections and history). To perform the pool removal, click on the 'Remove node' button in the personal profile. You can't remove or unstake the part of the pool (less than 10000 DMD minimum required), the full amount of coins must be removed at once."
+    answer: "It is possible to remove a validator pool, but only if the validator candidate is not part of the active validator set. To remove a pool, go to your personal profile and click the Remove pool button. Pool removal is an irreversible action. When a pool is removed, the full validator stake must be removed at once. It is not possible to remove or unstake only part of the pool, including an amount below the required 10,000 DMD minimum validator stake. After pool removal, neither the miner address nor the wallet address connected to Diamond UI can be reused to create a new validator pool in the future. This restriction allows removed pools to be excluded from future data collection while preserving accurate historical records."
   },
   {
     question: "Can I stake to any validator?",
