@@ -117,7 +117,8 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     const governancePot =  await web3Context.contractsManager.daoContract.methods.governancePot().call();
     setGovernancePotBalance(BigNumber(governancePot).dividedBy(1e18));
 
-    const claimingPot = await web3Context.web3.eth.getBalance(process.env.NEXT_PUBLIC_CLAIMING_CONTRACT_ADDRESS || "0xe0E6787A55049A90aAa4335D0Ff14fAD26B8e88e");
+    const runtimeConfig = await getRuntimeConfig();
+    const claimingPot = await web3Context.web3.eth.getBalance(runtimeConfig.claimingContractAddress || "0xe0E6787A55049A90aAa4335D0Ff14fAD26B8e88e");
     setClaimingContractBalance(BigNumber(claimingPot).dividedBy(1e18));
 
     const lowMajAddr = runtimeLowMajorityAddress || lowMajorityContractAddress;
@@ -1119,7 +1120,8 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     const governancePot =  await web3Context.contractsManager.daoContract.methods.governancePot().call();
     setGovernancePotBalance(BigNumber(governancePot).dividedBy(1e18));
 
-    const claimingPot = await web3Context.web3.eth.getBalance(process.env.NEXT_PUBLIC_CLAIMING_CONTRACT_ADDRESS || "0xe0E6787A55049A90aAa4335D0Ff14fAD26B8e88e");
+    const runtimeConfig = await getRuntimeConfig();
+    const claimingPot = await web3Context.web3.eth.getBalance(runtimeConfig.claimingContractAddress || "0xe0E6787A55049A90aAa4335D0Ff14fAD26B8e88e");
     setClaimingContractBalance(BigNumber(claimingPot).dividedBy(1e18));
 
     const lowMajorityPot = await web3Context.web3.eth.getBalance(lowMajorityContractAddress);

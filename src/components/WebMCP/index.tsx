@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ui2.bit.diamonds';
+import config from '@/lib/config';
 
 export default function WebMCP() {
   useEffect(() => {
@@ -43,7 +42,8 @@ export default function WebMCP() {
         description: 'Returns chain and contract config for the DMD network.',
         inputSchema: { type: 'object', properties: {} },
         execute: async () => {
-          const res = await fetch(`${SITE_URL}/api/config`);
+          const siteUrl = config.siteUrl || 'https://ui2.bit.diamonds';
+          const res = await fetch(`${siteUrl}/api/config`);
           if (!res.ok) throw new Error('Failed to fetch network config');
           return res.json();
         },
@@ -53,14 +53,14 @@ export default function WebMCP() {
         name: 'get-validators',
         description: 'Returns the URL for the validator list page.',
         inputSchema: { type: 'object', properties: {} },
-        execute: async () => ({ url: `${SITE_URL}/validators` }),
+        execute: async () => ({ url: `${config.siteUrl || 'https://ui2.bit.diamonds'}/validators` }),
       }),
 
       navigator.modelContext.registerTool({
         name: 'get-dao-proposals',
         description: 'Returns the URL for the DAO governance page.',
         inputSchema: { type: 'object', properties: {} },
-        execute: async () => ({ url: `${SITE_URL}/dao` }),
+        execute: async () => ({ url: `${config.siteUrl || 'https://ui2.bit.diamonds'}/dao` }),
       }),
     ];
 
