@@ -161,7 +161,7 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
                   ]}
                   config={{ height: 250 }}
                   xAxisLabel="Epoch"
-                  yAxisLabel="Score"
+                  yAxisLabel="Points"
                   tooltipLabelFormatter={(value) => `Epoch ${value}`}
                   className="chart-fade-in"
                 />

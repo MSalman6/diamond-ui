@@ -214,6 +214,10 @@ body.light-theme .chart-container:hover {
   font-weight: 600 !important;
 }
 
+.recharts-surface {
+  overflow: visible;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .chart-container {
