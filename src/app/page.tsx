@@ -2,6 +2,7 @@
 
 import "./page.css";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import FAQ from '../components/FAQ';
 import DmdNameSearchWidget from '@/components/DMDNames/DmdNameSearchWidget';
@@ -50,12 +51,30 @@ export default function Home() {
 
   const showHeroSearch = isConnected && !!userWallet.myAddr;
 
+  const heroRef = useRef<HTMLElement>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    const heroContent = heroContentRef.current;
+    if (!hero || !heroContent) return;
+
+    const setContentHeight = () => {
+      hero.style.setProperty('--hero-content-height', `${heroContent.offsetHeight}px`);
+    };
+
+    setContentHeight();
+    const observer = new ResizeObserver(setContentHeight);
+    observer.observe(heroContent);
+    return () => observer.disconnect();
+  }, [showHeroSearch]);
+
   return (
     <div>
         {/* Unauthenticated View */}
         <div id="unauthenticated-view">
           {/* Hero Section */}
-          <section className={`hero${showHeroSearch ? ' hero--with-search' : ''}`}>
+          <section ref={heroRef} className={`hero${showHeroSearch ? ' hero--with-search' : ''}`}>
             <div className="cosmic-grid"></div>
             <div className="cosmic-elements">
               <div className="glow glow-1"></div>
@@ -63,7 +82,7 @@ export default function Home() {
             </div>
             <div className="container">
               <div className="hero-top">
-                <div className="hero-content">
+                <div ref={heroContentRef} className="hero-content">
                   <h1>Become DMD Chain Participant</h1>
                   <p>
                     Welcome to the DMD Diamond Staking Platform – your gateway to earning rewards while contributing to the security and functionality of the DMD network. Embark on your staking adventure with us and unlock the full potential of your digital assets.
