@@ -326,7 +326,7 @@ export default function ProfilePage() {
                 <div className="user-info-card">
                   <div className="user-info-header">
                     <ProfileIdentityHeader address={userWallet.myAddr} activeName={walletDmdName} />
-                    <Link href={`/dmd-names/${userWallet.myAddr}`} className="btn-secondary profile-dmd-names-btn">
+                    <Link href={`/dmd-names/${userWallet.myAddr}`} className="btn-primary btn-sm profile-dmd-names-btn">
                       My DMD Names
                     </Link>
                   </div>
@@ -580,7 +580,7 @@ export default function ProfilePage() {
                       ) : undefined
                     }
                   />
-                  <Link href={`/dmd-names/${userWallet.myAddr}`} className="btn-secondary profile-dmd-names-btn">
+                  <Link href={`/dmd-names/${userWallet.myAddr}`} className="btn-primary btn-sm profile-dmd-names-btn">
                     My DMD Names
                   </Link>
                 </div>

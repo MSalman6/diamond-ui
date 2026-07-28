@@ -971,8 +971,7 @@ body.light-theme .dp2-tfoot-rewards-value {
 .profile-dmd-names-btn {
   flex-shrink: 0;
   white-space: nowrap;
-  border: 1px solid var(--accent) !important;
-  color: var(--accent);
+  justify-content: center;
 }
 
 @media (max-width: 992px) {

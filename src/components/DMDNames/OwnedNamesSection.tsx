@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePrivacyMode } from '@/contexts/PrivacyMode';
-import { getOwnedNames } from '@/services/dmdNaming';
+import { useWeb3Context } from '@/contexts/Web3';
+import { checkNameAvailability, getOwnedNames } from '@/services/dmdNaming';
 import { formatDmdDate, formatDmdName } from '@/utils/dmdNaming';
 import type { OwnedDmdName, OwnedDmdNameStatus } from '@/types/dmdNaming';
 import ActivateNameModal from './ActivateNameModal';
@@ -13,7 +14,12 @@ import TransferNameModal from './TransferNameModal';
 type Props = {
   walletAddress: string;
   activeName: string | null;
+  refreshKey?: number;
+  pendingName?: string | null;
 };
+
+/** One follow-up fetch, to pick up the indexed row if it landed in the meantime. */
+const INDEX_RETRY_MS = 8000;
 
 const STATUS_LABELS: Record<OwnedDmdNameStatus, string> = {
   active: 'Active',
@@ -26,9 +32,12 @@ function StatusPill({ status }: { status: OwnedDmdNameStatus }) {
   return <span className={`dmd-status-pill dmd-status-pill--${status}`}>{STATUS_LABELS[status]}</span>;
 }
 
-export default function OwnedNamesSection({ walletAddress, activeName }: Props) {
+export default function OwnedNamesSection({ walletAddress, activeName, refreshKey = 0, pendingName }: Props) {
   const { isPrivacyMode } = usePrivacyMode();
+  const { contractsManager, readonlyWeb3 } = useWeb3Context();
   const [names, setNames] = useState<OwnedDmdName[] | null>(null);
+  const [pendingRow, setPendingRow] = useState<OwnedDmdName | null>(null);
+  const indexRetryDone = useRef<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activateTarget, setActivateTarget] = useState<string | null>(null);
   const [renewTarget, setRenewTarget] = useState<OwnedDmdName | null>(null);
@@ -37,7 +46,7 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
   const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  const reload = useCallback(() => {
+  const reload = useCallback((options?: { silent?: boolean }) => {
     if (isPrivacyMode) {
       setNames(null);
       setError('Owned names are not available in Privacy Mode.');
@@ -45,11 +54,14 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
     }
 
     setError(null);
-    setNames(null);
+    if (!options?.silent) {
+      setNames(null);
+    }
 
     getOwnedNames(walletAddress)
       .then(setNames)
       .catch(() => {
+        if (options?.silent) return;
         setNames([]);
         setError('Unable to load owned names right now. Please try again later.');
       });
@@ -57,7 +69,61 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
 
   useEffect(() => {
     reload();
-  }, [reload]);
+  }, [reload, refreshKey]);
+
+  useEffect(() => {
+    indexRetryDone.current = null;
+
+    if (!pendingName) {
+      setPendingRow(null);
+      return;
+    }
+
+    const contract = contractsManager.diamondRegistryContract;
+    if (!contract) {
+      return;
+    }
+
+    let cancelled = false;
+    checkNameAvailability(contract, readonlyWeb3, pendingName, undefined, contractsManager.diamondNamesContract)
+      .then((result) => {
+        if (cancelled || result.status !== 'taken') return;
+        setPendingRow({
+          name: pendingName,
+          status: activeName === pendingName ? 'active' : 'inactive',
+          expiresAt: result.expiresAt ?? 0,
+          lastAction: { type: 'Created', timestamp: Math.floor(Date.now() / 1000) },
+        });
+      })
+      .catch(() => undefined);
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingName, contractsManager.diamondRegistryContract]);
+
+  useEffect(() => {
+    if (!pendingName || !names) {
+      return;
+    }
+
+    if (names.some((entry) => entry.name === pendingName)) {
+      setPendingRow(null);
+      return;
+    }
+
+    if (indexRetryDone.current === pendingName) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      indexRetryDone.current = pendingName;
+      reload({ silent: true });
+    }, INDEX_RETRY_MS);
+
+    return () => clearTimeout(timer);
+  }, [pendingName, names, reload]);
 
   useEffect(() => {
     if (!openMenuFor) {
@@ -77,10 +143,15 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
     };
   }, [openMenuFor]);
 
+  const awaitingIndex = !isPrivacyMode
+    && !!pendingRow
+    && !names?.some((entry) => entry.name === pendingRow.name);
+  const rows = awaitingIndex ? [pendingRow!, ...(names ?? [])] : names;
+
   // On error `names` is set to [] just so the table can render an empty body — that must
   // not be read as "confirmed zero names owned" by the stat cards, so gate on error first.
-  const namesOwnedCount = error ? null : names?.length ?? null;
-  const expiringSoonCount = error ? null : names?.filter((n) => n.status === 'expiring-soon').length ?? null;
+  const namesOwnedCount = error ? null : rows?.length ?? null;
+  const expiringSoonCount = error ? null : rows?.filter((n) => n.status === 'expiring-soon').length ?? null;
 
   return (
     <>
@@ -119,7 +190,7 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
               </tr>
             </thead>
             <tbody>
-              {names === null && !error && (
+              {rows === null && !error && (
                 <tr>
                   <td colSpan={5} className="dmd-owned-loading">Loading owned names…</td>
                 </tr>
@@ -129,12 +200,12 @@ export default function OwnedNamesSection({ walletAddress, activeName }: Props) 
                   <td colSpan={5} className="dmd-owned-error">{error}</td>
                 </tr>
               )}
-              {names !== null && !error && names.length === 0 && (
+              {rows !== null && !error && rows.length === 0 && (
                 <tr>
                   <td colSpan={5} className="dmd-owned-empty">No names owned by this address yet.</td>
                 </tr>
               )}
-              {names?.map((entry) => (
+              {rows?.map((entry) => (
                 <tr key={entry.name}>
                   <td className="dmd-owned-name-cell">
                     <Link href={`/names/${entry.name}?from=my-names`}>{formatDmdName(entry.name)}</Link>

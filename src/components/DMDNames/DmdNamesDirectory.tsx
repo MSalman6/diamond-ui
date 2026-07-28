@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useWeb3Context } from '@/contexts/Web3';
 import Modal from '@/components/Modal';
@@ -24,6 +24,8 @@ const STATUS_LABELS: Record<OwnedDmdNameStatus, string> = {
 };
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100];
+
+const INDEX_RETRY_MS = 8000;
 
 const SORT_OPTIONS: { value: string; sortBy: NonNullable<DmdDirectoryQuery['sortBy']>; order: NonNullable<DmdDirectoryQuery['order']>; label: string }[] = [
   { value: 'createdAt:desc', sortBy: 'createdAt', order: 'desc', label: 'Created (newest)' },
@@ -84,6 +86,7 @@ export default function DmdNamesDirectory() {
   const [registerName, setRegisterName] = useState('');
   const [registerAvailability, setRegisterAvailability] = useState<DmdNameAvailabilityResult | null>(null);
   const [searchResetKey, setSearchResetKey] = useState(0);
+  const indexCatchUpTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const reloadRegisteredName = useCallback(() => {
     const contract = contractsManager.diamondRegistryContract;
@@ -102,8 +105,10 @@ export default function DmdNamesDirectory() {
     getBlacklistedNames().then(setBlacklisted);
   }, []);
 
-  const load = useCallback(() => {
-    setEntries(null);
+  const load = useCallback((options?: { silent?: boolean }) => {
+    if (!options?.silent) {
+      setEntries(null);
+    }
     setError(null);
 
     const status = appliedFilters.statusActive && !appliedFilters.statusInactive
@@ -129,6 +134,7 @@ export default function DmdNamesDirectory() {
         setTotal(res.total);
       })
       .catch(() => {
+        if (options?.silent) return;
         setEntries([]);
         setError('Unable to load the DMD Names directory right now. Please try again later.');
       });
@@ -137,6 +143,10 @@ export default function DmdNamesDirectory() {
   useEffect(() => {
     load();
   }, [load]);
+
+  useEffect(() => () => {
+    if (indexCatchUpTimer.current) clearTimeout(indexCatchUpTimer.current);
+  }, []);
 
   useEffect(() => {
     const trimmed = searchInput.trim();
@@ -159,6 +169,9 @@ export default function DmdNamesDirectory() {
     reloadRegisteredName();
     setSearchResetKey((key) => key + 1);
     load();
+
+    if (indexCatchUpTimer.current) clearTimeout(indexCatchUpTimer.current);
+    indexCatchUpTimer.current = setTimeout(() => load({ silent: true }), INDEX_RETRY_MS);
   };
 
   const applyFilters = () => {

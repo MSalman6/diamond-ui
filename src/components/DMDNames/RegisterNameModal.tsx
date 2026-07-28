@@ -1,14 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import Modal from '@/components/Modal';
+import config from '@/lib/config';
 import { useWeb3Context } from '@/contexts/Web3';
 import { setOwnName } from '@/services/dmdNaming';
 import { formatTxError } from '@/utils/web3Errors';
 import type { DmdNameAvailabilityResult } from '@/types/dmdNaming';
-import { formatDmdName } from '@/utils/dmdNaming';
+import { formatDmdAmount, formatDmdName } from '@/utils/dmdNaming';
 import ActivateNameModal from './ActivateNameModal';
 
 type Props = {
@@ -20,7 +22,14 @@ type Props = {
   onComplete?: () => void;
 };
 
-type PendingStage = 'confirm' | 'mining' | null;
+type PendingStage = 'confirm' | 'mining' | 'stuck' | null;
+
+const STUCK_TX_POLL_MS = 6000;
+
+function isBlockTimeout(err: any): boolean {
+  return err?.name === 'TransactionBlockTimeoutError'
+    || /not mined within/i.test(String(err?.message ?? ''));
+}
 
 export default function RegisterNameModal({
   isOpen,
@@ -30,12 +39,23 @@ export default function RegisterNameModal({
   currentName,
   onComplete,
 }: Props) {
-  const { contractsManager, web3, userWallet, ensureWalletConnection, ensureProviderReady, getGasPriceSafe } = useWeb3Context();
+  const {
+    contractsManager,
+    web3,
+    userWallet,
+    ensureWalletConnection,
+    ensureProviderReady,
+    getGasPriceSafe,
+    getUpdatedBalance,
+  } = useWeb3Context();
   const [pendingStage, setPendingStage] = useState<PendingStage>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [activateOpen, setActivateOpen] = useState(false);
   const [autoActivatedSnapshot, setAutoActivatedSnapshot] = useState<boolean | null>(null);
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const [balanceWei, setBalanceWei] = useState<BigNumber | null>(null);
+  const txHashRef = useRef<string | null>(null);
   const fullName = formatDmdName(name);
   const willAutoActivate = success ? autoActivatedSnapshot ?? !currentName : !currentName;
 
@@ -43,15 +63,71 @@ export default function RegisterNameModal({
   const estimatedGas = availability?.estimatedGas ?? '—';
   const totalCost = availability?.totalEstimatedCost ?? registrationFee;
 
+  const requiredWei = availability?.registrationFeeWei
+    ? new BigNumber(availability.registrationFeeWei).plus(availability.estimatedGasWei ?? 0)
+    : null;
+  const insufficientFunds = !!balanceWei && !!requiredWei && balanceWei.isLessThan(requiredWei);
+
   useEffect(() => {
-    if (isOpen) {
-      setPendingStage(null);
-      setError(null);
-      setSuccess(false);
-      setActivateOpen(false);
-      setAutoActivatedSnapshot(null);
+    if (!isOpen) {
+      return;
     }
+
+    setPendingStage(null);
+    setError(null);
+    setSuccess(false);
+    setActivateOpen(false);
+    setAutoActivatedSnapshot(null);
+    setTxHash(null);
+    setBalanceWei(null);
+    txHashRef.current = null;
+
+    // Checked up front so the modal can flag a top-up before the wallet is opened.
+    let cancelled = false;
+    getUpdatedBalance()
+      .then((balance) => {
+        if (!cancelled) setBalanceWei(balance);
+      })
+      .catch(() => undefined);
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, name]);
+
+  useEffect(() => {
+    if (pendingStage !== 'stuck' || !txHash || !web3) {
+      return;
+    }
+
+    let cancelled = false;
+    const timer = setInterval(async () => {
+      try {
+        const receipt = await web3.eth.getTransactionReceipt(txHash);
+        if (cancelled || !receipt) {
+          return;
+        }
+
+        clearInterval(timer);
+        if (receipt.status === true || Number(receipt.status) === 1) {
+          toast.success(`${fullName} registered 💎`);
+          setPendingStage(null);
+          setSuccess(true);
+          onComplete?.();
+        } else {
+          setPendingStage(null);
+          setError('The transaction was mined but reverted. Please try again.');
+        }
+      } catch {}
+    }, STUCK_TX_POLL_MS);
+
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingStage, txHash, web3]);
 
   const handleClose = () => {
     onClose();
@@ -79,15 +155,24 @@ export default function RegisterNameModal({
     setPendingStage('confirm');
     setError(null);
     const willAutoActivateThisTx = !currentName;
+    setAutoActivatedSnapshot(willAutoActivateThisTx);
 
     try {
-      await setOwnName(contract, web3, from, name, valueWei, getGasPriceSafe, () => setPendingStage('mining'));
+      await setOwnName(contract, web3, from, name, valueWei, getGasPriceSafe, (hash) => {
+        txHashRef.current = hash;
+        setTxHash(hash);
+        setPendingStage('mining');
+      });
       toast.success(`${fullName} registered 💎`);
       setPendingStage(null);
-      setAutoActivatedSnapshot(willAutoActivateThisTx);
       setSuccess(true);
       onComplete?.();
     } catch (err: any) {
+      if (isBlockTimeout(err) && txHashRef.current) {
+        setPendingStage('stuck');
+        return;
+      }
+
       setPendingStage(null);
       const message = formatTxError(
         web3,
@@ -167,11 +252,49 @@ export default function RegisterNameModal({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} closable={!pendingStage}>
+    <Modal isOpen={isOpen} onClose={handleClose} closable={!pendingStage || pendingStage === 'stuck'}>
       <div className="dmd-modal">
         <h2>Create &quot;{fullName}&quot;</h2>
 
-        {pendingStage ? (
+        {pendingStage === 'stuck' ? (
+          <>
+            <div className="dmd-modal-notice dmd-modal-notice-warn">
+              <i className="fas fa-triangle-exclamation"></i>
+              <div>
+                <p><strong>Transaction stuck — most likely the gas price is too low</strong></p>
+                <p>
+                  It was sent but not mined within 50 blocks. Open your wallet and either speed it
+                  up with a higher gas price or cancel it, then create the name again. Sending
+                  another transaction now would queue behind this one and stay pending too.
+                </p>
+              </div>
+            </div>
+
+            <div className="dmd-modal-notice dmd-modal-notice-info">
+              <i className="fas fa-circle-info"></i>
+              <p>
+                This window keeps checking the transaction — if it still gets mined, it finishes
+                on its own.
+              </p>
+            </div>
+
+            <div className="dmd-modal-actions">
+              {txHash && (
+                <a
+                  className="btn-secondary"
+                  href={`${config.explorerUrl}tx/${txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View transaction <i className="fas fa-external-link-alt"></i>
+                </a>
+              )}
+              <button type="button" className="btn-primary" onClick={handleClose}>
+                Close
+              </button>
+            </div>
+          </>
+        ) : pendingStage ? (
           <div className="dmd-modal-pending-card">
             <span className="dmd-modal-spinner" aria-hidden="true"></span>
             {pendingStage === 'confirm' ? (
@@ -212,6 +335,16 @@ export default function RegisterNameModal({
               </p>
             </div>
 
+            {insufficientFunds && (
+              <div className="dmd-modal-notice dmd-modal-notice-warn">
+                <i className="fas fa-wallet"></i>
+                <p>
+                  This address holds {formatDmdAmount(web3, balanceWei!.toFixed(0))}, which does not
+                  cover the minting fee plus gas ({totalCost}). Top it up before creating the name.
+                </p>
+              </div>
+            )}
+
             {error && (
               <div className="dmd-modal-notice dmd-modal-notice-warn">
                 <i className="fas fa-times-circle"></i>
@@ -227,7 +360,7 @@ export default function RegisterNameModal({
                 type="button"
                 className="btn-primary"
                 onClick={handleConfirm}
-                disabled={!availability?.registrationFeeWei}
+                disabled={!availability?.registrationFeeWei || insufficientFunds}
               >
                 Confirm & Create
               </button>

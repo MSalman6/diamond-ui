@@ -7,6 +7,7 @@ export interface DmdNameAvailabilityResult {
   registrationFee?: string;
   estimatedGas?: string;
   registrationFeeWei?: string;
+  estimatedGasWei?: string;
   totalEstimatedCost?: string;
 }
 

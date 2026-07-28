@@ -9,9 +9,10 @@ import type {
   DmdDirectoryQuery,
   DmdDirectoryResponse,
   DmdNameHistory,
+  DmdNameHistoryEvent,
   ActivationFeeTier,
 } from '@/types/dmdNaming';
-import { formatDmdAmount, normalizeDmdNameInput } from '@/utils/dmdNaming';
+import { formatDmdAmount, formatDmdDate, normalizeDmdNameInput, shortenAddress } from '@/utils/dmdNaming';
 import { clientApiGet } from '@/lib/apiClient';
 import { buildTxOptions } from '@/utils/txOptions';
 
@@ -76,6 +77,7 @@ export async function checkNameAvailability(
     const registrationFee = formatDmdAmount(web3, registrationFeeWei);
 
     let estimatedGas: string | undefined;
+    let estimatedGasWei: string | undefined;
     let totalEstimatedCost: string | undefined;
     if (walletAddress) {
       try {
@@ -85,6 +87,7 @@ export async function checkNameAvailability(
         });
         const gasPrice = await web3.eth.getGasPrice();
         const gasWei = new BigNumber(gas).times(gasPrice).toFixed(0);
+        estimatedGasWei = gasWei;
         estimatedGas = formatDmdAmount(web3, gasWei);
         totalEstimatedCost = formatDmdAmount(
           web3,
@@ -92,6 +95,7 @@ export async function checkNameAvailability(
         );
       } catch {
         estimatedGas = undefined;
+        estimatedGasWei = undefined;
         totalEstimatedCost = registrationFee;
       }
     }
@@ -101,6 +105,7 @@ export async function checkNameAvailability(
       registrationFee,
       estimatedGas,
       registrationFeeWei,
+      estimatedGasWei,
       totalEstimatedCost: totalEstimatedCost ?? registrationFee,
     };
   } catch {
@@ -115,7 +120,7 @@ export async function setOwnName(
   name: string,
   valueWei: string,
   getGasPrice: () => Promise<string>,
-  onTransactionHash?: () => void,
+  onTransactionHash?: (txHash: string) => void,
 ): Promise<void> {
   const gasPrice = await getGasPrice();
   const method = contract.methods.register(normalizeDmdNameInput(name));
@@ -287,7 +292,7 @@ export async function transferName(
  * Names owned by a wallet, for the "Owned names" table.
  */
 export async function getOwnedNames(walletAddress: string): Promise<OwnedDmdName[]> {
-  const response = await clientApiGet<OwnedDmdName[] | { data: OwnedDmdName[] }>(
+  const response = await clientApiGet<{ data: any[] } | any[]>(
     `owner/${walletAddress}/names`,
   );
 
@@ -296,17 +301,15 @@ export async function getOwnedNames(walletAddress: string): Promise<OwnedDmdName
   }
 
   const payload = response.data as unknown;
-  if (Array.isArray(payload)) {
-    return payload;
-  }
-  return (payload as { data?: OwnedDmdName[] })?.data ?? [];
+  const rows = Array.isArray(payload) ? payload : (payload as { data?: any[] })?.data ?? [];
+  return rows.map(normalizeOwnedName);
 }
 
 /**
  * Indexed history timeline for a single DMD name.
  */
 export async function getNameHistory(name: string): Promise<DmdNameHistory> {
-  const response = await clientApiGet<DmdNameHistory>(
+  const response = await clientApiGet<any>(
     `name/${normalizeDmdNameInput(name)}/history`,
   );
 
@@ -317,23 +320,148 @@ export async function getNameHistory(name: string): Promise<DmdNameHistory> {
     throw new Error(response.error || `Failed to fetch name history (${response.status})`);
   }
 
-  return response.data;
+  return normalizeNameHistory(response.data);
+}
+
+const KNOWN_STATUSES: OwnedDmdNameStatus[] = ['active', 'inactive', 'expiring-soon', 'expired'];
+
+function readExpiresAt(raw: any): number {
+  return Number(raw.expiration ?? raw.expiresAt ?? 0) || 0;
+}
+
+function readStatus(raw: any, expiresAt: number): OwnedDmdNameStatus {
+  const rawStatus = raw.status as string | undefined;
+  if (KNOWN_STATUSES.includes(rawStatus as OwnedDmdNameStatus)) {
+    return rawStatus as OwnedDmdNameStatus;
+  }
+  return expiresAt && expiresAt * 1000 < Date.now() ? 'expired' : 'inactive';
+}
+
+const ACTION_LABELS: Record<string, string> = {
+  registered: 'Created',
+  activated: 'Activated',
+  renewed: 'Renewed',
+  transfer: 'Transferred',
+};
+
+function actionLabel(type: string): string {
+  const known = ACTION_LABELS[type?.toLowerCase()];
+  if (known) {
+    return known;
+  }
+  return type ? type.charAt(0).toUpperCase() + type.slice(1).toLowerCase() : 'Updated';
+}
+
+function normalizeOwnedName(raw: any): OwnedDmdName {
+  const expiresAt = readExpiresAt(raw);
+  const rawAction = raw.last_action ?? raw.lastAction;
+  const lastActionTimestamp = Number(rawAction?.timestamp ?? 0) || 0;
+
+  return {
+    name: raw.name,
+    status: readStatus(raw, expiresAt),
+    expiresAt,
+    lastAction: rawAction?.type && lastActionTimestamp
+      ? { type: actionLabel(rawAction.type), timestamp: lastActionTimestamp }
+      : undefined,
+  };
 }
 
 /**
  * Normalizes a single directory row from the indexed backend.
  */
 function normalizeDirectoryEntry(raw: any): DmdDirectoryEntry {
-  const ownerAddress = raw.ownerAddress ?? raw.owner ?? raw.address ?? '';
-  const createdAt = Number(raw.createdAt ?? raw.created_at ?? raw.registeredAt ?? 0);
-  const expiresAt = Number(raw.expiresAt ?? raw.expires_at ?? raw.expiry ?? 0);
-  const rawStatus = raw.status as string | undefined;
-  const knownStatuses: OwnedDmdNameStatus[] = ['active', 'inactive', 'expiring-soon', 'expired'];
-  const status: OwnedDmdNameStatus = knownStatuses.includes(rawStatus as OwnedDmdNameStatus)
-    ? (rawStatus as OwnedDmdNameStatus)
-    : expiresAt && expiresAt * 1000 < Date.now() ? 'expired' : 'inactive';
+  const ownerAddress = raw.owner ?? raw.ownerAddress ?? '';
+  const createdAt = Number(raw.created_at ?? raw.createdAt ?? 0) || 0;
+  const expiresAt = readExpiresAt(raw);
 
-  return { name: raw.name, ownerAddress, status, createdAt, expiresAt };
+  return { name: raw.name, ownerAddress, status: readStatus(raw, expiresAt), createdAt, expiresAt };
+}
+
+const ZERO_ADDRESS_RE = /^0x0{40}$/i;
+
+function normalizeHistoryEvent(raw: any): DmdNameHistoryEvent {
+  const timestamp = Number(raw.timestamp ?? 0) || 0;
+  const actor = raw.actor as string | undefined;
+  const from = raw.from as string | undefined;
+  const to = raw.to as string | undefined;
+
+  switch (raw.type?.toLowerCase()) {
+    case 'registered':
+      return {
+        type: 'created',
+        label: 'Created',
+        description: actor ? `Registered by ${shortenAddress(actor)}` : 'Name registered',
+        timestamp,
+      };
+    case 'activated':
+      return {
+        type: 'activated',
+        label: 'Activated',
+        description: actor
+          ? `Set as the active name of ${shortenAddress(actor)}`
+          : 'Set as an active name',
+        timestamp,
+      };
+    case 'renewed':
+      return {
+        type: 'renewed',
+        label: 'Renewed',
+        description: raw.expiration
+          ? `Renewed until ${formatDmdDate(Number(raw.expiration))}`
+          : 'Validity window extended',
+        timestamp,
+      };
+    case 'transfer':
+      return !!from && ZERO_ADDRESS_RE.test(from)
+        ? {
+          type: 'created',
+          label: 'Minted',
+          description: to ? `Name NFT minted to ${shortenAddress(to)}` : 'Name NFT minted',
+          timestamp,
+        }
+        : {
+          type: 'ownership-transferred',
+          label: 'Transferred',
+          description: from && to
+            ? `Transferred from ${shortenAddress(from)} to ${shortenAddress(to)}`
+            : 'Ownership transferred',
+          timestamp,
+        };
+    default:
+      return {
+        type: 'other',
+        label: actionLabel(raw.type),
+        description: actor ? `By ${shortenAddress(actor)}` : '',
+        timestamp,
+      };
+  }
+}
+
+function normalizeNameHistory(raw: any): DmdNameHistory {
+  const expiresAt = readExpiresAt(raw);
+  const events: any[] = Array.isArray(raw.events) ? raw.events : [];
+  const transfers: any[] = Array.isArray(raw.transfers) ? raw.transfers : [];
+
+  return {
+    name: raw.name,
+    creator: raw.creator ?? '',
+    createdAt: Number(raw.created_at ?? raw.createdAt ?? 0) || 0,
+    currentOwner: raw.owner ?? raw.currentOwner ?? '',
+    status: readStatus(raw, expiresAt),
+    expiresAt: expiresAt || undefined,
+    timeline: events
+      .map(normalizeHistoryEvent)
+      .sort((a, b) => b.timestamp - a.timestamp),
+    transfers: transfers
+      .map((transfer) => ({
+        timestamp: Number(transfer.timestamp ?? 0) || 0,
+        from: transfer.from ?? '',
+        to: transfer.to ?? '',
+        txHash: transfer.tx_hash ?? transfer.txHash ?? undefined,
+      }))
+      .sort((a, b) => b.timestamp - a.timestamp),
+  };
 }
 
 const DIRECTORY_SORT_FIELDS: Record<NonNullable<DmdDirectoryQuery['sortBy']>, string> = {

@@ -19,6 +19,8 @@ export default function MyDmdNamesContent({ walletAddress }: Props) {
   const [registerName, setRegisterName] = useState('');
   const [registerAvailability, setRegisterAvailability] = useState<DmdNameAvailabilityResult | null>(null);
   const [searchResetKey, setSearchResetKey] = useState(0);
+  const [ownedRefreshKey, setOwnedRefreshKey] = useState(0);
+  const [pendingName, setPendingName] = useState<string | null>(null);
 
   const reloadRegisteredName = useCallback(() => {
     const contract = contractsManager.diamondRegistryContract;
@@ -43,6 +45,8 @@ export default function MyDmdNamesContent({ walletAddress }: Props) {
   const handleRegistered = () => {
     reloadRegisteredName();
     setSearchResetKey((key) => key + 1);
+    setPendingName(registerName);
+    setOwnedRefreshKey((key) => key + 1);
   };
 
   return (
@@ -51,7 +55,12 @@ export default function MyDmdNamesContent({ walletAddress }: Props) {
         <DmdNameSearch key={searchResetKey} variant="page" showExamples onRegisterName={openRegister} />
       </div>
 
-      <OwnedNamesSection walletAddress={walletAddress} activeName={registeredName} />
+      <OwnedNamesSection
+        walletAddress={walletAddress}
+        activeName={registeredName}
+        refreshKey={ownedRefreshKey}
+        pendingName={pendingName}
+      />
 
       <RegisterNameModal
         isOpen={registerOpen}
