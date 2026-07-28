@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import DmdNameSearch from './DmdNameSearch';
 
 export default function DmdNameSearchWidget() {
@@ -10,7 +11,10 @@ export default function DmdNameSearchWidget() {
       <DmdNameSearch variant="homepage" showExamples={false} />
       <p className="dmd-search-widget-note">
         <i className="fas fa-info-circle"></i>
-        DMD names are unique, blockchain-native identities on the DMD network.
+        <span>DMD names are unique, blockchain-native identities on the DMD network.</span>
+        <Link href="/names" className="dmd-search-widget-note-link">
+          DMD Names <i className="fas fa-external-link-alt"></i>
+        </Link>
       </p>
     </div>
   );

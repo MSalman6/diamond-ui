@@ -76,6 +76,7 @@ export default function Home() {
                         <a href="#" onClick={handleWalletConnect} className="btn-primary" id="connect-wallet-btn">Connect wallet <i className="fas fa-arrow-right"></i></a>
                     }
                     <a href="https://github.com/DMDcoin/whitepaper/wiki/A.-Home" target="_blank" className="btn-secondary">GitHub Whitepaper <i className="fas fa-arrow-right"></i></a>
+                    <Link href="/names" className="btn-secondary hero-names-link">All DMD Names <i className="fas fa-external-link-alt"></i></Link>
                   </div>
                 </div>
               </div>

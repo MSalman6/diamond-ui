@@ -1364,8 +1364,23 @@ header .container {
 
 .hero-buttons {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 20px;
   margin-top: 40px;
+}
+
+.hero-names-link {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.hero-names-link i {
+  font-size: 0.8rem;
+}
+
+.hero-names-link:hover {
+  color: var(--accent-hover);
 }
 
 .partners-bar {
