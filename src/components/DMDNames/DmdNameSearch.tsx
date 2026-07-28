@@ -104,7 +104,7 @@ export default function DmdNameSearch({
           <input
             type="text"
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={(e) => setValue(e.target.value.toLowerCase())}
             placeholder={isHomepage ? 'Enter a name (e.g. yourname)' : undefined}
             autoComplete="off"
             spellCheck={false}

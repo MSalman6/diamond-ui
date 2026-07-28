@@ -138,6 +138,17 @@ export default function DmdNamesDirectory() {
     load();
   }, [load]);
 
+  useEffect(() => {
+    const trimmed = searchInput.trim();
+    if (trimmed === appliedSearch) return;
+
+    const timer = setTimeout(() => {
+      setAppliedSearch(trimmed);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput, appliedSearch]);
+
   const openRegister = (name: string, availability: DmdNameAvailabilityResult) => {
     setRegisterName(name);
     setRegisterAvailability(availability);
@@ -184,7 +195,7 @@ export default function DmdNamesDirectory() {
             type="text"
             placeholder="Search DMD name or owner address"
             value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            onChange={(e) => setSearchInput(e.target.value.toLowerCase())}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 setAppliedSearch(searchInput.trim());

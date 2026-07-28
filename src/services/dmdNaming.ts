@@ -11,7 +11,7 @@ import type {
   DmdNameHistory,
   ActivationFeeTier,
 } from '@/types/dmdNaming';
-import { formatDmdAmount } from '@/utils/dmdNaming';
+import { formatDmdAmount, normalizeDmdNameInput } from '@/utils/dmdNaming';
 import { clientApiGet } from '@/lib/apiClient';
 import { buildTxOptions } from '@/utils/txOptions';
 
@@ -29,10 +29,12 @@ export async function getWalletDmdName(
 export async function checkNameAvailability(
   contract: DMDRegistrarController,
   web3: Web3,
-  name: string,
+  rawName: string,
   walletAddress?: string,
   namesContract?: DMDNames,
 ): Promise<DmdNameAvailabilityResult> {
+  const name = normalizeDmdNameInput(rawName);
+
   try {
     const isValid = await contract.methods.valid(name).call();
     if (!isValid) {
@@ -116,7 +118,7 @@ export async function setOwnName(
   onTransactionHash?: () => void,
 ): Promise<void> {
   const gasPrice = await getGasPrice();
-  const method = contract.methods.register(name);
+  const method = contract.methods.register(normalizeDmdNameInput(name));
   const tx = method.send(await buildTxOptions(method, { from, gasPrice, value: valueWei }));
   if (onTransactionHash) {
     tx.once('transactionHash', onTransactionHash);
@@ -304,7 +306,9 @@ export async function getOwnedNames(walletAddress: string): Promise<OwnedDmdName
  * Indexed history timeline for a single DMD name.
  */
 export async function getNameHistory(name: string): Promise<DmdNameHistory> {
-  const response = await clientApiGet<DmdNameHistory>(`name/${name}/history`);
+  const response = await clientApiGet<DmdNameHistory>(
+    `name/${normalizeDmdNameInput(name)}/history`,
+  );
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -332,6 +336,12 @@ function normalizeDirectoryEntry(raw: any): DmdDirectoryEntry {
   return { name: raw.name, ownerAddress, status, createdAt, expiresAt };
 }
 
+const DIRECTORY_SORT_FIELDS: Record<NonNullable<DmdDirectoryQuery['sortBy']>, string> = {
+  name: 'name',
+  createdAt: 'created_at',
+  expiresAt: 'expires_at',
+};
+
 /**
  * Paginated/filterable public directory of all DMD names.
  */
@@ -341,13 +351,13 @@ export async function getNamesDirectory(query: DmdDirectoryQuery = {}): Promise<
   const offset = (page - 1) * pageSize;
 
   const params = new URLSearchParams();
-  if (query.q) params.set('q', query.q);
+  if (query.q) params.set('search', query.q);
   if (query.status) params.set('status', query.status);
-  if (query.createdFrom) params.set('createdFrom', String(query.createdFrom));
-  if (query.createdTo) params.set('createdTo', String(query.createdTo));
-  if (query.expiresFrom) params.set('expiresFrom', String(query.expiresFrom));
-  if (query.expiresTo) params.set('expiresTo', String(query.expiresTo));
-  if (query.sortBy) params.set('sortBy', query.sortBy);
+  if (query.createdFrom) params.set('created_from', String(query.createdFrom));
+  if (query.createdTo) params.set('created_to', String(query.createdTo));
+  if (query.expiresFrom) params.set('expires_from', String(query.expiresFrom));
+  if (query.expiresTo) params.set('expires_to', String(query.expiresTo));
+  if (query.sortBy) params.set('sort', DIRECTORY_SORT_FIELDS[query.sortBy]);
   if (query.order) params.set('order', query.order);
   params.set('limit', String(pageSize));
   params.set('offset', String(offset));

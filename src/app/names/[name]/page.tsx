@@ -2,12 +2,14 @@
 
 import { useParams, useSearchParams } from 'next/navigation';
 import NameHistoryContent from '@/components/DMDNames/NameHistoryContent';
+import { normalizeDmdNameInput, stripDmdSuffix } from '@/utils/dmdNaming';
 import '@/components/DMDNames/DmdNames.css';
 
 export default function NameHistoryPage() {
   const params = useParams();
   const searchParams = useSearchParams();
-  const name = typeof params.name === 'string' ? params.name : '';
+  const rawName = typeof params.name === 'string' ? params.name : '';
+  const name = normalizeDmdNameInput(stripDmdSuffix(rawName));
   const backTo = searchParams.get('from') === 'my-names' ? 'my-names' : 'directory';
 
   return (

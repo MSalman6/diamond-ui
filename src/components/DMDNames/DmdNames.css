@@ -816,6 +816,19 @@ body.light-theme .dmd-name-search-suffix {
   border-left-color: rgba(0, 0, 0, 0.1);
 }
 
+body.light-theme .dmd-directory-search input,
+body.light-theme .dmd-name-search-input-group input {
+  background: transparent;
+  border: none;
+  color: var(--text);
+}
+
+body.light-theme .dmd-directory-search input:focus,
+body.light-theme .dmd-name-search-input-group input:focus {
+  border: none;
+  box-shadow: none;
+}
+
 .dmd-history-back {
   display: inline-flex;
   align-items: center;
