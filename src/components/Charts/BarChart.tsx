@@ -21,6 +21,8 @@ const BarChart: React.FC<BarChartProps> = ({
   xAxisKey,
   bars,
   layout = 'horizontal',
+  xAxisType = 'category',
+  barSize,
   config = {},
   showLegend = true,
   showGrid = true,
@@ -39,8 +41,16 @@ const BarChart: React.FC<BarChartProps> = ({
   const {
     width = '100%' as const,
     height = 400,
-    margin = { top: 10, right: 30, left: 0, bottom: 0 },
+    margin = {
+      top: 10,
+      right: 30,
+      // Room for the rotated axis title so it doesn't sit on top of the tick numbers.
+      left: yAxisLabel ? 20 : 0,
+      bottom: xAxisLabel ? 12 : 0,
+    },
   } = config;
+
+  const isHorizontalNumeric = layout === 'horizontal' && xAxisType === 'number';
 
   return (
     <ChartContainer
@@ -60,7 +70,8 @@ const BarChart: React.FC<BarChartProps> = ({
           )}
           <XAxis
             dataKey={layout === 'horizontal' ? xAxisKey : undefined}
-            type={layout === 'horizontal' ? 'category' : 'number'}
+            type={layout === 'horizontal' ? xAxisType : 'number'}
+            padding={isHorizontalNumeric ? { left: 20, right: 20 } : undefined}
             stroke={theme.textColor}
             tick={{ fill: theme.textColor }}
             label={
@@ -85,6 +96,7 @@ const BarChart: React.FC<BarChartProps> = ({
                     value: yAxisLabel,
                     angle: -90,
                     position: 'insideLeft',
+                    offset: 8,
                     fill: theme.textColor,
                   }
                 : undefined
@@ -109,6 +121,7 @@ const BarChart: React.FC<BarChartProps> = ({
               name={bar.name || bar.dataKey}
               fill={bar.color || getAccentColor(index, theme)}
               stackId={bar.stackId}
+              barSize={barSize}
               animationDuration={animate ? 1000 : 0}
               radius={[4, 4, 0, 0]}
             />

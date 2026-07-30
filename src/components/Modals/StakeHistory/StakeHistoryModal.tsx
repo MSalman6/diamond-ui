@@ -302,6 +302,8 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
                   <BarChart
                     data={chartData}
                     xAxisKey="epoch"
+                    xAxisType="number"
+                    barSize={20}
                     bars={[
                       { dataKey: 'stakeIn', name: 'Stake In (DMD)' },
                       { dataKey: 'stakeOut', name: 'Stake Out (DMD)' },
