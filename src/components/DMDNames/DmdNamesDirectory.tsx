@@ -111,6 +111,12 @@ export default function DmdNamesDirectory() {
     }
     setError(null);
 
+    if (!appliedFilters.statusActive && !appliedFilters.statusInactive) {
+      setEntries([]);
+      setTotal(0);
+      return;
+    }
+
     const status = appliedFilters.statusActive && !appliedFilters.statusInactive
       ? 'active'
       : !appliedFilters.statusActive && appliedFilters.statusInactive
