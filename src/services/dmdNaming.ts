@@ -380,6 +380,19 @@ function normalizeDirectoryEntry(raw: any): DmdDirectoryEntry {
 
 const ZERO_ADDRESS_RE = /^0x0{40}$/i;
 
+function isMintTransfer(raw: any): boolean {
+  return raw.type?.toLowerCase() === 'transfer' && !!raw.from && ZERO_ADDRESS_RE.test(raw.from);
+}
+
+const TIMELINE_STEP_ORDER: Record<DmdNameHistoryEvent['type'], number> = {
+  created: 0,
+  activated: 1,
+  renewed: 2,
+  'ownership-transferred': 3,
+  expiring: 4,
+  other: 5,
+};
+
 function normalizeHistoryEvent(raw: any): DmdNameHistoryEvent {
   const timestamp = Number(raw.timestamp ?? 0) || 0;
   const actor = raw.actor as string | undefined;
@@ -413,10 +426,10 @@ function normalizeHistoryEvent(raw: any): DmdNameHistoryEvent {
         timestamp,
       };
     case 'transfer':
-      return !!from && ZERO_ADDRESS_RE.test(from)
+      return isMintTransfer(raw)
         ? {
           type: 'created',
-          label: 'Minted',
+          label: 'Created',
           description: to ? `Name NFT minted to ${shortenAddress(to)}` : 'Name NFT minted',
           timestamp,
         }
@@ -440,7 +453,9 @@ function normalizeHistoryEvent(raw: any): DmdNameHistoryEvent {
 
 function normalizeNameHistory(raw: any): DmdNameHistory {
   const expiresAt = readExpiresAt(raw);
-  const events: any[] = Array.isArray(raw.events) ? raw.events : [];
+  const allEvents: any[] = Array.isArray(raw.events) ? raw.events : [];
+  const hasRegistered = allEvents.some((event) => event.type?.toLowerCase() === 'registered');
+  const events = hasRegistered ? allEvents.filter((event) => !isMintTransfer(event)) : allEvents;
   const transfers: any[] = Array.isArray(raw.transfers) ? raw.transfers : [];
 
   return {
@@ -452,7 +467,8 @@ function normalizeNameHistory(raw: any): DmdNameHistory {
     expiresAt: expiresAt || undefined,
     timeline: events
       .map(normalizeHistoryEvent)
-      .sort((a, b) => b.timestamp - a.timestamp),
+      .sort((a, b) => b.timestamp - a.timestamp
+        || TIMELINE_STEP_ORDER[b.type] - TIMELINE_STEP_ORDER[a.type]),
     transfers: transfers
       .map((transfer) => ({
         timestamp: Number(transfer.timestamp ?? 0) || 0,
