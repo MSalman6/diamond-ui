@@ -288,7 +288,7 @@ export default function Header() {
                         </Link>
                       </li>
                       <li>
-                        <a href="https://github.com/DMDcoin/whitepaper/wiki" target="_blank" rel="noopener noreferrer">
+                        <a href="https://github.com/DMDcoin/whitepaper/wiki/A.-Home" target="_blank" rel="noopener noreferrer">
                           <i className="fas fa-file-alt"></i> GitHub Whitepaper
                         </a>
                       </li>
