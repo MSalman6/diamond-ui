@@ -121,7 +121,7 @@ body.light-theme .chart-container:hover {
   border: 1px solid var(--tooltip-border) !important;
   border-radius: 8px;
   padding: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 10px -4px rgba(0, 0, 0, 0.3), 0 3px 5px -3px rgba(0, 0, 0, 0.2);
 }
 
 .chart-custom-tooltip .tooltip-label {

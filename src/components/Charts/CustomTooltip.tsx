@@ -27,7 +27,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, l
         border: `1px solid ${theme.tooltipBorder}`,
         borderRadius: '8px',
         padding: '12px',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        boxShadow: '0 8px 10px -4px rgba(0, 0, 0, 0.3), 0 3px 5px -3px rgba(0, 0, 0, 0.2)',
       }}
     >
       {displayLabel && (

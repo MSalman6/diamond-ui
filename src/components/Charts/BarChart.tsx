@@ -105,7 +105,7 @@ const BarChart: React.FC<BarChartProps> = ({
           {showTooltip && (
             <Tooltip
               content={<CustomTooltip labelFormatter={tooltipLabelFormatter} />}
-              cursor={{ fill: 'rgba(128, 128, 128, 0.1)' }}
+              cursor={isHorizontalNumeric ? false : { fill: 'rgba(128, 128, 128, 0.1)' }}
             />
           )}
           {showLegend && (
