@@ -14,6 +14,61 @@ import { useStakingContext } from '@/contexts/Staking'
 import { capitalizeFirstLetter, decodeCallData, extractValueFromCalldata, formatCryptoUnitValue, getFunctionInfoWithAbi, timestampToDate } from '@/utils/common'
 import { getProposalImpact } from '@/constants/proposalImpacts'
 
+interface UsernameModerationDetails {
+  summary: string;
+  username: string;
+  ownerAddress: string;
+  reasonCategory: string;
+  evidenceNotes: string;
+}
+
+const USERNAME_MODERATION_SUFFIX = /\n\n---\nUsername: (.+)\nOwner Address: (.+)\nReason category: (.+)\nEvidence\/Notes: ([\s\S]*)$/;
+
+function parseUsernameModerationDescription(description: string): UsernameModerationDetails | null {
+  const match = description.match(USERNAME_MODERATION_SUFFIX);
+  if (!match) return null;
+
+  const [, username, ownerAddress, reasonCategory, evidenceNotes] = match;
+  const summary = description.slice(0, match.index).trim().replace(/^description\s*[:\-]\s*/i, '');
+  return {
+    summary,
+    username,
+    ownerAddress,
+    reasonCategory,
+    evidenceNotes,
+  };
+}
+
+function ProposalDescription({ description }: { description: string }) {
+  const moderation = parseUsernameModerationDescription(description);
+
+  if (!moderation) {
+    return <p>{description}</p>;
+  }
+
+  return (
+    <>
+      {moderation.summary && <p>{moderation.summary}</p>}
+      <div className="target-address">
+        <div className="label">Username</div>
+        <div className="value">{moderation.username}</div>
+      </div>
+      <div className="target-address">
+        <div className="label">Owner Address</div>
+        <div className="value">{moderation.ownerAddress}</div>
+      </div>
+      <div className="target-address">
+        <div className="label">Reason Category</div>
+        <div className="value">{moderation.reasonCategory}</div>
+      </div>
+      <div className="target-address" style={{ marginBottom: 0 }}>
+        <div className="label">Evidence / Notes</div>
+        <div className="value">{moderation.evidenceNotes}</div>
+      </div>
+    </>
+  );
+}
+
 export default function ProposalDetailsPage() {
   const [menuActive, setMenuActive] = useState(false)
   const [type, setType] = useState<"parameter-change" | "funding-request" | "contract-upgrade">("parameter-change")
@@ -503,7 +558,7 @@ export default function ProposalDetailsPage() {
                   </div>
                   <div className="parameter-description">
                     <h4>Description</h4>
-                    <p>{proposal?.description || ''}</p>
+                    <ProposalDescription description={proposal?.description || ''} />
                   </div>
                   {(() => {
                     const impactData = getProposalImpact(paramFunctionName);
@@ -534,7 +589,7 @@ export default function ProposalDetailsPage() {
                   <div className="card-content">
                     <div className="parameter-description">
                       <h4>Description</h4>
-                      <p>{proposal?.description || ''}</p>
+                      <ProposalDescription description={proposal?.description || ''} />
                     </div>
                     {proposal?.targets?.map((target: string, index: number) => {
                       if (target === '0x0000000000000000000000000000000000000000') return null
@@ -568,7 +623,7 @@ export default function ProposalDetailsPage() {
                 <div className="card-content">
                   <div className="parameter-description">
                     <h4>Description</h4>
-                    <p>{proposal?.description || ''}</p>
+                    <ProposalDescription description={proposal?.description || ''} />
                   </div>
                   {proposal?.targets?.map((target: string, index: number) => (
                     <div key={index} className="technical-details" style={{ marginBottom: index < (proposal.targets?.length || 0) - 1 ? '30px' : '0', paddingBottom: '20px', borderBottom: index < (proposal.targets?.length || 0) - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none' }}>

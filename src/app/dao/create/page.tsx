@@ -525,10 +525,6 @@ export default function CreateProposalPage() {
 
           {proposalType === "username-moderation" && (
             <>
-              <p>
-                Submits a moderation proposal against a DMD name. If the proposal passes, the name is blocked and its active-name link is removed on-chain.
-              </p>
-
               <input
                 type="text"
                 value={umUsername}
@@ -564,6 +560,19 @@ export default function CreateProposalPage() {
                 style={{ height: "auto", minHeight: 80, resize: "vertical" }}
                 required={umReasonCategory === "other"}
               />
+
+              <div className={`${styles.infoBox} ${styles.moderationOutcomeBox}`}>
+                <div className={styles.moderationOutcomeHeader}>
+                  <i className="fas fa-circle-info"></i>
+                  <strong>Proposal Outcome</strong>
+                </div>
+                <ul className={styles.usernameModerationInfo}>
+                  <li>Proposal submitted to DAO members for voting</li>
+                  <li>If approved, the username is blacklisted</li>
+                  <li>The name still remains on-chain</li>
+                  <li>Diamond server UI hides blacklisted names</li>
+                </ul>
+              </div>
             </>
           )}
 
