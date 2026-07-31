@@ -49,6 +49,16 @@ export type NameDeactivated = ContractEventLog<{
   1: string;
   2: string;
 }>;
+export type NameModerated = ContractEventLog<{
+  owmer: string;
+  labelHash: string;
+  reason: string;
+  note: string;
+  0: string;
+  1: string;
+  2: string;
+  3: string;
+}>;
 export type NameRegistered = ContractEventLog<{
   node: string;
   labelHash: string;
@@ -126,8 +136,6 @@ export interface DMDRegistrarController extends BaseContract {
 
     available(_name: string): NonPayableTransactionObject<boolean>;
 
-    blockName(_name: string, _owner: string): NonPayableTransactionObject<void>;
-
     diamondNames(): NonPayableTransactionObject<string>;
 
     getActivationFee(_who: string): NonPayableTransactionObject<string>;
@@ -158,6 +166,13 @@ export interface DMDRegistrarController extends BaseContract {
     ): NonPayableTransactionObject<boolean>;
 
     mintingFee(): NonPayableTransactionObject<string>;
+
+    moderateName(
+      _owner: string,
+      _name: string,
+      reason: string,
+      notes: string
+    ): NonPayableTransactionObject<void>;
 
     names(arg0: string): NonPayableTransactionObject<string>;
 
@@ -235,6 +250,12 @@ export interface DMDRegistrarController extends BaseContract {
       cb?: Callback<NameDeactivated>
     ): EventEmitter;
 
+    NameModerated(cb?: Callback<NameModerated>): EventEmitter;
+    NameModerated(
+      options?: EventOptions,
+      cb?: Callback<NameModerated>
+    ): EventEmitter;
+
     NameRegistered(cb?: Callback<NameRegistered>): EventEmitter;
     NameRegistered(
       options?: EventOptions,
@@ -302,6 +323,13 @@ export interface DMDRegistrarController extends BaseContract {
     event: "NameDeactivated",
     options: EventOptions,
     cb: Callback<NameDeactivated>
+  ): void;
+
+  once(event: "NameModerated", cb: Callback<NameModerated>): void;
+  once(
+    event: "NameModerated",
+    options: EventOptions,
+    cb: Callback<NameModerated>
   ): void;
 
   once(event: "NameRegistered", cb: Callback<NameRegistered>): void;

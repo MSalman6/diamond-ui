@@ -228,14 +228,17 @@ export default function CreateProposalPage() {
         if (umReasonCategory === "other" && !umEvidence.trim()) throw new Error("Evidence/Notes is required for \"Other\"");
 
         const reasonLabel = USERNAME_MODERATION_REASONS.find((r) => r.value === umReasonCategory)?.label ?? umReasonCategory;
+        const notes = umEvidence.trim() || "N/A";
         const contract = web3Context.contractsManager.diamondRegistryContract;
         const contractAddress = contract?.options.address;
-        const encodedCallData = (contract?.methods as any).blockName(normalizedUsername, umOwnerAddress).encodeABI();
+        const encodedCallData = (contract?.methods as any)
+          .moderateName(umOwnerAddress, normalizedUsername, reasonLabel, notes)
+          .encodeABI();
 
         targets = [contractAddress as string];
         values = ["0"];
         calldatas = [encodedCallData as string];
-        descriptionSuffix = `\n\n---\nUsername: ${normalizedUsername}.dmd\nOwner Address: ${umOwnerAddress}\nReason category: ${reasonLabel}\nEvidence/Notes: ${umEvidence.trim() || "N/A"}`;
+        descriptionSuffix = `\n\n---\nUsername: ${normalizedUsername}.dmd\nOwner Address: ${umOwnerAddress}\nReason category: ${reasonLabel}\nEvidence/Notes: ${notes}`;
       }
     } catch (err: any) {
       return toast.error(err.message);
