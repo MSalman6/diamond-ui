@@ -600,8 +600,8 @@ body.light-theme .search-container input::placeholder {
 }
 
 body.light-theme .search-btn {
-  background-color: #3a7bd5;
-  color: #ffffff;
+  background-color: transparent;
+  color: #64748b;
 }
 
 body.light-theme .filter-container select {

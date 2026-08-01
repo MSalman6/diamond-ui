@@ -315,18 +315,21 @@ export const formatCryptoUnitValue = (value: string | number): string => {
     value = value.toString();
   }
 
-  // Remove any leading zeros
-  value = value.replace(/^0+/, '');
+  // Strip leading zeros, but keep a single digit so "0" doesn't become an empty string
+  value = String(value ?? '').trim().replace(/^0+(?=\d)/, '');
+
+  const amount = BigNumber(value);
+  if (!amount.isFinite()) return '0 Wei';
 
   const strLength = value.length;
 
   // Interpret based on the number of trailing zeros
   if (strLength >= 18) {
-    return `${BigNumber(value).dividedBy(10**18)} DMD`;
+    return `${amount.dividedBy(10**18)} DMD`;
   } else if (strLength >= 9) {
-    return `${BigNumber(value).dividedBy(10**9)} Gwei`;
+    return `${amount.dividedBy(10**9)} Gwei`;
   } else {
-    return `${BigNumber(value).dividedBy(10**1)} Wei`;
+    return `${amount} Wei`;
   }
 }
 

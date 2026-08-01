@@ -2,7 +2,7 @@
 
 import "./proposal-details.css"
 import "../../../styles/proposal-status.css";
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import InfoTooltip from '@/components/InfoTooltip'
 import Modal from '@/components/Modal'
 import { usePathname } from 'next/navigation'
@@ -268,6 +268,9 @@ export default function ProposalDetailsPage() {
       if (fnName === 'setDelegatorMinStake' || name.includes('delegator min stake')) {
         return `${BigNumber(v).dividedBy(10 ** 18).toFixed()} DMD`
       }
+      if (fnName === 'setMintingFee' || name.includes('minting fee')) {
+        return `${BigNumber(v).dividedBy(10 ** 18).toFixed()} DMD`
+      }
       // Fallback to crypto unit heuristic
       return formatCryptoUnitValue(v)
     } catch (e) {
@@ -301,7 +304,7 @@ export default function ProposalDetailsPage() {
         setProposedParamValue(formatParameterValue(fnName, displayName, rawProposed))
 
         // Fetch current value based on the function
-        let currentRaw = '0'
+        let currentRaw: string | null = null
         if (fnName === 'setCreateProposalFee') {
           currentRaw = await web3Context.contractsManager.daoContract.methods.createProposalFee().call()
         } else if (fnName === 'setDelegatorMinStake') {
@@ -324,10 +327,15 @@ export default function ProposalDetailsPage() {
           return
         } else if (fnName === 'setStandByFactor') {
           currentRaw = await web3Context.contractsManager.bsContract?.methods.standByFactor().call() || '0'
+        } else if (fnName === 'setMintingFee') {
+          currentRaw = await web3Context.contractsManager.diamondRegistryContract?.methods.mintingFee().call() || '0'
         }
 
-        setCurrentParamValue(formatParameterValue(fnName, displayName, currentRaw))
-      } catch (e) {}
+        // No reader wired up for a parameter — show it as unknown rather than as zero
+        setCurrentParamValue(currentRaw === null ? '—' : formatParameterValue(fnName, displayName, currentRaw))
+      } catch (e) {
+        setCurrentParamValue('—')
+      }
     })()
   }, [proposal?.targets, proposal?.calldatas, web3Context.contractsManager])
 
@@ -428,6 +436,16 @@ export default function ProposalDetailsPage() {
       if (res === 'success' && daoContext.getProposalDetails) daoContext.getProposalDetails(pid).then((r: any) => setProposal(r)).catch(() => {})
     }
   }
+
+  const proposalFeeLabel = useMemo(() => {
+    const fee = daoContext?.proposalFee
+    if (fee === undefined || fee === null || fee === '') return '—'
+    try {
+      return `${BigNumber(fee).dividedBy(1e18).toString()} DMD`
+    } catch (e) {
+      return '—'
+    }
+  }, [daoContext?.proposalFee])
 
   const proposalAccepted = (proposalType: string, positive: BigNumber, negative: BigNumber) => {
     const thresholdPercentage = daoContext.getProposalThreshold ? daoContext.getProposalThreshold(proposalType) : 0
@@ -551,7 +569,7 @@ export default function ProposalDetailsPage() {
                   </div>
                   <div className="parameter-fee">
                     <span className="label">Proposal fee:</span>
-                    <span className="value">{daoContext?.proposalFee ? BigNumber(daoContext?.proposalFee).dividedBy(1e18).toString() + ' DMD' : '100 DMD'}</span>
+                    <span className="value">{proposalFeeLabel}</span>
                     <InfoTooltip placement="bottom" content={<span>Fee to create a proposal. Refunded if approved.</span>}>
                       <i className="fas fa-info-circle info-icon" aria-hidden="true" />
                     </InfoTooltip>
@@ -609,7 +627,7 @@ export default function ProposalDetailsPage() {
                     })}
                     <div className="parameter-fee" style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
                       <span className="label">Proposal fee:</span>
-                      <span className="value">{daoContext?.proposalFee ? BigNumber(daoContext?.proposalFee).dividedBy(1e18).toString() + ' DMD' : '100 DMD'}</span>
+                      <span className="value">{proposalFeeLabel}</span>
                       <InfoTooltip placement="bottom" content={<span>Fee to create a proposal. Refunded if approved.</span>}>
                         <i className="fas fa-info-circle info-icon" aria-hidden="true" />
                       </InfoTooltip>
@@ -687,7 +705,7 @@ export default function ProposalDetailsPage() {
                   })()}
                   <div className="parameter-fee" style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
                     <span className="label">Proposal fee:</span>
-                    <span className="value">{daoContext?.proposalFee ? BigNumber(daoContext?.proposalFee).dividedBy(1e18).toString() + ' DMD' : '100 DMD'}</span>
+                    <span className="value">{proposalFeeLabel}</span>
                     <InfoTooltip placement="bottom" content={<span>Fee to create a proposal. Refunded if approved.</span>}>
                       <i className="fas fa-info-circle info-icon" aria-hidden="true" />
                     </InfoTooltip>

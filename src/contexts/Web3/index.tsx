@@ -12,7 +12,7 @@ import { useWalletConnect } from "@/contexts/WalletConnect";
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { ContractManager } from "@/contexts/services/contractManager";
 import { wagmiConfig } from "@/contexts/WalletConnect/config/wagmi";
-import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import React, { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { validateRpcUrl } from "@/utils/rpc";
 import { getRPC, saveRPC, clearRPC } from "@/utils/storage";
 import { checkProviderHealth, getGasPriceSafe, isEip1193Provider } from "../../utils/providerHealth";
@@ -77,6 +77,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
+  const loaderTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [web3Initialized, setWeb3Initialized] = useState<boolean>(false);
 
   // Initialize Web3 with CustomHttpProvider
@@ -239,10 +240,37 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     }
   };
 
+  const LOADER_TIMEOUT_MS = 120000;
+
+  const clearLoaderTimeout = () => {
+    if (loaderTimeoutRef.current) {
+      clearTimeout(loaderTimeoutRef.current);
+      loaderTimeoutRef.current = null;
+    }
+  };
+
   const showLoader = (loading: boolean, loadingMsg: string) => {
+    clearLoaderTimeout();
     setIsLoading(loading);
     setLoadingMessage(loadingMsg);
+
+    if (loading) {
+      loaderTimeoutRef.current = setTimeout(() => {
+        loaderTimeoutRef.current = null;
+        setIsLoading(false);
+        setLoadingMessage("");
+        toast.info("Still waiting on a response. Check your wallet — the request may not have reached it.");
+      }, LOADER_TIMEOUT_MS);
+    }
   }
+
+  const dismissLoader = () => {
+    clearLoaderTimeout();
+    setIsLoading(false);
+    setLoadingMessage("");
+  }
+
+  useEffect(() => clearLoaderTimeout, []);
 
   const reinitializeContractsWithProvider = async (provider: Web3) => {
     await initialzeContracts(new ContractManager(provider));
@@ -596,7 +624,7 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
 
   return (
     <Web3Context.Provider value={contextValue}>
-      <Loader isLoading={isLoading} loadingMessage={loadingMessage}/>
+      <Loader isLoading={isLoading} loadingMessage={loadingMessage} onDismiss={dismissLoader}/>
       {children}
     </Web3Context.Provider>
   );

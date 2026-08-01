@@ -47,7 +47,7 @@ interface DaoContextProps {
   getHistoricProposalsEvents: () => Promise<Array<string>>;
   getMyVote: (proposalId: string, myAddr: string) => Promise<Vote>;
   executeProposal: (proposalId: string) => Promise<string>;
-  getDaoPotBalanceChange: (blocksAgo: number) => Promise<{ changePercentage: string, direction: string }>;
+  getDaoPotBalanceChange: (blocksAgo: number) => Promise<{ changePercentage: string | null, absoluteChange: string, direction: string }>;
   getProposalThreshold: (proposalType: string, proposal?: any) => number;
 }
 
@@ -706,9 +706,15 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
 
   const createProposal = async (type: string, title: string, discussionUrl: string, targets: string[], values: string[], callDatas: string[], description: string) => {
     return new Promise<string>(async (resolve, reject) => {
-        if (daoPhase.phase !== "0") return toast.warn("Cannot propose in voting phase");        
+        if (daoPhase.phase !== "0") {
+          toast.warn("Cannot propose in voting phase");
+          return reject("Cannot propose in voting phase");
+        }
         if (!web3Context.ensureWalletConnection()) return reject("Wallet not connected");
-        if (await getProposalExists(targets, values, callDatas, description)) return toast.warn("Proposal already exists");
+        if (await getProposalExists(targets, values, callDatas, description)) {
+          toast.warn("Proposal already exists");
+          return reject("Proposal already exists");
+        }
 
         try {
           // Pre-validate provider readiness
@@ -1020,7 +1026,10 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     return new Promise<string>(async (resolve, reject) => {
         if (!web3Context.ensureWalletConnection()) return resolve("");
         let proposalDetails = await getProposalDetails(proposalId);
-        if (proposalDetails.proposalType == 'Contract Upgrade' &&  proposalDetails.proposer !== web3Context.userWallet.myAddr) return toast.warn("Only proposer can execute the proposal");
+        if (proposalDetails.proposalType == 'Contract Upgrade' &&  proposalDetails.proposer !== web3Context.userWallet.myAddr) {
+          toast.warn("Only proposer can execute the proposal");
+          return resolve("failed");
+        }
 
         // Pre-validate provider readiness
         const ready = await web3Context.ensureProviderReady();
@@ -1135,12 +1144,27 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     const pastBlockNumber = currentBlockNumber - blocksAgo;
     const pastBalance = await web3Context.web3.eth.getBalance(web3Context.contractsManager.daoContract.options.address, pastBlockNumber);
     
-    const balanceChange = BigNumber(currentBalance).minus(BigNumber(pastBalance));
-    const percentageChange = balanceChange.dividedBy(BigNumber(pastBalance)).multipliedBy(100);
-    
+    const past = BigNumber(pastBalance);
+    const balanceChange = BigNumber(currentBalance).minus(past);
+    const absoluteChange = balanceChange.dividedBy(1e18).toFixed(4);
+
+    if (balanceChange.isZero()) {
+      return { changePercentage: '0.00', absoluteChange, direction: 'neutral', blocks: blocksAgo };
+    }
+
+    if (past.isZero()) {
+      return { changePercentage: null, absoluteChange, direction: 'neutral', blocks: blocksAgo };
+    }
+
+    const percentageChange = balanceChange.dividedBy(past).multipliedBy(100);
+    if (!percentageChange.isFinite()) {
+      return { changePercentage: null, absoluteChange, direction: 'neutral', blocks: blocksAgo };
+    }
+
     return {
       changePercentage: percentageChange.toFixed(2),
-      direction: percentageChange.isGreaterThanOrEqualTo(0) ? 'positive' : 'negative',
+      absoluteChange,
+      direction: percentageChange.isGreaterThan(0) ? 'positive' : 'negative',
       blocks: blocksAgo
     };
   }

@@ -12,13 +12,12 @@ import logger from '@/utils/logger';
 // Set up queryClient
 const queryClient = new QueryClient()
 
-// Set up metadata
-const metadata = {
+const getMetadata = () => ({
   name: 'Diamond UI',
   icons: ['/favicon.ico'],
-  url: 'https://diamond-ui.vercel.app/',
+  url: typeof window !== 'undefined' ? window.location.origin : 'https://diamond-ui.vercel.app',
   description: 'Decentralized platform for DMD operations, offering tools for validator management, staking, DAO governance, and personalized user profiles to promote trust and stability in the DMD ecosystem.'
-}
+})
 
 const excludeWalletIds = [
   "a797aa35c0fadbfc1a53e7f675162ed5226968b44a19ee3d24385c64d1d3c393",
@@ -46,7 +45,7 @@ const initializeAppKit = () => {
       projectId: projectId,
       networks: networks as any,
       defaultNetwork: networks[0] as any,
-      metadata: metadata,
+      metadata: getMetadata(),
       features: {
         analytics: false,
         swaps: false,

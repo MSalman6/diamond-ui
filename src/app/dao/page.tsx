@@ -28,6 +28,7 @@ type Proposal = {
   exceeding: number;
   voted: boolean;
   status: string;
+  state?: string;
   totalStakeSnapshot?: string;
   actionsNeeded?: boolean;
 };
@@ -59,12 +60,14 @@ export default function DaoPage() {
   const [voteModalThresholdLeft, setVoteModalThresholdLeft] = useState<string>("0%");
   const [voteModalStats, setVoteModalStats] = useState<any>(null);
   const [daoPotBalanceChange, setDaoPotBalanceChange] = useState<{
-    changePercentage: string;
+    changePercentage: string | null;
+    absoluteChange?: string;
     direction: string;
     blocks: number;
   }>({
-    changePercentage: "0",
-    direction: "positive",
+    changePercentage: "0.00",
+    absoluteChange: "0.0000",
+    direction: "neutral",
     blocks: 0
   });
 
@@ -92,7 +95,7 @@ export default function DaoPage() {
     const src = activeTab === 'currentPhase'
       ? daoContext.activeProposals.filter((proposal: any) => proposal.state !== "3")
       : daoContext.allDaoProposals.filter((proposal: any) => (
-          proposal.state === "3" || (proposal.state === "4" && daoContext.daoPhase.daoEpoch == Number(proposal.daoPhaseCount) + 1)
+          proposal.state === "3" || proposal.state === "4"
         ));
 
     if (!src || !src.length) return [];
@@ -112,7 +115,8 @@ export default function DaoPage() {
         totalStakeSnapshot: p.totalStakeSnapshot || p.totalStakeSnapshot || '0',
         voted: false,
         status: daoContext.getStateString ? daoContext.getStateString(p.state) : (p.state || 'Unknown'),
-        actionsNeeded: (p.state === "3") || (p.state === "4" && daoContext.daoPhase && daoContext.daoPhase.daoEpoch === String(Number(p.daoPhaseCount) + 1))
+        state: p.state,
+        actionsNeeded: p.state === "3" || p.state === "4"
       };
       return mapped;
     });
@@ -162,6 +166,15 @@ export default function DaoPage() {
     try {
       if (!daoContext?.allDaoProposals) return 0;
       return daoContext.allDaoProposals.filter((proposal: any) => proposal.state === "3").length;
+    } catch {
+      return 0;
+    }
+  }, [daoContext?.allDaoProposals]);
+
+  const actionsNeededCount = useMemo(() => {
+    try {
+      if (!daoContext?.allDaoProposals) return 0;
+      return daoContext.allDaoProposals.filter((proposal: any) => proposal.state === "3" || proposal.state === "4").length;
     } catch {
       return 0;
     }
@@ -386,6 +399,14 @@ export default function DaoPage() {
     } catch (e) {}
   }
 
+  async function handleExecuteClick(p: Proposal) {
+    try {
+      if (daoContext?.executeProposal) {
+        await daoContext.executeProposal(p.id);
+      }
+    } catch (e) {}
+  }
+
   function handleCreateProposalClick(e: React.MouseEvent) {
     e.preventDefault();
     if (finalizeableProposalsCount > 0) {
@@ -439,10 +460,10 @@ export default function DaoPage() {
   }
 
   useEffect(() => {
-    if (activeTab === 'actionsNeeded' && finalizeableProposalsCount === 0) {
+    if (activeTab === 'actionsNeeded' && actionsNeededCount === 0) {
       setActiveTab('currentPhase');
     }
-  }, [activeTab, finalizeableProposalsCount]);
+  }, [activeTab, actionsNeededCount]);
 
   return (
     <div className="dao-page">
@@ -583,9 +604,13 @@ export default function DaoPage() {
               </div>
               <div className="stat-content">
                 <p className="stat-value">{daoContext.governancePotBalance ? `${daoContext.governancePotBalance.toFixed(2)} DMD` : '0 DMD'}</p>
-                <div className={`stat-trend ${daoPotBalanceChange.direction === "positive" ? "positive" : "negative"}`}>
-                  <i className={`fas ${daoPotBalanceChange.direction === "positive" ? "fa-arrow-up" : "fa-arrow-down"}`} />
-                  {daoPotBalanceChange.direction === "positive" ? "+" : ""}{daoPotBalanceChange.changePercentage}% since last {daoPotBalanceChange.blocks} blocks
+                <div className={`stat-trend ${daoPotBalanceChange.direction === "neutral" ? "" : daoPotBalanceChange.direction}`}>
+                  {daoPotBalanceChange.direction !== "neutral" && (
+                    <i className={`fas ${daoPotBalanceChange.direction === "positive" ? "fa-arrow-up" : "fa-arrow-down"}`} />
+                  )}
+                  {daoPotBalanceChange.changePercentage !== null
+                    ? `${daoPotBalanceChange.direction === "positive" ? "+" : ""}${daoPotBalanceChange.changePercentage}% since last ${daoPotBalanceChange.blocks} blocks`
+                    : `${Number(daoPotBalanceChange.absoluteChange) > 0 ? "+" : ""}${daoPotBalanceChange.absoluteChange} DMD since last ${daoPotBalanceChange.blocks} blocks`}
                 </div>
                 <div className="pot-distribution">
                   <div className="distribution-item">
@@ -673,9 +698,9 @@ export default function DaoPage() {
 
           <div className="proposals-tabs">
             <button className={`tab-btn ${activeTab === "currentPhase" ? "active" : ""}`} data-tab="current" onClick={() => setActiveTab("currentPhase")}>Proposals of the current DAO phase</button>
-            {finalizeableProposalsCount > 0 && (
+            {actionsNeededCount > 0 && (
               <button className={`tab-btn ${activeTab === "actionsNeeded" ? "active" : ""}`} data-tab="actions" onClick={() => setActiveTab("actionsNeeded")}>Actions needed
-                <span className="actionsNeededBadge">{finalizeableProposalsCount}</span>
+                <span className="actionsNeededBadge">{actionsNeededCount}</span>
               </button>
             )}
           </div>
@@ -766,7 +791,7 @@ export default function DaoPage() {
                 </thead>
                 <tbody>
                   {paginatedProposals
-                    .filter((p) => p.status === (daoContext.getStateString ? daoContext.getStateString('3') : '3'))
+                    .filter((p) => p.state === '3' || p.state === '4')
                     .map((p) => (
                     <tr key={p.id} onClick={() => handleDetailsClick(p.id)} style={{ cursor: 'pointer' }}>
                       <td>{p.date}</td>
@@ -803,9 +828,15 @@ export default function DaoPage() {
                       </td>
                       <td><span className={`exceeding-value ${p.exceeding >= 0 ? "positive" : "negative"}`}>{p.exceeding >= 0 ? `+${p.exceeding}%` : `${p.exceeding}%`}</span></td>
                       <td>
-                        <button className="btn-vote" onClick={(e) => { e.stopPropagation(); handleFinalizeClick(p); }}>
-                          <i className="fas fa-gavel" /> Finalize
-                        </button>
+                        {p.state === '4' ? (
+                          <button className="btn-vote" onClick={(e) => { e.stopPropagation(); handleExecuteClick(p); }}>
+                            <i className="fas fa-play" /> Execute
+                          </button>
+                        ) : (
+                          <button className="btn-vote" onClick={(e) => { e.stopPropagation(); handleFinalizeClick(p); }}>
+                            <i className="fas fa-gavel" /> Finalize
+                          </button>
+                        )}
                       </td>
                       <td><span className={`proposal-status ${p.status.toLowerCase()}`}>{p.status}</span></td>
                     </tr>
