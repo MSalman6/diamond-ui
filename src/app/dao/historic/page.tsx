@@ -241,7 +241,7 @@ export default function HistoricProposalsPage() {
                       })()}
                     </td>
                     <td>
-                      <div className="proposal-title"><span>{p.title}</span></div>
+                      <div className="proposal-title" title={p.title}><span>{p.title}</span></div>
                     </td>
                     <td><span className={`proposal-type ${(p.type || '').replace(/\s+/g, '-')}`}>{p.type}</span></td>
                     <td>

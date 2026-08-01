@@ -737,7 +737,7 @@ export default function DaoPage() {
                         })()}
                       </td>
                       <td>
-                        <div className="proposal-title"><span>{p.title}</span></div>
+                        <div className="proposal-title" title={p.title}><span>{p.title}</span></div>
                       </td>
                       <td><span className={`proposal-type ${(p.type || '').replace(/\s+/g, '-')}`}>{p.type === "community" ? "Open" : p.type}</span></td>
                       <td>
@@ -808,7 +808,7 @@ export default function DaoPage() {
                         })()}
                       </td>
                       <td>
-                        <div className="proposal-title"><span>{p.title}</span></div>
+                        <div className="proposal-title" title={p.title}><span>{p.title}</span></div>
                       </td>
                       <td><span className={`proposal-type ${(p.type || '').replace(/\s+/g, '-')}`}>{p.type}</span></td>
                       <td>

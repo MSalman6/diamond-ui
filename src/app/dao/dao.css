@@ -776,7 +776,7 @@
   background: var(--card-bg);
   border-radius: 8px;
   border: 1px solid var(--border-color);
-  overflow: hidden;
+  overflow-x: auto;
   margin-bottom: 30px;
   transition: background-color 0.5s ease, border-color 0.5s ease;
 }
@@ -790,6 +790,7 @@
 
 .proposals-table {
   width: 100%;
+  min-width: 900px;
   border-collapse: collapse;
 }
 
@@ -869,6 +870,12 @@
 
 .proposal-title {
   font-weight: 500;
+  max-width: 260px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
 }
 
 .proposal-type {
@@ -2517,7 +2524,7 @@
   background: var(--card-bg);
   border-radius: 8px;
   border: 1px solid var(--border-color);
-  overflow: hidden;
+  overflow-x: auto;
   margin-bottom: 30px;
   transition: background-color 0.5s ease, border-color 0.5s ease;
 }
@@ -2531,6 +2538,7 @@
 
 .proposals-table {
   width: 100%;
+  min-width: 900px;
   border-collapse: collapse;
 }
 

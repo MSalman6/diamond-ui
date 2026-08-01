@@ -112,6 +112,7 @@ export default function ProposalDetailsPage() {
   const [paramDisplayName, setParamDisplayName] = useState<string>("")
   const [currentParamValue, setCurrentParamValue] = useState<string>("")
   const [proposedParamValue, setProposedParamValue] = useState<string>("")
+  const [liveProposalFee, setLiveProposalFee] = useState<string | null>(null)
 
   const pathname = usePathname()
   const proposalId = (() => {
@@ -156,6 +157,17 @@ export default function ProposalDetailsPage() {
       setThresholdLeft("0%")
     }
   }, [votingStats, proposal?.totalStakeSnapshot, proposal?.proposalType, proposal?.rawProposalType, stakingContext.totalDaoStake])
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const fee = await web3Context.contractsManager?.daoContract?.methods?.createProposalFee().call()
+        if (!cancelled && fee !== undefined && fee !== null) setLiveProposalFee(String(fee))
+      } catch (e) {}
+    })()
+    return () => { cancelled = true }
+  }, [web3Context.contractsManager])
 
   // fetch proposal details and related data
   useEffect(() => {
@@ -438,14 +450,16 @@ export default function ProposalDetailsPage() {
   }
 
   const proposalFeeLabel = useMemo(() => {
-    const fee = daoContext?.proposalFee
+    const fee = liveProposalFee ?? daoContext?.proposalFee
     if (fee === undefined || fee === null || fee === '') return '—'
     try {
-      return `${BigNumber(fee).dividedBy(1e18).toString()} DMD`
+      const amount = BigNumber(fee).dividedBy(1e18)
+      if (!amount.isFinite()) return '—'
+      return `${amount.toFixed()} DMD`
     } catch (e) {
       return '—'
     }
-  }, [daoContext?.proposalFee])
+  }, [liveProposalFee, daoContext?.proposalFee])
 
   const proposalAccepted = (proposalType: string, positive: BigNumber, negative: BigNumber) => {
     const thresholdPercentage = daoContext.getProposalThreshold ? daoContext.getProposalThreshold(proposalType) : 0
