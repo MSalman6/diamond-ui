@@ -14,6 +14,51 @@ import { useStakingContext } from '@/contexts/Staking'
 import { capitalizeFirstLetter, decodeCallData, extractValueFromCalldata, formatCryptoUnitValue, getFunctionInfoWithAbi, timestampToDate } from '@/utils/common'
 import { getProposalImpact } from '@/constants/proposalImpacts'
 
+function CollapsibleDescription({ text }: { text: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const [overflows, setOverflows] = useState(false);
+  const textRef = useRef<HTMLParagraphElement | null>(null);
+
+  useEffect(() => {
+    const measure = () => {
+      const el = textRef.current;
+      if (!el) return;
+      // Only offer the toggle when the clamped text is actually cut off
+      setOverflows(el.scrollHeight > el.clientHeight + 1);
+    };
+    if (!expanded) measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [text, expanded]);
+
+  return (
+    <>
+      <p ref={textRef} className={expanded ? '' : 'clamped'}>{text}</p>
+      {(overflows || expanded) && (
+        <button
+          type="button"
+          className="expand-btn description-toggle"
+          aria-expanded={expanded}
+          onClick={() => setExpanded((prev) => !prev)}
+        >
+          {expanded
+            ? (<><i className="fas fa-chevron-up" /> Show less</>)
+            : (<><i className="fas fa-chevron-down" /> Show more</>)}
+        </button>
+      )}
+    </>
+  );
+}
+
+function ProposalDescription({ description, loaded = true }: { description: string; loaded?: boolean }) {
+  if (!description.trim()) {
+    // Stay blank until the proposal is in, so loading isn't reported as "no description"
+    if (!loaded) return null;
+    return <p className="empty-description">No description was provided for this proposal.</p>;
+  }
+  return <CollapsibleDescription text={description} />;
+}
+
 export default function ProposalDetailsPage() {
   const [menuActive, setMenuActive] = useState(false)
   const [type, setType] = useState<"parameter-change" | "funding-request" | "contract-upgrade">("parameter-change")
@@ -472,6 +517,16 @@ export default function ProposalDetailsPage() {
                 </div>
               </div>
 
+              {/* Rendered for every proposal type so a hidden type card can never swallow it */}
+              <div className="proposal-card description-card" id="description-content">
+                <div className="card-header"><h3>Description</h3></div>
+                <div className="card-content">
+                  <div className="parameter-description">
+                    <ProposalDescription description={proposal?.description || ''} loaded={Boolean(proposal?.id)} />
+                  </div>
+                </div>
+              </div>
+
               <div className={`proposal-card parameter-change-card ${type !== "parameter-change" ? "hidden" : ""}`} id="parameter-change-content">
                 <div className="card-header"><h3>Parameter Change</h3></div>
                 <div className="card-content">
@@ -501,10 +556,6 @@ export default function ProposalDetailsPage() {
                       <i className="fas fa-info-circle info-icon" aria-hidden="true" />
                     </InfoTooltip>
                   </div>
-                  <div className="parameter-description">
-                    <h4>Description</h4>
-                    <p>{proposal?.description || ''}</p>
-                  </div>
                   {(() => {
                     const impactData = getProposalImpact(paramFunctionName);
                     if (!impactData) return null;
@@ -532,10 +583,6 @@ export default function ProposalDetailsPage() {
                 <div className="proposal-card funding-request-card" id="funding-request-content">
                   <div className="card-header"><h3>Funding Request</h3></div>
                   <div className="card-content">
-                    <div className="parameter-description">
-                      <h4>Description</h4>
-                      <p>{proposal?.description || ''}</p>
-                    </div>
                     {proposal?.targets?.map((target: string, index: number) => {
                       if (target === '0x0000000000000000000000000000000000000000') return null
                       return (
@@ -566,10 +613,6 @@ export default function ProposalDetailsPage() {
               <div className={`proposal-card contract-upgrade-card ${type !== "contract-upgrade" ? "hidden" : ""}`} id="contract-upgrade-content">
                 <div className="card-header"><h3>Contract Upgrade</h3></div>
                 <div className="card-content">
-                  <div className="parameter-description">
-                    <h4>Description</h4>
-                    <p>{proposal?.description || ''}</p>
-                  </div>
                   {proposal?.targets?.map((target: string, index: number) => (
                     <div key={index} className="technical-details" style={{ marginBottom: index < (proposal.targets?.length || 0) - 1 ? '30px' : '0', paddingBottom: '20px', borderBottom: index < (proposal.targets?.length || 0) - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none' }}>
                       {proposal.targets.length > 1 && <div style={{ marginBottom: '10px', fontWeight: 'bold', color: 'var(--accent)' }}>Transaction {index + 1}</div>}
