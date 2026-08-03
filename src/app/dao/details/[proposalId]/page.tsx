@@ -113,7 +113,6 @@ export default function ProposalDetailsPage() {
   const [menuActive, setMenuActive] = useState(false)
   const [type, setType] = useState<"parameter-change" | "funding-request" | "contract-upgrade">("parameter-change")
   const [callDataCollapsed, setCallDataCollapsed] = useState(false)
-  const [decodedDataCollapsed, setDecodedDataCollapsed] = useState(false)
   const [progressYesWidth, setProgressYesWidth] = useState("0%")
   const [progressNoWidth, setProgressNoWidth] = useState("0%")
   const [thresholdLeft, setThresholdLeft] = useState<string>("0%")
@@ -712,22 +711,17 @@ export default function ProposalDetailsPage() {
                           {callDataCollapsed ? (<><i className="fas fa-chevron-down"></i> Expand</>) : (<><i className="fas fa-chevron-up"></i> Collapse</>) }
                         </button>
                         <div className={`call-data-content ${callDataCollapsed ? "collapsed" : ""}`}>
-                          <pre className="code-block"><code>{proposal?.calldatas?.[index] || 'Raw call data…'}</code></pre>
-                        </div>
-                      </div>
-                      <div className="decoded-data">
-                        <button id={`expand-decoded-data-${index}`} className="expand-btn" onClick={() => setDecodedDataCollapsed(!decodedDataCollapsed)}>
-                          {decodedDataCollapsed ? (<><i className="fas fa-chevron-down"></i> Expand</>) : (<><i className="fas fa-chevron-up"></i> Collapse</>) }
-                        </button>
-                        <div className={`decoded-data-content ${decodedDataCollapsed ? "collapsed" : ""}`}>
                           {(() => {
+                            const calldata = proposal?.calldatas?.[index]
+                            if (!calldata || calldata === '0x') return <pre className="code-block"><code>No call data for this transaction</code></pre>
                             try {
-                              const res = target && proposal?.calldatas?.[index] ? decodeCallData(web3Context.contractsManager, target, proposal.calldatas[index]) : {}
+                              const res = target ? decodeCallData(web3Context.contractsManager, target, calldata) : {}
                               if (res && Object.keys(res).length > 0) {
                                 return Object.entries(res).map(([k, v]) => (<div key={k}><strong>{capitalizeFirstLetter(k)}:</strong> {String(v)}</div>))
                               }
                             } catch (e) {}
-                            return 'Decoded data…'
+                            // Signature isn't in the target contract's current ABI, so fall back to raw
+                            return <pre className="code-block"><code>{calldata}</code></pre>
                           })()}
                         </div>
                       </div>

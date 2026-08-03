@@ -291,7 +291,11 @@ export async function transferName(
 /**
  * Names owned by a wallet, for the "Owned names" table.
  */
-export async function getOwnedNames(walletAddress: string): Promise<OwnedDmdName[]> {
+export async function getOwnedNames(
+  walletAddress: string,
+  registrarContract?: DMDRegistrarController,
+  web3?: Web3,
+): Promise<OwnedDmdName[]> {
   const response = await clientApiGet<{ data: any[] } | any[]>(
     `owner/${walletAddress}/names`,
   );
@@ -302,7 +306,21 @@ export async function getOwnedNames(walletAddress: string): Promise<OwnedDmdName
 
   const payload = response.data as unknown;
   const rows = Array.isArray(payload) ? payload : (payload as { data?: any[] })?.data ?? [];
-  return rows.map(normalizeOwnedName);
+  const names = rows.map(normalizeOwnedName);
+
+  if (registrarContract && web3) {
+    await Promise.all(rows.map(async (raw, index) => {
+      const rawAction = raw.last_action ?? raw.lastAction;
+      const blockNumber = Number(rawAction?.block_number ?? rawAction?.blockNumber ?? 0);
+      const lastAction = names[index].lastAction;
+      if (rawAction?.type?.toLowerCase() === 'blockedset' && blockNumber && lastAction) {
+        const isDaoBan = await wasBlockedViaDaoModeration(registrarContract, web3, blockNumber);
+        lastAction.type = isDaoBan ? 'Banned' : 'Blocked';
+      }
+    }));
+  }
+
+  return names;
 }
 
 /**
@@ -342,6 +360,7 @@ const ACTION_LABELS: Record<string, string> = {
   activated: 'Activated',
   renewed: 'Renewed',
   transfer: 'Transferred',
+  blockedset: 'Blocked',
 };
 
 function actionLabel(type: string): string {
@@ -350,6 +369,26 @@ function actionLabel(type: string): string {
     return known;
   }
   return type ? type.charAt(0).toUpperCase() + type.slice(1).toLowerCase() : 'Updated';
+}
+
+const NAME_MODERATED_TOPIC = Web3.utils.sha3('NameModerated(address,bytes32,string,string)');
+
+async function wasBlockedViaDaoModeration(
+  contract: DMDRegistrarController,
+  web3: Web3,
+  blockNumber: number,
+): Promise<boolean> {
+  try {
+    const logs = await web3.eth.getPastLogs({
+      address: contract.options.address,
+      topics: [NAME_MODERATED_TOPIC],
+      fromBlock: blockNumber,
+      toBlock: blockNumber,
+    });
+    return logs.length > 0;
+  } catch {
+    return false;
+  }
 }
 
 function normalizeOwnedName(raw: any): OwnedDmdName {

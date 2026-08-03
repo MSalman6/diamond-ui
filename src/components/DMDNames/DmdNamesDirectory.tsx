@@ -279,14 +279,16 @@ export default function DmdNamesDirectory() {
                   <td>{formatDmdDate(entry.expiresAt)}</td>
                   <td className="dmd-owned-actions-cell">
                     {!isModerated && (
-                      <button
-                        type="button"
-                        className="dmd-table-btn"
-                        title={isUserHidden ? 'Unhide this name for yourself' : 'Hide this name for yourself'}
-                        onClick={() => (isUserHidden ? unhideName(entry.name) : hideName(entry.name))}
-                      >
-                        <i className={`fas ${isUserHidden ? 'fa-eye' : 'fa-eye-slash'}`}></i>
-                      </button>
+                      <div className="dmd-owned-actions-inner">
+                        <button
+                          type="button"
+                          className="dmd-table-btn"
+                          title={isUserHidden ? 'Unhide this name for yourself' : 'Hide this name for yourself'}
+                          onClick={() => (isUserHidden ? unhideName(entry.name) : hideName(entry.name))}
+                        >
+                          <i className={`fas ${isUserHidden ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                        </button>
+                      </div>
                     )}
                   </td>
                 </tr>

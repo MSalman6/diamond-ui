@@ -436,9 +436,13 @@
 }
 
 .dmd-owned-actions-cell {
-  display: flex;
+  text-align: right;
+}
+
+.dmd-owned-actions-inner {
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
-  justify-content: flex-end;
 }
 
 .dmd-owned-empty,
@@ -489,7 +493,6 @@
   color: var(--text);
   cursor: pointer;
   white-space: nowrap;
-  height: 100%;
 }
 
 .dmd-table-btn:hover {

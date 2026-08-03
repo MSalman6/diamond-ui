@@ -58,14 +58,14 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
       setNames(null);
     }
 
-    getOwnedNames(walletAddress)
+    getOwnedNames(walletAddress, contractsManager?.diamondRegistryContract, readonlyWeb3)
       .then(setNames)
       .catch(() => {
         if (options?.silent) return;
         setNames([]);
         setError('Unable to load owned names right now. Please try again later.');
       });
-  }, [walletAddress, isPrivacyMode]);
+  }, [walletAddress, isPrivacyMode, contractsManager, readonlyWeb3]);
 
   useEffect(() => {
     reload();
@@ -218,6 +218,7 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
                       : '—'}
                   </td>
                   <td className="dmd-owned-actions-cell">
+                    <div className="dmd-owned-actions-inner">
                     <Link href={`/names/${entry.name}?from=my-names`} className="dmd-table-btn">
                       History
                     </Link>
@@ -273,6 +274,7 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
                         )}
                       </div>
                     )}
+                    </div>
                   </td>
                 </tr>
               ))}
