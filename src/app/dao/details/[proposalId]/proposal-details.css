@@ -548,6 +548,40 @@
   line-height: 1.6;
   margin: 0;
   opacity: 0.9;
+  white-space: pre-wrap;
+}
+
+.parameter-description p.empty-description {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+body.light-theme .parameter-description {
+  background: #f5f7fa;
+  border: 1px solid #e5e7eb;
+}
+
+.parameter-description p.clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 12;
+  line-clamp: 12;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.parameter-description .description-toggle {
+  margin-top: 14px;
+  margin-left: -10px;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.parameter-description .description-toggle:hover {
+  background: rgba(58, 123, 213, 0.12);
+}
+
+.parameter-description .description-toggle i {
+  font-size: 0.8rem;
 }
 
 .parameter-impact h4 {
