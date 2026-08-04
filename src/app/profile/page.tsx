@@ -425,7 +425,7 @@ export default function ProfilePage() {
                     className="btn-secondary btn-sm dp2-rewards-history-btn"
                   >
                     <i className="fas fa-history" aria-hidden="true"></i>
-                    Rewards History
+                    History
                   </button>
                 )}
               </div>
@@ -860,7 +860,7 @@ export default function ProfilePage() {
                     className="btn-secondary btn-sm dp2-rewards-history-btn"
                   >
                     <i className="fas fa-history" aria-hidden="true"></i>
-                    Rewards History
+                    History
                   </button>
                 )}
               </div>

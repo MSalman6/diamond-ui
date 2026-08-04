@@ -26,6 +26,8 @@ import { getCachedNodeRewardStats, getCachedNodeDailyRewards } from '@/lib/rewar
 import type { RewardsRange } from '@/lib/rewardStatsCache';
 import { mapDailyRewardsToChartPoints } from '@/utils/rewardAggregation';
 import type { NodeRewardStats, NodeDailyReward } from '@/types/rewards';
+import { useDmdNamesForAddresses } from '@/hooks/useDmdNamesForAddresses';
+import { formatDmdName } from '@/utils/dmdNaming';
 
 
 export default function ValidatorDetails() {
@@ -38,6 +40,8 @@ export default function ValidatorDetails() {
   const { activeProposals, getMyVote, getActiveProposals } = useDaoContext();
   const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake } = useStakingContext();
   const isPrivacyMode = useIsPrivacyMode();
+  const dmdNames = useDmdNamesForAddresses(address ? [address] : []);
+  const dmdName = address ? dmdNames[address.toLowerCase()] : null;
 
   // State
   const [pool, setPool] = useState<any | null>(null);
@@ -239,7 +243,9 @@ export default function ValidatorDetails() {
                 <div className="vd-detail-avatar" aria-hidden="true"></div>
                 <div className="vd-detail-id">
                   <div className="vd-detail-id-top">
-                    <h1 id="validator-address" className="vd-detail-address">{address ? truncateAddress(address) : 'Loading...'}</h1>
+                    <h1 id="validator-address" className="vd-detail-address">
+                      {address ? (dmdName ? formatDmdName(dmdName) : truncateAddress(address)) : 'Loading...'}
+                    </h1>
                     <span id="validator-status-badge" className={`status-badge ${pool?.isActive ? 'status-active' : (pool?.isToBeElected || pool?.isPendingValidator) ? 'status-valid' : 'status-invalid'}`}>
                       {pool?.isActive ? "Active" : (pool?.isToBeElected || pool?.isPendingValidator) ? "Valid" : "Invalid"}
                     </span>
@@ -254,6 +260,12 @@ export default function ValidatorDetails() {
                       </a>
                     </div>
                   </div>
+                  {dmdName && (
+                    <div className="vd-detail-address-sub" onClick={() => copyData(address || '')} title="Click to copy address">
+                      {truncateAddress(address)}
+                      <i className="fas fa-copy"></i>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="vd-detail-totalpool">

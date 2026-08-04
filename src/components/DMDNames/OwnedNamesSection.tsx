@@ -58,14 +58,14 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
       setNames(null);
     }
 
-    getOwnedNames(walletAddress, contractsManager?.diamondRegistryContract, readonlyWeb3)
+    getOwnedNames(walletAddress)
       .then(setNames)
       .catch(() => {
         if (options?.silent) return;
         setNames([]);
         setError('Unable to load owned names right now. Please try again later.');
       });
-  }, [walletAddress, isPrivacyMode, contractsManager, readonlyWeb3]);
+  }, [walletAddress, isPrivacyMode]);
 
   useEffect(() => {
     reload();

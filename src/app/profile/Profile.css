@@ -943,6 +943,11 @@ body.light-theme .dp2-tfoot-rewards-value {
   word-break: break-word;
 }
 
+.validator-identity .profile-dmd-name {
+  font-size: 1.3rem;
+  margin: 0 0 2px;
+}
+
 .profile-wallet-row {
   display: flex;
   align-items: center;

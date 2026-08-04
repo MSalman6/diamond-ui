@@ -21,6 +21,23 @@ body.light-theme .dmd-validator-cell__sub { color: #666; }
 body.light-theme .dmd-validator-cell__sub--green { color: #1a7a40; }
 body.light-theme .dmd-validator-cell__sub--yellow { color: #c06000; }
 body.light-theme .dmd-validator-cell__sub--red { color: #c0392b; }
+.dmd-validator-cell__addr-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.dmd-validator-cell__copy {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  opacity: 0.6;
+  cursor: pointer;
+  font-size: 0.7rem;
+  line-height: 1;
+}
+.dmd-validator-cell__copy:hover { opacity: 1; }
 
 /* Aep30Badge */
 .dmd-aep30-badge {

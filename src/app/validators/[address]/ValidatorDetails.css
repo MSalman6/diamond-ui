@@ -2596,6 +2596,29 @@ body.light-theme .vd-rewards-performance-title h2 {
   transition: color 0.5s ease;
 }
 
+.vd-detail-address-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: var(--text-secondary, #aaa);
+  cursor: pointer;
+}
+
+.vd-detail-address-sub i {
+  opacity: 0.6;
+  font-size: 0.75rem;
+}
+
+.vd-detail-address-sub:hover i {
+  opacity: 1;
+}
+
+body.light-theme .vd-detail-address-sub {
+  color: #666;
+}
+
 .vd-detail-totalpool {
   text-align: right;
   margin-left: auto;

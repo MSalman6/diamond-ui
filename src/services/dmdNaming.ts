@@ -291,11 +291,7 @@ export async function transferName(
 /**
  * Names owned by a wallet, for the "Owned names" table.
  */
-export async function getOwnedNames(
-  walletAddress: string,
-  registrarContract?: DMDRegistrarController,
-  web3?: Web3,
-): Promise<OwnedDmdName[]> {
+export async function getOwnedNames(walletAddress: string): Promise<OwnedDmdName[]> {
   const response = await clientApiGet<{ data: any[] } | any[]>(
     `owner/${walletAddress}/names`,
   );
@@ -306,21 +302,7 @@ export async function getOwnedNames(
 
   const payload = response.data as unknown;
   const rows = Array.isArray(payload) ? payload : (payload as { data?: any[] })?.data ?? [];
-  const names = rows.map(normalizeOwnedName);
-
-  if (registrarContract && web3) {
-    await Promise.all(rows.map(async (raw, index) => {
-      const rawAction = raw.last_action ?? raw.lastAction;
-      const blockNumber = Number(rawAction?.block_number ?? rawAction?.blockNumber ?? 0);
-      const lastAction = names[index].lastAction;
-      if (rawAction?.type?.toLowerCase() === 'blockedset' && blockNumber && lastAction) {
-        const isDaoBan = await wasBlockedViaDaoModeration(registrarContract, web3, blockNumber);
-        lastAction.type = isDaoBan ? 'Banned' : 'Blocked';
-      }
-    }));
-  }
-
-  return names;
+  return rows.map(normalizeOwnedName);
 }
 
 /**
@@ -360,7 +342,7 @@ const ACTION_LABELS: Record<string, string> = {
   activated: 'Activated',
   renewed: 'Renewed',
   transfer: 'Transferred',
-  blockedset: 'Blocked',
+  blockedset: 'Banned',
 };
 
 function actionLabel(type: string): string {
@@ -369,26 +351,6 @@ function actionLabel(type: string): string {
     return known;
   }
   return type ? type.charAt(0).toUpperCase() + type.slice(1).toLowerCase() : 'Updated';
-}
-
-const NAME_MODERATED_TOPIC = Web3.utils.sha3('NameModerated(address,bytes32,string,string)');
-
-async function wasBlockedViaDaoModeration(
-  contract: DMDRegistrarController,
-  web3: Web3,
-  blockNumber: number,
-): Promise<boolean> {
-  try {
-    const logs = await web3.eth.getPastLogs({
-      address: contract.options.address,
-      topics: [NAME_MODERATED_TOPIC],
-      fromBlock: blockNumber,
-      toBlock: blockNumber,
-    });
-    return logs.length > 0;
-  } catch {
-    return false;
-  }
 }
 
 function normalizeOwnedName(raw: any): OwnedDmdName {
@@ -563,6 +525,62 @@ export async function getNamesDirectory(query: DmdDirectoryQuery = {}): Promise<
     page,
     pageSize,
   };
+}
+
+const ACTIVE_NAME_MAP_CACHE_KEY = 'dmd_active_name_map_v1';
+const ACTIVE_NAME_MAP_PAGE_SIZE = 500;
+
+let activeNameMapPromise: Promise<Record<string, string>> | null = null;
+
+async function fetchActiveNameMap(): Promise<Record<string, string>> {
+  const map: Record<string, string> = {};
+  let page = 1;
+  for (let guard = 0; guard < 20; guard += 1) {
+    const res = await getNamesDirectory({ status: 'active', page, pageSize: ACTIVE_NAME_MAP_PAGE_SIZE });
+    for (const entry of res.items) {
+      if (entry.ownerAddress) {
+        map[entry.ownerAddress.toLowerCase()] = entry.name;
+      }
+    }
+    if (res.items.length === 0 || page * ACTIVE_NAME_MAP_PAGE_SIZE >= res.total) {
+      break;
+    }
+    page += 1;
+  }
+  return map;
+}
+
+export async function getActiveNameMap(web3: Web3): Promise<Record<string, string>> {
+  const latestBlock = String(await web3.eth.getBlockNumber());
+
+  if (typeof window !== 'undefined') {
+    try {
+      const cached = localStorage.getItem(ACTIVE_NAME_MAP_CACHE_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached) as { data: Record<string, string>; blockNumber: string };
+        if (parsed?.data && parsed.blockNumber === latestBlock) {
+          return parsed.data;
+        }
+      }
+    } catch {}
+  }
+
+  if (!activeNameMapPromise) {
+    activeNameMapPromise = fetchActiveNameMap().then((map) => {
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem(ACTIVE_NAME_MAP_CACHE_KEY, JSON.stringify({ data: map, blockNumber: latestBlock }));
+        } catch {
+          // ignore quota errors
+        }
+      }
+      return map;
+    }).finally(() => {
+      activeNameMapPromise = null;
+    });
+  }
+
+  return activeNameMapPromise;
 }
 
 /**

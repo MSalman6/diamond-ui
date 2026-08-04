@@ -20,6 +20,7 @@ import ValidatorCell from '../ValidatorCell';
 import { Aep30Bar } from '../Aep30Badge';
 import SaturationBar from '../SaturationBar';
 import Rpt30Cell from '../Rpt30Cell';
+import { useDmdNamesForAddresses } from '@/hooks/useDmdNamesForAddresses';
 
 const SORT_PILLS = [
   { key: 'rpt30',      label: 'Highest RpT30',       icon: 'fa-trophy',        direction: 'descending' },
@@ -323,6 +324,8 @@ export default function Validators() {
   const offset = currentPage * itemsPerPage;
   const currentItems = poolsCopy.slice(offset, offset + itemsPerPage);
 
+  const dmdNames = useDmdNamesForAddresses(currentItems.map(p => p.stakingAddress).filter(Boolean));
+
   // Handle page changes
   const handlePageClick = (pageIndex: number) => {
     setCurrentPage(pageIndex);
@@ -481,7 +484,9 @@ export default function Validators() {
                 {pool.stakingAddress ? (
                   <ValidatorCell
                     address={pool.stakingAddress}
+                    name={dmdNames[pool.stakingAddress.toLowerCase()]}
                     onClick={(e) => { e.stopPropagation(); copyData(e, pool.stakingAddress, 'Copied staking address'); }}
+                    onCopy={(addr) => { copy(addr); toast.success('Copied staking address'); }}
                   />
                 ) : (
                   <div>Loading...</div>
