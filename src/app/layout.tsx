@@ -2,6 +2,7 @@ import "./globals.css";
 import "@/components/Header/Header.css";
 import "@/components/InfoTooltip/InfoTooltip.css";
 import "@/components/PrivacyModeIndicator/PrivacyModeIndicator.css";
+import "@/components/MarkdownText/MarkdownText.css";
 import "@/components/PrivacyModeGuard.css";
 import type { Metadata } from "next";
 import { DaoContextProvider } from "@/contexts/DAO";

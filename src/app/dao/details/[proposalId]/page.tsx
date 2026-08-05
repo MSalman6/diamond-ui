@@ -4,6 +4,7 @@ import "./proposal-details.css"
 import "../../../styles/proposal-status.css";
 import React, { useEffect, useMemo, useRef, useState } from "react"
 import InfoTooltip from '@/components/InfoTooltip'
+import MarkdownText, { hasMarkdownSyntax } from '@/components/MarkdownText'
 import Modal from '@/components/Modal'
 import { usePathname } from 'next/navigation'
 import BigNumber from 'bignumber.js'
@@ -42,11 +43,12 @@ function parseUsernameModerationDescription(description: string): UsernameModera
 function CollapsibleDescription({ text }: { text: string }) {
   const [expanded, setExpanded] = useState(false);
   const [overflows, setOverflows] = useState(false);
-  const textRef = useRef<HTMLParagraphElement | null>(null);
+  const contentRef = useRef<HTMLElement | null>(null);
+  const formatted = useMemo(() => hasMarkdownSyntax(text), [text]);
 
   useEffect(() => {
     const measure = () => {
-      const el = textRef.current;
+      const el = contentRef.current;
       if (!el) return;
       // Only offer the toggle when the clamped text is actually cut off
       setOverflows(el.scrollHeight > el.clientHeight + 1);
@@ -54,11 +56,19 @@ function CollapsibleDescription({ text }: { text: string }) {
     if (!expanded) measure();
     window.addEventListener('resize', measure);
     return () => window.removeEventListener('resize', measure);
-  }, [text, expanded]);
+  }, [text, expanded, formatted]);
 
   return (
     <>
-      <p ref={textRef} className={expanded ? '' : 'clamped'}>{text}</p>
+      {formatted ? (
+        <MarkdownText
+          ref={(el) => { contentRef.current = el; }}
+          text={text}
+          className={expanded ? '' : 'clamped'}
+        />
+      ) : (
+        <p ref={(el) => { contentRef.current = el; }} className={expanded ? '' : 'clamped'}>{text}</p>
+      )}
       {(overflows || expanded) && (
         <button
           type="button"
@@ -88,7 +98,11 @@ function ProposalDescription({ description, loaded = true }: { description: stri
 
   return (
     <>
-      {moderation.summary && <p>{moderation.summary}</p>}
+      {moderation.summary && (
+        hasMarkdownSyntax(moderation.summary)
+          ? <MarkdownText text={moderation.summary} />
+          : <p>{moderation.summary}</p>
+      )}
       <div className="target-address">
         <div className="label">Username</div>
         <div className="value">{moderation.username}</div>
