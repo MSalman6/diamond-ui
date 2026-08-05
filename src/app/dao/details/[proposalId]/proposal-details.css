@@ -571,6 +571,31 @@ body.light-theme .parameter-description {
   overflow: hidden;
 }
 
+.parameter-description .markdown-body {
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.parameter-description .markdown-body p,
+.parameter-description .markdown-body li {
+  font-weight: 500;
+  opacity: 1;
+}
+
+.parameter-description .markdown-body h3,
+.parameter-description .markdown-body h4,
+.parameter-description .markdown-body h5,
+.parameter-description .markdown-body h6 {
+  opacity: 1;
+}
+
+.parameter-description .markdown-body.clamped {
+  max-height: 24em;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+}
+
 .parameter-description .description-toggle {
   margin-top: 14px;
   margin-left: -10px;

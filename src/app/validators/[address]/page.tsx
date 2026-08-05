@@ -17,6 +17,7 @@ import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import InfoTooltip from '@/components/InfoTooltip';
+import { markdownToPlainText } from '@/components/MarkdownText';
 import { Aep30Ring } from '@/components/Aep30Badge';
 import ComposedChart from '@/components/Charts/ComposedChart';
 import BonusScoreHistoryModal from '@/components/Modals/BonusScoreHistory/BonusScoreHistoryModal';
@@ -770,7 +771,7 @@ export default function ValidatorDetails() {
                           )}
                         </div>
                       </td>
-                      <td><span className="vd-dao-desc">{proposal.description || '—'}</span></td>
+                      <td><span className="vd-dao-desc">{markdownToPlainText(proposal.description) || '—'}</span></td>
                       <td>
                         {votedYes && (
                           <span className="vd-dao-action vd-dao-action--for">For</span>
