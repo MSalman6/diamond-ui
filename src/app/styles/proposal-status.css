@@ -1,11 +1,16 @@
 /* Base status badge styling */
 .proposal-status {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   padding: 4px 10px;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 500;
+  line-height: 1.4;
   text-align: center;
+  white-space: nowrap;
 }
 
 .proposal-status.active {

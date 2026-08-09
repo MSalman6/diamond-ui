@@ -20,6 +20,8 @@ const MARKDOWN_HINTS = [
 
 const INLINE_BULLET = /(^|\s)\*(?!\*)[ \t]+(?=\S)/g;
 
+const CLOSING_HASHES = /[ \t]+#{1,6}(?=\s|$)/g;
+
 function countInlineBullets(text: string): number {
   return (text.match(INLINE_BULLET) || []).length;
 }
@@ -37,10 +39,21 @@ export function markdownToPlainText(text: string): string {
     .replace(/`([^`\n]+)`/g, '$1')
     .replace(/!?\[([^\]\n]+)\]\([^)\s]+\)/g, '$1')
     .replace(/(^|\s)#{1,6}[ \t]+/g, '$1')
+    .replace(CLOSING_HASHES, '')
     .replace(/(^|\n)[ \t]*-{3,}[ \t]*(?=\n|$)/g, '$1')
     .replace(/\*+/g, '')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+export function markdownToSnippet(text: string, limit = 150): string {
+  const plain = markdownToPlainText(text);
+  if (plain.length <= limit) return plain;
+
+  const clipped = plain.slice(0, limit);
+  const lastSpace = clipped.lastIndexOf(' ');
+  const head = lastSpace > limit / 2 ? clipped.slice(0, lastSpace) : clipped;
+  return `${head.replace(/[\s.,;:!?-]+$/, '')}…`;
 }
 
 const TITLE_CONNECTORS = new Set([
@@ -115,7 +128,7 @@ function parseBlocks(source: string): Block[] {
     const heading = line.match(/^(#{1,6})[ \t]+(.+)$/);
     if (heading) {
       flush();
-      const { heading: title, body } = splitHeadingLine(heading[2]);
+      const { heading: title, body } = splitHeadingLine(heading[2].replace(CLOSING_HASHES, ''));
       blocks.push({ kind: 'heading', level: heading[1].length, text: title });
       if (body) paragraph.push(body);
       continue;

@@ -17,7 +17,7 @@ import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import InfoTooltip from '@/components/InfoTooltip';
-import { markdownToPlainText } from '@/components/MarkdownText';
+import { markdownToPlainText, markdownToSnippet } from '@/components/MarkdownText';
 import { Aep30Ring } from '@/components/Aep30Badge';
 import ComposedChart from '@/components/Charts/ComposedChart';
 import BonusScoreHistoryModal from '@/components/Modals/BonusScoreHistory/BonusScoreHistoryModal';
@@ -759,11 +759,14 @@ export default function ValidatorDetails() {
                   const votedYes = hasVoted && proposal.myVote === '1';
                   const votedNo = hasVoted && proposal.myVote === '0';
 
+                  const title = markdownToPlainText(proposal.title);
+                  const description = markdownToPlainText(proposal.description);
+
                   return (
                     <tr key={i} onClick={() => navigateToProposal(proposal.id)} className="clickable-row">
                       <td>
                         <div className="proposal-name">
-                          <span>{proposal.title}</span>
+                          <span className="vd-dao-title" title={title}>{title}</span>
                           {isProposer && (
                             <span className="creator-badge">
                               <i className="fas fa-user-edit"></i> Creator
@@ -771,7 +774,7 @@ export default function ValidatorDetails() {
                           )}
                         </div>
                       </td>
-                      <td><span className="vd-dao-desc">{markdownToPlainText(proposal.description) || '—'}</span></td>
+                      <td><span className="vd-dao-desc" title={description}>{markdownToSnippet(proposal.description) || '—'}</span></td>
                       <td>
                         {votedYes && (
                           <span className="vd-dao-action vd-dao-action--for">For</span>
