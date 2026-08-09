@@ -978,6 +978,8 @@ body.light-theme .performance-info {
   font-size: 0.95rem;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+  vertical-align: middle;
   transition: color 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
 }
 
@@ -985,6 +987,7 @@ body.light-theme .performance-info {
   margin-left: 5px;
   cursor: pointer;
   opacity: 0.7;
+  vertical-align: middle;
   transition: opacity 0.2s ease;
 }
 
@@ -1062,6 +1065,7 @@ body.light-theme .address-icon {
   border: 1px solid var(--border-color);
   border-radius: 12px;
   overflow: hidden;
+  overflow-x: auto;
   margin-bottom: 30px;
   transition: background-color 0.5s ease, border-color 0.5s ease;
   backdrop-filter: blur(10px);
@@ -1076,17 +1080,12 @@ body.light-theme .address-icon {
   background: rgba(0, 0, 0, 0.2);
   padding: 20px;
   text-align: left;
-  border-collapse: collapse;
-}
-
-.dao-table th {
-  background: rgba(0, 0, 0, 0.2);
-  padding: 20px;
-  text-align: left;
   font-weight: 600;
   font-size: 0.95rem;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+  vertical-align: middle;
   transition: color 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
 }
 
@@ -1094,6 +1093,7 @@ body.light-theme .address-icon {
   margin-left: 5px;
   cursor: pointer;
   opacity: 0.7;
+  vertical-align: middle;
   transition: opacity 0.2s ease;
 }
 
@@ -1216,12 +1216,17 @@ body.light-theme .address-icon {
 }
 
 .proposal-status {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
+  line-height: 1.4;
   text-align: center;
+  white-space: nowrap;
 }
 
 .proposal-status.passed {
@@ -2792,7 +2797,16 @@ body.light-theme .vd-detail-address-sub {
   width: 100%;
 }
 
-/* DAO participation — description + action cells */
+.vd-dao-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  max-width: 480px;
+  overflow-wrap: anywhere;
+}
+
 .vd-dao-desc {
   color: var(--text-secondary);
   opacity: 0.85;
@@ -2800,6 +2814,7 @@ body.light-theme .vd-detail-address-sub {
   line-height: 1.4;
   display: inline-block;
   max-width: 480px;
+  overflow-wrap: anywhere;
 }
 
 .vd-dao-action {

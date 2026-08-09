@@ -13,6 +13,7 @@ import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { timestampToDate, truncateAddress } from '@/utils/common';
 import InfoTooltip from '@/components/InfoTooltip';
+import { markdownToPlainText } from '@/components/MarkdownText';
 
 type ProposalType = "parameter" | "open" | "contract upgrade";
 
@@ -108,7 +109,7 @@ export default function DaoPage() {
         creator: truncateAddress(fullAddress),
         fullCreatorAddress: fullAddress,
         creatorColor: undefined,
-        title: p.title || (p.description ? String(p.description).split('\n')[0] : ""),
+        title: markdownToPlainText(p.title || (p.description ? String(p.description).split('\n')[0] : "")),
         type: (p.proposalType || p.rawProposalType || 'open').toLowerCase(),
         participation: Number(p.participation) || 0,
         exceeding: Number(p.exceedingYes) || 0,

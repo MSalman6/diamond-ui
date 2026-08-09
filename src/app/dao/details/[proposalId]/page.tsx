@@ -4,7 +4,7 @@ import "./proposal-details.css"
 import "../../../styles/proposal-status.css";
 import React, { useEffect, useMemo, useRef, useState } from "react"
 import InfoTooltip from '@/components/InfoTooltip'
-import MarkdownText, { hasMarkdownSyntax } from '@/components/MarkdownText'
+import MarkdownText, { hasMarkdownSyntax, markdownToPlainText } from '@/components/MarkdownText'
 import Modal from '@/components/Modal'
 import { usePathname } from 'next/navigation'
 import BigNumber from 'bignumber.js'
@@ -573,7 +573,7 @@ export default function ProposalDetailsPage() {
               <span>Proposal Details</span>
             </div>
             <div className="proposal-header">
-              <h1 id="proposal-title">{proposal?.title || ''}</h1>
+              <h1 id="proposal-title">{markdownToPlainText(proposal?.title || '')}</h1>
               <div className="proposal-meta">
                 <div className="proposal-date">
                   <i className="fas fa-calendar" /> Date: {proposal?.timestamp ? timestampToDate(proposal.timestamp) : ''}

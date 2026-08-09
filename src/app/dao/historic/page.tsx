@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useDaoContext } from '@/contexts/DAO';
 import { useWeb3Context } from '@/contexts/Web3';
 import { timestampToDate, truncateAddress } from '@/utils/common';
+import { markdownToPlainText } from '@/components/MarkdownText';
 
 type Proposal = {
   id: string;
@@ -56,7 +57,7 @@ export default function HistoricProposalsPage() {
       date: p.timestamp ? timestampToDate(p.timestamp) : (p.date || new Date().toISOString().slice(0,10)),
       creator: truncateAddress(p.proposer || p.proposerAddress || ""),
       creatorColor: undefined,
-      title: p.title || (p.description ? String(p.description).split('\n')[0] : ""),
+      title: markdownToPlainText(p.title || (p.description ? String(p.description).split('\n')[0] : "")),
       type: (p.proposalType || p.rawProposalType || 'open').toLowerCase(),
       participation: Number(p.participation) || 0,
       exceeding: Number(p.exceedingYes) || 0,

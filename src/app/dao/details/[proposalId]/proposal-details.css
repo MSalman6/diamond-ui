@@ -50,14 +50,17 @@
 }
 
 .proposal-status {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   font-size: 0.95rem;
   padding: 5px 12px;
   border-radius: 20px;
   font-weight: 500;
+  line-height: 1.4;
   text-align: center;
+  white-space: nowrap;
 }
 
 .dismiss-proposal-btn {
