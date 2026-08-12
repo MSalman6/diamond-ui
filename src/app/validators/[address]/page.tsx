@@ -25,6 +25,8 @@ import StakeHistoryModal from '@/components/Modals/StakeHistory/StakeHistoryModa
 import NodeRewardsHistoryModal from '@/components/Modals/NodeRewardsHistory/NodeRewardsHistoryModal';
 import { getCachedNodeRewardStats, getCachedNodeDailyRewards } from '@/lib/rewardStatsCache';
 import type { RewardsRange } from '@/lib/rewardStatsCache';
+import { getDelegationStartDates } from '@/lib/delegationDates';
+import type { DelegationStartDates } from '@/lib/delegationDates';
 import { mapDailyRewardsToChartPoints } from '@/utils/rewardAggregation';
 import type { NodeRewardStats, NodeDailyReward } from '@/types/rewards';
 import { useDmdNamesForAddresses } from '@/hooks/useDmdNamesForAddresses';
@@ -61,6 +63,7 @@ export default function ValidatorDetails() {
   const [chartShowRpt, setChartShowRpt] = useState(true);
   const [chartShowPoolReward, setChartShowPoolReward] = useState(true);
   const [chartShowOwnerShare, setChartShowOwnerShare] = useState(true);
+  const [delegationStartDates, setDelegationStartDates] = useState<DelegationStartDates>({});
 
   // Effects
   useEffect(() => {
@@ -100,6 +103,16 @@ export default function ValidatorDetails() {
       .catch(() => {})
       .finally(() => setIsLoadingEpochRewards(false));
   }, [address, isPrivacyMode, chartRange]);
+
+  useEffect(() => {
+    if (!address || isPrivacyMode) {
+      setDelegationStartDates({});
+      return;
+    }
+    getDelegationStartDates(address)
+      .then(dates => setDelegationStartDates(dates))
+      .catch(() => {});
+  }, [address, isPrivacyMode]);
 
   // RpT30 change vs previous 30d as a percentage
   const rpt30DeltaPct = useMemo(() => {
@@ -144,6 +157,12 @@ export default function ValidatorDetails() {
   const myStakePct = stakePct(myStakeWei);
 
   const formatStakeDmd = (wei: BigNumber) => wei.dividedBy(10 ** 18).toFormat(4, BigNumber.ROUND_DOWN);
+
+  const delegationSince = (delegatorAddress: string) => {
+    if (isPrivacyMode) return '—';
+    const timestamp = delegationStartDates[delegatorAddress?.toLowerCase()];
+    return timestamp ? timestampToDate(String(timestamp)) : 'Unknown';
+  };
 
   // Monthly rewards: validator owner share (VOS30) plus the rewards earned on the
   // validator's own staked DMD (own stake earns at the RpT30 rate per 1,000 DMD).
@@ -715,7 +734,7 @@ export default function ValidatorDetails() {
                       </td>
                       <td>{delegatedAmount.toFormat(4, BigNumber.ROUND_DOWN)} DMD</td>
                       <td>{percentage}%</td>
-                      <td>Unknown</td>
+                      <td>{delegationSince(delegator.address)}</td>
                     </tr>
                   );
                 }) : (

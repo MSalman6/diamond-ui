@@ -798,7 +798,7 @@ export default function ProfilePage() {
                     {isPrivacyMode ? '—' : isLoadingValidatorStats ? '...' : monthlyRewards30d != null ? monthlyRewards30d.toFixed(2) + ' DMD' : '—'}
                   </div>
                   {!isPrivacyMode && (
-                    <button onClick={() => setIsValidatorRewardsHistoryModalOpen(true)} className="btn-secondary btn-sm">Rewards history</button>
+                    <button onClick={() => setIsValidatorRewardsHistoryModalOpen(true)} className="btn-secondary btn-sm">History</button>
                   )}
                 </div>
 
