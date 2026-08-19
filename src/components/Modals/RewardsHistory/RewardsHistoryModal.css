@@ -19,6 +19,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-right: 40px;
 }
 
 .rewards-history-title {
@@ -26,6 +27,32 @@
   font-weight: 600;
   color: var(--text);
   margin: 0;
+}
+
+.rewards-history-export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.rewards-history-export-btn:hover:not(:disabled) {
+  background: var(--accent);
+  color: white;
+}
+
+.rewards-history-export-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .rewards-history-subtitle {

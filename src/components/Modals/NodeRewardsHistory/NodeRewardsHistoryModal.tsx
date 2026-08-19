@@ -27,6 +27,7 @@ const NodeRewardsHistoryModal: React.FC<NodeRewardsHistoryModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
+  const [isExporting, setIsExporting] = useState(false);
   const { isPrivacyMode } = usePrivacyMode();
 
   const fetchRewards = async () => {
@@ -89,11 +90,87 @@ const NodeRewardsHistoryModal: React.FC<NodeRewardsHistoryModalProps> = ({
     [rewards]
   );
 
+  const escapeCsvField = (value: string | number) => {
+    const str = String(value);
+    return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+  };
+
+  const handleExportCsv = async () => {
+    if (isPrivacyMode || !validatorAddress || isExporting) return;
+
+    setIsExporting(true);
+    setError(null);
+
+    try {
+      const addr = validatorAddress.toLowerCase();
+      const exportLimit = 200;
+      let offset = 0;
+      let expectedCount = Infinity;
+      const allRewards: NodeEpochReward[] = [];
+
+      while (allRewards.length < expectedCount) {
+        const response = await clientApiGet<NodeEpochRewardsResponse>(
+          `node/${addr}/epoch-rewards?limit=${exportLimit}&offset=${offset}`
+        );
+
+        if (!response.ok) {
+          throw new Error(response.error || `Failed to fetch rewards (${response.status})`);
+        }
+
+        const batch = response.data.data || [];
+        allRewards.push(...batch);
+        expectedCount = response.data.count || 0;
+        offset += exportLimit;
+
+        if (batch.length === 0) break;
+      }
+
+      const rows = [...allRewards].sort((a, b) => b.epoch - a.epoch);
+      const header = ['Epoch', 'Date', 'Total (DMD)', 'Owner (DMD)', 'Delegators (DMD)', 'APY (%)', 'Pool stake (DMD)'];
+      const lines = [header.join(',')];
+
+      for (const entry of rows) {
+        lines.push([
+          entry.epoch,
+          formatEpochEndDate(entry.epoch_end_time),
+          parseFloat(entry.total_pool_reward).toFixed(4),
+          parseFloat(entry.owner_reward).toFixed(4),
+          parseFloat(entry.delegators_total_reward).toFixed(4),
+          parseFloat(entry.epoch_apy).toFixed(2),
+          parseFloat(entry.total_staked_snapshot).toFixed(4),
+        ].map(escapeCsvField).join(','));
+      }
+
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `pool-rewards-${addr}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      logger.error('Error exporting rewards history:', err);
+      setError(err instanceof Error ? err.message : 'Failed to export rewards history');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="rewards-history-modal">
       <div className="rewards-history-container">
         <div className="rewards-history-header">
           <h2 className="rewards-history-title">Rewards History</h2>
+          <button
+            className="rewards-history-export-btn"
+            onClick={handleExportCsv}
+            disabled={isPrivacyMode || isLoading || isExporting || totalCount === 0}
+          >
+            <i className={`fas ${isExporting ? 'fa-spinner fa-spin' : 'fa-download'}`}></i>
+            {isExporting ? 'Exporting...' : 'Export CSV'}
+          </button>
         </div>
 
         <p className="rewards-history-subtitle">
