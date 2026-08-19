@@ -19,6 +19,7 @@ import { toast } from 'react-toastify';
 import InfoTooltip from '@/components/InfoTooltip';
 import { markdownToPlainText, markdownToSnippet } from '@/components/MarkdownText';
 import { Aep30Ring } from '@/components/Aep30Badge';
+import SaturationBar from '@/components/SaturationBar';
 import ComposedChart from '@/components/Charts/ComposedChart';
 import BonusScoreHistoryModal from '@/components/Modals/BonusScoreHistory/BonusScoreHistoryModal';
 import StakeHistoryModal from '@/components/Modals/StakeHistory/StakeHistoryModal';
@@ -146,6 +147,9 @@ export default function ValidatorDetails() {
   const selfStakeWei = BigNumber(pool?.ownStake || 0);
   const delegatedStakeWei = BigNumber.max(totalStakeWei.minus(selfStakeWei), 0);
   const myStakeWei = BigNumber(pool?.myStake || 0);
+
+  const maxPoolStakeWei = BigNumber(50000).multipliedBy(10 ** 18);
+  const saturationPctNum = Math.min(Math.max(totalStakeWei.dividedBy(maxPoolStakeWei).multipliedBy(100).toNumber(), 0), 100);
 
   const stakePct = (partWei: BigNumber) =>
     totalStakeWei.isGreaterThan(0)
@@ -690,6 +694,25 @@ export default function ValidatorDetails() {
                 </button>
               </div>
             )}
+          </div>
+
+          <div className="vd-vstat-card stat-card-wireframe fade-in">
+            <div className="vd-vstat-label">
+              Validator saturation
+              <InfoTooltip
+                placement="bottom"
+                content={<p>Indicates how close the validator is to the maximum pool size. Higher saturation can reduce rewards due to max delegation limits and may influence validator election behavior, making this a useful signal when choosing where to stake.</p>}
+              >
+                <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+              </InfoTooltip>
+            </div>
+            <div className="vd-vstat-body">
+              <div className="vd-vstat-value">{Math.round(saturationPctNum)}% saturated</div>
+              <div className="vd-vstat-sub">Based on total pool stake vs 50,000 DMD max</div>
+            </div>
+            <div className="vd-vstat-action">
+              <SaturationBar totalStakeWei={pool?.totalStake || '0'} showLabel={false} size="lg" />
+            </div>
           </div>
         </div>
       </div>

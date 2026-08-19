@@ -6,15 +6,17 @@ const MAX_STAKE_WEI = BigNumber(50000).multipliedBy(1e18);
 
 interface SaturationBarProps {
   totalStakeWei: string | BigNumber;
+  showLabel?: boolean;
+  size?: 'sm' | 'lg';
 }
 
-export default function SaturationBar({ totalStakeWei }: SaturationBarProps) {
+export default function SaturationBar({ totalStakeWei, showLabel = true, size = 'sm' }: SaturationBarProps) {
   const pct = BigNumber(totalStakeWei).dividedBy(MAX_STAKE_WEI).multipliedBy(100);
   const pctNum = Math.min(Math.max(pct.toNumber(), 0), 100);
   const tier = pctNum >= 90 ? 'red' : pctNum >= 70 ? 'yellow' : 'green';
   return (
-    <div className="dmd-sat-bar">
-      <span className="dmd-sat-bar__label">{pctNum.toFixed(1)}%</span>
+    <div className={`dmd-sat-bar dmd-sat-bar--${size}`}>
+      {showLabel && <span className="dmd-sat-bar__label">{pctNum.toFixed(1)}%</span>}
       <div className="dmd-sat-bar__track">
         <div
           className={`dmd-sat-bar__fill dmd-sat-bar__fill--${tier}`}

@@ -152,6 +152,15 @@ body.light-theme .dmd-aep30-bar__sub { color: #666; }
 .dmd-sat-bar__fill--red { background: #ff4757; }
 body.light-theme .dmd-sat-bar__track { background: rgba(0,0,0,0.08); }
 
+.dmd-sat-bar--lg {
+  width: 100%;
+  min-width: 0;
+}
+.dmd-sat-bar--lg .dmd-sat-bar__track {
+  height: 10px;
+  border-radius: 5px;
+}
+
 /* Rpt30Cell */
 .dmd-rpt30-cell {
   display: flex;
