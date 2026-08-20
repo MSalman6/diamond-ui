@@ -86,7 +86,7 @@ const CreatePoolModal: React.FC<ModalProps> = ({ buttonText }) => {
 
   return (
     <>
-      <button className="btn-secondary btn-sm" onClick={(e) => { e.stopPropagation(); openModal(); }}>
+      <button className="btn-primary btn-sm" onClick={(e) => { e.stopPropagation(); openModal(); }}>
         {buttonText}
       </button>
 

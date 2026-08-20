@@ -1,6 +1,7 @@
 'use client';
 
 import { clientApiGet, clientApiPost } from '@/lib/apiClient';
+import { parseEpochEndTime } from '@/utils/common';
 import type {
   BatchNodeRewardStats,
   BatchNodeRewardStatsResponse,
@@ -244,10 +245,11 @@ export async function getCachedStakerRewards30d(
     )
       .then(res => {
         if (!res.ok) return {} as Record<string, number>;
-        const thirtyDaysAgo = Math.floor(Date.now() / 1000) - 30 * 86400;
+        const thirtyDaysAgo = Date.now() - 30 * 86400 * 1000;
         const map: Record<string, number> = {};
         for (const entry of res.data.data) {
-          if (entry.epoch_end_time == null || entry.epoch_end_time < thirtyDaysAgo) continue;
+          const endTime = parseEpochEndTime(entry.epoch_end_time);
+          if (endTime === null || endTime.getTime() < thirtyDaysAgo) continue;
           const pool = entry.pool_address.toLowerCase();
           map[pool] = (map[pool] || 0) + parseFloat(entry.reward_amount);
         }

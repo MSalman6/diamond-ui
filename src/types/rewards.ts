@@ -21,7 +21,7 @@ export interface StakerRewardEntry {
   is_claimed: boolean;
   block_start: number;
   block_end: number;
-  epoch_end_time: number | null;
+  epoch_end_time: number | string | null;
 }
 export interface StakerRewardsListResponse {
   data: StakerRewardEntry[];

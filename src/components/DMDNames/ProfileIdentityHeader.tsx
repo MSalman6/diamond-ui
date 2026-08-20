@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
+import { truncateAddress } from '@/utils/common';
 
 type Props = {
   address: string;
@@ -6,7 +7,6 @@ type Props = {
   wrapperClass?: string;
   avatarStyle?: CSSProperties;
   statusBadge?: ReactNode;
-  subtitle?: string;
 };
 
 export default function ProfileIdentityHeader({
@@ -15,7 +15,6 @@ export default function ProfileIdentityHeader({
   wrapperClass = 'user-wallet',
   avatarStyle,
   statusBadge,
-  subtitle = 'User Account',
 }: Props) {
   return (
     <div className={wrapperClass}>
@@ -29,13 +28,12 @@ export default function ProfileIdentityHeader({
         {activeName && <h1 className="profile-dmd-name">{activeName}.dmd</h1>}
         <div className="profile-wallet-row">
           {activeName ? (
-            <span className="profile-wallet-address">{address}</span>
+            <span className="profile-wallet-address" title={address}>{truncateAddress(address)}</span>
           ) : (
-            <h1>{address}</h1>
+            <h1 title={address}>{truncateAddress(address)}</h1>
           )}
           {statusBadge}
         </div>
-        {!activeName && !statusBadge && subtitle && <p>{subtitle}</p>}
       </div>
     </div>
   );

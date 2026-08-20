@@ -367,6 +367,46 @@ section h2 {
   cursor: pointer;
 }
 
+.btn-sm,
+.btn-primary,
+.btn-secondary {
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary,
+.btn-primary.btn-sm {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+}
+
+.btn-primary:hover,
+.btn-primary.btn-sm:hover {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  transform: translateY(-1px);
+}
+
+.btn-secondary.btn-sm {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary.btn-sm:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
 #epcContractName {
   background: var(--bg);
   color: var(--text);
@@ -2535,6 +2575,43 @@ footer {
 .btn-stake:active,
 .btn-unstake:active {
   transform: scale(0.95);
+}
+
+.claim-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  background: rgba(255, 159, 67, 0.15);
+  color: #ff9f43;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.claim-btn:hover {
+  background: rgba(255, 159, 67, 0.3);
+}
+
+.claim-btn:active {
+  transform: scale(0.95);
+}
+
+.claim-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+body.light-theme .claim-btn {
+  background: rgba(255, 159, 67, 0.15);
+  color: #e65100;
+}
+
+body.light-theme .claim-btn:hover {
+  background: rgba(255, 159, 67, 0.25);
 }
 
 @media (max-width: 768px) {

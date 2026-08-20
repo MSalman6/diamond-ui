@@ -725,6 +725,10 @@ body.light-theme .vp2-rewards-performance {
   border-left: none;
 }
 
+.dp2-stat-item--address {
+  min-width: fit-content;
+}
+
 .dp2-stat-label {
   font-size: 0.76rem;
   color: var(--text-secondary, rgba(255, 255, 255, 0.6));
@@ -750,6 +754,11 @@ body.light-theme .vp2-rewards-performance {
 
 .dp2-stat-value--teal {
   color: #00d2ff;
+}
+
+.dp2-stat-value--address {
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .dp2-stat-value--link a {
@@ -808,6 +817,17 @@ body.light-theme .vp2-rewards-performance {
   color: #00d2ff;
   font-weight: 600;
   white-space: nowrap;
+}
+
+.validators-table th.dp2-action-cell,
+.validators-table td.dp2-action-cell {
+  width: 1%;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.dp2-clickable-row {
+  cursor: pointer;
 }
 
 .dp2-tfoot-row td {

@@ -4,8 +4,8 @@ import React, { useEffect, useState, useMemo } from 'react';
 import Modal from '@/components/Modal';
 import { clientApiGet } from '@/lib/apiClient';
 import { usePrivacyMode } from '@/contexts/PrivacyMode';
-import { AreaChart } from '@/components/Charts';
-import { truncateAddress } from '@/utils/common';
+import { BarChart } from '@/components/Charts';
+import { truncateAddress, formatEpochEndDate } from '@/utils/common';
 import logger from '@/utils/logger';
 import type { StakerRewardEntry } from '@/types/rewards';
 import './RewardsHistoryModal.css';
@@ -23,7 +23,7 @@ interface RewardsHistoryModalProps {
   stakerAddress: string;
 }
 
-const LIMIT = 50;
+const LIMIT = 100;
 
 const RewardsHistoryModal: React.FC<RewardsHistoryModalProps> = ({
   isOpen,
@@ -99,11 +99,6 @@ const RewardsHistoryModal: React.FC<RewardsHistoryModalProps> = ({
 
   const totalPages = Math.ceil(totalCount / LIMIT);
 
-  const formatDate = (ts: number | null) => {
-    if (!ts) return '—';
-    return new Date(ts * 1000).toLocaleDateString();
-  };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="rewards-history-modal">
       <div className="rewards-history-container">
@@ -140,14 +135,13 @@ const RewardsHistoryModal: React.FC<RewardsHistoryModalProps> = ({
             {chartData.length > 0 && (
               <div className="rewards-history-chart-section">
                 <div className="chart-wrapper">
-                  <AreaChart
+                  <BarChart
                     data={chartData}
                     xAxisKey="epoch"
-                    areas={[
+                    bars={[
                       {
                         dataKey: 'reward',
                         name: 'Reward (DMD)',
-                        type: 'monotone',
                       },
                     ]}
                     config={{ height: 250 }}
@@ -168,7 +162,6 @@ const RewardsHistoryModal: React.FC<RewardsHistoryModalProps> = ({
                     <th>Pool</th>
                     <th>Reward</th>
                     <th>Date</th>
-                    <th>Claimed</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -177,12 +170,7 @@ const RewardsHistoryModal: React.FC<RewardsHistoryModalProps> = ({
                       <td>{entry.epoch}</td>
                       <td>{truncateAddress(entry.pool_address)}</td>
                       <td>{parseFloat(entry.reward_amount).toFixed(4)} DMD</td>
-                      <td>{formatDate(entry.epoch_end_time)}</td>
-                      <td>
-                        <span className={`claimed-badge ${entry.is_claimed ? 'claimed' : 'unclaimed'}`}>
-                          {entry.is_claimed ? 'Yes' : 'No'}
-                        </span>
-                      </td>
+                      <td>{formatEpochEndDate(entry.epoch_end_time)}</td>
                     </tr>
                   ))}
                 </tbody>

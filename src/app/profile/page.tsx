@@ -47,7 +47,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const { userWallet } = useWeb3Context();
   const walletDmdName = useWalletDmdName();
-  const { myPool, pools, totalDaoStake, myTotalStake, myCandidateStake, delegatorMinStake } = useStakingContext();
+  const { myPool, pools, totalDaoStake, myTotalStake, myCandidateStake, delegatorMinStake, stakingEpoch, claimOrderedUnstake } = useStakingContext();
   const isPrivacyMode = useIsPrivacyMode();
   const { isConnected } = useWalletConnect();
   const { allDaoProposals } = useDaoContext();
@@ -310,6 +310,10 @@ export default function ProfilePage() {
     toast.success("Copied to clipboard");
   };
 
+  const openValidator = (stakingAddress: string) => {
+    router.push(`/validators/${stakingAddress}`);
+  };
+
   return (
     <div>
         {/* Authenticated User View (Without Validator) */}
@@ -386,16 +390,16 @@ export default function ProfilePage() {
                       <div className="dp2-stat-sub">per 1000 / 30d</div>
                     </div>
 
-                    <div className="dp2-stat-item dp2-stat-item--sep">
+                    <div className="dp2-stat-item dp2-stat-item--sep dp2-stat-item--address">
                       <div className="dp2-stat-label">
                         Best Validator
                         <InfoTooltip content={<div><p>The validator you're staked with that has the highest RpT30 (rewards per 1,000 DMD / 30d).</p></div>}>
                           <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                         </InfoTooltip>
                       </div>
-                      <div className="dp2-stat-value dp2-stat-value--teal dp2-stat-value--link">
+                      <div className="dp2-stat-value dp2-stat-value--teal dp2-stat-value--link dp2-stat-value--address">
                         {isPrivacyMode ? '—' : bestValidator
-                          ? <Link href="/validators">{truncateAddress(bestValidator.addr)}</Link>
+                          ? <Link href={`/validators/${bestValidator.addr}`} title={bestValidator.addr}>{truncateAddress(bestValidator.addr)}</Link>
                           : '—'}
                       </div>
                       <div className="dp2-stat-sub">
@@ -440,6 +444,7 @@ export default function ProfilePage() {
                       <th>Saturation</th>
                       <th>My Stake</th>
                       {!isPrivacyMode && <th>Rewards 30d</th>}
+                      <th className="dp2-action-cell"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -447,8 +452,14 @@ export default function ProfilePage() {
                       stakedValidators.map((validator) => {
                         const stats = stakerNodeStatsMap[validator.stakingAddress.toLowerCase()];
                         const rewards30d = perPoolRewards30d[validator.stakingAddress.toLowerCase()];
+                        const isClaimable = BigNumber(validator.orderedWithdrawAmount).isGreaterThan(0)
+                          && BigNumber(validator.orderedWithdrawUnlockEpoch).isLessThanOrEqualTo(stakingEpoch);
                         return (
-                          <tr key={validator.stakingAddress}>
+                          <tr
+                            key={validator.stakingAddress}
+                            className="dp2-clickable-row"
+                            onClick={() => openValidator(validator.stakingAddress)}
+                          >
                             <td><ValidatorCell address={validator.stakingAddress} /></td>
                             {!isPrivacyMode && <td>{stats ? <Rpt30Cell rpt30={stats.rpt30} rpt30_delta={stats.rpt30_delta} /> : '—'}</td>}
                             {!isPrivacyMode && <td>{stats ? stats.estimated_apy.toFixed(2) + '%' : '—'}</td>}
@@ -456,12 +467,19 @@ export default function ProfilePage() {
                             <td><SaturationBar totalStakeWei={validator.totalStake || '0'} /></td>
                             <td>{validator.myStake ? BigNumber(validator.myStake).dividedBy(1e18).toFormat(4, BigNumber.ROUND_DOWN) + ' DMD' : '0 DMD'}</td>
                             {!isPrivacyMode && <td className="dp2-rewards-cell">{rewards30d != null ? rewards30d.toFixed(1) + ' DMD' : '—'}</td>}
+                            <td className="dp2-action-cell" onClick={(e) => e.stopPropagation()}>
+                              {isClaimable ? (
+                                <button className="btn-stake claim-btn" onClick={() => claimOrderedUnstake(validator)}>Claim</button>
+                              ) : (
+                                <UnstakeModal buttonText="Unstake" pool={validator} />
+                              )}
+                            </td>
                           </tr>
                         );
                       })
                     ) : (
                       <tr>
-                        <td colSpan={isPrivacyMode ? 3 : 7} style={{ textAlign: 'center', padding: '2rem' }}>
+                        <td colSpan={isPrivacyMode ? 4 : 8} style={{ textAlign: 'center', padding: '2rem' }}>
                           You haven't staked with any validators yet
                         </td>
                       </tr>
@@ -492,6 +510,7 @@ export default function ProfilePage() {
                             </strong>
                           </td>
                         )}
+                        <td className="dp2-action-cell"></td>
                       </tr>
                     </tfoot>
                   )}
@@ -571,7 +590,6 @@ export default function ProfilePage() {
                     address={userWallet.myAddr}
                     activeName={walletDmdName}
                     wrapperClass="validator-identity"
-                    subtitle=""
                     statusBadge={
                       myValidatorStatus ? (
                         <span className={`status-badge ${myValidatorStatus.className}`}>
@@ -875,6 +893,7 @@ export default function ProfilePage() {
                       <th>Saturation</th>
                       <th>My Stake</th>
                       {!isPrivacyMode && <th>Rewards 30d</th>}
+                      <th className="dp2-action-cell"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -882,8 +901,14 @@ export default function ProfilePage() {
                       stakedValidators.map((validator) => {
                         const stats = stakerNodeStatsMap[validator.stakingAddress.toLowerCase()];
                         const rewards30d = perPoolRewards30d[validator.stakingAddress.toLowerCase()];
+                        const isClaimable = BigNumber(validator.orderedWithdrawAmount).isGreaterThan(0)
+                          && BigNumber(validator.orderedWithdrawUnlockEpoch).isLessThanOrEqualTo(stakingEpoch);
                         return (
-                          <tr key={validator.stakingAddress}>
+                          <tr
+                            key={validator.stakingAddress}
+                            className="dp2-clickable-row"
+                            onClick={() => openValidator(validator.stakingAddress)}
+                          >
                             <td><ValidatorCell address={validator.stakingAddress} /></td>
                             {!isPrivacyMode && <td>{stats ? <Rpt30Cell rpt30={stats.rpt30} rpt30_delta={stats.rpt30_delta} /> : '—'}</td>}
                             {!isPrivacyMode && <td>{stats ? stats.estimated_apy.toFixed(2) + '%' : '—'}</td>}
@@ -891,12 +916,19 @@ export default function ProfilePage() {
                             <td><SaturationBar totalStakeWei={validator.totalStake || '0'} /></td>
                             <td>{validator.myStake ? BigNumber(validator.myStake).dividedBy(1e18).toFormat(4, BigNumber.ROUND_DOWN) + ' DMD' : '0 DMD'}</td>
                             {!isPrivacyMode && <td className="dp2-rewards-cell">{rewards30d != null ? rewards30d.toFixed(1) + ' DMD' : '—'}</td>}
+                            <td className="dp2-action-cell" onClick={(e) => e.stopPropagation()}>
+                              {isClaimable ? (
+                                <button className="btn-stake claim-btn" onClick={() => claimOrderedUnstake(validator)}>Claim</button>
+                              ) : (
+                                <UnstakeModal buttonText="Unstake" pool={validator} />
+                              )}
+                            </td>
                           </tr>
                         );
                       })
                     ) : (
                       <tr>
-                        <td colSpan={isPrivacyMode ? 3 : 7} style={{ textAlign: 'center', padding: '2rem' }}>
+                        <td colSpan={isPrivacyMode ? 4 : 8} style={{ textAlign: 'center', padding: '2rem' }}>
                           You haven't staked with any validators yet
                         </td>
                       </tr>
@@ -927,6 +959,7 @@ export default function ProfilePage() {
                             </strong>
                           </td>
                         )}
+                        <td className="dp2-action-cell"></td>
                       </tr>
                     </tfoot>
                   )}
