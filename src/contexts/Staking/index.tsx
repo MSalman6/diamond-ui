@@ -8,6 +8,7 @@ import { useWeb3Context } from "@/contexts/Web3";
 import { NonPayableTx } from "@/contexts/types/contracts";
 import { getAddressFromPublicKey } from "@/utils/common";
 import { PoolCache, Delegator, Pool } from "@/contexts/types/models";
+import { buildTxOptions, EstimatableMethod } from "@/utils/txOptions";
 import logger from '@/utils/logger';
 
 interface StakingContextProps {
@@ -66,12 +67,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
   const [showHistoricBlock, setShowHistoricBlock] = useState<number>(0);
   const [handlingNewBlock, setHandlingNewBlock] = useState<boolean>(false);
   const [stakingInitialized, setStakingInitialized] = useState<boolean>(false);
-  const [defaultTxOpts, setDefaultTxOpts] = useState<{from: string; gasPrice: string; gasLimit: string; value: string;}>({
-    from: '',
-    gasPrice: '0',
-    gasLimit: '8000000',
-    value: '0'
-  });
+  const [cachedGasPrice, setCachedGasPrice] = useState<string>('0');
 
   const [myPool, setMyPool] = useState<Pool | undefined>(undefined);
   const [pools, setPools] = useState<Pool[]>(Array.from({ length: 10 }, () => (new Pool(""))));
@@ -418,20 +414,23 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
   /**
    * Build transaction options with current gas price from RPC.
    */
-  const buildTxOpts = async (overrides: Partial<{from: string; gasPrice: string; gasLimit: string; value: string;}> = {}) => {
+  const resolveGasPrice = async (): Promise<string> => {
     try {
       const rpcGasPrice = await getGasPriceSafe();
       const minGas = minimumGasFee ? minimumGasFee : new BigNumber(0);
       const finalGasPrice = BigNumber.max(new BigNumber(rpcGasPrice || 0), minGas).toFixed(0);
-
-      const next = { ...defaultTxOpts, gasPrice: finalGasPrice, type: '0x0', ...overrides };
-      setDefaultTxOpts(prev => ({ ...prev, gasPrice: finalGasPrice }));
-      return next;
+      setCachedGasPrice(finalGasPrice);
+      return finalGasPrice;
     } catch (e) {
-      // Fallback to previously set default or 1 gwei when RPC fails
-      const fallback = defaultTxOpts.gasPrice && defaultTxOpts.gasPrice !== '0' ? defaultTxOpts.gasPrice : '1000000000';
-      return { ...defaultTxOpts, gasPrice: fallback, ...overrides };
+      return cachedGasPrice !== '0' ? cachedGasPrice : '1000000000';
     }
+  };
+
+  /**
+   * Build send options for a staking write.
+   */
+  const buildTxOpts = async (method: EstimatableMethod, params: { from: string; value?: string }) => {
+    return buildTxOptions(method, { from: params.from, gasPrice: await resolveGasPrice(), value: params.value });
   };
 
   const retrieveGlobalValues = async () => {
@@ -734,7 +733,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
       const ready = await ensureProviderReady();
       if (!ready) {return false;}
 
-      let txOpts = await buildTxOpts({ from: userWallet.myAddr, value: web3.utils.toWei(stakeAmount.toString()) });
+      const stakeAmountWei = web3.utils.toWei(stakeAmount.toString());
 
       const accBalance = await getUpdatedBalance();
       const ipAddress = '0x00000000000000000000000000000000';
@@ -746,13 +745,14 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
         toast.warn("Pool and mining addresses cannot be the same");
       } else if (!areAddressesValidForCreatePool(userWallet.myAddr, minningAddress)) {
         toast.warn("Staking or mining key are or were already in use with a pool");
-      } else if (BigNumber(txOpts.value).isGreaterThan(accBalance)) {
+      } else if (BigNumber(stakeAmountWei).isGreaterThan(accBalance)) {
         toast.warn(`Insufficient balance (${BigNumber(accBalance).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD) for stake amount ${stakeAmount} DMD`);
-      } else if (BigNumber(txOpts.value).isLessThan(BigNumber(candidateMinStake.toString()).dividedBy(10**18))) {
+      } else if (BigNumber(stakeAmountWei).isLessThan(BigNumber(candidateMinStake.toString()).dividedBy(10**18))) {
         toast.warn("Insufficient candidate (pool owner) stake");
       } else {
         showLoader(true, "Creating pool 💎");
-        const receipt = await contractsManager.stContract.methods.addPool(minningAddress, nodeOperatorAddress, nodeOperatorShare.toString(), publicKey, ipAddress).send(txOpts);
+        const addPool = contractsManager.stContract.methods.addPool(minningAddress, nodeOperatorAddress, nodeOperatorShare.toString(), publicKey, ipAddress);
+        const receipt = await addPool.send(await buildTxOpts(addPool, { from: userWallet.myAddr, value: stakeAmountWei }));
         if (!showHistoricBlock) setCurrentBlockNumber(receipt.blockNumber);
         await addOrUpdatePool(userWallet.myAddr, receipt.blockNumber);
         showLoader(false, "");
@@ -771,8 +771,6 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
   const removePool = async (pool: Pool, amount: BigNumber): Promise<boolean> => {
     const amountInWei = web3.utils.toWei(amount.toString());
 
-    let txOpts = await buildTxOpts({ from: userWallet.myAddr });
-
     if (!contractsManager.stContract || !userWallet || !userWallet.myAddr) return false;
 
     // Pre-validate provider readiness
@@ -780,9 +778,9 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
     if (!ready) {return false;}
 
     try {
-      let receipt;
       showLoader(true, `Removing Pool 💎`);
-      receipt = await contractsManager.stContract.methods.withdraw(pool.stakingAddress, amountInWei.toString()).send(txOpts);
+      const withdraw = contractsManager.stContract.methods.withdraw(pool.stakingAddress, amountInWei.toString());
+      const receipt = await withdraw.send(await buildTxOpts(withdraw, { from: userWallet.myAddr }));
       setPools(prevPools => {
         const updatedPools = prevPools.filter(p => p.stakingAddress !== pool.stakingAddress);
         updateStakeAmounts(updatedPools);
@@ -804,11 +802,12 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
         // Pre-validate provider readiness
         const ready = await ensureProviderReady();
         if (!ready) {return false;}
+        if (!contractsManager.stContract) return false;
 
-        const txOpts = await buildTxOpts({ from: userWallet.myAddr });
         showLoader(true, "Updating pool rewards share 💎");
-        const receipt = await contractsManager.stContract?.methods.setNodeOperator(nodeOperatorAddress, nodeOperatorShare.toString()).send(txOpts);
-        if (!showHistoricBlock && receipt) setCurrentBlockNumber(receipt.blockNumber);
+        const setNodeOperator = contractsManager.stContract.methods.setNodeOperator(nodeOperatorAddress, nodeOperatorShare.toString());
+        const receipt = await setNodeOperator.send(await buildTxOpts(setNodeOperator, { from: userWallet.myAddr }));
+        if (!showHistoricBlock) setCurrentBlockNumber(receipt.blockNumber);
         pool.poolOperator = nodeOperatorAddress;
         pool.poolOperatorShare = nodeOperatorShare;
         setPools(prevPools => {
@@ -853,7 +852,6 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
 
   const unstake = async (pool: Pool, amount: BigNumber): Promise<boolean> => {
     const amountInWei = web3.utils.toWei(amount.toString());
-    let txOpts = await buildTxOpts({ from: userWallet.myAddr });
     if (!contractsManager.stContract || !userWallet || !userWallet.myAddr) return false;
 
     // Pre-validate provider readiness
@@ -871,7 +869,8 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
           return false;
         }
         showLoader(true, `Unstaking ${amount} DMD 💎`);
-        receipt = await contractsManager.stContract.methods.withdraw(pool.stakingAddress, amountInWei.toString()).send(txOpts);
+        const withdraw = contractsManager.stContract.methods.withdraw(pool.stakingAddress, amountInWei.toString());
+        receipt = await withdraw.send(await buildTxOpts(withdraw, { from: userWallet.myAddr }));
         if (!showHistoricBlock) setCurrentBlockNumber(receipt.blockNumber);
         toast.success(`Unstaked ${amount} DMD 💎`);
       } else {
@@ -880,7 +879,8 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
           return false;
         } else {
           showLoader(true, `Ordering unstake of ${amount} DMD 💎`);
-          receipt = await contractsManager.stContract.methods.orderWithdraw(pool.stakingAddress, amountInWei.toString()).send(txOpts);
+          const orderWithdraw = contractsManager.stContract.methods.orderWithdraw(pool.stakingAddress, amountInWei.toString());
+          receipt = await orderWithdraw.send(await buildTxOpts(orderWithdraw, { from: userWallet.myAddr }));
           if (!showHistoricBlock) setCurrentBlockNumber(receipt.blockNumber);
           toast.success(`Ordered withdraw of ${amount} DMD 💎`);
         }
@@ -897,7 +897,6 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
 
   const stake = async (pool: Pool, stakeAmount: BigNumber): Promise<boolean> => {
     const stakeAmountWei = web3.utils.toWei(stakeAmount.toString());
-    const txOpts = await buildTxOpts({ from: userWallet.myAddr, value: stakeAmountWei });
 
     if (new BigNumber(stakeAmountWei).isGreaterThan(userWallet.myBalance)) {
       toast.warn(`Insufficient balance ${BigNumber(userWallet.myBalance).dividedBy(10**18)} for selected amount ${BigNumber(stakeAmount).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)}`);
@@ -913,10 +912,12 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
         // Pre-validate provider readiness
         const ready = await ensureProviderReady();
         if (!ready) {return false;}
+        if (!contractsManager.stContract) return false;
         showLoader(true, `Staking ${stakeAmount} DMD 💎`);
-        const receipt = await contractsManager.stContract?.methods.stake(pool.stakingAddress).send(txOpts);
-        if (!showHistoricBlock && receipt) setCurrentBlockNumber(receipt.blockNumber);
-        await addOrUpdatePool(pool.stakingAddress, receipt?.blockNumber || currentBlockNumber + 1);
+        const stakeMethod = contractsManager.stContract.methods.stake(pool.stakingAddress);
+        const receipt = await stakeMethod.send(await buildTxOpts(stakeMethod, { from: userWallet.myAddr, value: stakeAmountWei }));
+        if (!showHistoricBlock) setCurrentBlockNumber(receipt.blockNumber);
+        await addOrUpdatePool(pool.stakingAddress, receipt.blockNumber);
         toast.success(`Staked ${stakeAmount} DMD 💎`);
         showLoader(false, "");
         return true;
@@ -930,7 +931,6 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
 
   const claimOrderedUnstake = async (pool: Pool): Promise<boolean> => {
     const claimAmount = pool.orderedWithdrawAmount;
-    const txOpts = await buildTxOpts({ from: userWallet.myAddr });
 
     if (!contractsManager.stContract || !userWallet.myAddr) return false;
 
@@ -943,7 +943,8 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
         const ready = await ensureProviderReady();
         if (!ready) {return false;}
         showLoader(true, `Claiming ${claimAmount.dividedBy(10**18)} DMD 💎`);
-        const receipt = await contractsManager.stContract.methods.claimOrderedWithdraw(pool.stakingAddress).send(txOpts);
+        const claimOrderedWithdraw = contractsManager.stContract.methods.claimOrderedWithdraw(pool.stakingAddress);
+        const receipt = await claimOrderedWithdraw.send(await buildTxOpts(claimOrderedWithdraw, { from: userWallet.myAddr }));
         if (!showHistoricBlock) setCurrentBlockNumber(receipt.blockNumber);
         toast.success(`Claimed ${claimAmount.dividedBy(10**18)} DMD 💎`);
         showLoader(false, "");
