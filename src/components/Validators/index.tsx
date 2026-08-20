@@ -21,6 +21,7 @@ import { Aep30Bar } from '../Aep30Badge';
 import SaturationBar from '../SaturationBar';
 import Rpt30Cell from '../Rpt30Cell';
 import { useDmdNamesForAddresses } from '@/hooks/useDmdNamesForAddresses';
+import { stripDmdSuffix } from '@/utils/dmdNaming';
 
 const SORT_PILLS = [
   { key: 'rpt30',      label: 'Highest RpT30',       icon: 'fa-trophy',        direction: 'descending' },
@@ -258,6 +259,8 @@ export default function Validators() {
     toast.success(msg);
   }, []);
 
+  const dmdNames = useDmdNamesForAddresses(visiblePools.map(p => p.stakingAddress).filter(Boolean));
+
   // Filter and process pools
   let poolsCopy = [...visiblePools];
 
@@ -272,10 +275,17 @@ export default function Validators() {
   }
 
   if (searchTerm.trim() !== '') {
-    poolsCopy = poolsCopy.filter(pool =>
-      pool.stakingAddress.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (pool.miningAddress && pool.miningAddress.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+    const query = searchTerm.trim().toLowerCase();
+    // Names are stored bare but shown with the .dmd suffix, so accept either.
+    const nameQuery = stripDmdSuffix(query);
+    poolsCopy = poolsCopy.filter(pool => {
+      const name = pool.stakingAddress ? dmdNames[pool.stakingAddress.toLowerCase()] : null;
+      return (
+        pool.stakingAddress.toLowerCase().includes(query) ||
+        (pool.miningAddress && pool.miningAddress.toLowerCase().includes(query)) ||
+        (!!name && !!nameQuery && name.toLowerCase().includes(nameQuery))
+      );
+    });
   }
 
   // Apply sorting
@@ -323,8 +333,6 @@ export default function Validators() {
   const pageCount = Math.ceil(poolsCopy.length / itemsPerPage);
   const offset = currentPage * itemsPerPage;
   const currentItems = poolsCopy.slice(offset, offset + itemsPerPage);
-
-  const dmdNames = useDmdNamesForAddresses(currentItems.map(p => p.stakingAddress).filter(Boolean));
 
   // Handle page changes
   const handlePageClick = (pageIndex: number) => {
@@ -684,7 +692,7 @@ export default function Validators() {
               <div className="search-container">
                 <input 
                   type="text" 
-                  placeholder="Search by address"
+                  placeholder="Search by address or name"
                   value={searchTerm}
                   onChange={handleSearchChange}
                 />
