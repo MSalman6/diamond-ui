@@ -1,4 +1,5 @@
 :root {
+  --header-h: 92px;
   --bg: #030014;
   --darker-bg: #020010;
   --card-bg: rgba(255, 255, 255, 0.05);
@@ -553,6 +554,11 @@ header .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 24px;
+}
+
+header .logo {
+  flex: 0 0 auto;
 }
 
 .logo h1 {
@@ -562,6 +568,7 @@ header .container {
 
 .nav-links {
   display: flex;
+  align-items: center;
   gap: 30px;
 }
 
@@ -569,6 +576,7 @@ header .container {
   font-weight: 500;
   opacity: 0.8;
   transition: var(--transition-speed);
+  white-space: nowrap;
 }
 
 .nav-links a:hover {
@@ -702,7 +710,7 @@ header .container {
   background: rgba(255, 255, 255, 0.15);
 }
 
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
   .dropdown:hover .dropdown-menu {
     opacity: 1;
     visibility: visible;
@@ -723,6 +731,12 @@ header .container {
     font-size: 2rem;
     margin-bottom: 25px;
   }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --header-h: 80px;
+  }
 
   header {
     padding: 15px 0;
@@ -734,22 +748,32 @@ header .container {
     background: var(--header-bg);
   }
 
+  header .container {
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  header .header-right {
+    margin-left: auto;
+  }
+
   .nav-links {
     position: fixed;
-    top: 100px;
+    top: var(--header-h);
     left: 0;
     width: 100%;
-    height: calc(100vh - 70px);
-    background: rgba(3, 0, 20, 0.98);
+    height: calc(100vh - var(--header-h));
+    height: calc(100dvh - var(--header-h));
+    background: var(--bg);
     flex-direction: column;
     align-items: center;
-    padding: 40px 20px;
-    gap: 30px;
+    padding: 24px 20px 40px;
+    gap: 4px;
     transform: translateY(-100%);
     transition: transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
-    backdrop-filter: blur(10px);
     z-index: 1040;
     overflow-y: auto;
+    overscroll-behavior: contain;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     visibility: hidden;
     opacity: 0;
@@ -803,11 +827,15 @@ header .container {
 
   .nav-links li {
     width: 100%;
-    max-width: 400px;
+    max-width: 420px;
     transform: translateY(20px);
     opacity: 0;
     transition: transform 0.4s ease, opacity 0.4s ease;
     transition-delay: calc(0.05s * var(--item-index, 0));
+  }
+
+  .nav-links > li + li {
+    border-top: 1px solid var(--border-color);
   }
 
   .nav-links.active li {
@@ -831,6 +859,10 @@ header .container {
     --item-index: 5;
   }
 
+  .nav-links li:nth-child(6) {
+    --item-index: 6;
+  }
+
   .nav-links li a {
     display: block;
     text-align: center;
@@ -843,6 +875,7 @@ header .container {
     position: static;
     transform: none;
     width: 100%;
+    min-width: 0;
     background: rgba(17, 17, 34, 0.3);
     box-shadow: none;
     border-radius: 8px;
@@ -2486,15 +2519,40 @@ footer {
 }
 
 .mobile-wallet-container {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-color);
+  display: none;
 }
 
-.mobile-wallet-container .cta-button,
-.mobile-wallet-container .user-wallet-info {
-  width: 100%;
-  justify-content: center;
+@media (max-width: 1024px) {
+  .mobile-wallet-container {
+    display: block;
+    padding-top: 24px;
+  }
+
+  .mobile-wallet-container .user-wallet-info {
+    display: block;
+    width: 100%;
+    padding: 0;
+  }
+
+  .mobile-wallet-container .cta-button {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 1.05rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+  }
+
+  .mobile-wallet-container .user-wallet-info .dropdown-toggle {
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+  }
+
+  .mobile-wallet-container .dropdown-menu {
+    text-align: center;
+  }
 }
 
 .btn-stake,
@@ -2537,7 +2595,7 @@ footer {
   transform: scale(0.95);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .header-right .cta-button,
   .header-right .user-wallet-info {
     display: none !important;
@@ -3305,7 +3363,7 @@ body.light-theme .btn-stake:hover {
   background: rgba(7, 244, 158, 0.25);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   body.light-theme .nav-links {
     background: #ffffff;
     backdrop-filter: none;
@@ -3342,5 +3400,19 @@ body.light-theme .btn-stake:hover {
 
   body.light-theme .mobile-menu-btn.active .fa-times {
     color: #1f2937;
+  }
+
+  body.light-theme .mobile-wallet-container .cta-button,
+  body.light-theme .mobile-wallet-container .wallet-address {
+    color: #1f2937;
+  }
+
+  body.light-theme .mobile-wallet-container .cta-button,
+  body.light-theme .mobile-wallet-container .user-wallet-info .dropdown-toggle {
+    border-color: rgba(0, 0, 0, 0.12);
+  }
+
+  body.light-theme .nav-links > li + li {
+    border-top-color: rgba(0, 0, 0, 0.08);
   }
 }

@@ -8,6 +8,9 @@ import { useState, useEffect, useRef } from 'react';
 import { useWalletConnect } from '@/contexts/WalletConnect';
 import { config } from '@/lib/config';
 
+// Width at which the nav collapses into the hamburger.
+const NAV_BREAKPOINT = 1024;
+
 export default function Header() {
   const router = useRouter();
   const { open: openWalletModal, address, isConnected, disconnect } = useWalletConnect();
@@ -17,10 +20,21 @@ export default function Header() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [logoSrc, setLogoSrc] = useState('/logos/dmd-logo.png');
   const navLinksRef = useRef<HTMLUListElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const mobileMenuBtnRef = useRef<HTMLDivElement>(null);
+
+  // Close the collapsed menu and restore page scrolling
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+    setActiveDropdown(null);
+    document.body.style.overflow = '';
+  };
 
   // Handle wallet connect button click
   const handleWalletConnect = () => {
+    if (isMobileMenuOpen) {
+      closeMobileMenu();
+    }
     if (isConnected && !userWallet.myAddr) {
       retryWalletConnection();
       return;
@@ -35,14 +49,14 @@ export default function Header() {
     // Only navigate to profile if wallet is connected
     if (isConnected && userWallet.myAddr) {
       router.push('/profile');
-      setActiveDropdown(null);
+      closeMobileMenu();
     }
   };
 
   // Handle wallet disconnect
   const handleDisconnect = () => {
     disconnect();
-    setActiveDropdown(null);
+    closeMobileMenu();
     router.push('/');
   };
 
@@ -76,19 +90,34 @@ export default function Header() {
     e.stopPropagation();
     
     // Only handle click behavior on mobile
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= NAV_BREAKPOINT) {
       setActiveDropdown(prev => prev === dropdownName ? null : dropdownName);
     }
   };
 
   // Close mobile menu when clicking regular links
   const handleRegularLinkClick = () => {
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= NAV_BREAKPOINT) {
       setIsMobileMenuOpen(false);
       setActiveDropdown(null);
       document.body.style.overflow = '';
     }
   };
+
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+
+    const syncHeaderHeight = () => {
+      document.documentElement.style.setProperty('--header-h', `${el.offsetHeight}px`);
+    };
+
+    syncHeaderHeight();
+    const observer = new ResizeObserver(syncHeaderHeight);
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, []);
 
   // Setup event listeners
   useEffect(() => {
@@ -96,7 +125,7 @@ export default function Header() {
       const target = e.target as Element;
       
       // Close dropdown when clicking outside on mobile
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= NAV_BREAKPOINT) {
         if (!target.closest('.dropdown') && !target.closest('.mobile-menu-btn') && !target.closest('.user-wallet-info')) {
           setActiveDropdown(null);
         }
@@ -120,7 +149,7 @@ export default function Header() {
 
     const handleResize = () => {
       // Reset overflow if menu is closed on resize to desktop
-      if (window.innerWidth > 768) {
+      if (window.innerWidth > NAV_BREAKPOINT) {
         document.body.style.overflow = '';
         setIsMobileMenuOpen(false);
         setActiveDropdown(null);
@@ -170,8 +199,66 @@ export default function Header() {
     return () => observer.disconnect();
   }, []);
 
+  const renderWallet = () => {
+    if (isConnected && userWallet.myAddr) {
+      return (
+        <div
+          className={`user-wallet-info dropdown ${activeDropdown === 'wallet' ? 'active' : ''}`}
+          onClick={handleWalletDropdownToggle}
+          style={{ cursor: 'pointer' }}
+        >
+          <div className="dropdown-toggle">
+            <div className="wallet-icon">
+              <div className="wallet-icon-inner"></div>
+            </div>
+            <div className="wallet-address">{truncateAddress(userWallet.myAddr)}</div>
+            <i className="fas fa-chevron-down wallet-address-dropdown"></i>
+          </div>
+          <div className="dropdown-menu">
+            <div className="dropdown-content">
+              <div className="dropdown-section">
+                <ul>
+                  <li>
+                    <a href="#" onClick={(e) => { e.preventDefault(); handleProfileClick(); }}>
+                      <i className="fas fa-user"></i> Profile
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (isConnected && userWallet.myAddr) {
+                          router.push(`/dmd-names/${userWallet.myAddr}`);
+                          closeMobileMenu();
+                        }
+                      }}
+                    >
+                      <i className="fas fa-tag"></i> My DMD Names
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" onClick={(e) => { e.preventDefault(); handleDisconnect(); }}>
+                      <i className="fas fa-sign-out-alt"></i> Disconnect
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="cta-button" onClick={handleWalletConnect} style={{ cursor: 'pointer' }}>
+        <i className="fas fa-wallet"></i> Connect Wallet
+      </div>
+    );
+  };
+
   return (
-    <header>
+    <header ref={headerRef}>
       <div className="container">
         <div className="logo">
           <Link href="/">
@@ -302,6 +389,10 @@ export default function Header() {
                 </div>
               </div>
             </li>
+
+            <li className="mobile-wallet-container">
+              {renderWallet()}
+            </li>
           </ul>
         </nav>
         
@@ -316,53 +407,7 @@ export default function Header() {
             </label>
           </div>
           
-          {isConnected && userWallet.myAddr ? (
-            <div className={`user-wallet-info dropdown ${activeDropdown === 'wallet' ? 'active' : ''}`} onClick={handleWalletDropdownToggle} style={{ cursor: 'pointer' }}>
-              <div className="dropdown-toggle">
-                <div className="wallet-icon">
-                  <div className="wallet-icon-inner"></div>
-                </div>
-                <div className="wallet-address">{truncateAddress(userWallet.myAddr)}</div>
-                <i className="fas fa-chevron-down wallet-address-dropdown"></i>
-              </div>
-              <div className="dropdown-menu">
-                <div className="dropdown-content">
-                  <div className="dropdown-section">
-                    <ul>
-                      <li>
-                        <a href="#" onClick={(e) => { e.preventDefault(); handleProfileClick(); }}>
-                          <i className="fas fa-user"></i> Profile
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (isConnected && userWallet.myAddr) {
-                              router.push(`/dmd-names/${userWallet.myAddr}`);
-                              setActiveDropdown(null);
-                            }
-                          }}
-                        >
-                          <i className="fas fa-tag"></i> My DMD Names
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" onClick={(e) => { e.preventDefault(); handleDisconnect(); }}>
-                          <i className="fas fa-sign-out-alt"></i> Disconnect
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="cta-button" onClick={handleWalletConnect} style={{ cursor: 'pointer' }}>
-              <i className="fas fa-wallet"></i> Connect Wallet
-            </div>
-          )}
+          {renderWallet()}
         </div>
         
         <div 
