@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface TableField {
   key: string;
@@ -162,7 +163,7 @@ const ColumnsFilterModal: React.FC<ColumnsFilterModalProps> = ({
         <i className="fas fa-columns"></i> {buttonText}
       </button>
 
-      {isOpen && (
+      {isOpen && createPortal(
         <div className={`modal ${isOpen ? 'show' : ''}`}>
           <div className="modal-content" ref={modalRef}>
             <div className="modal-header">
@@ -230,7 +231,8 @@ const ColumnsFilterModal: React.FC<ColumnsFilterModalProps> = ({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
