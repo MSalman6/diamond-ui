@@ -3,7 +3,8 @@
   min-height: 100vh;
   align-items: flex-start;
   justify-content: flex-start;
-  padding-bottom: 0;
+  --partners-bar-height: 60px;
+  padding-bottom: var(--partners-bar-height);
   --hero-anchor-offset: max(
     0px,
     (100vh - 160px - var(--hero-content-height, 400px) - 100px) / 2
@@ -1341,7 +1342,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
 
 @media (max-width: 900px) {
   .hero-search-section {
-    margin-bottom: 64px;
+    margin-bottom: 56px;
   }
 }
 
@@ -1361,7 +1362,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
 
   .hero-search-section {
     margin-top: 24px;
-    margin-bottom: 56px;
+    margin-bottom: 48px;
   }
 
   .dmd-name-search--page .dmd-name-search-input-group {
