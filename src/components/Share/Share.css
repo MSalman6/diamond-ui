@@ -1,0 +1,193 @@
+/* Trigger — icon variant matches the round buttons of the validator header */
+.share-trigger {
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.share-trigger--icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.share-trigger--icon:hover,
+.share-trigger--icon.is-open {
+  background: var(--card-hover);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Trigger — pill variant matches the status chips of the proposal header */
+.share-trigger--pill {
+  gap: 6px;
+  display: inline-flex;
+  align-items: center;
+  height: 35px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  background: rgba(58, 123, 213, 0.15);
+  color: var(--accent);
+  border: 1px solid rgba(58, 123, 213, 0.3);
+}
+
+.share-trigger--pill i {
+  font-size: 0.85rem;
+}
+
+.share-trigger--pill:hover,
+.share-trigger--pill.is-open {
+  background: rgba(58, 123, 213, 0.25);
+  border-color: rgba(58, 123, 213, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Menu */
+.share-menu {
+  position: fixed;
+  z-index: 10050;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--tooltip-bg, rgba(22, 22, 26, 0.95));
+  border: 1px solid var(--border-color);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  visibility: hidden;
+}
+
+.share-menu.is-positioned {
+  visibility: visible;
+  animation: share-menu-in 0.18s ease;
+}
+
+.share-menu--top.is-positioned {
+  animation-name: share-menu-in-up;
+}
+
+@keyframes share-menu-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes share-menu-in-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.share-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--tooltip-color, #ffffff);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.share-menu-item:hover,
+.share-menu-item:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+}
+
+.share-menu-item i {
+  width: 18px;
+  flex-shrink: 0;
+  font-size: 0.95rem;
+  text-align: center;
+  opacity: 0.75;
+}
+
+.share-menu-item:hover i {
+  opacity: 1;
+}
+
+.share-menu-icon--done {
+  color: #22c55e;
+  opacity: 1 !important;
+}
+
+.share-menu-divider {
+  height: 1px;
+  margin: 6px 8px;
+  background: var(--border-color);
+}
+
+/* Light theme */
+body.light-theme .share-trigger--icon {
+  background: #f8fafc;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: #374151;
+}
+
+body.light-theme .share-trigger--icon:hover,
+body.light-theme .share-trigger--icon.is-open {
+  background: #f1f5f9;
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .share-trigger--pill {
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
+  border-color: rgba(37, 99, 235, 0.25);
+}
+
+body.light-theme .share-trigger--pill:hover,
+body.light-theme .share-trigger--pill.is-open {
+  background: rgba(37, 99, 235, 0.18);
+  border-color: rgba(37, 99, 235, 0.45);
+}
+
+body.light-theme .share-menu {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 12px 32px rgba(18, 24, 38, 0.14);
+}
+
+body.light-theme .share-menu-item {
+  color: #1f2937;
+}
+
+body.light-theme .share-menu-item:hover,
+body.light-theme .share-menu-item:focus-visible {
+  background: #f1f5f9;
+}
+
+body.light-theme .share-menu-divider {
+  background: #e5e7eb;
+}
+
+@media (max-width: 576px) {
+  .share-trigger--icon {
+    width: 36px;
+    height: 36px;
+    font-size: 0.8rem;
+  }
+
+  .share-trigger--pill {
+    font-size: 0.9rem;
+    padding: 5px 12px;
+  }
+}

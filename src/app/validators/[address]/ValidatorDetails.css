@@ -2601,6 +2601,13 @@ body.light-theme .vd-rewards-performance-title h2 {
   transition: color 0.5s ease;
 }
 
+.vd-detail-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
 .vd-detail-address-sub {
   display: inline-flex;
   align-items: center;
@@ -2609,6 +2616,24 @@ body.light-theme .vd-rewards-performance-title h2 {
   font-size: 0.85rem;
   color: var(--text-secondary, #aaa);
   cursor: pointer;
+}
+
+.vd-detail-since {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: var(--text-secondary, #aaa);
+}
+
+.vd-detail-since > i:first-child {
+  opacity: 0.6;
+  font-size: 0.8rem;
+}
+
+body.light-theme .vd-detail-since {
+  color: #64748b;
 }
 
 .vd-detail-address-sub i {

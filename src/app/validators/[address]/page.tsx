@@ -20,6 +20,7 @@ import InfoTooltip from '@/components/InfoTooltip';
 import { markdownToPlainText, markdownToSnippet } from '@/components/MarkdownText';
 import { Aep30Ring } from '@/components/Aep30Badge';
 import SaturationBar from '@/components/SaturationBar';
+import ShareMenu from '@/components/Share';
 import ComposedChart from '@/components/Charts/ComposedChart';
 import BonusScoreHistoryModal from '@/components/Modals/BonusScoreHistory/BonusScoreHistoryModal';
 import StakeHistoryModal from '@/components/Modals/StakeHistory/StakeHistoryModal';
@@ -27,6 +28,7 @@ import NodeRewardsHistoryModal from '@/components/Modals/NodeRewardsHistory/Node
 import { getCachedNodeRewardStats, getCachedNodeDailyRewards } from '@/lib/rewardStatsCache';
 import type { RewardsRange } from '@/lib/rewardStatsCache';
 import { getDelegationStartDates } from '@/lib/delegationDates';
+import { getValidatorCreationDate } from '@/lib/validatorCreation';
 import type { DelegationStartDates } from '@/lib/delegationDates';
 import { mapDailyRewardsToChartPoints } from '@/utils/rewardAggregation';
 import type { NodeRewardStats, NodeDailyReward } from '@/types/rewards';
@@ -65,6 +67,7 @@ export default function ValidatorDetails() {
   const [chartShowPoolReward, setChartShowPoolReward] = useState(true);
   const [chartShowOwnerShare, setChartShowOwnerShare] = useState(true);
   const [delegationStartDates, setDelegationStartDates] = useState<DelegationStartDates>({});
+  const [creationTimestamp, setCreationTimestamp] = useState<number | null>(null);
 
   // Effects
   useEffect(() => {
@@ -112,6 +115,16 @@ export default function ValidatorDetails() {
     }
     getDelegationStartDates(address)
       .then(dates => setDelegationStartDates(dates))
+      .catch(() => {});
+  }, [address, isPrivacyMode]);
+
+  useEffect(() => {
+    if (!address || isPrivacyMode) {
+      setCreationTimestamp(null);
+      return;
+    }
+    getValidatorCreationDate(address)
+      .then(timestamp => setCreationTimestamp(timestamp))
       .catch(() => {});
   }, [address, isPrivacyMode]);
 
@@ -179,6 +192,15 @@ export default function ValidatorDetails() {
   }, [validatorRewardStats, pool?.ownStake]);
 
   const proposalsCreatedCount = filteredProposals.filter(p => String(p.proposer || '').toLowerCase() === String(address || '').toLowerCase()).length;
+
+  const validatorDisplayName = address ? (dmdName ? formatDmdName(dmdName) : truncateAddress(address)) : '';
+  const validatorCreatedLabel = creationTimestamp ? timestampToDate(String(creationTimestamp)) : null;
+
+  const shareTitle = dmdName
+    ? `DMD Diamond validator - ${formatDmdName(dmdName)}`
+    : address
+      ? `DMD Diamond validator - ${address}`
+      : 'DMD Diamond validator';
 
   // Functions
   async function filterProposals() {
@@ -268,7 +290,7 @@ export default function ValidatorDetails() {
                 <div className="vd-detail-id">
                   <div className="vd-detail-id-top">
                     <h1 id="validator-address" className="vd-detail-address">
-                      {address ? (dmdName ? formatDmdName(dmdName) : truncateAddress(address)) : 'Loading...'}
+                      {validatorDisplayName || 'Loading...'}
                     </h1>
                     <span id="validator-status-badge" className={`status-badge ${pool?.isActive ? 'status-active' : (pool?.isToBeElected || pool?.isPendingValidator) ? 'status-valid' : 'status-invalid'}`}>
                       {pool?.isActive ? "Active" : (pool?.isToBeElected || pool?.isPendingValidator) ? "Valid" : "Invalid"}
@@ -282,14 +304,34 @@ export default function ValidatorDetails() {
                           <i className="fas fa-external-link-alt"></i>
                         </button>
                       </a>
+                      <ShareMenu
+                        title={shareTitle}
+                        variant="icon"
+                        label="Share validator"
+                        align="left"
+                      />
                     </div>
                   </div>
-                  {dmdName && (
-                    <div className="vd-detail-address-sub" onClick={() => copyData(address || '')} title="Click to copy address">
-                      {truncateAddress(address)}
-                      <i className="fas fa-copy"></i>
-                    </div>
-                  )}
+                  <div className="vd-detail-meta">
+                    {dmdName && (
+                      <div className="vd-detail-address-sub" onClick={() => copyData(address || '')} title="Click to copy address">
+                        {truncateAddress(address)}
+                        <i className="fas fa-copy"></i>
+                      </div>
+                    )}
+                    {validatorCreatedLabel && (
+                      <div className="vd-detail-since">
+                        <i className="fas fa-calendar-plus" aria-hidden="true"></i>
+                        Validator since {validatorCreatedLabel}
+                        <InfoTooltip
+                          placement="bottom"
+                          content={<p>Date this validator pool was created.</p>}
+                        >
+                          <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
+                        </InfoTooltip>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="vd-detail-totalpool">

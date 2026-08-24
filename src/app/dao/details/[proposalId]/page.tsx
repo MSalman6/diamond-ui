@@ -6,6 +6,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react"
 import InfoTooltip from '@/components/InfoTooltip'
 import MarkdownText, { hasMarkdownSyntax, markdownToPlainText } from '@/components/MarkdownText'
 import Modal from '@/components/Modal'
+import ShareMenu from '@/components/Share'
 import { usePathname } from 'next/navigation'
 import BigNumber from 'bignumber.js'
 import { useDaoContext } from '@/contexts/DAO'
@@ -502,6 +503,11 @@ export default function ProposalDetailsPage() {
     }
   }
 
+  const shareTitle = useMemo(() => {
+    const title = markdownToPlainText(proposal?.title || '').trim()
+    return title ? `DMD Diamond DAO proposal: ${title}` : 'DMD Diamond DAO proposal'
+  }, [proposal?.title])
+
   const proposalFeeLabel = useMemo(() => {
     const fee = liveProposalFee ?? daoContext?.proposalFee
     if (fee === undefined || fee === null || fee === '') return '—'
@@ -581,6 +587,7 @@ export default function ProposalDetailsPage() {
                 <div className={`proposal-status ${(proposalState || 'Executed').toLowerCase().replace(/[^a-z]/g, '')}`}>
                   <i className="fas fa-check-circle" /> {proposalState || 'Executed'}
                 </div>
+                <ShareMenu title={shareTitle} variant="pill" label="Share" align="left" />
                 {web3Context.userWallet?.myAddr === proposal?.proposer &&
                   proposal?.state === '0' &&
                   daoContext.daoPhase?.phase === '0' && (

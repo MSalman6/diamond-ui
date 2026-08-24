@@ -38,7 +38,8 @@
 .proposal-meta {
   display: flex;
   align-items: center;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 12px 20px;
   margin-top: 15px;
 }
 
