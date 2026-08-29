@@ -1,21 +1,29 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import BigNumber from 'bignumber.js';
+import { useRouter, usePathname } from 'next/navigation';
 import { useWeb3Context } from '@/contexts/Web3';
-import { truncateAddress } from '@/utils/common';
+import { truncateAddress, formatDmdFromWei } from '@/utils/common';
 import { useState, useEffect, useRef } from 'react';
 import { useWalletConnect } from '@/contexts/WalletConnect';
+import { useWalletTotals } from '@/hooks/useWalletTotals';
+import InfoTooltip from '@/components/InfoTooltip';
 import { config } from '@/lib/config';
 
 // Width at which the nav collapses into the hamburger.
 const NAV_BREAKPOINT = 1024;
 
+const ECOSYSTEM_ROUTES = ['/names'];
+const KNOWLEDGEBASE_ROUTES = ['/wiki', '/faqs'];
+
 export default function Header() {
   const router = useRouter();
+  const pathname = usePathname();
   const { open: openWalletModal, address, isConnected, disconnect } = useWalletConnect();
   const { userWallet, retryWalletConnection } = useWeb3Context();
-  
+  const totals = useWalletTotals();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [logoSrc, setLogoSrc] = useState('/logos/dmd-logo.png');
@@ -61,10 +69,14 @@ export default function Header() {
   };
 
   // Handle wallet dropdown toggle
-  const handleWalletDropdownToggle = (e: React.MouseEvent) => {
+  const handleWalletDropdownToggle = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setActiveDropdown(prev => prev === 'wallet' ? null : 'wallet');
+  };
+
+  const handleWalletKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') handleWalletDropdownToggle(e);
   };
   
   // Toggle mobile menu
@@ -140,10 +152,14 @@ export default function Header() {
     };
 
     const handleEscKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isMobileMenuOpen) {
+      if (e.key !== 'Escape') return;
+
+      if (isMobileMenuOpen) {
         setIsMobileMenuOpen(false);
         setActiveDropdown(null);
         document.body.style.overflow = '';
+      } else {
+        setActiveDropdown(null);
       }
     };
 
@@ -199,23 +215,114 @@ export default function Header() {
     return () => observer.disconnect();
   }, []);
 
-  const renderWallet = () => {
+  const isActiveRoute = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+
+  const exactDmd = (wei: BigNumber) => formatDmdFromWei(wei, { compact: false, trim: true });
+  const plainDmd = (wei: BigNumber) => formatDmdFromWei(wei, { compact: false, unit: false, trim: true });
+  const shielded = (value: string) => (totals.isHidden ? '—' : value);
+
+  const isWalletOpen = activeDropdown === 'wallet';
+
+  const renderWalletTotal = () => {
+    if (totals.isHidden) {
+      return <span className="hdr-wallet-total" aria-label="Balance hidden in privacy mode">—</span>;
+    }
+    if (totals.isLoading) {
+      return <span className="hdr-wallet-total-skeleton" role="status" aria-label="Loading total balance" />;
+    }
+    return (
+      <span className="hdr-wallet-total" aria-label={`Total balance ${exactDmd(totals.totalWei)}`}>
+        {formatDmdFromWei(totals.totalWei)}
+      </span>
+    );
+  };
+
+  const renderBalanceBreakdown = (scope: 'bar' | 'drawer') => (
+    <div className="dropdown-section hdr-balance">
+      <h4>
+        DMD balance
+        <InfoTooltip
+          id={`hdr-balance-tip-${scope}`}
+          interactive
+          label="What the combined balance includes"
+          content={
+            <div>
+              <p>
+                Everything this wallet controls: coins you can spend now, plus everything you have
+                staked.
+              </p>
+              {totals.pendingWithdrawWei.isGreaterThan(0) && (
+                <p>
+                  Coins in an ordered unstake are listed separately because they have already left
+                  your stake and only reach your wallet once you claim them.
+                </p>
+              )}
+            </div>
+          }
+        >
+          <i className="fas fa-info-circle" aria-hidden="true"></i>
+        </InfoTooltip>
+      </h4>
+
+      <dl className="hdr-balance-list">
+        <div className="hdr-balance-row">
+          <dt>Wallet</dt>
+          <dd>{shielded(plainDmd(totals.liquidWei))}</dd>
+        </div>
+        {totals.ownStakeWei.isGreaterThan(0) && (
+          <div className="hdr-balance-row">
+            <dt>Own stake</dt>
+            <dd>{shielded(plainDmd(totals.ownStakeWei))}</dd>
+          </div>
+        )}
+        {totals.delegatedWei.isGreaterThan(0) && (
+          <div className="hdr-balance-row">
+            <dt>Delegated out</dt>
+            <dd>{shielded(plainDmd(totals.delegatedWei))}</dd>
+          </div>
+        )}
+        <div className="hdr-balance-row hdr-balance-row--total">
+          <dt>Total</dt>
+          <dd>
+            {shielded(plainDmd(totals.totalWei))} <span className="hdr-balance-unit">DMD</span>
+          </dd>
+        </div>
+        {totals.pendingWithdrawWei.isGreaterThan(0) && (
+          <div className="hdr-balance-row hdr-balance-row--pending">
+            <dt>Pending unstake</dt>
+            <dd>{shielded(plainDmd(totals.pendingWithdrawWei))}</dd>
+          </div>
+        )}
+      </dl>
+    </div>
+  );
+
+  const renderWallet = (scope: 'bar' | 'drawer') => {
     if (isConnected && userWallet.myAddr) {
       return (
         <div
-          className={`user-wallet-info dropdown ${activeDropdown === 'wallet' ? 'active' : ''}`}
+          className={`user-wallet-info dropdown ${isWalletOpen ? 'active' : ''}`}
           onClick={handleWalletDropdownToggle}
+          onKeyDown={handleWalletKeyDown}
+          role="button"
+          tabIndex={0}
+          aria-haspopup="menu"
+          aria-expanded={isWalletOpen}
           style={{ cursor: 'pointer' }}
         >
           <div className="dropdown-toggle">
             <div className="wallet-icon">
               <div className="wallet-icon-inner"></div>
             </div>
-            <div className="wallet-address">{truncateAddress(userWallet.myAddr)}</div>
-            <i className="fas fa-chevron-down wallet-address-dropdown"></i>
+            <div className="hdr-wallet-lines">
+              <span className="wallet-address">{truncateAddress(userWallet.myAddr)}</span>
+              {renderWalletTotal()}
+            </div>
+            <i className="fas fa-chevron-down wallet-address-dropdown" aria-hidden="true"></i>
           </div>
           <div className="dropdown-menu">
             <div className="dropdown-content">
+              {renderBalanceBreakdown(scope)}
               <div className="dropdown-section">
                 <ul>
                   <li>
@@ -238,7 +345,11 @@ export default function Header() {
                     </a>
                   </li>
                   <li>
-                    <a href="#" onClick={(e) => { e.preventDefault(); handleDisconnect(); }}>
+                    <a
+                      href="#"
+                      className="hdr-menu-danger"
+                      onClick={(e) => { e.preventDefault(); handleDisconnect(); }}
+                    >
                       <i className="fas fa-sign-out-alt"></i> Disconnect
                     </a>
                   </li>
@@ -262,16 +373,12 @@ export default function Header() {
       <div className="container">
         <div className="logo">
           <Link href="/">
-            <Image 
-              className="logo-img" 
+            <Image
+              className="logo-img"
               src={logoSrc}
               alt="DMD Diamond Logo"
-              width={150}
-              height={0}
-              style={{
-                width: '150px',
-                height: 'auto',
-              }}
+              width={116}
+              height={56}
               priority
             />
           </Link>
@@ -280,12 +387,16 @@ export default function Header() {
         <nav>
           <ul className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`} ref={navLinksRef}>
             <li>
-              <Link href="/validators" onClick={handleRegularLinkClick}>
+              <Link
+                href="/validators"
+                aria-current={isActiveRoute('/validators') ? 'page' : undefined}
+                onClick={handleRegularLinkClick}
+              >
                 Validators
               </Link>
             </li>
-            
-            <li className={`dropdown ${activeDropdown === 'ecosystem' ? 'active' : ''}`}>
+
+            <li className={`dropdown ${activeDropdown === 'ecosystem' ? 'active' : ''} ${ECOSYSTEM_ROUTES.some(isActiveRoute) ? 'is-active' : ''}`}>
               <a 
                 href="#" 
                 className="dropdown-toggle"
@@ -352,12 +463,16 @@ export default function Header() {
             </li> */}
 
             <li>
-              <Link href="/dao" onClick={handleRegularLinkClick}>
+              <Link
+                href="/dao"
+                aria-current={isActiveRoute('/dao') ? 'page' : undefined}
+                onClick={handleRegularLinkClick}
+              >
                 DAO
               </Link>
             </li>
 
-            <li className={`dropdown ${activeDropdown === 'knowledgebase' ? 'active' : ''}`}>
+            <li className={`dropdown ${activeDropdown === 'knowledgebase' ? 'active' : ''} ${KNOWLEDGEBASE_ROUTES.some(isActiveRoute) ? 'is-active' : ''}`}>
               <a
                 href="#"
                 className="dropdown-toggle"
@@ -391,7 +506,7 @@ export default function Header() {
             </li>
 
             <li className="mobile-wallet-container">
-              {renderWallet()}
+              {renderWallet('drawer')}
             </li>
           </ul>
         </nav>
@@ -407,10 +522,10 @@ export default function Header() {
             </label>
           </div>
           
-          {renderWallet()}
+          {renderWallet('bar')}
         </div>
-        
-        <div 
+
+        <div
           className={`mobile-menu-btn ${isMobileMenuOpen ? 'active' : ''}`}
           ref={mobileMenuBtnRef}
           onClick={toggleMobileMenu}

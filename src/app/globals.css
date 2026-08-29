@@ -1,5 +1,6 @@
 :root {
-  --header-h: 92px;
+  --header-h: 88px;
+  --page-top-gap: 24px;
   --bg: #030014;
   --darker-bg: #020010;
   --card-bg: rgba(255, 255, 255, 0.05);
@@ -574,8 +575,10 @@ form button .disabled {
 }
 
 .logo-img {
-  width: 150px;
-  margin-left: -10px;
+  height: 56px;
+  width: auto;
+  margin-left: -4px;
+  display: block;
 }
 
 header {
@@ -584,7 +587,7 @@ header {
   left: 0;
   width: 100%;
   z-index: 1000;
-  padding: 20px 0;
+  padding: 16px 0;
   background: var(--header-bg);
   backdrop-filter: blur(10px);
   transition: background-color 0.5s ease;
@@ -592,9 +595,13 @@ header {
 
 header .container {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  gap: 24px;
+  gap: 32px;
+}
+
+header .container > .header-right {
+  margin-left: auto;
 }
 
 header .logo {
@@ -609,6 +616,7 @@ header .logo {
 .nav-links {
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
   gap: 30px;
 }
 
@@ -751,13 +759,13 @@ header .logo {
 }
 
 @media (min-width: 1025px) {
-  .dropdown:hover .dropdown-menu {
+  .dropdown:not(.user-wallet-info):hover .dropdown-menu {
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(0);
   }
 
-  .dropdown:hover .dropdown-toggle .fa-chevron-down {
+  .dropdown:not(.user-wallet-info):hover .dropdown-toggle .fa-chevron-down {
     transform: rotate(180deg);
   }
 }
@@ -775,11 +783,11 @@ header .logo {
 
 @media (max-width: 1024px) {
   :root {
-    --header-h: 80px;
+    --header-h: 70px;
   }
 
   header {
-    padding: 15px 0;
+    padding: 12px 0;
     position: fixed;
     top: 0;
     left: 0;
@@ -1014,6 +1022,29 @@ header .logo {
 .header-right {
   display: flex;
   align-items: center;
+}
+
+.wallet-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  flex: 0 0 auto;
+}
+
+.wallet-icon.large {
+  width: 48px;
+  height: 48px;
+}
+
+.wallet-icon-inner {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #6ee7b7, #3b82f6);
 }
 
 .cosmic-grid {
@@ -1386,7 +1417,7 @@ header .logo {
   background: var(--bg);
   position: relative;
   overflow: hidden;
-  padding-top: 80px;
+  padding-top: calc(var(--header-h) + var(--page-top-gap));
   padding-bottom: 0;
   transition: background-color 0.5s ease;
 }
@@ -1396,7 +1427,7 @@ header .logo {
 .governance-hero,
 .validator-hero,
 .proposal-hero {
-  padding-top: 120px;
+  padding-top: calc(var(--header-h) + var(--page-top-gap));
   min-height: 350px;
   display: flex;
   align-items: center;
@@ -2322,7 +2353,7 @@ footer {
   .governance-hero,
   .validator-hero,
   .proposal-hero {
-    padding-top: 100px;
+    padding-top: calc(var(--header-h) + var(--page-top-gap));
     min-height: 300px;
   }
 
@@ -2439,7 +2470,7 @@ footer {
 
 .user-info-section,
 .validator-info-section {
-  padding-top: 100px;
+  padding-top: calc(var(--header-h) + var(--page-top-gap));
 }
 
 .modal {

@@ -9,12 +9,28 @@ type Props = {
   offset?: number;
   children: React.ReactElement;
   id?: string;
+  interactive?: boolean;
+  focusable?: boolean;
+  disabled?: boolean;
+  label?: string;
 };
 
-export default function InfoTooltip({ content, placement = 'bottom', offset = 8, children, id }: Props) {
+export default function InfoTooltip({
+  content,
+  placement = 'bottom',
+  offset = 8,
+  children,
+  id,
+  interactive = false,
+  focusable = true,
+  disabled = false,
+  label,
+}: Props) {
   const triggerRef = useRef<HTMLElement | null>(null);
   const tooltipRef = useRef<HTMLDivElement | null>(null);
-  const [visible, setVisible] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [pinned, setPinned] = useState(false);
+  const visible = !disabled && (hovered || pinned);
   const [pos, setPos] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
@@ -46,8 +62,40 @@ export default function InfoTooltip({ content, placement = 'bottom', offset = 8,
     };
   }, [visible, placement, offset]);
 
-  const handleShow = () => setVisible(true);
-  const handleHide = () => setVisible(false);
+  useEffect(() => {
+    if (!pinned) return;
+
+    const handlePointerDown = (e: PointerEvent) => {
+      if (!triggerRef.current?.contains(e.target as Node)) setPinned(false);
+    };
+    const handleEscKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setPinned(false);
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown, true);
+    document.addEventListener('keydown', handleEscKey);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown, true);
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [pinned]);
+
+  useEffect(() => {
+    if (disabled) setPinned(false);
+  }, [disabled]);
+
+  const handleShow = () => setHovered(true);
+  const handleHide = () => setHovered(false);
+
+  const togglePinned = (e: React.MouseEvent | React.KeyboardEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setPinned(prev => !prev);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') togglePinned(e);
+  };
 
   const trigger = (
     <span
@@ -57,7 +105,12 @@ export default function InfoTooltip({ content, placement = 'bottom', offset = 8,
       onMouseLeave={handleHide}
       onFocus={handleShow}
       onBlur={handleHide}
-      tabIndex={0}
+      onClick={interactive ? togglePinned : undefined}
+      onKeyDown={interactive ? handleKeyDown : undefined}
+      role={interactive ? 'button' : undefined}
+      aria-expanded={interactive ? visible : undefined}
+      aria-label={label}
+      tabIndex={focusable ? 0 : undefined}
       aria-describedby={id ?? 'info-tooltip'}
     >
       {children}

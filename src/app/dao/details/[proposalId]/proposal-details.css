@@ -6,7 +6,7 @@
   background: var(--bg);
   position: relative;
   overflow: hidden;
-  padding-top: 120px;
+  padding-top: calc(var(--header-h) + var(--page-top-gap));
   padding-bottom: 60px;
   transition: background-color 0.5s ease;
 }

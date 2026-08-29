@@ -5,7 +5,7 @@
   background: var(--bg);
   position: relative;
   overflow: hidden;
-  padding-top: 120px;
+  padding-top: calc(var(--header-h) + var(--page-top-gap));
   padding-bottom: 40px;
   transition: background-color 0.5s ease;
 }
@@ -1559,7 +1559,7 @@ body.light-theme .cta-button.coming-soon:hover {
 @media (max-width: 768px) {
   .validator-hero {
     height: auto;
-    padding: 100px 0 40px;
+    padding: calc(var(--header-h) + var(--page-top-gap)) 0 40px;
   }
 
   .validator-header h1 {
@@ -2549,7 +2549,7 @@ body.light-theme .vd-rewards-performance-title h2 {
 /* Compact detail header */
 .validator-hero--detail {
   min-height: auto;
-  padding-top: 110px;
+  padding-top: calc(var(--header-h) + var(--page-top-gap));
   padding-bottom: 30px;
 }
 

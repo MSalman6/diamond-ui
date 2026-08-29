@@ -6,7 +6,7 @@
   background: var(--bg);
   position: relative;
   overflow: hidden;
-  padding-top: 120px;
+  padding-top: calc(var(--header-h) + var(--page-top-gap));
   padding-bottom: 40px;
   transition: background-color 0.5s ease;
 }
@@ -391,7 +391,7 @@
 @media (max-width: 768px) {
   .historic-hero {
     height: auto;
-    padding: 100px 0 40px;
+    padding: calc(var(--header-h) + var(--page-top-gap)) 0 40px;
   }
 
   .historic-hero-content h1 {

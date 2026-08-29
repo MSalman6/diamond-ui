@@ -6,7 +6,7 @@
   position: relative;
   overflow: hidden;
   padding: 0px;
-  padding-top: 120px;
+  padding-top: calc(var(--header-h) + var(--page-top-gap));
   padding-bottom: 40px;
 }
 
@@ -802,7 +802,7 @@ body.light-theme .vl-table-scroll-btn:hover {
 @media (max-width: 768px) {
   .validators-hero {
     height: auto;
-    padding: 100px 0 60px !important;
+    padding: calc(var(--header-h) + var(--page-top-gap)) 0 60px !important;
   }
 
   .validators-hero-content h1 {

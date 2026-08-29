@@ -319,7 +319,7 @@
   align-items: center;
   position: relative;
   overflow: hidden;
-  padding: 120px 0 60px;
+  padding: calc(var(--header-h) + var(--page-top-gap)) 0 60px;
 }
 
 .dmd-names-hero-content {

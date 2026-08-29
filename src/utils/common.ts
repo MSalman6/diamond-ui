@@ -337,3 +337,40 @@ export const truncateAddress = (address: string) => {
   if (!address) return "";
   return `${address.slice(0, 7)}...${address.slice(-5)}`;
 };
+
+const WEI = new BigNumber(10).pow(18);
+
+interface FormatDmdOptions {
+  unit?: boolean;
+  compact?: boolean;
+  trim?: boolean;
+}
+
+const trimTrailingZeros = (value: string): string =>
+  value.includes('.') ? value.replace(/0+$/, '').replace(/\.$/, '') : value;
+
+/**
+ * Converts a wei value to a DMD display string
+ * @param {BigNumber|string|number|null|undefined} wei
+ * @param {FormatDmdOptions} options
+ * @returns {string}
+ */
+export const formatDmdFromWei = (
+  wei: BigNumber | string | number | null | undefined,
+  { unit = true, compact = true, trim = false }: FormatDmdOptions = {}
+): string => {
+  const suffix = unit ? ' DMD' : '';
+  const amount = new BigNumber(wei ?? 0).dividedBy(WEI);
+  const format = (decimals: number) => {
+    const formatted = amount.toFormat(decimals, BigNumber.ROUND_DOWN);
+    return trim ? trimTrailingZeros(formatted) : formatted;
+  };
+
+  if (!amount.isFinite() || amount.isNaN() || amount.isZero()) return `0${suffix}`;
+  if (compact && amount.isGreaterThanOrEqualTo(1e6)) {
+    return `${trimTrailingZeros(amount.dividedBy(1e6).toFormat(2, BigNumber.ROUND_DOWN))}M${suffix}`;
+  }
+  if (amount.isGreaterThanOrEqualTo(1000)) return `${format(0)}${suffix}`;
+  if (amount.isGreaterThanOrEqualTo(1)) return `${format(2)}${suffix}`;
+  return `${format(4)}${suffix}`;
+};

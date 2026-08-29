@@ -5,6 +5,7 @@ import React, { ReactNode, createContext, useContext, useEffect, useState, useCa
 import BigNumber from "bignumber.js";
 import { toast } from "react-toastify";
 import { useWeb3Context } from "@/contexts/Web3";
+import { UserWallet } from "@/contexts/types/wallet";
 import { NonPayableTx } from "@/contexts/types/contracts";
 import { getAddressFromPublicKey } from "@/utils/common";
 import { PoolCache, Delegator, Pool } from "@/contexts/types/models";
@@ -22,6 +23,7 @@ interface StakingContextProps {
   epochStartBlock: number;
   myTotalStake: BigNumber;
   isSyncingPools: boolean;
+  stakesSyncedFor: string;
   myPool: Pool | undefined;
   activeValidators: number;
   minimumGasFee: BigNumber;
@@ -95,6 +97,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
   const [canStakeOrWithdrawNow, setCanStakeOrWithdrawNow] = useState<boolean>(false);
   const [stakingAllowedTimeframe, setStakingAllowedTimeframe] = useState<number>(0);
   const [isSyncingPools, setIsSyncingPools] = useState<boolean>(true);
+  const [stakesSyncedFor, setStakesSyncedFor] = useState<string>('');
   const [currentValidatorsWithoutPools, setCurrentValidatorsWithoutPools] = useState<string[]>([]);
   const [numbersOfValidators, setNumbersOfValidators] = useState<number>(0);
   const [newBlockPolling, setNewBlockPolling] = useState<NodeJS.Timeout | undefined>(undefined);
@@ -226,8 +229,10 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
       }
       return newPools;
     });
+
+    setStakesSyncedFor(myAddr);
   }
- 
+
   const initializeStakingDataAdapter = async () => {
     if (stakingInitialized) return;
     updateEventSubscription();
@@ -391,8 +396,9 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
 
     if (userWallet.myAddr) {
       const myBalance = new BigNumber(await web3.eth.getBalance(userWallet.myAddr));
-      userWallet.myBalance = myBalance;
-      setUserWallet(userWallet);
+      if (!userWallet.myBalance?.isEqualTo(myBalance)) {
+        setUserWallet(new UserWallet(userWallet.myAddr, myBalance));
+      }
     }
 
     // epoch change
@@ -1002,6 +1008,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
     minimumGasFee,
     epochStartTime,
     isSyncingPools,
+    stakesSyncedFor,
     epochStartBlock,
     myCandidateStake,
     candidateMinStake,

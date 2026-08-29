@@ -11,7 +11,7 @@
   background: var(--bg);
   position: relative;
   overflow: hidden;
-  padding: 120px 0 60px;
+  padding: calc(var(--header-h) + var(--page-top-gap)) 0 60px;
 }
 
 .faqs-hero-content {
@@ -121,7 +121,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .faqs-hero {
-    padding: 100px 0 40px;
+    padding: calc(var(--header-h) + var(--page-top-gap)) 0 40px;
     min-height: 300px;
   }
 
