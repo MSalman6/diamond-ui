@@ -3,7 +3,7 @@
 import { toast } from 'react-toastify';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useWeb3Context } from "@/contexts/Web3";
-import { DaoPhase, Proposal, TotalVotingStats, Vote } from "@/contexts/types/dao";
+import { DaoPhase, Proposal, ProposalVote, ProposalVotesResult, TotalVotingStats, Vote } from "@/contexts/types/dao";
 import BigNumber from 'bignumber.js';
 import { getFunctionSelector, timestampToDate } from '../../utils/common';
 import { getRuntimeConfig } from '@/lib/runtimeConfig';
@@ -12,6 +12,51 @@ import { buildTxOptions } from '@/utils/txOptions';
 import { useStakingContext } from '@/contexts/Staking';
 import logger from '@/utils/logger';
 BigNumber.config({ EXPONENTIAL_AT: 1e+9 });
+
+const PROPOSAL_STATE_VOTING_FINISHED = 3;
+const VOTES_FETCH_CHUNK_SIZE = 10;
+const VOTES_CACHE_PREFIX = 'dao_proposal_votes_v1_';
+
+interface CachedProposalVotes {
+  fingerprint: string;
+  votes: ProposalVote[];
+}
+
+const votesCacheKey = (proposalId: string): string => `${VOTES_CACHE_PREFIX}${proposalId}`;
+
+const sortVotesByRecency = (votes: ProposalVote[]): ProposalVote[] =>
+  [...votes].sort((a, b) => {
+    const byTimestamp = Number(b.timestamp || 0) - Number(a.timestamp || 0);
+    if (byTimestamp !== 0) return byTimestamp;
+    return BigNumber(b.stake || 0).comparedTo(BigNumber(a.stake || 0)) ?? 0;
+  });
+
+const readVotesCache = (proposalId: string): CachedProposalVotes | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(votesCacheKey(proposalId));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as CachedProposalVotes;
+    if (!parsed?.fingerprint || !Array.isArray(parsed.votes)) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
+const writeVotesCache = (proposalId: string, entry: CachedProposalVotes): void => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(votesCacheKey(proposalId), JSON.stringify(entry));
+  } catch {}
+};
+
+const clearVotesCache = (proposalId: string): void => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.removeItem(votesCacheKey(proposalId));
+  } catch {}
+};
 
 interface DaoContextProps {
   daoPhase: any,
@@ -46,6 +91,7 @@ interface DaoContextProps {
   setProposalsState: (proposals: Proposal[]) => Promise<void>;
   getHistoricProposalsEvents: () => Promise<Array<string>>;
   getMyVote: (proposalId: string, myAddr: string) => Promise<Vote>;
+  getProposalVotes: (proposalId: string) => Promise<ProposalVotesResult>;
   executeProposal: (proposalId: string) => Promise<string>;
   getDaoPotBalanceChange: (blocksAgo: number) => Promise<{ changePercentage: string | null, absoluteChange: string, direction: string }>;
   getProposalThreshold: (proposalType: string, proposal?: any) => number;
@@ -1016,6 +1062,85 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     });
   }
 
+  const getProposalVotes = async (proposalId: string): Promise<ProposalVotesResult> => {
+    const daoContract = web3Context.contractsManager.daoContract;
+    const voters: string[] = await daoContract.methods.getProposalVoters(proposalId).call();
+
+    if (!voters?.length) {
+      clearVotesCache(proposalId);
+      return { votes: [], stakeSource: 'live' };
+    }
+
+    const proposal: any = await daoContract.methods.proposals(proposalId).call();
+    const state = Number(proposal?.state ?? 0);
+    const votingDaoEpoch = String(proposal?.votingDaoEpoch ?? '0');
+
+    const useSnapshot = state >= PROPOSAL_STATE_VOTING_FINISHED;
+    const stakeSource: 'snapshot' | 'live' = useSnapshot ? 'snapshot' : 'live';
+
+    const fingerprint = await buildVotesFingerprint(proposalId, voters, state);
+    const cached = readVotesCache(proposalId);
+    if (cached && cached.fingerprint === fingerprint) {
+      return { votes: cached.votes, stakeSource };
+    }
+
+    const collected: ProposalVote[] = [];
+
+    for (let i = 0; i < voters.length; i += VOTES_FETCH_CHUNK_SIZE) {
+      const chunk = voters.slice(i, i + VOTES_FETCH_CHUNK_SIZE);
+
+      const chunkVotes = await Promise.all(chunk.map(async (voter): Promise<ProposalVote> => {
+        const [record, stake] = await Promise.all([
+          daoContract.methods.votes(proposalId, voter).call(),
+          getVoterStake(voter, votingDaoEpoch, useSnapshot),
+        ]);
+
+        return {
+          voter,
+          vote: String((record as any)?.vote ?? (record as any)?.[1] ?? ''),
+          reason: String((record as any)?.reason ?? (record as any)?.[2] ?? ''),
+          timestamp: String((record as any)?.timestamp ?? (record as any)?.[0] ?? '0'),
+          stake: String(stake ?? '0'),
+        };
+      }));
+
+      collected.push(...chunkVotes);
+    }
+
+    const sorted = sortVotesByRecency(collected);
+    writeVotesCache(proposalId, { fingerprint, votes: sorted });
+
+    return { votes: sorted, stakeSource };
+  };
+
+  const getVoterStake = async (voter: string, votingDaoEpoch: string, useSnapshot: boolean): Promise<string> => {
+    try {
+      if (useSnapshot) {
+        return await web3Context.contractsManager.daoContract.methods
+          .daoEpochStakeSnapshot(votingDaoEpoch, voter)
+          .call();
+      }
+      const stakingContract = web3Context.contractsManager.stContract;
+      if (!stakingContract) return '0';
+      return await stakingContract.methods.stakeAmountTotal(voter).call();
+    } catch (error) {
+      logger.error(error);
+      return '0';
+    }
+  };
+
+  const buildVotesFingerprint = async (proposalId: string, voters: string[], state: number): Promise<string> => {
+    const roster = voters.map((voter) => voter.toLowerCase()).sort().join(',');
+    let tally = 'unavailable';
+
+    try {
+      const counted: any = await web3Context.contractsManager.daoContract.methods.countVotes(proposalId).call();
+      tally = [counted?.countYes, counted?.countNo, counted?.stakeYes, counted?.stakeNo].join(':');
+    } catch {}
+
+    return `${state}|${tally}|${roster}`;
+  };
+
   const getMyVote = async (proposalId: string, myAddr: string): Promise<Vote> => {
     return await web3Context.contractsManager.daoContract.methods
       .votes(proposalId, myAddr)
@@ -1203,6 +1328,7 @@ const DaoContextProvider: React.FC<{ children: ReactNode }>  = ({ children }) =>
     setProposalsState,
     getHistoricProposalsEvents,
     getMyVote,
+    getProposalVotes,
     setActiveProposals,
     executeProposal,
     getDaoPotBalanceChange,

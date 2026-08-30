@@ -7,6 +7,7 @@ import InfoTooltip from '@/components/InfoTooltip'
 import MarkdownText, { hasMarkdownSyntax, markdownToPlainText } from '@/components/MarkdownText'
 import Modal from '@/components/Modal'
 import ShareMenu from '@/components/Share'
+import ProposalVotes from '@/components/ProposalVotes'
 import { usePathname } from 'next/navigation'
 import BigNumber from 'bignumber.js'
 import { useDaoContext } from '@/contexts/DAO'
@@ -1003,6 +1004,12 @@ export default function ProposalDetailsPage() {
                   )}
                 </div>
               </div>
+
+              <ProposalVotes
+                proposalId={proposal?.id}
+                ready={!!proposal?.id}
+                refreshKey={`${proposal?.state ?? ''}-${votingStats?.total?.toString() ?? ''}`}
+              />
 
               <div className="proposal-card discussion-card">
                 <div className="card-header"><h3>Discussion</h3></div>

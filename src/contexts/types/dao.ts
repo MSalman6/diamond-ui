@@ -44,3 +44,16 @@ export interface DaoPhase {
   phase: string;
   start: string;
 }
+
+export interface ProposalVote {
+  voter: string;
+  vote: string;
+  reason: string;
+  timestamp: string;
+  stake: string;
+}
+
+export interface ProposalVotesResult {
+  votes: ProposalVote[];
+  stakeSource: 'snapshot' | 'live';
+}

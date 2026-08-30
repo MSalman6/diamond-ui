@@ -268,6 +268,11 @@
   gap: 25px;
 }
 
+.proposal-info,
+.voting-info {
+  min-width: 0;
+}
+
 /* Add a new class for full-width sections */
 .full-width-sections {
   grid-column: 1 / -1;
