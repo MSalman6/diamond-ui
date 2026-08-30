@@ -9,6 +9,7 @@ import { usePrivacyMode } from '@/contexts/PrivacyMode';
 import { useWeb3Context } from '@/contexts/Web3';
 import { getNameHistory, checkNameAvailability, getWalletDmdName } from '@/services/dmdNaming';
 import { formatDmdName, shortenAddress } from '@/utils/dmdNaming';
+import ReportNameModal from './ReportNameModal';
 import type { DmdNameHistory, DmdNameHistoryEventType, OwnedDmdNameStatus } from '@/types/dmdNaming';
 
 type Props = {
@@ -76,6 +77,7 @@ export default function NameHistoryContent({ name, backTo }: Props) {
   const { isPrivacyMode } = usePrivacyMode();
   const { userWallet, contractsManager, web3Initialized, readonlyWeb3 } = useWeb3Context();
   const [history, setHistory] = useState<DmdNameHistory | null>(null);
+  const [reportOpen, setReportOpen] = useState(false);
   const [chainFallback, setChainFallback] = useState<ChainFallback | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [notFound, setNotFound] = useState(false);
@@ -192,7 +194,8 @@ export default function NameHistoryContent({ name, backTo }: Props) {
                 <span>DMD Name</span>
               </div>
             </div>
-            <a
+            <div className="dmd-history-header-actions">
+              <a
               className="btn-secondary"
               href={`${config.explorerUrl}address/${chainFallback.currentOwner}`}
               target="_blank"
@@ -200,6 +203,10 @@ export default function NameHistoryContent({ name, backTo }: Props) {
             >
               View on Explorer <i className="fas fa-external-link-alt"></i>
             </a>
+              <button type="button" className="btn-secondary" onClick={() => setReportOpen(true)}>
+                Report Username <i className="fas fa-flag"></i>
+              </button>
+            </div>
           </div>
 
           <div className="dmd-history-stats">
@@ -247,7 +254,8 @@ export default function NameHistoryContent({ name, backTo }: Props) {
                 <span>DMD Name</span>
               </div>
             </div>
-            <a
+            <div className="dmd-history-header-actions">
+              <a
               className="btn-secondary"
               href={`${config.explorerUrl}address/${history.currentOwner}`}
               target="_blank"
@@ -255,6 +263,10 @@ export default function NameHistoryContent({ name, backTo }: Props) {
             >
               View on Explorer <i className="fas fa-external-link-alt"></i>
             </a>
+              <button type="button" className="btn-secondary" onClick={() => setReportOpen(true)}>
+                Report Username <i className="fas fa-flag"></i>
+              </button>
+            </div>
           </div>
 
           <div className="dmd-history-stats">
@@ -338,6 +350,8 @@ export default function NameHistoryContent({ name, backTo }: Props) {
           )}
         </>
       )}
+
+      <ReportNameModal isOpen={reportOpen} onClose={() => setReportOpen(false)} name={name} />
     </div>
   );
 }

@@ -106,6 +106,14 @@ export const config = {
   },
 
   // Application Settings
+  get reportEmail(): string {
+    if (runtimeConfigCache?.reportEmail) return runtimeConfigCache.reportEmail;
+    if (typeof window !== 'undefined' && (window as any).__RUNTIME_CONFIG__?.reportEmail) {
+      return (window as any).__RUNTIME_CONFIG__.reportEmail;
+    }
+    return process.env.NEXT_PUBLIC_REPORT_EMAIL || '';
+  },
+
   get siteUrl(): string {
     if (runtimeConfigCache?.siteUrl) return runtimeConfigCache.siteUrl;
     if (typeof window !== 'undefined' && (window as any).__RUNTIME_CONFIG__?.siteUrl) {

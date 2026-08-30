@@ -20,6 +20,7 @@ export async function GET() {
     // WalletConnect
     wcProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || '2cceb4f25f1cb889b967ea3c40bfd7cd',
     siteUrl: process.env.NEXT_PUBLIC_SITE_URL || '',
+    reportEmail: process.env.NEXT_PUBLIC_REPORT_EMAIL || '',
   };
 
   return NextResponse.json(config, {

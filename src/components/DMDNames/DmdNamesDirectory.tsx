@@ -10,6 +10,7 @@ import DateField from './DateField';
 import SelectField from './SelectField';
 import { getNamesDirectory, getBlacklistedNames, getWalletDmdName } from '@/services/dmdNaming';
 import { formatDmdDate, formatDmdName, shortenAddress } from '@/utils/dmdNaming';
+import ReportNameModal from './ReportNameModal';
 import { useHiddenNames } from '@/hooks/useHiddenNames';
 import serverHiddenNames from '@/config/hidden-names.json';
 import type { DmdDirectoryEntry, DmdDirectoryQuery, DmdNameAvailabilityResult, OwnedDmdNameStatus } from '@/types/dmdNaming';
@@ -68,6 +69,7 @@ export default function DmdNamesDirectory() {
   const [searchInput, setSearchInput] = useState('');
   const [appliedSearch, setAppliedSearch] = useState('');
   const [filterOpen, setFilterOpen] = useState(false);
+  const [reportName, setReportName] = useState<string | null>(null);
   const [draftFilters, setDraftFilters] = useState<DraftFilters>(DEFAULT_FILTERS);
   const [appliedFilters, setAppliedFilters] = useState<DraftFilters>(DEFAULT_FILTERS);
   const [sortValue, setSortValue] = useState(SORT_OPTIONS[0].value);
@@ -288,6 +290,14 @@ export default function DmdNamesDirectory() {
                         >
                           <i className={`fas ${isUserHidden ? 'fa-eye' : 'fa-eye-slash'}`}></i>
                         </button>
+                        <button
+                          type="button"
+                          className="dmd-table-btn"
+                          title="Report this name"
+                          onClick={() => setReportName(entry.name)}
+                        >
+                          <i className="fas fa-flag"></i>
+                        </button>
                       </div>
                     )}
                   </td>
@@ -403,6 +413,12 @@ export default function DmdNamesDirectory() {
         availability={registerAvailability}
         currentName={registeredName}
         onComplete={handleRegistered}
+      />
+
+      <ReportNameModal
+        isOpen={!!reportName}
+        onClose={() => setReportName(null)}
+        name={reportName ?? ''}
       />
     </div>
   );

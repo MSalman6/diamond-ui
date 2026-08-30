@@ -22,6 +22,9 @@ export interface RuntimeConfig {
   // WalletConnect
   wcProjectId: string;
   
+  // Moderation
+  reportEmail: string;
+
   // Application Settings
   siteUrl: string;
   port: string;
@@ -85,6 +88,7 @@ function getDefaultConfig(): RuntimeConfig {
     lowMajorityContractAddress: '',
     diamondRegistryContractAddress: '',
     wcProjectId: '2cceb4f25f1cb889b967ea3c40bfd7cd',
+    reportEmail: '',
     siteUrl: '',
     port: '3000',
     debugTx: '0',
