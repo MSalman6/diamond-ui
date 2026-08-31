@@ -4,10 +4,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePrivacyMode } from '@/contexts/PrivacyMode';
 import { useWeb3Context } from '@/contexts/Web3';
+import { useDnsRecords } from '@/hooks/useDnsRecords';
 import { checkNameAvailability, getOwnedNames } from '@/services/dmdNaming';
-import { formatDmdDate, formatDmdName } from '@/utils/dmdNaming';
-import type { OwnedDmdName, OwnedDmdNameStatus } from '@/types/dmdNaming';
+import { formatDmdDate, formatDmdName, summarizeDnsConfig } from '@/utils/dmdNaming';
+import type { DmdDnsState, OwnedDmdName, OwnedDmdNameStatus } from '@/types/dmdNaming';
 import ActivateNameModal from './ActivateNameModal';
+import DnsRecordsModal from './DnsRecordsModal';
 import RenewNameModal from './RenewNameModal';
 import TransferNameModal from './TransferNameModal';
 
@@ -32,9 +34,14 @@ function StatusPill({ status }: { status: OwnedDmdNameStatus }) {
   return <span className={`dmd-status-pill dmd-status-pill--${status}`}>{STATUS_LABELS[status]}</span>;
 }
 
+function DnsCell({ state, label }: { state: DmdDnsState; label: string }) {
+  return <span className={`dmd-dns-tag dmd-dns-tag--${state}`}>{label}</span>;
+}
+
 export default function OwnedNamesSection({ walletAddress, activeName, refreshKey = 0, pendingName }: Props) {
   const { isPrivacyMode } = usePrivacyMode();
   const { contractsManager, readonlyWeb3 } = useWeb3Context();
+  const { getDnsConfig, saveDnsConfig } = useDnsRecords();
   const [names, setNames] = useState<OwnedDmdName[] | null>(null);
   const [pendingRow, setPendingRow] = useState<OwnedDmdName | null>(null);
   const indexRetryDone = useRef<string | null>(null);
@@ -42,6 +49,7 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
   const [activateTarget, setActivateTarget] = useState<string | null>(null);
   const [renewTarget, setRenewTarget] = useState<OwnedDmdName | null>(null);
   const [transferTarget, setTransferTarget] = useState<OwnedDmdName | null>(null);
+  const [dnsTarget, setDnsTarget] = useState<OwnedDmdName | null>(null);
   const [openMenuFor, setOpenMenuFor] = useState<string | null>(null);
   const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -185,6 +193,7 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
                 <th>Name</th>
                 <th>Status</th>
                 <th>Expiration</th>
+                <th>DNS</th>
                 <th>Last action</th>
                 <th></th>
               </tr>
@@ -192,17 +201,17 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
             <tbody>
               {rows === null && !error && (
                 <tr>
-                  <td colSpan={5} className="dmd-owned-loading">Loading owned names…</td>
+                  <td colSpan={6} className="dmd-owned-loading">Loading owned names…</td>
                 </tr>
               )}
               {error && (
                 <tr>
-                  <td colSpan={5} className="dmd-owned-error">{error}</td>
+                  <td colSpan={6} className="dmd-owned-error">{error}</td>
                 </tr>
               )}
               {rows !== null && !error && rows.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="dmd-owned-empty">No names owned by this address yet.</td>
+                  <td colSpan={6} className="dmd-owned-empty">No names owned by this address yet.</td>
                 </tr>
               )}
               {rows?.map((entry) => (
@@ -212,6 +221,9 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
                   </td>
                   <td><StatusPill status={entry.status} /></td>
                   <td>{formatDmdDate(entry.expiresAt)}</td>
+                  <td>
+                    <DnsCell {...summarizeDnsConfig(getDnsConfig(entry.name))} />
+                  </td>
                   <td>
                     {entry.lastAction
                       ? `${entry.lastAction.type} · ${formatDmdDate(entry.lastAction.timestamp)}`
@@ -270,6 +282,15 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
                             >
                               <i className="fas fa-right-left"></i> Transfer
                             </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setDnsTarget(entry);
+                                setOpenMenuFor(null);
+                              }}
+                            >
+                              <i className="fas fa-globe"></i> Configure DNS
+                            </button>
                           </div>
                         )}
                       </div>
@@ -300,6 +321,10 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
               <strong>Transfer:</strong> Moves ownership of the name NFT to another address; Diamond UI
               shows transfer fee + gas before confirmation.
             </li>
+            <li>
+              <strong>Configure DNS:</strong> Links the name to its username.dmd.domains subdomain and
+              sets the free A and MX records served for it.
+            </li>
           </ul>
         </div>
       </div>
@@ -324,6 +349,14 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
           setRenewTarget(null);
           reload();
         }}
+      />
+
+      <DnsRecordsModal
+        isOpen={!!dnsTarget}
+        onClose={() => setDnsTarget(null)}
+        name={dnsTarget?.name ?? ''}
+        config={getDnsConfig(dnsTarget?.name ?? '')}
+        onSave={saveDnsConfig}
       />
 
       <TransferNameModal

@@ -94,3 +94,21 @@ export interface ActivationFeeTier {
   amount: string;
   isCurrent: boolean;
 }
+
+export interface DmdMxRecord {
+  priority: number;
+  host: string;
+}
+
+export interface DmdDnsConfig {
+  linked: boolean;
+  aRecord: string;
+  mxRecords: DmdMxRecord[];
+}
+
+export type DmdDnsState = 'not-set' | 'connected' | 'configured';
+
+export interface DmdDnsSummary {
+  state: DmdDnsState;
+  label: string;
+}
