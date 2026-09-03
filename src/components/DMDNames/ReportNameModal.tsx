@@ -17,12 +17,10 @@ type Props = {
 const MAX_DESCRIPTION = 800;
 const MAX_EVIDENCE = 400;
 const MAX_MAILTO_LENGTH = 1900;
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export default function ReportNameModal({ isOpen, onClose, name }: Props) {
   const [description, setDescription] = useState('');
   const [evidence, setEvidence] = useState('');
-  const [email, setEmail] = useState('');
   const [touched, setTouched] = useState(false);
   const [handedOff, setHandedOff] = useState(false);
 
@@ -35,7 +33,6 @@ export default function ReportNameModal({ isOpen, onClose, name }: Props) {
     if (!isOpen) return;
     setDescription('');
     setEvidence('');
-    setEmail('');
     setTouched(false);
     setHandedOff(false);
   }, [isOpen]);
@@ -43,11 +40,6 @@ export default function ReportNameModal({ isOpen, onClose, name }: Props) {
   const descriptionError =
     touched && description.trim().length < 10
       ? 'Please describe the problem in at least 10 characters.'
-      : null;
-
-  const emailError =
-    touched && email.trim() && !EMAIL_PATTERN.test(email.trim())
-      ? 'Enter a valid email address or leave it blank.'
       : null;
 
   const { subject, body } = useMemo(() => {
@@ -63,12 +55,9 @@ export default function ReportNameModal({ isOpen, onClose, name }: Props) {
     if (evidence.trim()) {
       lines.push('', 'Evidence:', evidence.trim());
     }
-    if (email.trim()) {
-      lines.push('', `Contact email: ${email.trim()}`);
-    }
 
     return { subject: `DMD Name Report: ${fullName}`, body: lines.join('\r\n') };
-  }, [fullName, name, description, evidence, email, runtimeConfig?.siteUrl]);
+  }, [fullName, name, description, evidence, runtimeConfig?.siteUrl]);
 
   const mailtoHref = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   const tooLongForMailto = mailtoHref.length > MAX_MAILTO_LENGTH;
@@ -80,9 +69,7 @@ export default function ReportNameModal({ isOpen, onClose, name }: Props) {
     toast.success('Report copied to clipboard');
   };
 
-  const isValid =
-    description.trim().length >= 10 &&
-    (!email.trim() || EMAIL_PATTERN.test(email.trim()));
+  const isValid = description.trim().length >= 10;
 
   // A genuine anchor activation is far more likely to reach the OS mail handler
   // than a scripted location change, so the button is a link and this only guards it.
@@ -210,20 +197,6 @@ export default function ReportNameModal({ isOpen, onClose, name }: Props) {
           value={evidence}
           onChange={(e) => setEvidence(e.target.value)}
         />
-
-        <label className="dmd-form-label" htmlFor="dmd-report-email">
-          Contact email <span className="dmd-form-optional">optional</span>
-        </label>
-        <input
-          id="dmd-report-email"
-          type="email"
-          className="dmd-form-input"
-          placeholder="Only if we should reply somewhere other than your sending address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          onBlur={() => setTouched(true)}
-        />
-        {emailError && <p className="dmd-form-error">{emailError}</p>}
 
         <div className="dmd-modal-actions">
           <button type="button" className="btn-secondary" onClick={handleClose}>
