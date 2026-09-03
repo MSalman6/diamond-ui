@@ -184,6 +184,13 @@ export default function Header() {
     };
   }, [isMobileMenuOpen]);
 
+  // Close the wallet dropdown and collapsed menu whenever the route changes
+  useEffect(() => {
+    setActiveDropdown(null);
+    setIsMobileMenuOpen(false);
+    document.body.style.overflow = '';
+  }, [pathname]);
+
   // Cleanup body overflow on unmount
   useEffect(() => {
     return () => {
@@ -321,7 +328,7 @@ export default function Header() {
             </div>
             <i className="fas fa-chevron-down wallet-address-dropdown" aria-hidden="true"></i>
           </div>
-          <div className="dropdown-menu">
+          <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
             <div className="dropdown-content">
               {renderBalanceBreakdown(scope)}
               <div className="dropdown-section">
