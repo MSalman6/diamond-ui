@@ -402,7 +402,6 @@ export default function ProfilePage() {
                   </div>
 
                   <div className="dp2-card-actions">
-                    <Link href="/validators?sort=myStake&direction=descending" className="btn-primary btn-sm">Stake/Unstake</Link>
                     <CreatePoolModal buttonText="Create pool" />
                   </div>
 
