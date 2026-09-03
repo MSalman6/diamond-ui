@@ -1,4 +1,5 @@
 'use client';
+import { formatAep30 } from '@/utils/format';
 import '../SharedStats/SharedStats.css';
 
 interface Aep30BadgeProps {
@@ -6,10 +7,9 @@ interface Aep30BadgeProps {
 }
 
 export default function Aep30Badge({ aep30 }: Aep30BadgeProps) {
-  const pct = aep30 * 100;
   return (
     <span className="dmd-aep30-badge">
-      {pct.toFixed(0)}%
+      {formatAep30(aep30)}
     </span>
   );
 }
@@ -27,7 +27,7 @@ export function Aep30Bar({ aep30 }: Aep30BarProps) {
           className="dmd-aep30-bar__fill"
           style={{ width: `${pct}%` }}
         />
-        <span className="dmd-aep30-bar__value">{pct.toFixed(0)}%</span>
+        <span className="dmd-aep30-bar__value">{formatAep30(pct / 100)}</span>
       </div>
       <span className="dmd-aep30-bar__sub">active epochs</span>
     </div>
@@ -49,7 +49,7 @@ export function Aep30Ring({ aep30, isLoading }: Aep30RingProps) {
 
   let center = '—';
   if (isLoading) center = '...';
-  else if (aep30 != null) center = `${pct.toFixed(0)}%`;
+  else if (aep30 != null) center = formatAep30(pct / 100);
 
   return (
     <div className="dmd-aep30-ring" style={{ width: size, height: size }}>

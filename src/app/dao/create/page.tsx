@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import styles from "./Create.module.css";
 import { useRouter } from "next/navigation";
 import { isValidAddress } from "@/utils/common";
+import { formatDmd } from "@/utils/format";
 import InfoTooltip from "@/components/InfoTooltip";
 import { useDaoContext } from "@/contexts/DAO";
 import logger from '@/utils/logger';
@@ -374,8 +375,8 @@ export default function CreateProposalPage() {
               <div className={`${styles.balanceInfoContainer} ${proposalType === "open" && !isLowMajorityEligible ? styles.exceedsBalanceContainer : ''}`}>
                 <div className={styles.balanceInfo}>
                   <h4>Available Balances:</h4>
-                  <p><strong>Governance Pot Balance:</strong> {daoContext.governancePotBalance.toFixed(4)} DMD</p>
-                  <p><strong>Low Majority Contract Balance:</strong> {lowMajorityContractBalance.toFixed(4)} DMD</p>
+                  <p><strong>Governance Pot Balance:</strong> {formatDmd(daoContext.governancePotBalance)}</p>
+                  <p><strong>Low Majority Contract Balance:</strong> {formatDmd(lowMajorityContractBalance)}</p>
                 </div>
 
                 {proposalType === "open" && lowMajorityContractAddress && (

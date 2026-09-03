@@ -6,6 +6,7 @@ import { Pool } from "@/contexts/types/models";
 import React, { useState, useEffect, useRef, FormEvent } from "react";
 import { toast } from 'react-toastify';
 import ReactDOM from "react-dom";
+import { formatDmdFromWei } from "@/utils/format";
 
 interface ModalProps {
   buttonText: string;
@@ -110,9 +111,9 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
   const isBelowDelegatorMin = new BigNumber(poolMyStakeWei).plus(stakeAmountWei).isLessThan(minDelegatorStakeWei);
   const isAbovePoolMax = new BigNumber(poolTotalStakeWei).plus(stakeAmountWei).isGreaterThan(poolMaxCapWei);
   const remainingToPoolMaxWei = new BigNumber(poolMaxCapWei).minus(poolTotalStakeWei).isGreaterThan(0) ? poolMaxCapWei.minus(poolTotalStakeWei) : new BigNumber(0);
-  const remainingToPoolMaxDmd = new BigNumber(remainingToPoolMaxWei).dividedBy(new BigNumber(10).pow(18)).toFixed(4, BigNumber.ROUND_DOWN);
+  const remainingToPoolMaxDmd = formatDmdFromWei(remainingToPoolMaxWei, { unit: false });
   const isStakeButtonDisabled = !stakeAmount || stakeAmount === '' || new BigNumber(stakeAmount).isLessThanOrEqualTo(0) || isBelowDelegatorMin || isAbovePoolMax;
-  const minDelegatorStakeDmd = new BigNumber(minDelegatorStakeWei).dividedBy(new BigNumber(10).pow(18)).toFixed(4, BigNumber.ROUND_DOWN);
+  const minDelegatorStakeDmd = formatDmdFromWei(minDelegatorStakeWei, { unit: false });
 
   return (
     <>
@@ -155,7 +156,7 @@ const StakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
                 </button>
               </div>
 
-              <span className={styles.spanLeft}>Your wallet balance: {userWallet.myBalance.dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD</span>
+              <span className={styles.spanLeft}>Your wallet balance: {formatDmdFromWei(userWallet.myBalance)}</span>
 
               {stakeAmount && stakeAmount !== '' && isAbovePoolMax ? (
                 <span className={styles.disabledNotice}>

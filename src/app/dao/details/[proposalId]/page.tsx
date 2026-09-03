@@ -15,6 +15,7 @@ import logger from '@/utils/logger';
 import { useWeb3Context } from '@/contexts/Web3'
 import { useStakingContext } from '@/contexts/Staking'
 import { capitalizeFirstLetter, decodeCallData, extractValueFromCalldata, formatCryptoUnitValue, getFunctionInfoWithAbi, timestampToDate } from '@/utils/common'
+import { formatCount, formatDmd, formatDmdFromWei, formatPercent } from '@/utils/format'
 import { getProposalImpact } from '@/constants/proposalImpacts'
 
 interface UsernameModerationDetails {
@@ -315,28 +316,28 @@ export default function ProposalDetailsPage() {
         return `${v}`
       }
       if (fnName === 'setGovernancePotShareNominator' || name.includes('governance pot share nominator')) {
-        return `${v} %`
+        return formatPercent(v)
       }
       if (fnName === 'setReportDisallowPeriod' || name.includes('report disallow period')) {
         // seconds -> minutes
-        return `${(Number(v) / 60).toFixed(0)} minutes`
+        return `${formatCount(Number(v) / 60)} minutes`
       }
       if (fnName === 'setBlockGasLimit' || name.includes('block gas limit')) {
         // show in mGas
-        return `${(Number(v) / 10 ** 6).toFixed(0)} mGas`
+        return `${formatCount(Number(v) / 10 ** 6)} mGas`
       }
       if (fnName === 'setMinimumGasPrice' || name.includes('minimum gas price')) {
         // show in Gwei
-        return `${(Number(v) / 10 ** 9).toFixed(0)} Gwei`
+        return `${formatCount(Number(v) / 10 ** 9)} Gwei`
       }
       if (fnName === 'setCreateProposalFee' || name.includes('create proposal fee')) {
-        return `${BigNumber(v).dividedBy(10 ** 18).toFixed()} DMD`
+        return formatDmdFromWei(v)
       }
       if (fnName === 'setDelegatorMinStake' || name.includes('delegator min stake')) {
-        return `${BigNumber(v).dividedBy(10 ** 18).toFixed()} DMD`
+        return formatDmdFromWei(v)
       }
       if (fnName === 'setMintingFee' || name.includes('minting fee')) {
-        return `${BigNumber(v).dividedBy(10 ** 18).toFixed()} DMD`
+        return formatDmdFromWei(v)
       }
       // Fallback to crypto unit heuristic
       return formatCryptoUnitValue(v)
@@ -386,10 +387,9 @@ export default function ProposalDetailsPage() {
           const nom = await web3Context.contractsManager.brContract?.methods.governancePotShareNominator().call() || '0'
           const denom = await web3Context.contractsManager.brContract?.methods.governancePotShareDenominator().call() || '100'
           try {
-            const pct = BigNumber(nom).multipliedBy(100).dividedBy(denom).toFixed(0)
-            setCurrentParamValue(`${pct} %`)
+            setCurrentParamValue(formatPercent(BigNumber(nom).multipliedBy(100).dividedBy(denom)))
           } catch (e) {
-            setCurrentParamValue(`${nom} %`)
+            setCurrentParamValue(formatPercent(nom))
           }
           return
         } else if (fnName === 'setStandByFactor') {
@@ -515,7 +515,7 @@ export default function ProposalDetailsPage() {
     try {
       const amount = BigNumber(fee).dividedBy(1e18)
       if (!amount.isFinite()) return '—'
-      return `${amount.toFixed()} DMD`
+      return formatDmd(amount)
     } catch (e) {
       return '—'
     }
@@ -696,7 +696,7 @@ export default function ProposalDetailsPage() {
                           </div>
                           <div className="payout-amount">
                             <span className="label">Amount</span>
-                            <div className="value">{proposal?.values && proposal.values[index] ? (new BigNumber(proposal.values[index]).dividedBy(10**18)).toString() + ' DMD' : '0 DMD'}</div>
+                            <div className="value">{formatDmdFromWei(proposal?.values?.[index] ?? 0)}</div>
                           </div>
                         </div>
                       )
@@ -725,7 +725,7 @@ export default function ProposalDetailsPage() {
                       {proposal?.values && proposal.values[index] && proposal.values[index] !== '0' && (
                         <div className="payout-amount">
                           <span className="label">Requested Amount</span>
-                          <div className="value">{(new BigNumber(proposal.values[index]).dividedBy(10**18)).toString() + ' DMD'}</div>
+                          <div className="value">{formatDmdFromWei(proposal.values[index])}</div>
                         </div>
                       )}
                       <div className="call-data">
@@ -881,49 +881,49 @@ export default function ProposalDetailsPage() {
                       const hasTotal = totalBn.isGreaterThan(0)
 
                       const yesPct = hasTotal
-                        ? positiveBn.multipliedBy(100).dividedBy(totalBn).toFixed(2)
-                        : '0'
+                        ? positiveBn.multipliedBy(100).dividedBy(totalBn)
+                        : new BigNumber(0)
                       const noPct = hasTotal
-                        ? negativeBn.multipliedBy(100).dividedBy(totalBn).toFixed(2)
-                        : '0'
+                        ? negativeBn.multipliedBy(100).dividedBy(totalBn)
+                        : new BigNumber(0)
 
                       return (
                         <>
                           <div className="stat-item total-stake">
-                            Total stake: {hasTotal ? `${totalBn.dividedBy(1e18).toFixed(4)} DMD` : '0 DMD'}
+                            Total stake: {formatDmdFromWei(totalBn)}
                           </div>
                           <div className="stat-item yes-votes">
-                            Yes: {`${yesPct}%`}
+                            Yes: {formatPercent(yesPct)}
                           </div>
                           <div className="stat-item no-votes">
-                            No: {`${noPct}%`}
+                            No: {formatPercent(noPct)}
                           </div>
                           <div className="stat-divider" />
                           <div className="stat-item participation">
-                            Exceeding Yes: {BigNumber.max(0, BigNumber(votingStats?.positive).minus(votingStats?.negative)).dividedBy(10**18).toFixed(4)} DMD ({parseFloat(String(progressYesWidth)).toFixed(4)}% | {daoContext.getProposalThreshold(proposal?.rawProposalType)}% required)
+                            Exceeding Yes: {formatDmdFromWei(BigNumber.max(0, BigNumber(votingStats?.positive).minus(votingStats?.negative)))} ({formatPercent(parseFloat(String(progressYesWidth)))} | {formatPercent(daoContext.getProposalThreshold(proposal?.rawProposalType))} required)
                           </div>
                           <div className="stat-item participation">
                             Participation:{" "}
-                            {votingStats?.total
-                              .dividedBy(10 ** 18)
-                              .toFixed(4, BigNumber.ROUND_DOWN)}{" "}
-                            DMD (
-                            {BigNumber(votingStats?.total)
-                              .dividedBy(
-                                Number(
-                                  proposal?.totalStakeSnapshot &&
-                                    proposal?.totalStakeSnapshot !== "0"
-                                    ? proposal?.totalStakeSnapshot
-                                    : stakingContext.totalDaoStake,
-                                ),
-                              )
-                              .multipliedBy(100)
-                              .toFixed(4)}
-                            % |{" "}
-                            {daoContext.getProposalThreshold(
-                              proposal?.rawProposalType,
-                            )}
-                            % required)
+                            {formatDmdFromWei(votingStats?.total)} (
+                            {formatPercent(
+                              BigNumber(votingStats?.total)
+                                .dividedBy(
+                                  Number(
+                                    proposal?.totalStakeSnapshot &&
+                                      proposal?.totalStakeSnapshot !== "0"
+                                      ? proposal?.totalStakeSnapshot
+                                      : stakingContext.totalDaoStake,
+                                  ),
+                                )
+                                .multipliedBy(100),
+                            )}{" "}
+                            |{" "}
+                            {formatPercent(
+                              daoContext.getProposalThreshold(
+                                proposal?.rawProposalType,
+                              ),
+                            )}{" "}
+                            required)
                           </div>
                         </>
                       )

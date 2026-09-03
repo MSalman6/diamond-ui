@@ -8,6 +8,7 @@ import './StakeHistoryModal.css';
 import { toast } from 'react-toastify';
 import { BarChart } from '@/components/Charts';
 import logger from '@/utils/logger';
+import { formatCount, formatDmdFromWei } from '@/utils/format';
 
 interface StakeTransaction {
   id: number;
@@ -55,18 +56,6 @@ const ACTION_TYPE_LABELS: Record<string, string> = {
 
 const STAKE_IN_TYPES = new Set(['PlacedStake', 'ClaimedOrderedWithdrawal']);
 const STAKE_OUT_TYPES = new Set(['WithdrewStake', 'OrderedWithdrawal']);
-
-function formatDMD(weiStr: string): string {
-  try {
-    // Parse large number string without BigInt literals for ES2017 compat
-    const padded = weiStr.padStart(19, '0');
-    const whole = padded.slice(0, padded.length - 18) || '0';
-    const frac = padded.slice(padded.length - 18, padded.length - 14);
-    return `${Number(whole).toLocaleString()}.${frac}`;
-  } catch {
-    return '0.0000';
-  }
-}
 
 function truncateAddr(addr: string): string {
   if (!addr || addr.length < 12) return addr;
@@ -346,7 +335,7 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
                           {ACTION_TYPE_LABELS[tx.action_type] || tx.action_type}
                         </span>
                         <span className="stake-amount">
-                          {formatDMD(tx.amount)} DMD
+                          {formatDmdFromWei(tx.amount)}
                         </span>
                       </div>
 
@@ -371,7 +360,7 @@ const StakeHistoryModal: React.FC<StakeHistoryModalProps> = ({
 
                       <div className="stake-meta">
                         <span className="stake-block" title={`Block #${tx.block_number}`}>
-                          Block #{tx.block_number.toLocaleString()}
+                          Block #{formatCount(tx.block_number)}
                         </span>
                       </div>
                     </div>

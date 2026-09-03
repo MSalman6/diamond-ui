@@ -4,7 +4,8 @@ import Image from 'next/image';
 import BigNumber from 'bignumber.js';
 import { useRouter, usePathname } from 'next/navigation';
 import { useWeb3Context } from '@/contexts/Web3';
-import { truncateAddress, formatDmdFromWei } from '@/utils/common';
+import { truncateAddress } from '@/utils/common';
+import { formatDmdFromWei } from '@/utils/format';
 import { useState, useEffect, useRef } from 'react';
 import { useWalletConnect } from '@/contexts/WalletConnect';
 import { useWalletTotals } from '@/hooks/useWalletTotals';
@@ -217,8 +218,8 @@ export default function Header() {
 
   const isActiveRoute = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
-  const exactDmd = (wei: BigNumber) => formatDmdFromWei(wei, { compact: false, trim: true });
-  const plainDmd = (wei: BigNumber) => formatDmdFromWei(wei, { compact: false, unit: false, trim: true });
+  const exactDmd = (wei: BigNumber) => formatDmdFromWei(wei);
+  const plainDmd = (wei: BigNumber) => formatDmdFromWei(wei, { unit: false });
   const shielded = (value: string) => (totals.isHidden ? '—' : value);
 
   const isWalletOpen = activeDropdown === 'wallet';

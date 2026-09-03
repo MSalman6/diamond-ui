@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useDaoContext } from '@/contexts/DAO';
 import { useWeb3Context } from '@/contexts/Web3';
 import { timestampToDate, truncateAddress } from '@/utils/common';
+import { formatPercent } from '@/utils/format';
 import { markdownToPlainText } from '@/components/MarkdownText';
 
 type Proposal = {
@@ -248,10 +249,10 @@ export default function HistoricProposalsPage() {
                     <td>
                       <div className="participation-bar">
                         <div className="participation-progress" style={{ width: `${p.participation}%` }} />
-                        <span className="participation-value">{p.participation}%</span>
+                        <span className="participation-value">{formatPercent(p.participation)}</span>
                       </div>
                     </td>
-                    <td><span className={`exceeding-value ${p.exceeding >= 0 ? 'positive' : 'negative'}`}>{p.exceeding >= 0 ? `+${p.exceeding}%` : `${p.exceeding}%`}</span></td>
+                    <td><span className={`exceeding-value ${p.exceeding >= 0 ? 'positive' : 'negative'}`}>{formatPercent(p.exceeding, { sign: true })}</span></td>
                     <td><span className={`proposal-status ${p.status.toLowerCase()}`}>{p.status}</span></td>
                   </tr>
                 ))}

@@ -13,6 +13,7 @@ import { useWeb3Context } from "@/contexts/Web3";
 import { useDaoContext, useStakingContext } from "@/contexts";
 import BigNumber from "bignumber.js";
 import { timestampToDateTime } from "@/utils/common";
+import { formatCount, formatDecimal, formatDmd } from "@/utils/format";
 BigNumber.config({ EXPONENTIAL_AT: 1e+9 });
 
 
@@ -425,11 +426,11 @@ export default function Home() {
             <div className="stats-grid">
               <div className="stat-card fade-in">
                 <h3>Current Epoch</h3>
-                <p className="stat-value">{stakingEpoch}</p>
+                <p className="stat-value">{formatCount(stakingEpoch)}</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Key Gen. Round</h3>
-                <p className="stat-value">{keyGenRound}</p>
+                <p className="stat-value">{formatCount(keyGenRound)}</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Epoch Start Time</h3>
@@ -437,31 +438,31 @@ export default function Home() {
               </div>
               <div className="stat-card fade-in">
                 <h3>Epoch Start Block</h3>
-                <p className="stat-value">{epochStartBlock}</p>
+                <p className="stat-value">{formatCount(epochStartBlock)}</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Active Validators</h3>
-                <p className="stat-value">{activeValidators}</p>
+                <p className="stat-value">{formatCount(activeValidators)}</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Valid Candidates</h3>
-                <p className="stat-value">{validCandidates}</p>
+                <p className="stat-value">{formatCount(validCandidates)}</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Min. Gas Fee</h3>
-                <p className="stat-value">{minimumGasFee.dividedBy(10**9).toString()} Gwei</p>
+                <p className="stat-value">{formatDecimal(minimumGasFee.dividedBy(10**9))} Gwei</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Reinsert Pot</h3>
-                <p className="stat-value">{BigNumber(reinsertPot).toFixed(4, BigNumber.ROUND_DOWN)} DMD</p>
+                <p className="stat-value">{formatDmd(reinsertPot)}</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Delta Pot</h3>
-                <p className="stat-value">{BigNumber(deltaPot).toFixed(4, BigNumber.ROUND_DOWN)} DMD</p>
+                <p className="stat-value">{formatDmd(deltaPot)}</p>
               </div>
               <div className="stat-card fade-in">
                 <h3>Claiming Pot</h3>
-                <p className="stat-value">{claimingContractBalance.toFixed(4, BigNumber.ROUND_DOWN)} DMD</p>
+                <p className="stat-value">{formatDmd(claimingContractBalance)}</p>
               </div>
             </div>
           </div>

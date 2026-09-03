@@ -8,6 +8,7 @@ import { useWeb3Context } from "@/contexts/Web3";
 import { UserWallet } from "@/contexts/types/wallet";
 import { NonPayableTx } from "@/contexts/types/contracts";
 import { getAddressFromPublicKey } from "@/utils/common";
+import { formatDmd, formatDmdFromWei } from "@/utils/format";
 import { PoolCache, Delegator, Pool } from "@/contexts/types/models";
 import { buildTxOptions, EstimatableMethod } from "@/utils/txOptions";
 import logger from '@/utils/logger';
@@ -752,7 +753,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
       } else if (!areAddressesValidForCreatePool(userWallet.myAddr, minningAddress)) {
         toast.warn("Staking or mining key are or were already in use with a pool");
       } else if (BigNumber(stakeAmountWei).isGreaterThan(accBalance)) {
-        toast.warn(`Insufficient balance (${BigNumber(accBalance).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)} DMD) for stake amount ${stakeAmount} DMD`);
+        toast.warn(`Insufficient balance (${formatDmdFromWei(accBalance)}) for stake amount ${formatDmd(stakeAmount)}`);
       } else if (BigNumber(stakeAmountWei).isLessThan(BigNumber(candidateMinStake.toString()).dividedBy(10**18))) {
         toast.warn("Insufficient candidate (pool owner) stake");
       } else {
@@ -871,24 +872,24 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
       let receipt;
       if (!BigNumber(maxWithdrawAmount).isZero()) {
         if (new BigNumber(amountInWei).isGreaterThan(maxWithdrawAmount)) {
-          toast.warn(`Requested withdraw amount exceeds max (${BigNumber(maxWithdrawAmount).dividedBy(10**18).toFixed(0)} DMD 💎)`);
+          toast.warn(`Requested withdraw amount exceeds max (${formatDmdFromWei(maxWithdrawAmount)} 💎)`);
           return false;
         }
-        showLoader(true, `Unstaking ${amount} DMD 💎`);
+        showLoader(true, `Unstaking ${formatDmd(amount)} 💎`);
         const withdraw = contractsManager.stContract.methods.withdraw(pool.stakingAddress, amountInWei.toString());
         receipt = await withdraw.send(await buildTxOpts(withdraw, { from: userWallet.myAddr }));
         if (!showHistoricBlock) setCurrentBlockNumber(receipt.blockNumber);
-        toast.success(`Unstaked ${amount} DMD 💎`);
+        toast.success(`Unstaked ${formatDmd(amount)} 💎`);
       } else {
         if (new BigNumber(amountInWei).isGreaterThan(maxWithdrawOrderAmount)) {
-          toast.warn(`Requested withdraw order amount exceeds max (${BigNumber(maxWithdrawOrderAmount).dividedBy(10**18).toFixed(0)} DMD 💎)`);
+          toast.warn(`Requested withdraw order amount exceeds max (${formatDmdFromWei(maxWithdrawOrderAmount)} 💎)`);
           return false;
         } else {
-          showLoader(true, `Ordering unstake of ${amount} DMD 💎`);
+          showLoader(true, `Ordering unstake of ${formatDmd(amount)} 💎`);
           const orderWithdraw = contractsManager.stContract.methods.orderWithdraw(pool.stakingAddress, amountInWei.toString());
           receipt = await orderWithdraw.send(await buildTxOpts(orderWithdraw, { from: userWallet.myAddr }));
           if (!showHistoricBlock) setCurrentBlockNumber(receipt.blockNumber);
-          toast.success(`Ordered withdraw of ${amount} DMD 💎`);
+          toast.success(`Ordered withdraw of ${formatDmd(amount)} 💎`);
         }
       }
       showLoader(false, "");
@@ -905,13 +906,13 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
     const stakeAmountWei = web3.utils.toWei(stakeAmount.toString());
 
     if (new BigNumber(stakeAmountWei).isGreaterThan(userWallet.myBalance)) {
-      toast.warn(`Insufficient balance ${BigNumber(userWallet.myBalance).dividedBy(10**18)} for selected amount ${BigNumber(stakeAmount).dividedBy(10**18).toFixed(4, BigNumber.ROUND_DOWN)}`);
+      toast.warn(`Insufficient balance ${formatDmdFromWei(userWallet.myBalance)} for selected amount ${formatDmd(stakeAmount)}`);
       return false;
     } else if (!canStakeOrWithdrawNow) {
       toast.warn("Outside staking/withdraw time window");
       return false
     } else if (new BigNumber(pool.myStake).plus(new BigNumber(stakeAmountWei)).isLessThan(delegatorMinStake)) {
-      toast.warn(`Min. staking amount is ${delegatorMinStake.dividedBy(10**18)}`);
+      toast.warn(`Min. staking amount is ${formatDmdFromWei(delegatorMinStake)}`);
       return false;
     } else {
       try {
@@ -919,12 +920,12 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
         const ready = await ensureProviderReady();
         if (!ready) {return false;}
         if (!contractsManager.stContract) return false;
-        showLoader(true, `Staking ${stakeAmount} DMD 💎`);
+        showLoader(true, `Staking ${formatDmd(stakeAmount)} 💎`);
         const stakeMethod = contractsManager.stContract.methods.stake(pool.stakingAddress);
         const receipt = await stakeMethod.send(await buildTxOpts(stakeMethod, { from: userWallet.myAddr, value: stakeAmountWei }));
         if (!showHistoricBlock) setCurrentBlockNumber(receipt.blockNumber);
         await addOrUpdatePool(pool.stakingAddress, receipt.blockNumber);
-        toast.success(`Staked ${stakeAmount} DMD 💎`);
+        toast.success(`Staked ${formatDmd(stakeAmount)} 💎`);
         showLoader(false, "");
         return true;
       } catch (err: any) {
@@ -948,11 +949,11 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
         // Pre-validate provider readiness
         const ready = await ensureProviderReady();
         if (!ready) {return false;}
-        showLoader(true, `Claiming ${claimAmount.dividedBy(10**18)} DMD 💎`);
+        showLoader(true, `Claiming ${formatDmdFromWei(claimAmount)} 💎`);
         const claimOrderedWithdraw = contractsManager.stContract.methods.claimOrderedWithdraw(pool.stakingAddress);
         const receipt = await claimOrderedWithdraw.send(await buildTxOpts(claimOrderedWithdraw, { from: userWallet.myAddr }));
         if (!showHistoricBlock) setCurrentBlockNumber(receipt.blockNumber);
-        toast.success(`Claimed ${claimAmount.dividedBy(10**18)} DMD 💎`);
+        toast.success(`Claimed ${formatDmdFromWei(claimAmount)} 💎`);
         showLoader(false, "");
 
         setPools(prevPools => {

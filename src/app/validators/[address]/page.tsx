@@ -34,6 +34,7 @@ import { mapDailyRewardsToChartPoints } from '@/utils/rewardAggregation';
 import type { NodeRewardStats, NodeDailyReward } from '@/types/rewards';
 import { useDmdNamesForAddresses } from '@/hooks/useDmdNamesForAddresses';
 import { formatDmdName } from '@/utils/dmdNaming';
+import { formatApy, formatCount, formatDmd, formatDmdFromWei, formatPercent, formatRpt30, formatSaturation } from '@/utils/format';
 
 
 export default function ValidatorDetails() {
@@ -166,14 +167,14 @@ export default function ValidatorDetails() {
 
   const stakePct = (partWei: BigNumber) =>
     totalStakeWei.isGreaterThan(0)
-      ? partWei.multipliedBy(100).dividedBy(totalStakeWei).toFixed(1)
-      : '0.0';
+      ? partWei.multipliedBy(100).dividedBy(totalStakeWei)
+      : new BigNumber(0);
 
   const selfStakePct = stakePct(selfStakeWei);
   const delegatedStakePct = stakePct(delegatedStakeWei);
   const myStakePct = stakePct(myStakeWei);
 
-  const formatStakeDmd = (wei: BigNumber) => wei.dividedBy(10 ** 18).toFormat(4, BigNumber.ROUND_DOWN);
+  const formatStakeDmd = (wei: BigNumber) => formatDmdFromWei(wei, { unit: false });
 
   const delegationSince = (delegatorAddress: string) => {
     if (isPrivacyMode) return '—';
@@ -335,7 +336,7 @@ export default function ValidatorDetails() {
                 </div>
               </div>
               <div className="vd-detail-totalpool">
-                <div className="vd-detail-totalpool-value">{pool ? BigNumber(pool.totalStake).dividedBy(10**18).toFormat(4, BigNumber.ROUND_DOWN) : 0} DMD</div>
+                <div className="vd-detail-totalpool-value">{formatDmdFromWei(pool?.totalStake ?? 0)}</div>
                 <div className="vd-detail-totalpool-label">Total pool stake</div>
               </div>
             </div>
@@ -369,7 +370,7 @@ export default function ValidatorDetails() {
                 </InfoTooltip>
               </h3>
             </div>
-            <p className="stat-value-large vd-pool-value">{pool ? formatStakeDmd(selfStakeWei) : 0} DMD</p>
+            <p className="stat-value-large vd-pool-value">{formatStakeDmd(selfStakeWei)} DMD</p>
             {!isPrivacyMode && (
               <div className="stat-actions">
                 <button
@@ -395,7 +396,7 @@ export default function ValidatorDetails() {
                 </InfoTooltip>
               </h3>
             </div>
-            <p className="stat-value-large vd-pool-value">{pool ? formatStakeDmd(delegatedStakeWei) : 0} DMD</p>
+            <p className="stat-value-large vd-pool-value">{formatStakeDmd(delegatedStakeWei)} DMD</p>
             {!isPrivacyMode && (
               <div className="stat-actions">
                 <button
@@ -421,8 +422,8 @@ export default function ValidatorDetails() {
                 </InfoTooltip>
               </h3>
             </div>
-            <p className="stat-value-large">{pool ? formatStakeDmd(myStakeWei) : 0} DMD</p>
-            <div className="vd-pool-sub">{myStakePct}% of pool</div>
+            <p className="stat-value-large">{formatStakeDmd(myStakeWei)} DMD</p>
+            <div className="vd-pool-sub">{formatPercent(myStakePct)} of pool</div>
             <div className="stat-actions vd-mystake-action">
               {(pool?.isActive || pool?.isToBeElected || pool?.isPendingValidator) &&
               BigNumber(pool?.totalStake || 0).isLessThan(BigNumber(50000).multipliedBy(10**18)) &&
@@ -469,17 +470,17 @@ export default function ValidatorDetails() {
         </div>
         <div className="vd-panel">
           <div className="vd-dist-bar">
-            <div className="vd-dist-self" style={{ width: `${selfStakePct}%` }} title={`${selfStakePct}% self stake`} />
-            <div className="vd-dist-delegated" style={{ width: `${delegatedStakePct}%` }} title={`${delegatedStakePct}% delegated`} />
+            <div className="vd-dist-self" style={{ width: `${selfStakePct.toFixed(4)}%` }} title={`${formatPercent(selfStakePct)} self stake`} />
+            <div className="vd-dist-delegated" style={{ width: `${delegatedStakePct.toFixed(4)}%` }} title={`${formatPercent(delegatedStakePct)} delegated`} />
           </div>
           <div className="vd-dist-labels">
             <div className="vd-dist-label vd-dist-label--left">
-              <div className="vd-dist-pct vd-dist-pct--self">{selfStakePct}% self stake</div>
-              <div className="vd-dist-amount">{pool ? formatStakeDmd(selfStakeWei) : 0} DMD</div>
+              <div className="vd-dist-pct vd-dist-pct--self">{formatPercent(selfStakePct)} self stake</div>
+              <div className="vd-dist-amount">{formatStakeDmd(selfStakeWei)} DMD</div>
             </div>
             <div className="vd-dist-label vd-dist-label--right">
-              <div className="vd-dist-pct vd-dist-pct--delegated">{delegatedStakePct}% delegated stake</div>
-              <div className="vd-dist-amount">{pool ? formatStakeDmd(delegatedStakeWei) : 0} DMD</div>
+              <div className="vd-dist-pct vd-dist-pct--delegated">{formatPercent(delegatedStakePct)} delegated stake</div>
+              <div className="vd-dist-amount">{formatStakeDmd(delegatedStakeWei)} DMD</div>
             </div>
           </div>
         </div>
@@ -507,13 +508,13 @@ export default function ValidatorDetails() {
               </h3>
             </div>
             <p className="stat-value-large vd-analytics-value">
-              {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.rpt30.toFixed(2) + ' DMD' : '—'}
+              {isLoadingValidatorStats ? '...' : formatRpt30(validatorRewardStats?.rpt30)}
             </p>
             <div className="vd-analytics-sub">per 1000 / 30d</div>
             {rpt30DeltaPct != null && (
               <div className={`vd-analytics-delta ${rpt30DeltaPct >= 0 ? 'vd-delta-up' : 'vd-delta-down'}`}>
                 {rpt30DeltaPct >= 0 ? '↑' : '↓'}{' '}
-                {rpt30DeltaPct >= 0 ? '+' : ''}{Math.abs(rpt30DeltaPct).toFixed(1)}% vs previous 30d
+                {formatPercent(rpt30DeltaPct, { sign: true })} vs previous 30d
               </div>
             )}
             <div className="vd-analytics-footer">Historical delegator profitability</div>
@@ -532,7 +533,7 @@ export default function ValidatorDetails() {
               </h3>
             </div>
             <p className="stat-value-large vd-analytics-value">
-              {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.estimated_apy.toFixed(2) + '%' : '—'}
+              {isLoadingValidatorStats ? '...' : formatApy(validatorRewardStats?.estimated_apy)}
             </p>
             <div className="vd-analytics-sub">estimated APY</div>
             <div className="vd-analytics-footer">Based on last 30d rewards</div>
@@ -577,7 +578,7 @@ export default function ValidatorDetails() {
               </h3>
             </div>
             <p className="stat-value-large vd-analytics-value">
-              {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.vos30.toFixed(2) + ' DMD' : '—'}
+              {isLoadingValidatorStats ? '...' : formatDmd(validatorRewardStats?.vos30)}
             </p>
             <div className="vd-analytics-sub">validator owner rewards</div>
             <div className="vd-analytics-footer">Last 30d (20% owner share)</div>
@@ -675,7 +676,7 @@ export default function ValidatorDetails() {
             </div>
             <div className="vd-vstat-body">
               <div className="vd-vstat-value">
-                {isPrivacyMode ? '—' : isLoadingValidatorStats ? '...' : monthlyRewards30d != null ? monthlyRewards30d.toFixed(2) + ' DMD' : '—'}
+                {isPrivacyMode ? '—' : isLoadingValidatorStats ? '...' : formatDmd(monthlyRewards30d)}
               </div>
               <div className="vd-vstat-sub">Based on last 30d</div>
             </div>
@@ -703,7 +704,7 @@ export default function ValidatorDetails() {
               </InfoTooltip>
             </div>
             <div className="vd-vstat-body">
-              <div className="vd-vstat-value">{pool ? pool.votingPower?.toString() : 0}%</div>
+              <div className="vd-vstat-value">{formatPercent(pool?.votingPower ?? 0)}</div>
               <div className="vd-vstat-sub">Proposals created: {proposalsCreatedCount}</div>
             </div>
             <div className="vd-vstat-action">
@@ -722,7 +723,7 @@ export default function ValidatorDetails() {
               </InfoTooltip>
             </div>
             <div className="vd-vstat-body">
-              <div className="vd-vstat-value">{pool?.score !== undefined && pool?.score !== null ? Number(pool.score).toFixed(1) : 0}</div>
+              <div className="vd-vstat-value">{formatCount(pool?.score, '0')}</div>
               <div className="vd-vstat-sub">Based on network score</div>
             </div>
             {!isPrivacyMode && (
@@ -749,7 +750,7 @@ export default function ValidatorDetails() {
               </InfoTooltip>
             </div>
             <div className="vd-vstat-body">
-              <div className="vd-vstat-value">{Math.round(saturationPctNum)}% saturated</div>
+              <div className="vd-vstat-value">{formatSaturation(saturationPctNum)} saturated</div>
               <div className="vd-vstat-sub">Based on total pool stake vs 50,000 DMD max</div>
             </div>
             <div className="vd-vstat-action">
@@ -787,7 +788,7 @@ export default function ValidatorDetails() {
                 pool.delegators.map((delegator: any, i: number) => {
                   const delegatedAmount = BigNumber(delegator.amount).dividedBy(10**18);
                   const totalStake = BigNumber(pool.totalStake).dividedBy(10**18);
-                  const percentage = totalStake.isGreaterThan(0) ? delegatedAmount.dividedBy(totalStake).multipliedBy(100).toFixed(1) : '0';
+                  const percentage = totalStake.isGreaterThan(0) ? delegatedAmount.dividedBy(totalStake).multipliedBy(100) : new BigNumber(0);
                   
                   return (
                     <tr key={i}>
@@ -797,8 +798,8 @@ export default function ValidatorDetails() {
                           <span>{truncateAddress(delegator.address)}</span>
                         </div>
                       </td>
-                      <td>{delegatedAmount.toFormat(4, BigNumber.ROUND_DOWN)} DMD</td>
-                      <td>{percentage}%</td>
+                      <td>{formatDmd(delegatedAmount)}</td>
+                      <td>{formatPercent(percentage)}</td>
                       <td>{delegationSince(delegator.address)}</td>
                     </tr>
                   );

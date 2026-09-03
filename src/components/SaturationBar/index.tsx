@@ -1,5 +1,6 @@
 'use client';
 import BigNumber from 'bignumber.js';
+import { formatSaturation } from '@/utils/format';
 import '../SharedStats/SharedStats.css';
 
 const MAX_STAKE_WEI = BigNumber(50000).multipliedBy(1e18);
@@ -16,7 +17,7 @@ export default function SaturationBar({ totalStakeWei, showLabel = true, size = 
   const tier = pctNum >= 90 ? 'red' : pctNum >= 70 ? 'yellow' : 'green';
   return (
     <div className={`dmd-sat-bar dmd-sat-bar--${size}`}>
-      {showLabel && <span className="dmd-sat-bar__label">{pctNum.toFixed(1)}%</span>}
+      {showLabel && <span className="dmd-sat-bar__label">{formatSaturation(pctNum)}</span>}
       <div className="dmd-sat-bar__track">
         <div
           className={`dmd-sat-bar__fill dmd-sat-bar__fill--${tier}`}

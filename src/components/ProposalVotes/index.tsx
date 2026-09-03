@@ -12,7 +12,8 @@ import { ProposalVote } from '@/contexts/types/dao';
 import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
 import { useDmdNamesForAddresses } from '@/hooks/useDmdNamesForAddresses';
 import { formatDmdName } from '@/utils/dmdNaming';
-import { formatDmdFromWei, timestampToDate, timestampToDateTime, truncateAddress } from '@/utils/common';
+import { timestampToDate, timestampToDateTime, truncateAddress } from '@/utils/common';
+import { formatDmdFromWei } from '@/utils/format';
 import logger from '@/utils/logger';
 
 type VoteFilter = 'all' | 'yes' | 'no';

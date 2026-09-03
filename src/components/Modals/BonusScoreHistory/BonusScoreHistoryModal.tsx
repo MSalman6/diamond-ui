@@ -8,6 +8,7 @@ import './BonusScoreHistoryModal.css';
 import { toast } from 'react-toastify';
 import { LineChart } from '@/components/Charts';
 import logger from '@/utils/logger';
+import { formatCount } from '@/utils/format';
 
 interface BonusScoreHistoryEntry {
   block_number: number;
@@ -178,7 +179,7 @@ const BonusScoreHistoryModal: React.FC<BonusScoreHistoryModalProps> = ({
                         <i className="fas fa-layer-group"></i> Epoch {entry.epoch}
                       </span>
                       <span className="entry-block">
-                        Block #{entry.block_number.toLocaleString()}
+                        Block #{formatCount(entry.block_number)}
                       </span>
                     </div>
 

@@ -3,6 +3,7 @@ import axios from "axios";
 import BigNumber from "bignumber.js";
 import ProxyAdmin from "@/contracts/abis/ProxyAdmin.json";
 import Web3 from 'web3';
+import { formatCount, formatDecimal, formatDmd } from '@/utils/format';
 import { toBuffer, bufferToHex, ecrecover, publicToAddress, hashPersonalMessage, fromRpcSig } from 'ethereumjs-util';
 
 const web3 = new Web3();
@@ -325,52 +326,15 @@ export const formatCryptoUnitValue = (value: string | number): string => {
 
   // Interpret based on the number of trailing zeros
   if (strLength >= 18) {
-    return `${amount.dividedBy(10**18)} DMD`;
+    return formatDmd(amount.dividedBy(10**18));
   } else if (strLength >= 9) {
-    return `${amount.dividedBy(10**9)} Gwei`;
+    return `${formatDecimal(amount.dividedBy(10**9))} Gwei`;
   } else {
-    return `${amount} Wei`;
+    return `${formatCount(amount)} Wei`;
   }
 }
 
 export const truncateAddress = (address: string) => {
   if (!address) return "";
   return `${address.slice(0, 7)}...${address.slice(-5)}`;
-};
-
-const WEI = new BigNumber(10).pow(18);
-
-interface FormatDmdOptions {
-  unit?: boolean;
-  compact?: boolean;
-  trim?: boolean;
-}
-
-const trimTrailingZeros = (value: string): string =>
-  value.includes('.') ? value.replace(/0+$/, '').replace(/\.$/, '') : value;
-
-/**
- * Converts a wei value to a DMD display string
- * @param {BigNumber|string|number|null|undefined} wei
- * @param {FormatDmdOptions} options
- * @returns {string}
- */
-export const formatDmdFromWei = (
-  wei: BigNumber | string | number | null | undefined,
-  { unit = true, compact = true, trim = false }: FormatDmdOptions = {}
-): string => {
-  const suffix = unit ? ' DMD' : '';
-  const amount = new BigNumber(wei ?? 0).dividedBy(WEI);
-  const format = (decimals: number) => {
-    const formatted = amount.toFormat(decimals, BigNumber.ROUND_DOWN);
-    return trim ? trimTrailingZeros(formatted) : formatted;
-  };
-
-  if (!amount.isFinite() || amount.isNaN() || amount.isZero()) return `0${suffix}`;
-  if (compact && amount.isGreaterThanOrEqualTo(1e6)) {
-    return `${trimTrailingZeros(amount.dividedBy(1e6).toFormat(2, BigNumber.ROUND_DOWN))}M${suffix}`;
-  }
-  if (amount.isGreaterThanOrEqualTo(1000)) return `${format(0)}${suffix}`;
-  if (amount.isGreaterThanOrEqualTo(1)) return `${format(2)}${suffix}`;
-  return `${format(4)}${suffix}`;
 };

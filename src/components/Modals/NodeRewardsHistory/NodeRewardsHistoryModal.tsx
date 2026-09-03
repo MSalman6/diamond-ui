@@ -5,6 +5,7 @@ import Modal from '@/components/Modal';
 import { clientApiGet } from '@/lib/apiClient';
 import { usePrivacyMode } from '@/contexts/PrivacyMode';
 import { truncateAddress, formatEpochEndDate } from '@/utils/common';
+import { formatApy, formatCount, formatDmd } from '@/utils/format';
 import logger from '@/utils/logger';
 import type { NodeEpochReward, NodeEpochRewardsResponse } from '@/types/rewards';
 import '../RewardsHistory/RewardsHistoryModal.css';
@@ -79,11 +80,6 @@ const NodeRewardsHistoryModal: React.FC<NodeRewardsHistoryModalProps> = ({
   }, [isOpen]);
 
   const totalPages = Math.ceil(totalCount / LIMIT);
-
-  const formatDmd = (val: string) => {
-    const num = parseFloat(val);
-    return isNaN(num) ? '—' : num.toFixed(4) + ' DMD';
-  };
 
   const tableRows = useMemo(
     () => [...rewards].sort((a, b) => b.epoch - a.epoch),
@@ -214,13 +210,13 @@ const NodeRewardsHistoryModal: React.FC<NodeRewardsHistoryModalProps> = ({
                 <tbody>
                   {tableRows.map((entry, i) => (
                     <tr key={`${entry.epoch}-${i}`}>
-                      <td>{entry.epoch}</td>
+                      <td>{formatCount(entry.epoch)}</td>
                       <td>{formatEpochEndDate(entry.epoch_end_time)}</td>
                       <td>{formatDmd(entry.total_pool_reward)}</td>
                       <td>{formatDmd(entry.owner_reward)}</td>
                       <td>{formatDmd(entry.delegators_total_reward)}</td>
-                      <td>{parseFloat(entry.epoch_apy).toFixed(2)}%</td>
-                      <td>{parseFloat(entry.total_staked_snapshot).toFixed(4)} DMD</td>
+                      <td>{formatApy(entry.epoch_apy)}</td>
+                      <td>{formatDmd(entry.total_staked_snapshot)}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -7,6 +7,7 @@ import React, { useState, useEffect, useRef, FormEvent } from "react";
 import ReactDOM from "react-dom";
 import { toast } from "react-toastify";
 import { truncateAddress } from "@/utils/common";
+import { formatDmd, formatDmdFromWei } from "@/utils/format";
 
 interface ModalProps {
   buttonText: string;
@@ -80,25 +81,25 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
       const remainingStake = canBeOrderedAmount.minus(amountInWei);
 
       if (BigNumber(amountInWei).isGreaterThan(canBeOrderedAmount)) {
-        return toast.warn(`Cannot order more than ${canBeOrderedAmount.dividedBy(10 ** 18).toString()} DMD`);
+        return toast.warn(`Cannot order more than ${formatDmdFromWei(canBeOrderedAmount)}`);
       }
 
       if (
         !BigNumber(amountInWei).isEqualTo(canBeOrderedAmount) && remainingStake.isLessThan(delegatorMinStake)
       ) {
-        return toast.warn(`Ordered amount is invalid. You must order the full amount or leave at least the minimum stake of ${delegatorMinStake.dividedBy(10 ** 18).toString()} DMD.`);
+        return toast.warn(`Ordered amount is invalid. You must order the full amount or leave at least the minimum stake of ${formatDmdFromWei(delegatorMinStake)}.`);
       }
     } else {
       const remainingStake = canBeUnstakedAmount.minus(amountInWei);
 
       if (BigNumber(amountInWei).isGreaterThan(canBeUnstakedAmount)) {
-        return toast.warn(`Cannot unstake more than ${canBeUnstakedAmount.dividedBy(10 ** 18).toString()} DMD`);
+        return toast.warn(`Cannot unstake more than ${formatDmdFromWei(canBeUnstakedAmount)}`);
       }
 
       if (
         !BigNumber(amountInWei).isEqualTo(canBeUnstakedAmount) && remainingStake.isLessThan(ownPool ? candidateMinStake : delegatorMinStake)
       ) {
-        return toast.warn(`Unstake amount is invalid. You must unstake the full amount or leave at least the minimum stake of ${(ownPool ? candidateMinStake : delegatorMinStake).dividedBy(10 ** 18).toString()} DMD.`);
+        return toast.warn(`Unstake amount is invalid. You must unstake the full amount or leave at least the minimum stake of ${formatDmdFromWei(ownPool ? candidateMinStake : delegatorMinStake)}.`);
       }
     }
 
@@ -167,24 +168,24 @@ const UnstakeModal: React.FC<ModalProps> = ({ buttonText, pool }) => {
               {canBeUnstakedAmount.isZero() ? (
                 lockedAmountDmd.isGreaterThan(0) && (
                   <span className={styles.zeroPadding} data-tooltip="This amount is currently locked in an active Epoch and cannot be unstaked right now. You can pre-order an unstake, and it will become claimable after the Epoch ends.">
-                    Locked : {lockedAmountDmd.toString()} DMD
+                    Locked : {formatDmd(lockedAmountDmd)}
                   </span>
                 )
               ) : (
                 <span className={styles.zeroPadding} data-tooltip="This is the amount of DMD that can be unstaked and claimed immediately because it is not currently active in an Epoch.">
-                  Available for immediate unstaking: {availableUnstakableDmd.toString()} DMD
+                  Available for immediate unstaking: {formatDmd(availableUnstakableDmd)}
                 </span>
               )}
 
               {
                 !canBeUnstakedAmount.isZero() && lockedAmountDmd.isGreaterThan(0) && (
-                  <span className={styles.zeroPadding} data-tooltip="This amount is currently locked in an active Epoch and cannot be unstaked right now. You can pre-order an unstake, and it will become claimable after the Epoch ends.">Locked: {lockedAmountDmd.toString()} DMD</span>
+                  <span className={styles.zeroPadding} data-tooltip="This amount is currently locked in an active Epoch and cannot be unstaked right now. You can pre-order an unstake, and it will become claimable after the Epoch ends.">Locked: {formatDmd(lockedAmountDmd)}</span>
                 )
               }
 
               {pool.orderedWithdrawAmount.isGreaterThan(0) && (
                 <span className={styles.zeroMargin + " " + styles.zeroPadding}>
-                  Amount already ordered: {pool.orderedWithdrawAmount.dividedBy(10 ** 18).toString()} DMD
+                  Amount already ordered: {formatDmdFromWei(pool.orderedWithdrawAmount)}
                 </span>
               )}
 

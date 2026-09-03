@@ -22,6 +22,7 @@ import SaturationBar from '../SaturationBar';
 import Rpt30Cell from '../Rpt30Cell';
 import { useDmdNamesForAddresses } from '@/hooks/useDmdNamesForAddresses';
 import { stripDmdSuffix } from '@/utils/dmdNaming';
+import { formatApy, formatCount, formatDmd, formatDmdFromWei, formatPercent } from '@/utils/format';
 
 const SORT_PILLS = [
   { key: 'rpt30',      label: 'Highest RpT30',       icon: 'fa-trophy',        direction: 'descending' },
@@ -540,7 +541,7 @@ export default function Validators() {
               <td key={colIndex}>
                 {isPrivacyMode ? '—' : isLoadingRewardStats ? '...' : stats ? (
                   <div>
-                    <div>{stats.estimated_apy.toFixed(2)}%</div>
+                    <div>{formatApy(stats.estimated_apy)}</div>
                     <div className="vl-apy-sub">estimated</div>
                   </div>
                 ) : '—'}
@@ -559,7 +560,7 @@ export default function Validators() {
             const stats = rewardStatsMap[pool.stakingAddress.toLowerCase()];
             return (
               <td key={colIndex}>
-                {isPrivacyMode ? '—' : isLoadingRewardStats ? '...' : stats ? stats.vos30.toFixed(2) + ' DMD' : '—'}
+                {isPrivacyMode ? '—' : isLoadingRewardStats ? '...' : stats ? formatDmd(stats.vos30) : '—'}
               </td>
             );
           } else if (column.key === 'saturation') {
@@ -571,28 +572,28 @@ export default function Validators() {
           } else if (column.key === 'totalStake') {
             return (
               <td key={colIndex}>
-                {BigNumber(pool.totalStake ?? 0) ? BigNumber(BigNumber(pool.totalStake ?? 0)).dividedBy(10**18).toFixed(4) + " DMD" : 'Loading...'}
+                {pool.totalStake !== undefined && pool.totalStake !== null ? formatDmdFromWei(pool.totalStake) : 'Loading...'}
               </td>
             );
           } else if (column.key === 'votingPower') {
             return (
               <td key={colIndex}>
                 {pool.votingPower && pool.votingPower.toString() !== 'NaN' && pool.votingPower.toString() !== 'Infinity'
-                  ? `${pool.votingPower.toString()} %`
+                  ? formatPercent(pool.votingPower)
                   : 'Loading...'}
               </td>
             );
           } else if (column.key === 'score') {
             return (
               <td key={colIndex}>
-                {pool.score !== undefined && pool.score !== null ? pool.score : 'Loading...'}
+                {pool.score !== undefined && pool.score !== null ? formatCount(pool.score) : 'Loading...'}
               </td>
             );
           } else if (column.key === 'connectivityReport') {
             return (
               <td key={colIndex}>
                 <span className={`cr-value ${pool.isFaultyValidator ? 'cr-danger' : (Number(pool.connectivityReport) > 0 ? 'cr-warning' : 'cr-zero')}`}>
-                  {pool.connectivityReport !== undefined && pool.connectivityReport !== null ? pool.connectivityReport : 'Loading...'}
+                  {pool.connectivityReport !== undefined && pool.connectivityReport !== null ? formatCount(pool.connectivityReport) : 'Loading...'}
                 </span>
               </td>
             );
@@ -600,10 +601,10 @@ export default function Validators() {
             return (
               <td key={colIndex}>
                 <div>
-                  {BigNumber(pool.myStake) ? BigNumber(pool.myStake).dividedBy(10**18).toFixed(4) : 'Loading...'} DMD
+                  {pool.myStake !== undefined && pool.myStake !== null ? formatDmdFromWei(pool.myStake) : 'Loading...'}
                 </div>
                 {BigNumber(pool.orderedWithdrawAmount).isGreaterThan(0) && (
-                  <div className="ordered-amount">Ordered: {BigNumber(pool.orderedWithdrawAmount).dividedBy(10**18).toFixed(4)} DMD</div>
+                  <div className="ordered-amount">Ordered: {formatDmdFromWei(pool.orderedWithdrawAmount)}</div>
                 )}
               </td>
             );

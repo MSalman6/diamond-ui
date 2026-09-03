@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { PieChartProps } from './types';
+import { formatPercent } from '@/utils/format';
 import { useChartTheme, getAccentColor } from './useChartTheme';
 import ChartContainer from './ChartContainer';
 import CustomTooltip from './CustomTooltip';
@@ -47,8 +48,8 @@ const PieChart: React.FC<PieChartProps> = ({
   // Custom label renderer for pie segments
   const renderLabel = (entry: any) => {
     if (!showLabels) return '';
-    const percent = ((entry.value / entry.payload.total) * 100).toFixed(0);
-    return `${entry[nameKey]}: ${percent}%`;
+    const percent = (entry.value / entry.payload.total) * 100;
+    return `${entry[nameKey]}: ${formatPercent(percent)}`;
   };
 
   return (

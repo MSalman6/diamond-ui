@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { useMemo, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { truncateAddress } from '@/utils/common';
+import { formatApy, formatCount, formatDmd, formatDmdFromWei, formatPercent, formatRpt30 } from '@/utils/format';
 import { useWeb3Context } from '@/contexts/Web3';
 import InfoTooltip from '@/components/InfoTooltip';
 import { useStakingContext } from '@/contexts/Staking';
@@ -119,12 +120,6 @@ export default function ProfilePage() {
     }
   }, [isConnected, userWallet.myAddr, router]);
 
-  // Format DMD amounts with proper decimals and commas
-  const formatDMDAmount = (amount: BigNumber) => {
-    const dmdAmount = amount.dividedBy(1e18);
-    return dmdAmount.toFormat(0, BigNumber.ROUND_DOWN) + ' DMD';
-  };
-
   const handleValidatorRowClick = (stakingAddress: string) => {
     if (userWallet.myAddr && stakingAddress.toLowerCase() === userWallet.myAddr.toLowerCase()) {
       router.push('/profile');
@@ -156,9 +151,9 @@ export default function ProfilePage() {
 
   // Aggregate voting power of validators the user staked with
   const stakedWithVotingPowerPct = useMemo(() => {
-    if (!totalDaoStake || totalDaoStake.isZero()) return '0.0';
+    if (!totalDaoStake || totalDaoStake.isZero()) return new BigNumber(0);
     const sumStakeWei = stakedValidators.reduce((sum, v) => sum.plus(v.totalStake || 0), new BigNumber(0));
-    return BigNumber(sumStakeWei).dividedBy(totalDaoStake).multipliedBy(100).toFixed(2);
+    return BigNumber(sumStakeWei).dividedBy(totalDaoStake).multipliedBy(100);
   }, [stakedValidators, totalDaoStake]);
 
   const hasValidator = Boolean(myPool);
@@ -260,7 +255,7 @@ export default function ProfilePage() {
     if (!stakerRewardStats || !myTotalStake || BigNumber(myTotalStake).isZero()) return null;
     const rewards = BigNumber(stakerRewardStats.total_rewards_30d);
     const stakeInDmd = BigNumber(myTotalStake).dividedBy(1e18);
-    return rewards.dividedBy(stakeInDmd).multipliedBy(12).multipliedBy(100).toFixed(2);
+    return rewards.dividedBy(stakeInDmd).multipliedBy(12).multipliedBy(100);
   }, [stakerRewardStats, myTotalStake]);
 
   // Average RpT30 across staked validators
@@ -269,7 +264,7 @@ export default function ProfilePage() {
       .map(v => stakerNodeStatsMap[v.stakingAddress.toLowerCase()]?.rpt30)
       .filter((v): v is number => v != null);
     if (!entries.length) return null;
-    return (entries.reduce((a, b) => a + b, 0) / entries.length).toFixed(2);
+    return entries.reduce((a, b) => a + b, 0) / entries.length;
   }, [stakedValidators, stakerNodeStatsMap]);
 
   // Best validator by RpT30
@@ -299,11 +294,11 @@ export default function ProfilePage() {
 
   // Compute stake distribution percentages (own vs delegated)
   const ownStakePct = totalStakeWei.isGreaterThan(0)
-    ? myValidatorStakeWei.multipliedBy(100).dividedBy(totalStakeWei).toFixed(0)
-    : '0';
+    ? myValidatorStakeWei.multipliedBy(100).dividedBy(totalStakeWei)
+    : new BigNumber(0);
   const delegatedStakePct = totalStakeWei.isGreaterThan(0)
-    ? delegatedStakeWei.multipliedBy(100).dividedBy(totalStakeWei).toFixed(0)
-    : '0';
+    ? delegatedStakeWei.multipliedBy(100).dividedBy(totalStakeWei)
+    : new BigNumber(0);
 
   const copyData = (data: string) => {
     copy(data);
@@ -344,9 +339,7 @@ export default function ProfilePage() {
                         </InfoTooltip>
                       </div>
                       <div className="dp2-stat-value dp2-stat-value--teal">
-                        {isPrivacyMode ? '—' : myDelegatedStakeWei.isZero()
-                          ? '0 DMD'
-                          : myDelegatedStakeWei.dividedBy(1e18).toFormat(4, BigNumber.ROUND_DOWN) + ' DMD'}
+                        {isPrivacyMode ? '—' : formatDmdFromWei(myDelegatedStakeWei)}
                       </div>
                       <div className="dp2-stat-sub">across {stakedValidators.length} validator{stakedValidators.length !== 1 ? 's' : ''}</div>
                     </div>
@@ -359,7 +352,7 @@ export default function ProfilePage() {
                         </InfoTooltip>
                       </div>
                       <div className="dp2-stat-value dp2-stat-value--teal">
-                        {isPrivacyMode ? '—' : isLoadingStakerStats ? '...' : stakerRewardStats ? stakerRewardStats.total_rewards_30d.toFixed(1) + ' DMD' : '—'}
+                        {isPrivacyMode ? '—' : isLoadingStakerStats ? '...' : stakerRewardStats ? formatDmd(stakerRewardStats.total_rewards_30d) : '—'}
                       </div>
                       <div className="dp2-stat-sub">last 30d</div>
                     </div>
@@ -372,7 +365,7 @@ export default function ProfilePage() {
                         </InfoTooltip>
                       </div>
                       <div className="dp2-stat-value dp2-stat-value--teal">
-                        {isPrivacyMode ? '—' : isLoadingStakerStats ? '...' : portfolioApy != null ? portfolioApy + '%' : '—'}
+                        {isPrivacyMode ? '—' : isLoadingStakerStats ? '...' : formatApy(portfolioApy)}
                       </div>
                       <div className="dp2-stat-sub">estimated</div>
                     </div>
@@ -385,7 +378,7 @@ export default function ProfilePage() {
                         </InfoTooltip>
                       </div>
                       <div className="dp2-stat-value dp2-stat-value--teal">
-                        {isPrivacyMode ? '—' : avgRpt30 != null ? avgRpt30 + ' DMD' : '—'}
+                        {isPrivacyMode ? '—' : formatRpt30(avgRpt30)}
                       </div>
                       <div className="dp2-stat-sub">per 1000 / 30d</div>
                     </div>
@@ -403,7 +396,7 @@ export default function ProfilePage() {
                           : '—'}
                       </div>
                       <div className="dp2-stat-sub">
-                        {!isPrivacyMode && bestValidator ? `RpT30: ${bestValidator.rpt30.toFixed(1)}` : '—'}
+                        {!isPrivacyMode && bestValidator ? `RpT30: ${formatRpt30(bestValidator.rpt30, { unit: false })}` : '—'}
                       </div>
                     </div>
                   </div>
@@ -462,11 +455,11 @@ export default function ProfilePage() {
                           >
                             <td><ValidatorCell address={validator.stakingAddress} /></td>
                             {!isPrivacyMode && <td>{stats ? <Rpt30Cell rpt30={stats.rpt30} rpt30_delta={stats.rpt30_delta} /> : '—'}</td>}
-                            {!isPrivacyMode && <td>{stats ? stats.estimated_apy.toFixed(2) + '%' : '—'}</td>}
+                            {!isPrivacyMode && <td>{formatApy(stats?.estimated_apy)}</td>}
                             {!isPrivacyMode && <td>{stats ? <Aep30Badge aep30={stats.aep30} /> : '—'}</td>}
                             <td><SaturationBar totalStakeWei={validator.totalStake || '0'} /></td>
-                            <td>{validator.myStake ? BigNumber(validator.myStake).dividedBy(1e18).toFormat(4, BigNumber.ROUND_DOWN) + ' DMD' : '0 DMD'}</td>
-                            {!isPrivacyMode && <td className="dp2-rewards-cell">{rewards30d != null ? rewards30d.toFixed(1) + ' DMD' : '—'}</td>}
+                            <td>{formatDmdFromWei(validator.myStake ?? 0)}</td>
+                            {!isPrivacyMode && <td className="dp2-rewards-cell">{formatDmd(rewards30d)}</td>}
                             <td className="dp2-action-cell" onClick={(e) => e.stopPropagation()}>
                               {isClaimable ? (
                                 <button className="btn-stake claim-btn" onClick={() => claimOrderedUnstake(validator)}>Claim</button>
@@ -500,13 +493,13 @@ export default function ProfilePage() {
                         <td></td>
                         <td className="dp2-tfoot-total">
                           <span>Total Delegated:</span>{' '}
-                          <strong>{isPrivacyMode ? '—' : myDelegatedStakeWei.dividedBy(1e18).toFormat(4, BigNumber.ROUND_DOWN) + ' DMD'}</strong>
+                          <strong>{isPrivacyMode ? '—' : formatDmdFromWei(myDelegatedStakeWei)}</strong>
                         </td>
                         {!isPrivacyMode && (
                           <td className="dp2-tfoot-rewards">
                             <span>Total Rewards 30d:</span>{' '}
                             <strong className="dp2-tfoot-rewards-value">
-                              {stakerRewardStats ? stakerRewardStats.total_rewards_30d.toFixed(1) + ' DMD' : '—'}
+                              {stakerRewardStats ? formatDmd(stakerRewardStats.total_rewards_30d) : '—'}
                             </strong>
                           </td>
                         )}
@@ -551,9 +544,9 @@ export default function ProfilePage() {
                             />
                           </td>
                           {!isPrivacyMode && <td>{stats ? <Rpt30Cell rpt30={stats.rpt30} rpt30_delta={stats.rpt30_delta} /> : '—'}</td>}
-                          {!isPrivacyMode && <td>{stats ? stats.estimated_apy.toFixed(2) + '%' : '—'}</td>}
+                          {!isPrivacyMode && <td>{formatApy(stats?.estimated_apy)}</td>}
                           <td><SaturationBar totalStakeWei={validator.totalStake || '0'} /></td>
-                          <td>{validator.score !== undefined && validator.score !== null ? Number(validator.score).toFixed(1) : 'N/A'}</td>
+                          <td>{validator.score !== undefined && validator.score !== null ? formatCount(validator.score) : 'N/A'}</td>
                         </tr>
                       );
                     })}
@@ -607,7 +600,7 @@ export default function ProfilePage() {
                   <div className="stake-card-header">
                     <h3>Validator Pool Overview <InfoTooltip content={<div><p>Summary of your total stake, combining your own validator stake and all delegations received.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></h3>
                     <div className="total-stake-value highlight">
-                      {formatDMDAmount(BigNumber(myPool?.totalStake || 0))}
+                      {formatDmdFromWei(myPool?.totalStake || 0)}
                     </div>
                   </div>
                   
@@ -615,7 +608,7 @@ export default function ProfilePage() {
                     <div className="stake-item">
                       <div className="stake-item-header">
                         <span className="stake-label">My validator stake <InfoTooltip content={<div><p>The amount of DMD you've personally staked as a validator in your own pool.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
-                        <span className="stake-value highlight">{formatDMDAmount(myValidatorStakeWei)}</span>
+                        <span className="stake-value highlight">{formatDmdFromWei(myValidatorStakeWei)}</span>
                       </div>
                       <div className="stake-actions">
                         {
@@ -642,7 +635,7 @@ export default function ProfilePage() {
                     <div className="stake-item">
                       <div className="stake-item-header">
                         <span className="stake-label">Delegated stake to my pool <InfoTooltip content={<div><p>The amount of DMD delegated to your pool by other users (excluding your own stake).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></span>
-                        <span className="stake-value highlight">{formatDMDAmount(delegatedStakeWei)}</span>
+                        <span className="stake-value highlight">{formatDmdFromWei(delegatedStakeWei)}</span>
                       </div>
                       {!isPrivacyMode && (
                         <button onClick={() => setIsDelegatedStakeHistoryModalOpen(true)}  className="btn-secondary btn-sm">History</button>
@@ -658,18 +651,18 @@ export default function ProfilePage() {
                       <div className="stake-bar">
                           <div
                             className="own-stake"
-                            title={`${ownStakePct}% own stake`}
-                            style={{ width: `${ownStakePct}%` }}
+                            title={`${formatPercent(ownStakePct)} own stake`}
+                            style={{ width: `${ownStakePct.toFixed(4)}%` }}
                           />
                           <div
                             className="delegated-stake"
-                            title={`${delegatedStakePct}% delegated`}
-                            style={{ width: `${delegatedStakePct}%` }}
+                            title={`${formatPercent(delegatedStakePct)} delegated`}
+                            style={{ width: `${delegatedStakePct.toFixed(4)}%` }}
                           />
                       </div>
                       <div className="stake-labels">
-                        <span className="own-stake-label">{ownStakePct}% own stake</span>
-                        <span className="delegated-stake-label">{delegatedStakePct}% delegated</span>
+                        <span className="own-stake-label">{formatPercent(ownStakePct)} own stake</span>
+                        <span className="delegated-stake-label">{formatPercent(delegatedStakePct)} delegated</span>
                       </div>
                     </div>
                   </div>
@@ -688,14 +681,14 @@ export default function ProfilePage() {
                   <div className="stat-card vp2-analytics-card">
                     <div className="stat-label">RpT30 <InfoTooltip content={<div><p>Historical staking rewards earned per 1000 DMD staked with this validator during the last 30 days. This value excludes the validator owner reward share and represents delegator-focused profitability.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="stat-value highlight vp2-analytics-value">
-                      {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.rpt30.toFixed(2) + ' DMD' : '—'}
+                      {isLoadingValidatorStats ? '...' : formatRpt30(validatorRewardStats?.rpt30)}
                     </div>
                     <div className="vp2-analytics-sub">per 1000 / 30d</div>
                     {rpt30DeltaPct != null && (
                       <div className={`vp2-analytics-delta ${rpt30DeltaPct >= 0 ? 'vp2-delta-up' : 'vp2-delta-down'}`}>
                         {rpt30DeltaPct >= 0 ? '↑' : '↓'}{' '}
                         {rpt30DeltaPct >= 0 ? '+' : ''}
-                        {Math.abs(rpt30DeltaPct).toFixed(1)}% vs previous 30d
+                        {formatPercent(Math.abs(rpt30DeltaPct))} vs previous 30d
                       </div>
                     )}
                     <div className="vp2-analytics-footer">Historical delegator profitability</div>
@@ -703,7 +696,7 @@ export default function ProfilePage() {
                   <div className="stat-card vp2-analytics-card">
                     <div className="stat-label">APY <InfoTooltip content={<div><p>Historical annualized return based on delegator rewards earned during the last 30 days. This value excludes the validator owner reward share and does not guarantee future rewards.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="stat-value highlight vp2-analytics-value">
-                      {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.estimated_apy.toFixed(2) + '%' : '—'}
+                      {isLoadingValidatorStats ? '...' : formatApy(validatorRewardStats?.estimated_apy)}
                     </div>
                     <div className="vp2-analytics-sub">estimated APY</div>
                     <div className="vp2-analytics-footer">Based on last 30d rewards</div>
@@ -726,7 +719,7 @@ export default function ProfilePage() {
                   <div className="stat-card vp2-analytics-card">
                     <div className="stat-label">VOS30 <InfoTooltip content={<div><p>Total validator owner rewards earned during the last 30 days from the 20% validator owner share.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                     <div className="stat-value highlight vp2-analytics-value">
-                      {isLoadingValidatorStats ? '...' : validatorRewardStats ? validatorRewardStats.vos30.toFixed(2) + ' DMD' : '—'}
+                      {isLoadingValidatorStats ? '...' : formatDmd(validatorRewardStats?.vos30)}
                     </div>
                     <div className="vp2-analytics-sub">validator owner rewards</div>
                     <div className="vp2-analytics-footer">Last 30d (20% owner share)</div>
@@ -813,7 +806,7 @@ export default function ProfilePage() {
                 <div className="stat-card">
                   <div className="stat-label">Pool rewards <InfoTooltip content={<div><p>Total rewards generated by this validator pool during the last 30 days. Rewards are split between the validator owner (20%) and all stakers (80%).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                   <div className="stat-value highlight">
-                    {isPrivacyMode ? '—' : isLoadingValidatorStats ? '...' : monthlyRewards30d != null ? monthlyRewards30d.toFixed(2) + ' DMD' : '—'}
+                    {isPrivacyMode ? '—' : isLoadingValidatorStats ? '...' : formatDmd(monthlyRewards30d)}
                   </div>
                   {!isPrivacyMode && (
                     <button onClick={() => setIsValidatorRewardsHistoryModalOpen(true)} className="btn-secondary btn-sm">History</button>
@@ -822,7 +815,7 @@ export default function ProfilePage() {
 
                 <div className="stat-card">
                   <div className="stat-label">Node operator shared reward <InfoTooltip content={<div><p>The portion of the validator's 20% reward that is shared with a separate node operator.</p> <p>Useful when a node owner delegates technical operation to someone else but keeps ownership and voting rights. Configurable per pool (from 0.01% to 20%).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-                  <div className="stat-value highlight">{myPool?.poolOperatorShare ? BigNumber(myPool.poolOperatorShare).dividedBy(100).toFixed(2) + '%' : '—'}</div>
+                  <div className="stat-value highlight">{formatPercent(myPool?.poolOperatorShare ? BigNumber(myPool.poolOperatorShare).dividedBy(100) : null)}</div>
                   <div className="stat-note copy-address-container vp2-operator-address" title={myPool?.poolOperator || undefined}>
                     {myPool?.poolOperator ? truncateAddress(myPool.poolOperator) : '—'}
                   </div>
@@ -831,7 +824,7 @@ export default function ProfilePage() {
 
                 <div className="stat-card">
                   <div className="stat-label">Voting power <InfoTooltip content={<div><p>Voting power is the share of total DAO stake that your validator pool represents (your own stake + delegated stake).</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
-                  <div className="stat-value highlight">{myPool?.votingPower && myPool.votingPower.toString() !== 'NaN' ? `${myPool.votingPower.toString()}%` : '0%'}</div>
+                  <div className="stat-value highlight">{myPool?.votingPower && myPool.votingPower.toString() !== 'NaN' ? formatPercent(myPool.votingPower) : '0.00%'}</div>
                   <div className="stat-note">Proposals created: {myProposalsCreated}</div>
                   {!isPrivacyMode && (
                     <button onClick={() => toast.info('Coming soon!')} className="btn-secondary btn-sm">History</button>
@@ -855,7 +848,7 @@ export default function ProfilePage() {
                   >
                     <i className="fas fa-info-circle info-icon" aria-hidden="true"></i>
                   </InfoTooltip></div>
-                  <div className="stat-value highlight">{myPool?.score !== undefined && myPool?.score !== null ? Number(myPool.score).toFixed(1) : '—'}</div>
+                  <div className="stat-value highlight">{formatCount(myPool?.score)}</div>
                   <div className="cr-count">Connectivity reports: {myPool?.connectivityReport ?? '—'}<InfoTooltip content={<div><p>Number of detected connectivity issues for this validator.</p></div>}><i className="fas fa-info-circle info-icon" aria-hidden="true"></i></InfoTooltip></div>
                   {!isPrivacyMode && (
                     <button onClick={() => setIsBonusHistoryModalOpen(true)} className="btn-secondary btn-sm">History</button>
@@ -911,11 +904,11 @@ export default function ProfilePage() {
                           >
                             <td><ValidatorCell address={validator.stakingAddress} /></td>
                             {!isPrivacyMode && <td>{stats ? <Rpt30Cell rpt30={stats.rpt30} rpt30_delta={stats.rpt30_delta} /> : '—'}</td>}
-                            {!isPrivacyMode && <td>{stats ? stats.estimated_apy.toFixed(2) + '%' : '—'}</td>}
+                            {!isPrivacyMode && <td>{formatApy(stats?.estimated_apy)}</td>}
                             {!isPrivacyMode && <td>{stats ? <Aep30Badge aep30={stats.aep30} /> : '—'}</td>}
                             <td><SaturationBar totalStakeWei={validator.totalStake || '0'} /></td>
-                            <td>{validator.myStake ? BigNumber(validator.myStake).dividedBy(1e18).toFormat(4, BigNumber.ROUND_DOWN) + ' DMD' : '0 DMD'}</td>
-                            {!isPrivacyMode && <td className="dp2-rewards-cell">{rewards30d != null ? rewards30d.toFixed(1) + ' DMD' : '—'}</td>}
+                            <td>{formatDmdFromWei(validator.myStake ?? 0)}</td>
+                            {!isPrivacyMode && <td className="dp2-rewards-cell">{formatDmd(rewards30d)}</td>}
                             <td className="dp2-action-cell" onClick={(e) => e.stopPropagation()}>
                               {isClaimable ? (
                                 <button className="btn-stake claim-btn" onClick={() => claimOrderedUnstake(validator)}>Claim</button>
@@ -949,13 +942,13 @@ export default function ProfilePage() {
                         <td></td>
                         <td className="dp2-tfoot-total">
                           <span>Total Delegated:</span>{' '}
-                          <strong>{isPrivacyMode ? '—' : myOutgoingDelegationsWei.dividedBy(1e18).toFormat(4, BigNumber.ROUND_DOWN) + ' DMD'}</strong>
+                          <strong>{isPrivacyMode ? '—' : formatDmdFromWei(myOutgoingDelegationsWei)}</strong>
                         </td>
                         {!isPrivacyMode && (
                           <td className="dp2-tfoot-rewards">
                             <span>Total Rewards 30d:</span>{' '}
                             <strong className="dp2-tfoot-rewards-value">
-                              {stakerRewardStats ? stakerRewardStats.total_rewards_30d.toFixed(1) + ' DMD' : '—'}
+                              {stakerRewardStats ? formatDmd(stakerRewardStats.total_rewards_30d) : '—'}
                             </strong>
                           </td>
                         )}
@@ -1000,9 +993,9 @@ export default function ProfilePage() {
                             />
                           </td>
                           {!isPrivacyMode && <td>{stats ? <Rpt30Cell rpt30={stats.rpt30} rpt30_delta={stats.rpt30_delta} /> : '—'}</td>}
-                          {!isPrivacyMode && <td>{stats ? stats.estimated_apy.toFixed(2) + '%' : '—'}</td>}
+                          {!isPrivacyMode && <td>{formatApy(stats?.estimated_apy)}</td>}
                           <td><SaturationBar totalStakeWei={validator.totalStake || '0'} /></td>
-                          <td>{validator.score !== undefined && validator.score !== null ? Number(validator.score).toFixed(1) : 'N/A'}</td>
+                          <td>{validator.score !== undefined && validator.score !== null ? formatCount(validator.score) : 'N/A'}</td>
                         </tr>
                       );
                     })}

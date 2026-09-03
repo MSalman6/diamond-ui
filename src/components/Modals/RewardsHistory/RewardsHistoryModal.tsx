@@ -6,6 +6,7 @@ import { clientApiGet } from '@/lib/apiClient';
 import { usePrivacyMode } from '@/contexts/PrivacyMode';
 import { BarChart } from '@/components/Charts';
 import { truncateAddress, formatEpochEndDate } from '@/utils/common';
+import { formatCount, formatDmd } from '@/utils/format';
 import logger from '@/utils/logger';
 import type { StakerRewardEntry } from '@/types/rewards';
 import './RewardsHistoryModal.css';
@@ -167,9 +168,9 @@ const RewardsHistoryModal: React.FC<RewardsHistoryModalProps> = ({
                 <tbody>
                   {rewards.map((entry, i) => (
                     <tr key={`${entry.pool_address}-${entry.epoch}-${i}`}>
-                      <td>{entry.epoch}</td>
+                      <td>{formatCount(entry.epoch)}</td>
                       <td>{truncateAddress(entry.pool_address)}</td>
-                      <td>{parseFloat(entry.reward_amount).toFixed(4)} DMD</td>
+                      <td>{formatDmd(entry.reward_amount)}</td>
                       <td>{formatEpochEndDate(entry.epoch_end_time)}</td>
                     </tr>
                   ))}

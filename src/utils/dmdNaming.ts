@@ -1,6 +1,7 @@
 import type Web3 from 'web3';
 import BigNumber from 'bignumber.js';
 import type { DmdDnsConfig, DmdDnsSummary } from '@/types/dmdNaming';
+import { formatDmd } from '@/utils/format';
 
 const DMD_NAME_PATTERN = /^[a-z0-9-]+$/;
 
@@ -39,11 +40,7 @@ export function bareDmdName(name: string): string {
 }
 
 export function formatDmdAmount(web3: Web3, wei: string): string {
-  const amount = new BigNumber(web3.utils.fromWei(wei, 'ether'));
-  if (amount.isZero()) {
-    return '0 DMD';
-  }
-  return `${amount.toFormat(4, BigNumber.ROUND_DOWN).replace(/\.?0+$/, '')} DMD`;
+  return formatDmd(new BigNumber(web3.utils.fromWei(wei, 'ether')));
 }
 
 export function formatDmdDate(timestampSeconds?: number | null): string {

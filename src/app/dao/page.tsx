@@ -12,6 +12,7 @@ import logger from '@/utils/logger';
 import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { timestampToDate, truncateAddress } from '@/utils/common';
+import { formatDmd, formatDmdFromWei, formatPercent } from '@/utils/format';
 import InfoTooltip from '@/components/InfoTooltip';
 import { markdownToPlainText } from '@/components/MarkdownText';
 
@@ -565,19 +566,19 @@ export default function DaoPage() {
                   </div>
                 </div>
                 <div className="stat-content">
-                  <p className="stat-value">{stakingContext.myPool.votingPower ? `${stakingContext.myPool.votingPower.toFixed(2)}%` : '0%'}</p>
+                  <p className="stat-value">{formatPercent(stakingContext.myPool.votingPower ?? 0)}</p>
                   <div className="stat-details">
                     <div className="detail-item">
                       <span className="detail-label">Pool Stake:</span>
-                      <span className="detail-value">{stakingContext.myPool.ownStake ? BigNumber(stakingContext.myPool.ownStake).dividedBy(1e18).toFixed(2) + ' DMD' : '0 DMD'}</span>
+                      <span className="detail-value">{formatDmdFromWei(stakingContext.myPool.ownStake ?? 0)}</span>
                     </div>
                     <div className="detail-item">
                       <span className="detail-label">Total Stake:</span>
-                      <span className="detail-value">{stakingContext.totalDaoStake ?  BigNumber(stakingContext.totalDaoStake).dividedBy(1e18).toFixed(2) + ' DMD' : '0 DMD'}</span>
+                      <span className="detail-value">{formatDmdFromWei(stakingContext.totalDaoStake ?? 0)}</span>
                     </div>
                   </div>
                   <div className="voting-power-bar">
-                    <div className="power-progress" style={{ width: `${stakingContext.myPool.votingPower ? stakingContext.myPool.votingPower.toFixed(2) : 0}%` }} />
+                    <div className="power-progress" style={{ width: `${stakingContext.myPool.votingPower ? stakingContext.myPool.votingPower.toFixed(4) : 0}%` }} />
                   </div>
                 </div>
               </div>
@@ -604,14 +605,14 @@ export default function DaoPage() {
                 </div>
               </div>
               <div className="stat-content">
-                <p className="stat-value">{daoContext.governancePotBalance ? `${daoContext.governancePotBalance.toFixed(2)} DMD` : '0 DMD'}</p>
+                <p className="stat-value">{formatDmd(daoContext.governancePotBalance ?? 0)}</p>
                 <div className={`stat-trend ${daoPotBalanceChange.direction === "neutral" ? "" : daoPotBalanceChange.direction}`}>
                   {daoPotBalanceChange.direction !== "neutral" && (
                     <i className={`fas ${daoPotBalanceChange.direction === "positive" ? "fa-arrow-up" : "fa-arrow-down"}`} />
                   )}
                   {daoPotBalanceChange.changePercentage !== null
-                    ? `${daoPotBalanceChange.direction === "positive" ? "+" : ""}${daoPotBalanceChange.changePercentage}% since last ${daoPotBalanceChange.blocks} blocks`
-                    : `${Number(daoPotBalanceChange.absoluteChange) > 0 ? "+" : ""}${daoPotBalanceChange.absoluteChange} DMD since last ${daoPotBalanceChange.blocks} blocks`}
+                    ? `${formatPercent(daoPotBalanceChange.changePercentage, { sign: true })} since last ${daoPotBalanceChange.blocks} blocks`
+                    : `${formatDmd(daoPotBalanceChange.absoluteChange, { sign: true })} since last ${daoPotBalanceChange.blocks} blocks`}
                 </div>
                 <div className="pot-distribution">
                   <div className="distribution-item">
@@ -629,7 +630,7 @@ export default function DaoPage() {
                         <i className="fas fa-info-circle info-icon" aria-hidden="true" />
                       </InfoTooltip>
                     </span>
-                    <span className="distribution-value">{daoContext.lowMajorityContractBalance ? `${daoContext.lowMajorityContractBalance.toFixed(2)} DMD` : '0 DMD'}</span>
+                    <span className="distribution-value">{formatDmd(daoContext.lowMajorityContractBalance ?? 0)}</span>
                     {/* <div className="distribution-bar">
                       <div className="distribution-progress community" style={{ width: `40%` }} />
                     </div> */}
@@ -749,14 +750,14 @@ export default function DaoPage() {
                               const snap = (p as any).totalStakeSnapshot;
                               if (snap && snap !== '0') {
                                 const tokens = BigNumber(snap).multipliedBy(Number(p.participation)).dividedBy(100).dividedBy(1e18).toFixed(2);
-                                return <span className="participation-value">{p.participation}%</span>;
+                                return <span className="participation-value">{formatPercent(p.participation)}</span>;
                               }
                             } catch (e) {logger.log("Error", e);}
-                            return <span className="participation-value">{p.participation}%</span>;
+                            return <span className="participation-value">{formatPercent(p.participation)}</span>;
                           })()}
                         </div>
                       </td>
-                      <td><span className={`exceeding-value ${p.exceeding >= 0 ? "positive" : "negative"}`}>{p.exceeding >= 0 ? `+${p.exceeding}%` : `${p.exceeding}%`}</span></td>
+                      <td><span className={`exceeding-value ${p.exceeding >= 0 ? "positive" : "negative"}`}>{formatPercent(p.exceeding, { sign: true })}</span></td>
                       <td><span className={`voted-status ${p.voted ? "voted" : "not-voted"}`}>{p.voted ? <i className="fas fa-check-circle" /> : <i className="fas fa-times-circle" />}</span></td>
                       {/* {votingPhase && isMyPoolValid && p.status !== (daoContext.getStateString ? daoContext.getStateString('1') : 'Canceled') && (
                         <td>
@@ -820,14 +821,14 @@ export default function DaoPage() {
                               const snap = (p as any).totalStakeSnapshot;
                               if (snap && snap !== '0') {
                                 const tokens = BigNumber(snap).multipliedBy(Number(p.participation)).dividedBy(100).dividedBy(1e18).toFixed(2);
-                                return <span className="participation-value">{p.participation}%</span>;
+                                return <span className="participation-value">{formatPercent(p.participation)}</span>;
                               }
                             } catch (e) {}
-                            return <span className="participation-value">{p.participation}%</span>;
+                            return <span className="participation-value">{formatPercent(p.participation)}</span>;
                           })()}
                         </div>
                       </td>
-                      <td><span className={`exceeding-value ${p.exceeding >= 0 ? "positive" : "negative"}`}>{p.exceeding >= 0 ? `+${p.exceeding}%` : `${p.exceeding}%`}</span></td>
+                      <td><span className={`exceeding-value ${p.exceeding >= 0 ? "positive" : "negative"}`}>{formatPercent(p.exceeding, { sign: true })}</span></td>
                       <td>
                         {p.state === '4' ? (
                           <button className="btn-vote" onClick={(e) => { e.stopPropagation(); handleExecuteClick(p); }}>
@@ -974,33 +975,32 @@ export default function DaoPage() {
                       const hasTotal = totalBn.isGreaterThan(0);
 
                       const yesPct = hasTotal
-                        ? positiveBn.multipliedBy(100).dividedBy(totalBn).toFixed(2)
-                        : '0';
+                        ? positiveBn.multipliedBy(100).dividedBy(totalBn)
+                        : new BigNumber(0);
                       const noPct = hasTotal
-                        ? negativeBn.multipliedBy(100).dividedBy(totalBn).toFixed(2)
-                        : '0';
+                        ? negativeBn.multipliedBy(100).dividedBy(totalBn)
+                        : new BigNumber(0);
 
                       return (
                         <div className="voting-stats" style={{ marginTop: '20px' }}>
                           <div className="stat-item total-stake">
-                            Total stake: {hasTotal ? `${totalBn.dividedBy(1e18).toFixed(4)} DMD` : '0 DMD'}
+                            Total stake: {formatDmdFromWei(totalBn)}
                           </div>
                           <div className="stat-item yes-votes">
-                            Yes: {`${yesPct}%`}
+                            Yes: {formatPercent(yesPct)}
                           </div>
                           <div className="stat-item no-votes">
-                            No: {`${noPct}%`}
+                            No: {formatPercent(noPct)}
                           </div>
                           <div className="stat-divider" />
                           <div className="stat-item participation">
-                            Exceeding Yes: {BigNumber.max(0, positiveBn.minus(negativeBn)).dividedBy(10**18).toFixed(4)} DMD ({parseFloat(String(voteModalProgressYesWidth)).toFixed(4)}% | {daoContext.getProposalThreshold(voteModalStats.proposalData?.rawProposalType)}% required)
+                            Exceeding Yes: {formatDmdFromWei(BigNumber.max(0, positiveBn.minus(negativeBn)))} ({formatPercent(parseFloat(String(voteModalProgressYesWidth)))} | {formatPercent(daoContext.getProposalThreshold(voteModalStats.proposalData?.rawProposalType))} required)
                           </div>
                           <div className="stat-item participation">
                             Participation:{" "}
-                            {totalBn.dividedBy(10 ** 18).toFixed(4, BigNumber.ROUND_DOWN)}{" "}
-                            DMD (
-                            {totalBn.dividedBy(Number(voteModalStats.stakeForCalculation)).multipliedBy(100).toFixed(4)}% |{" "}
-                            {daoContext.getProposalThreshold(voteModalStats.proposalData?.rawProposalType)}% required)
+                            {formatDmdFromWei(totalBn)} (
+                            {formatPercent(totalBn.dividedBy(Number(voteModalStats.stakeForCalculation)).multipliedBy(100))} |{" "}
+                            {formatPercent(daoContext.getProposalThreshold(voteModalStats.proposalData?.rawProposalType))} required)
                           </div>
                         </div>
                       );
@@ -1015,7 +1015,7 @@ export default function DaoPage() {
                     <button className={`vote-btn vote-no ${selectedVote === "No" ? "selected" : ""}`} onClick={() => setSelectedVote("No")}><i className="fas fa-times-circle" /> No</button>
                   </div>
                   <div className="voting-power-info">
-                    <span>Your Voting Power: <strong>{stakingContext?.myPool?.votingPower ? `${stakingContext.myPool.votingPower.toFixed(2)}%` : '0%'}</strong></span>
+                    <span>Your Voting Power: <strong>{formatPercent(stakingContext?.myPool?.votingPower ?? 0)}</strong></span>
                   </div>
                 </div>
               </>

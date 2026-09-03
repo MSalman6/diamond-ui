@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useChartTheme } from './useChartTheme';
+import { formatDecimal } from '@/utils/format';
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -70,7 +71,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label, l
           </span>
           <span style={{ fontWeight: 600 }}>
             {typeof entry.value === 'number'
-              ? entry.value.toLocaleString()
+              ? formatDecimal(entry.value)
               : entry.value}
           </span>
         </div>
