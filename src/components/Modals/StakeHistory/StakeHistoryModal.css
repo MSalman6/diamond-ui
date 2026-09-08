@@ -445,7 +445,7 @@ body.light-theme .stake-action-badge.stake-neutral {
   gap: 6px;
   font-size: 0.75rem;
   color: var(--text-secondary);
-  font-family: monospace;
+  font-family: var(--font-data);
 }
 
 .stake-addr i {
@@ -463,7 +463,7 @@ body.light-theme .stake-action-badge.stake-neutral {
   background: rgba(33, 150, 243, 0.1);
   color: #2196f3;
   border: 1px solid rgba(33, 150, 243, 0.3);
-  font-family: sans-serif;
+  font-family: var(--font-sans);
   margin-left: 4px;
 }
 
@@ -475,7 +475,7 @@ body.light-theme .stake-action-badge.stake-neutral {
   font-size: 0.65rem;
   padding: 1px 6px;
   border-radius: 4px;
-  font-family: sans-serif;
+  font-family: var(--font-sans);
   margin-left: 4px;
 }
 

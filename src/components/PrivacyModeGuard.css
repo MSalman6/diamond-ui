@@ -135,7 +135,7 @@
   color: var(--text-secondary);
   font-size: 0.875rem;
   font-weight: 600;
-  font-family: monospace;
+  font-family: var(--font-data);
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
