@@ -64,6 +64,11 @@
   --border-width-thick: 2px;
   --border-width-arrow: 8px;
 
+  --btn-radius: 6px;
+  --btn-border-width: 1px;
+  --btn-weight: 500;
+  --btn-letter-spacing: 0;
+
   --duration-fast: 0.2s;
   --duration-base: 0.3s;
   --duration-panel: 0.4s;

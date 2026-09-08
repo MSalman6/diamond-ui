@@ -80,8 +80,8 @@ body.light-theme {
 .btnIcon {
   width: 35px;
   height: 35px;
-  border-radius: var(--radius-card);
-  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--btn-radius);
+  border: var(--btn-border-width) solid var(--btn-secondary-border);
   background: var(--card-bg);
   color: var(--text);
   display: flex;
@@ -90,6 +90,7 @@ body.light-theme {
   cursor: pointer;
   transition: all var(--duration-base) var(--ease-default);
   font-size: var(--text-ui);
+  font-weight: var(--btn-weight);
 }
 
 .btnIcon:hover {

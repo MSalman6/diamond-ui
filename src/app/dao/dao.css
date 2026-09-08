@@ -1030,31 +1030,20 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-8);
-  background: rgba(0, 210, 255, 0.15);
-  color: #00d2ff;
+  background: var(--btn-info-bg);
+  color: var(--btn-info-fg);
   padding: var(--space-6) var(--space-12);
-  border-radius: var(--radius-control);
+  border-radius: var(--btn-radius);
   font-size: var(--text-ui);
-  font-weight: var(--weight-medium);
+  font-weight: var(--btn-weight);
   border: none;
   cursor: pointer;
   transition: var(--transition);
 }
 
-
-.light-theme .btn-vote {
-  background: rgba(0, 119, 204, 0.12);
-  color: #0077cc;
-}
-
 .btn-vote:hover {
-  background: rgba(0, 210, 255, 0.3);
+  background: var(--btn-info-bg-hover);
   transform: translateY(-2px);
-}
-
-
-.light-theme .btn-vote:hover {
-  background: rgba(0, 119, 204, 0.25);
 }
 
 

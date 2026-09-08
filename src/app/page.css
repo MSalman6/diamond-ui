@@ -114,12 +114,13 @@
   .btn-outline-sm {
     padding: var(--space-6) var(--space-12);
     font-size: var(--text-ui);
-    border: var(--border-width) solid rgba(255, 255, 255, 0.2);
+    border: var(--btn-border-width) solid var(--btn-secondary-border);
     background: transparent;
     color: var(--text);
-    border-radius: var(--radius-control);
+    border-radius: var(--btn-radius);
     cursor: pointer;
     transition: all var(--duration-fast) var(--ease-default);
+    font-weight: var(--btn-weight);
   }
   
   .btn-outline-sm:hover {

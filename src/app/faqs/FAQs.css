@@ -86,8 +86,8 @@
 .contact-links .btn-secondary {
   padding: 14px 28px;
   font-size: var(--text-body);
-  font-weight: var(--weight-medium);
-  border-radius: var(--radius-card);
+  font-weight: var(--btn-weight);
+  border-radius: var(--btn-radius);
   text-decoration: none;
   transition: all var(--duration-base) var(--ease-default);
   display: inline-flex;
@@ -96,8 +96,8 @@
 }
 
 .contact-links .btn-primary {
-  background: linear-gradient(135deg, #3a7bd5, #00d2ff);
-  color: #ffffff;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
   border: none;
 }
 
@@ -107,13 +107,13 @@
 }
 
 .contact-links .btn-secondary {
-  background: transparent;
-  color: var(--text);
-  border: var(--border-width) solid var(--border-color);
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-fg);
+  border: var(--btn-border-width) solid var(--btn-secondary-border);
 }
 
 .contact-links .btn-secondary:hover {
-  background: var(--card-hover);
+  background: var(--btn-secondary-bg-hover);
   border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
 }
