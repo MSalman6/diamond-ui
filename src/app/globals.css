@@ -225,7 +225,9 @@ input:checked + .theme-toggle-slider .theme-toggle-icon.moon {
 }
 
 body {
-  font-family: "Inter", sans-serif;
+  --font-sans: var(--font-archivo), system-ui, -apple-system, sans-serif;
+  --font-data: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-sans);
   background-color: var(--bg);
   color: var(--text);
   line-height: 1.6;

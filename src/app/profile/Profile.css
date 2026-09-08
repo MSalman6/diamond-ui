@@ -977,7 +977,7 @@ body.light-theme .dp2-tfoot-rewards-value {
 
 .profile-wallet-address {
   font-size: 0.85rem;
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-data);
   opacity: 0.75;
   word-break: break-all;
   line-height: 1.4;
