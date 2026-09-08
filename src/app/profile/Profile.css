@@ -47,12 +47,12 @@ body.light-theme {
 
 .table-container::-webkit-scrollbar-track {
   background: var(--scrollbar-track);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 
 .table-container::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, var(--scrollbar-thumb), var(--scrollbar-thumb-hover));
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 3px solid transparent;
   background-clip: padding-box;
 }
@@ -80,16 +80,16 @@ body.light-theme {
 .btnIcon {
   width: 35px;
   height: 35px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  border: var(--border-width) solid var(--border-color);
   background: var(--card-bg);
   color: var(--text);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
+  transition: all var(--duration-base) var(--ease-default);
+  font-size: var(--text-ui);
 }
 
 .btnIcon:hover {
@@ -109,7 +109,7 @@ body.light-theme {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  font-size: 0.7rem !important;
+  font-size: var(--icon-xs) !important;
 }
 
 /* Tooltip for info icons (multi-line, bullet points) */
@@ -121,7 +121,7 @@ body.light-theme {
 .info-icon {
   cursor: help;
   color: var(--text-muted, #999);
-  margin-left: 0.25rem;
+  margin-left: var(--space-4);
 }
 
 .validator-dashboard .stat-label,
@@ -141,11 +141,11 @@ body.light-theme {
 .validator-dashboard .stake-label .info-tooltip-trigger,
 .validator-dashboard .distribution-label .info-tooltip-trigger,
 .validator-dashboard .stake-card-header h3 .info-tooltip-trigger {
-  margin-left: 0;
+  margin-left: var(--space-0);
 }
 
 .validator-dashboard .info-icon {
-  margin-left: 0;
+  margin-left: var(--space-0);
 }
 
 .info-tooltip {
@@ -157,10 +157,10 @@ body.light-theme {
   max-width: 360px;
   background: var(--card-bg, #fff);
   color: var(--text, #111);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
+  border-radius: var(--radius-card);
+  padding: var(--space-12) var(--space-16);
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  font-size: 0.95rem;
+  font-size: var(--text-control);
   line-height: 1.35;
   display: none;
   z-index: 60;
@@ -183,17 +183,17 @@ body.light-theme {
 }
 
 .info-tooltip .tooltip-title {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-8);
 }
 
 .info-tooltip p {
-  margin: 0 0 0.5rem 0;
+  margin: var(--space-0) var(--space-0) var(--space-8) var(--space-0);
 }
 
 .info-tooltip ul {
-  margin: 0 0 0.5rem 1rem;
-  padding: 0;
+  margin: var(--space-0) var(--space-0) var(--space-8) var(--space-16);
+  padding: var(--space-0);
 }
 
 .info-tooltip li {
@@ -216,12 +216,12 @@ body.light-theme {
 
 .info-tooltip-inline {
   box-shadow: none;
-  border: 1px solid rgba(255,255,255,0.04);
+  border: var(--border-width) solid rgba(255,255,255,0.04);
 }
 
 .stat-action-group {
   display: flex;
-  gap: 8px;
+  gap: var(--space-8);
   align-items: center;
 }
 
@@ -235,13 +235,13 @@ body.light-theme {
 }
 
 .reward-analytics-row {
-  margin-top: 1rem;
-  padding-top: 1rem;
+  margin-top: var(--space-16);
+  padding-top: var(--space-16);
 }
 
 .performance-analytics-row {
-  margin-top: 1rem;
-  padding-top: 1rem;
+  margin-top: var(--space-16);
+  padding-top: var(--space-16);
 }
 
 .validators-staked th:nth-child(6),
@@ -256,34 +256,34 @@ body.light-theme {
 .dp-summary-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: var(--space-16);
+  margin-top: var(--space-16);
 }
 .dp-card {
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-panel);
+  padding: var(--space-16) var(--space-20);
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-8);
 }
 .dp-card-label {
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
   color: var(--text-secondary, #aaa);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
 }
 .dp-card-value {
   font-size: 1.35rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--text);
 }
 .dp-card-actions {
   display: flex;
-  gap: 8px;
+  gap: var(--space-8);
   flex-wrap: wrap;
 }
 body.light-theme .dp-card {
@@ -299,69 +299,69 @@ body.light-theme .dp-card-value { color: #111827; }
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  gap: var(--space-8);
+  margin-bottom: var(--space-12);
 }
 .dp-section-header h2 {
-  margin: 0;
+  margin: var(--space-0);
 }
 
 #authenticated-user-view .validators-staked h2,
 #authenticated-user-view .top-validators h2,
 #authenticated-validator-view .validators-staked h2,
 #authenticated-validator-view .top-validators h2 {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: var(--text-subsection);
+  font-weight: var(--weight-semibold);
 }
 
 /* View-all link */
 .dp-view-all-link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
 }
 
 /* Consolidated stats grid */
 .vp-validator-stats {
-  margin-top: 1rem;
+  margin-top: var(--space-16);
 }
 .vp-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 0.75rem;
+  gap: var(--space-12);
 }
 
 /* Performance analytics section */
 .vp-performance-section {
-  padding: 2rem 0;
+  padding: var(--space-32) var(--space-0);
   background: var(--section-bg, var(--bg));
 }
 .vp-analytics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  gap: var(--space-16);
 }
 
 /* Delta indicators */
 .vp-delta-up {
   color: #2ed573 !important;
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
 }
 .vp-delta-down {
   color: #ff4757 !important;
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
 }
 body.light-theme .vp-delta-up { color: #1a7a40 !important; }
 body.light-theme .vp-delta-down { color: #c0392b !important; }
 
 /* Rewards chart section */
 .vp-rewards-chart-section {
-  padding: 2rem 0;
+  padding: var(--space-32) var(--space-0);
 }
 .vp-rewards-chart-section h3 {
-  margin: 0 0 1rem;
-  font-size: 1.1rem;
-  font-weight: 600;
+  margin: var(--space-0) var(--space-0) var(--space-16);
+  font-size: var(--text-card-title);
+  font-weight: var(--weight-semibold);
 }
 body.light-theme .vp-performance-section {
   background: #f9fafb;
@@ -374,21 +374,21 @@ body.light-theme .vp-rewards-chart-section {
 .vp2-section-title {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0 0 1.25rem;
+  gap: var(--space-8);
+  font-size: var(--text-subsection);
+  font-weight: var(--weight-semibold);
+  margin: var(--space-0) var(--space-0) var(--space-20);
   opacity: 0.95;
 }
 
 .vp2-performance-section {
-  padding: 2rem 0;
+  padding: var(--space-32) var(--space-0);
 }
 
 .vp2-analytics-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  gap: var(--space-16);
 }
 
 .vp2-analytics-card {
@@ -402,20 +402,20 @@ body.light-theme .vp-rewards-chart-section {
 }
 
 .vp2-analytics-value {
-  font-size: 1.6rem !important;
-  margin-bottom: 0.25rem !important;
+  font-size: var(--text-section-lg) !important;
+  margin-bottom: var(--space-4) !important;
 }
 
 .vp2-analytics-sub {
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
   color: var(--text-secondary, rgba(255, 255, 255, 0.6));
   margin-top: 0.15rem;
 }
 
 .vp2-analytics-delta {
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
   margin-top: 0.35rem;
-  font-weight: 500;
+  font-weight: var(--weight-medium);
 }
 
 .vp2-delta-up {
@@ -430,7 +430,7 @@ body.light-theme .vp-rewards-chart-section {
   font-size: 0.78rem;
   color: var(--text-secondary, rgba(255, 255, 255, 0.55));
   margin-top: auto;
-  padding-top: 0.75rem;
+  padding-top: var(--space-12);
   line-height: 1.35;
 }
 
@@ -440,7 +440,7 @@ body.light-theme .vp-rewards-chart-section {
   align-items: center;
   justify-content: center;
   min-height: 120px;
-  margin: 0.25rem 0;
+  margin: var(--space-4) var(--space-0);
 }
 
 .vp2-rewards-performance .chart-container {
@@ -453,7 +453,7 @@ body.light-theme .vp-rewards-chart-section {
 }
 
 .vp2-rewards-performance {
-  padding: 2rem 0;
+  padding: var(--space-32) var(--space-0);
 }
 
 .vp2-rewards-performance-header {
@@ -461,39 +461,39 @@ body.light-theme .vp-rewards-chart-section {
   align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: var(--space-16);
+  margin-bottom: var(--space-16);
 }
 
 .vp2-rewards-performance-title {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-8);
 }
 
 .vp2-rewards-performance-title h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
+  margin: var(--space-0);
+  font-size: var(--text-subsection);
+  font-weight: var(--weight-semibold);
   opacity: 0.95;
 }
 
 .vp2-section-title .info-icon,
 .vp2-rewards-performance-title .info-icon {
-  font-size: 1.25rem;
+  font-size: var(--text-subsection);
 }
 
 .vp2-rewards-performance-controls {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--space-12);
   flex-wrap: wrap;
 }
 
 .vp2-legend-pills {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-8);
   flex-wrap: wrap;
 }
 
@@ -502,13 +502,13 @@ body.light-theme .vp-rewards-chart-section {
   align-items: center;
   gap: 0.35rem;
   padding: 0.35rem 0.65rem;
-  font-size: 0.8rem;
-  border-radius: 999px;
-  border: 1px solid var(--border-color);
+  font-size: var(--text-badge);
+  border-radius: var(--radius-pill);
+  border: var(--border-width) solid var(--border-color);
   background: transparent;
   color: var(--text-secondary, rgba(255, 255, 255, 0.6));
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: background var(--duration-fast) var(--ease-default), border-color var(--duration-fast) var(--ease-default), color var(--duration-fast) var(--ease-default);
 }
 
 .vp2-legend-pill--active {
@@ -520,7 +520,7 @@ body.light-theme .vp-rewards-chart-section {
 .vp2-legend-dot {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   flex-shrink: 0;
 }
 
@@ -551,10 +551,10 @@ body.light-theme .vp-rewards-chart-section {
 .vp2-range-pills {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: var(--space-4);
   padding: 0.2rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  border: var(--border-width) solid var(--border-color);
   background: var(--card-bg, rgba(255, 255, 255, 0.03));
 }
 
@@ -562,14 +562,14 @@ body.light-theme .vp-rewards-chart-section {
   display: inline-flex;
   align-items: center;
   padding: 0.3rem 0.7rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  border-radius: 6px;
+  font-size: var(--text-badge);
+  font-weight: var(--weight-semibold);
+  border-radius: var(--radius-button);
   border: none;
   background: transparent;
   color: var(--text-secondary, rgba(255, 255, 255, 0.6));
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background var(--duration-fast) var(--ease-default), color var(--duration-fast) var(--ease-default);
 }
 
 .vp2-range-pill--active {
@@ -578,13 +578,13 @@ body.light-theme .vp-rewards-chart-section {
 }
 
 .vp2-validator-statistics {
-  padding: 2rem 0 3rem;
+  padding: var(--space-32) var(--space-0) 3rem;
 }
 
 .vp2-stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
+  gap: var(--space-12);
 }
 
 .vp2-stats-grid .stat-card {
@@ -595,17 +595,17 @@ body.light-theme .vp-rewards-chart-section {
 .vp2-stats-grid .stat-card .stat-label {
   display: block;
   min-height: 2.6rem;
-  margin-bottom: 10px;
+  margin-bottom: var(--space-10);
   line-height: 1.3;
 }
 
 .vp2-stats-grid .stat-card .stat-label .info-tooltip-trigger {
   display: inline;
-  margin-top: 0;
+  margin-top: var(--space-0);
 }
 
 .vp2-stats-grid .stat-card .stat-label .info-icon {
-  margin-left: 0.25rem;
+  margin-left: var(--space-4);
 }
 
 .vp2-operator-address {
@@ -615,7 +615,7 @@ body.light-theme .vp-rewards-chart-section {
   overflow-wrap: anywhere;
   word-break: break-all;
   line-height: 1.35;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-12);
 }
 
 .validator-dashboard .vp2-performance-section,
@@ -705,20 +705,20 @@ body.light-theme .vp2-rewards-performance {
 .dp2-stats-bar {
   display: flex;
   flex-wrap: nowrap;
-  gap: 1rem;
-  margin-top: 1.25rem;
+  gap: var(--space-16);
+  margin-top: var(--space-20);
 }
 
 .dp2-stat-item {
   flex: 1 1 0;
-  padding: 1.25rem 1.5rem;
+  padding: var(--space-20) var(--space-24);
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
   min-width: 0;
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-panel);
 }
 
 .dp2-stat-item--sep {
@@ -732,20 +732,20 @@ body.light-theme .vp2-rewards-performance {
 .dp2-stat-label {
   font-size: 0.76rem;
   color: var(--text-secondary, rgba(255, 255, 255, 0.6));
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .dp2-stat-value {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: var(--text-modal-title);
+  font-weight: var(--weight-bold);
   color: var(--text);
-  line-height: 1.2;
+  line-height: var(--leading-heading);
   margin-top: 0.15rem;
   white-space: nowrap;
   overflow: hidden;
@@ -780,16 +780,16 @@ body.light-theme .vp2-rewards-performance {
 
 .dp2-stat-actions {
   display: flex;
-  gap: 8px;
+  gap: var(--space-8);
   flex-wrap: wrap;
   margin-top: 0.6rem;
 }
 
 .dp2-card-actions {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--space-12);
   flex-wrap: wrap;
-  margin-top: 1.25rem;
+  margin-top: var(--space-20);
 }
 
 .dp2-card-actions > a,
@@ -797,7 +797,7 @@ body.light-theme .vp2-rewards-performance {
   flex: 0 0 auto;
   width: 160px;
   height: 40px;
-  padding: 0 1rem;
+  padding: var(--space-0) var(--space-16);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -810,12 +810,12 @@ body.light-theme .vp2-rewards-performance {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--space-8);
 }
 
 .dp2-rewards-cell {
   color: #00d2ff;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   white-space: nowrap;
 }
 
@@ -833,7 +833,7 @@ body.light-theme .vp2-rewards-performance {
 .dp2-tfoot-row td {
   padding: 0.8rem 1rem;
   font-size: 0.82rem;
-  border-top: 2px solid var(--border-color);
+  border-top: var(--border-width-thick) solid var(--border-color);
   color: var(--text-secondary, rgba(255, 255, 255, 0.6));
   white-space: nowrap;
   vertical-align: middle;
@@ -842,8 +842,8 @@ body.light-theme .vp2-rewards-performance {
 .dp2-tfoot-count {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-weight: 500;
+  gap: var(--space-6);
+  font-weight: var(--weight-medium);
 }
 
 .dp2-tfoot-total {
@@ -852,7 +852,7 @@ body.light-theme .vp2-rewards-performance {
 
 .dp2-tfoot-total strong {
   color: var(--text);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
 .dp2-tfoot-rewards {
@@ -861,7 +861,7 @@ body.light-theme .vp2-rewards-performance {
 
 .dp2-tfoot-rewards-value {
   color: #00d2ff;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
 body.light-theme .dp2-stat-item {
@@ -926,26 +926,26 @@ body.light-theme .dp2-tfoot-rewards-value {
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 30px !important;
+  gap: var(--space-20);
+  margin-bottom: var(--space-30) !important;
 }
 
 .validator-dashboard .validator-identity {
   flex-direction: row;
   align-items: center;
-  gap: 15px;
+  gap: var(--space-15);
 }
 
 .validator-dashboard .validator-details {
   flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .validator-dashboard .validator-details h1 {
-  font-size: 1.3rem;
-  margin: 0;
+  font-size: var(--text-modal-title);
+  margin: var(--space-0);
   letter-spacing: normal;
 }
 
@@ -956,15 +956,15 @@ body.light-theme .dp2-tfoot-rewards-value {
 }
 
 .profile-dmd-name {
-  margin: 0 0 6px;
+  margin: var(--space-0) var(--space-0) var(--space-6);
   font-size: 1.75rem;
-  font-weight: 700;
-  line-height: 1.2;
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-heading);
   word-break: break-word;
 }
 
 .validator-identity .profile-dmd-name {
-  font-size: 1.3rem;
+  font-size: var(--text-modal-title);
   margin: 0 0 2px;
 }
 
@@ -972,19 +972,19 @@ body.light-theme .dp2-tfoot-rewards-value {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .profile-wallet-address {
-  font-size: 0.85rem;
+  font-size: var(--text-caption);
   font-family: var(--font-data);
   opacity: 0.75;
   word-break: break-all;
-  line-height: 1.4;
+  line-height: var(--leading-normal);
 }
 
 .profile-wallet-row .status-badge {
-  margin-left: 0;
+  margin-left: var(--space-0);
   flex-shrink: 0;
 }
 

@@ -1,7 +1,7 @@
 .loaderActive {
   top: 0;
   left: 0;
-  gap: 2rem;
+  gap: var(--space-32);
   width: 100%;
   height: 100%;
   z-index: 99999;
@@ -38,7 +38,7 @@
 }
 
 .pulse {
-  animation: pulsate 0.6s ease-in-out infinite alternate;
+  animation: pulsate var(--duration-slow) ease-in-out infinite alternate;
 }
 
 @keyframes pulsate {
@@ -53,8 +53,8 @@
 .loadingMsg {
   z-index: 999;
   color: white;
-  margin-top: 1rem;
-  font-size: 1.4rem;
+  margin-top: var(--space-16);
+  font-size: var(--text-section-sm);
 }
 
 .dismissBlock {
@@ -62,28 +62,28 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--space-12);
   max-width: 420px;
-  padding: 0 1.5rem;
+  padding: var(--space-0) var(--space-24);
   text-align: center;
 }
 
 .dismissHint {
   color: rgba(255, 255, 255, 0.7);
-  font-size: 0.95rem;
+  font-size: var(--text-control);
   line-height: 1.5;
-  margin: 0;
+  margin: var(--space-0);
 }
 
 .dismissBtn {
   cursor: pointer;
-  padding: 8px 20px;
-  font-size: 0.95rem;
+  padding: var(--space-8) var(--space-20);
+  font-size: var(--text-control);
   color: #ffffff;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 6px;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  border: var(--border-width) solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius-button);
+  transition: background-color var(--duration-fast) var(--ease-default), border-color var(--duration-fast) var(--ease-default);
 }
 
 .dismissBtn:hover {

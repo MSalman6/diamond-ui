@@ -3,12 +3,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  line-height: 1.4;
+  gap: var(--space-6);
+  padding: var(--space-4) var(--space-10);
+  border-radius: var(--radius-badge);
+  font-size: var(--text-badge);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-normal);
   text-align: center;
   white-space: nowrap;
 }

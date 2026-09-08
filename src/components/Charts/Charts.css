@@ -2,10 +2,10 @@
 .chart-container {
   width: 100%;
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
-  transition: all 0.3s ease;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-panel);
+  padding: var(--space-20);
+  transition: all var(--duration-base) var(--ease-default);
 }
 
 .chart-container:hover {
@@ -25,28 +25,28 @@ body.light-theme .chart-container:hover {
 
 /* Chart Header */
 .chart-header {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-20);
 }
 
 .chart-title {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: var(--text-subsection);
+  font-weight: var(--weight-semibold);
   color: var(--text);
-  margin: 0 0 8px 0;
+  margin: var(--space-0) var(--space-0) var(--space-8) var(--space-0);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .chart-title i {
   color: var(--accent);
-  font-size: 1.1rem;
+  font-size: var(--text-card-title);
 }
 
 .chart-description {
-  font-size: 0.9rem;
+  font-size: var(--text-ui);
   color: var(--text-secondary);
-  margin: 0;
+  margin: var(--space-0);
 }
 
 /* Chart Content */
@@ -63,8 +63,8 @@ body.light-theme .chart-container:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 40px;
+  gap: var(--space-16);
+  padding: var(--space-40);
 }
 
 .chart-spinner {
@@ -72,7 +72,7 @@ body.light-theme .chart-container:hover {
   height: 40px;
   border: 3px solid var(--border-color);
   border-top-color: var(--accent);
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   animation: chart-spin 0.8s linear infinite;
 }
 
@@ -84,8 +84,8 @@ body.light-theme .chart-container:hover {
 
 .chart-loading p {
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin: 0;
+  font-size: var(--text-ui);
+  margin: var(--space-0);
 }
 
 /* Empty State */
@@ -94,19 +94,19 @@ body.light-theme .chart-container:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 40px;
+  gap: var(--space-12);
+  padding: var(--space-40);
   color: var(--text-secondary);
 }
 
 .chart-empty i {
-  font-size: 3rem;
+  font-size: var(--text-hero);
   opacity: 0.4;
 }
 
 .chart-empty p {
-  font-size: 0.95rem;
-  margin: 0;
+  font-size: var(--text-control);
+  margin: var(--space-0);
 }
 
 /* Chart Wrapper for Responsive Charts */
@@ -118,26 +118,26 @@ body.light-theme .chart-container:hover {
 /* Custom Tooltip Styles */
 .chart-custom-tooltip {
   background: var(--tooltip-bg) !important;
-  border: 1px solid var(--tooltip-border) !important;
-  border-radius: 8px;
-  padding: 12px;
+  border: var(--border-width) solid var(--tooltip-border) !important;
+  border-radius: var(--radius-card);
+  padding: var(--space-12);
   box-shadow: 0 8px 10px -4px rgba(0, 0, 0, 0.3), 0 3px 5px -3px rgba(0, 0, 0, 0.2);
 }
 
 .chart-custom-tooltip .tooltip-label {
   color: var(--tooltip-color);
-  font-weight: 600;
-  margin-bottom: 8px;
-  font-size: 0.9rem;
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-8);
+  font-size: var(--text-ui);
 }
 
 .chart-custom-tooltip .tooltip-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   color: var(--tooltip-color);
-  font-size: 0.85rem;
-  margin: 4px 0;
+  font-size: var(--text-caption);
+  margin: var(--space-4) var(--space-0);
 }
 
 .chart-custom-tooltip .tooltip-color {
@@ -149,23 +149,23 @@ body.light-theme .chart-container:hover {
 /* Chart Type Selector */
 .chart-type-selector {
   display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: var(--space-8);
+  margin-bottom: var(--space-16);
   flex-wrap: wrap;
 }
 
 .chart-type-button {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-16);
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: var(--text-ui);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-fast) var(--ease-default);
 }
 
 .chart-type-button:hover {
@@ -181,23 +181,23 @@ body.light-theme .chart-container:hover {
 }
 
 .chart-type-button i {
-  font-size: 0.85rem;
+  font-size: var(--text-caption);
 }
 
 /* Legend Customization */
 .recharts-legend-wrapper {
-  padding-top: 16px !important;
+  padding-top: var(--space-16) !important;
 }
 
 .recharts-legend-item-text {
   color: var(--text-secondary) !important;
-  font-size: 0.85rem !important;
+  font-size: var(--text-caption) !important;
 }
 
 /* Axis Labels */
 .recharts-cartesian-axis-tick-value {
   fill: var(--text-secondary) !important;
-  font-size: 0.8rem !important;
+  font-size: var(--text-badge) !important;
 }
 
 /* Grid Lines */
@@ -210,8 +210,8 @@ body.light-theme .chart-container:hover {
 /* Pie Chart Labels */
 .recharts-pie-label-text {
   fill: var(--text) !important;
-  font-size: 0.85rem !important;
-  font-weight: 600 !important;
+  font-size: var(--text-caption) !important;
+  font-weight: var(--weight-semibold) !important;
 }
 
 .recharts-surface {
@@ -221,24 +221,24 @@ body.light-theme .chart-container:hover {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .chart-container {
-    padding: 16px;
+    padding: var(--space-16);
   }
 
   .chart-title {
-    font-size: 1.1rem;
+    font-size: var(--text-card-title);
   }
 
   .chart-description {
-    font-size: 0.85rem;
+    font-size: var(--text-caption);
   }
 
   .chart-type-selector {
-    gap: 6px;
+    gap: var(--space-6);
   }
 
   .chart-type-button {
-    padding: 6px 12px;
-    font-size: 0.85rem;
+    padding: var(--space-6) var(--space-12);
+    font-size: var(--text-caption);
   }
 
   .chart-content {
@@ -246,17 +246,17 @@ body.light-theme .chart-container:hover {
   }
 
   .recharts-cartesian-axis-tick-value {
-    font-size: 0.7rem !important;
+    font-size: var(--icon-xs) !important;
   }
 
   .recharts-legend-item-text {
-    font-size: 0.75rem !important;
+    font-size: var(--icon-sm) !important;
   }
 }
 
 /* Animation classes */
 .chart-fade-in {
-  animation: chartFadeIn 0.5s ease-in-out;
+  animation: chartFadeIn var(--duration-theme) ease-in-out;
 }
 
 @keyframes chartFadeIn {
@@ -281,13 +281,13 @@ body.light-theme .chart-container:hover {
 }
 
 .donut-center-label .label {
-  font-size: 0.9rem;
+  font-size: var(--text-ui);
   color: var(--text-secondary);
-  margin-bottom: 4px;
+  margin-bottom: var(--space-4);
 }
 
 .donut-center-label .value {
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-size: var(--text-stat);
+  font-weight: var(--weight-bold);
   color: var(--accent);
 }

@@ -1,5 +1,5 @@
 .votes-card .card-content.proposal-votes-content {
-  padding: 15px;
+  padding: var(--space-15);
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -10,15 +10,15 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .proposal-votes-count {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   letter-spacing: 0.01em;
   white-space: nowrap;
 }
@@ -40,7 +40,7 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .proposal-votes-filters {
@@ -49,7 +49,7 @@
   gap: 2px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border-color);
+  border: var(--border-width) solid var(--border-color);
 }
 
 .proposal-votes-filters button {
@@ -57,12 +57,12 @@
   border: none;
   background: transparent;
   color: var(--text-secondary);
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 5px 12px;
+  font-size: var(--text-badge);
+  font-weight: var(--weight-medium);
+  padding: var(--space-5) var(--space-12);
   border-radius: 7px;
   cursor: pointer;
-  transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
+  transition: background var(--transition-speed) var(--ease-default), color var(--transition-speed) var(--ease-default);
 }
 
 .proposal-votes-filters button:hover {
@@ -76,7 +76,7 @@
 }
 
 .proposal-votes-filters button:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: var(--border-width-thick) solid var(--accent);
   outline-offset: 1px;
 }
 
@@ -87,19 +87,19 @@
 
 .proposal-votes-sort select {
   appearance: none;
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
   font-family: inherit;
   color: var(--text);
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
   padding: 6px 26px 6px 10px;
   cursor: pointer;
   background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
   background-position: calc(100% - 14px) 52%, calc(100% - 9px) 52%;
   background-size: 5px 5px, 5px 5px;
   background-repeat: no-repeat;
-  transition: border-color var(--transition-speed) ease;
+  transition: border-color var(--transition-speed) var(--ease-default);
 }
 
 .proposal-votes-sort select:hover {
@@ -107,7 +107,7 @@
 }
 
 .proposal-votes-sort select:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: var(--border-width-thick) solid var(--accent);
   outline-offset: 1px;
 }
 
@@ -120,7 +120,7 @@
   position: absolute;
   width: 1px;
   height: 1px;
-  padding: 0;
+  padding: var(--space-0);
   margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
@@ -131,14 +131,14 @@
 .proposal-votes-notice {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--space-8);
   font-size: 0.82rem;
   line-height: 1.45;
   padding: 9px 11px;
   border-radius: 10px;
   color: var(--text-secondary);
   background: rgba(58, 123, 213, 0.12);
-  border: 1px solid rgba(58, 123, 213, 0.3);
+  border: var(--border-width) solid rgba(58, 123, 213, 0.3);
 }
 
 .proposal-votes-notice i {
@@ -151,16 +151,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: var(--space-10);
   min-height: 110px;
   padding: 18px 12px;
   text-align: center;
-  font-size: 0.85rem;
+  font-size: var(--text-caption);
   color: var(--text-secondary);
 }
 
 .proposal-votes-state i {
-  font-size: 0.95rem;
+  font-size: var(--text-control);
   opacity: 0.7;
 }
 
@@ -168,8 +168,8 @@
   width: 15px;
   height: 15px;
   flex-shrink: 0;
-  border-radius: 50%;
-  border: 2px solid var(--border-color);
+  border-radius: var(--radius-circle);
+  border: var(--border-width-thick) solid var(--border-color);
   border-top-color: var(--accent);
   animation: proposal-votes-spin 0.7s linear infinite;
 }
@@ -182,8 +182,8 @@
 
 .proposal-votes-list {
   list-style: none;
-  margin: 0;
-  padding: 0;
+  margin: var(--space-0);
+  padding: var(--space-0);
   display: flex;
   flex-direction: column;
   max-height: clamp(300px, 58vh, 560px);
@@ -210,10 +210,10 @@
 .proposal-vote-row {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-8);
   padding: 11px 8px;
-  border-bottom: 1px solid var(--border-color);
-  transition: background var(--transition-speed) ease;
+  border-bottom: var(--border-width) solid var(--border-color);
+  transition: background var(--transition-speed) var(--ease-default);
 }
 
 .proposal-vote-row:last-child {
@@ -237,7 +237,7 @@
 .proposal-vote-main {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
   min-width: 0;
 }
 
@@ -245,7 +245,7 @@
   width: 4px;
   align-self: stretch;
   min-height: 30px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   flex-shrink: 0;
 }
 
@@ -266,14 +266,14 @@
 }
 
 .proposal-vote-name {
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: var(--text-ui);
+  font-weight: var(--weight-semibold);
   color: var(--text);
   text-decoration: none;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: color var(--transition-speed) ease;
+  transition: color var(--transition-speed) var(--ease-default);
 }
 
 .proposal-vote-name:hover {
@@ -282,7 +282,7 @@
 }
 
 .proposal-vote-name:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: var(--border-width-thick) solid var(--accent);
   outline-offset: 2px;
   border-radius: 3px;
 }
@@ -291,7 +291,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px 8px;
+  gap: var(--space-4) var(--space-8);
   font-size: 0.72rem;
   color: var(--text-secondary);
   opacity: 0.85;
@@ -316,7 +316,7 @@
 
 .proposal-vote-stake {
   font-size: 0.88rem;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   color: var(--text, #ffffff);
@@ -324,21 +324,21 @@
 
 .proposal-vote-unit {
   margin-left: 3px;
-  font-size: 0.7rem;
-  font-weight: 500;
+  font-size: var(--icon-xs);
+  font-weight: var(--weight-medium);
   opacity: 0.6;
 }
 
 .proposal-vote-choice {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.7rem;
-  font-weight: 600;
+  gap: var(--space-4);
+  font-size: var(--icon-xs);
+  font-weight: var(--weight-semibold);
   letter-spacing: 0.03em;
   text-transform: uppercase;
   padding: 2px 7px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   white-space: nowrap;
 }
 
@@ -360,21 +360,21 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-8);
   padding-left: 14px;
 }
 
 .proposal-vote-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   font-size: 0.72rem;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   padding: 3px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   color: #7fb2f0;
   background: rgba(58, 123, 213, 0.16);
-  border: 1px solid rgba(58, 123, 213, 0.35);
+  border: var(--border-width) solid rgba(58, 123, 213, 0.35);
 }
 
 .proposal-vote-badge.own {
@@ -384,13 +384,13 @@
 }
 
 .proposal-vote-badge i {
-  font-size: 0.7rem;
+  font-size: var(--icon-xs);
 }
 
 .proposal-vote-unstake button {
   font-size: 0.72rem !important;
-  padding: 4px 12px !important;
-  border-radius: 999px !important;
+  padding: var(--space-4) var(--space-12) !important;
+  border-radius: var(--radius-pill) !important;
 }
 
 .proposal-vote-reason {
@@ -399,11 +399,11 @@
   padding: 9px 11px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-color);
+  border: var(--border-width) solid var(--border-color);
 }
 
 .proposal-vote-reason p {
-  margin: 0;
+  margin: var(--space-0);
   font-size: 0.82rem;
   line-height: 1.5;
   color: var(--text-secondary);
@@ -423,10 +423,10 @@
   appearance: none;
   border: none;
   background: none;
-  padding: 4px 0 0;
-  margin: 0;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: var(--space-4) var(--space-0) var(--space-0);
+  margin: var(--space-0);
+  font-size: var(--icon-sm);
+  font-weight: var(--weight-semibold);
   color: var(--accent);
   cursor: pointer;
 }
@@ -436,7 +436,7 @@
 }
 
 .proposal-votes-footnote {
-  margin: 0;
+  margin: var(--space-0);
   font-size: 0.72rem;
   line-height: 1.45;
   color: var(--text-secondary);
@@ -597,7 +597,7 @@ body.light-theme .proposal-votes-footnote {
 
   .proposal-votes-filters button {
     flex: 1;
-    padding: 6px 8px;
+    padding: var(--space-6) var(--space-8);
   }
 
   .proposal-votes-sort select {
@@ -613,7 +613,7 @@ body.light-theme .proposal-votes-footnote {
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
-    gap: 8px;
+    gap: var(--space-8);
     padding-left: 14px;
     width: 100%;
     text-align: left;
@@ -650,7 +650,7 @@ body.light-theme .proposal-votes-footnote {
 .proposal-votes-head-meta {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .proposal-votes-refresh {
@@ -660,13 +660,13 @@ body.light-theme .proposal-votes-footnote {
   justify-content: center;
   width: 26px;
   height: 26px;
-  padding: 0;
-  border-radius: 8px;
+  padding: var(--space-0);
+  border-radius: var(--radius-card);
   cursor: pointer;
   color: var(--text-secondary);
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border-color);
-  transition: color var(--transition-speed) ease, background var(--transition-speed) ease;
+  border: var(--border-width) solid var(--border-color);
+  transition: color var(--transition-speed) var(--ease-default), background var(--transition-speed) var(--ease-default);
 }
 
 .proposal-votes-refresh:hover:not(:disabled) {
@@ -680,7 +680,7 @@ body.light-theme .proposal-votes-footnote {
 }
 
 .proposal-votes-refresh:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: var(--border-width-thick) solid var(--accent);
   outline-offset: 1px;
 }
 

@@ -11,7 +11,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn var(--duration-base) ease-out;
 }
 
 @keyframes fadeIn {
@@ -37,22 +37,22 @@
 .modalContent {
   width: 100%;
   max-width: 520px;
-  padding: 32px;
+  padding: var(--space-32);
   background: var(--card-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-modal-module);
   position: relative;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.3s ease-out;
-  margin: 20px;
+  animation: slideUp var(--duration-base) ease-out;
+  margin: var(--space-20);
 }
 
 .modalContent h3 {
   color: var(--text);
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0 0 24px 0;
+  font-size: var(--text-section);
+  font-weight: var(--weight-semibold);
+  margin: var(--space-0) var(--space-0) var(--space-24) var(--space-0);
   text-align: center;
   background: linear-gradient(135deg, #ff6b6b, #ee5a52);
   -webkit-background-clip: text;
@@ -70,16 +70,16 @@
   background: none;
   border: none;
   color: var(--text-secondary);
-  font-size: 1.5rem;
+  font-size: var(--text-section);
   cursor: pointer;
-  padding: 4px;
-  border-radius: 50%;
+  padding: var(--space-4);
+  border-radius: var(--radius-circle);
   width: 32px;
   height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all var(--duration-fast) var(--ease-default);
 }
 
 .modalClose:hover {
@@ -91,7 +91,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-20);
   text-align: center;
 }
 
@@ -99,23 +99,23 @@
   color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.5;
-  margin: 0;
-  padding: 12px;
+  margin: var(--space-0);
+  padding: var(--space-12);
   text-align: center;
 }
 
 .formInput {
   width: 100%;
-  padding: 16px;
+  padding: var(--space-16);
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
   color: var(--text);
-  font-size: 16px;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  transition: all var(--duration-base) var(--ease-default);
   backdrop-filter: blur(10px);
-  margin: 0;
+  margin: var(--space-0);
 }
 
 .formInput:focus {
@@ -138,7 +138,7 @@
 .inputWrapper input[type=number]::-webkit-outer-spin-button,
 .inputWrapper input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
-  margin: 0;
+  margin: var(--space-0);
 }
 
 .inputWrapper input[type=number] {
@@ -155,11 +155,11 @@
   border: none;
   background: transparent;
   color: var(--text-secondary);
-  font-weight: 700;
-  padding: 6px 8px;
+  font-weight: var(--weight-bold);
+  padding: var(--space-6) var(--space-8);
   cursor: pointer;
-  border-radius: 6px;
-  transition: color 0.15s ease, background 0.15s ease;
+  border-radius: var(--radius-button);
+  transition: color 0.15s var(--ease-default), background 0.15s var(--ease-default);
 }
 
 .maxButton:hover {
@@ -169,46 +169,46 @@
 
 .formSubmit {
   color: black;
-  font-weight: bold;
+  font-weight: var(--weight-bold);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--duration-base) var(--ease-default);
   max-width: 150px;
   align-self: center;
 }
 
 .allButton {
-  font-weight: bold;
+  font-weight: var(--weight-bold);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--duration-base) var(--ease-default);
   max-width: 150px;
   align-self: center;
-  border: 1px solid var(--text);
+  border: var(--border-width) solid var(--text);
   padding: 12px 13px;
 }
 
 .unstakeWarning {
   color: #ffa726;
   font-size: 13px;
-  line-height: 1.4;
+  line-height: var(--leading-normal);
   text-align: center;
-  margin: 0;
-  padding: 16px;
+  margin: var(--space-0);
+  padding: var(--space-16);
   background: rgba(255, 167, 38, 0.1);
-  border: 1px solid rgba(255, 167, 38, 0.2);
-  border-radius: 8px;
+  border: var(--border-width) solid rgba(255, 167, 38, 0.2);
+  border-radius: var(--radius-card);
 }
 
 .zeroPadding {
-  padding: 0 !important;
+  padding: var(--space-0) !important;
 }
 
 .zeroMargin {
-  margin: 0 !important;
+  margin: var(--space-0) !important;
 }
 
 .spanLeft {
   align-self: flex-start;
-  padding: 0px !important;
+  padding: var(--space-0) !important;
 }
 
 /* Light theme overrides */
@@ -218,7 +218,7 @@
 
 :global(body.light-theme) .modalContent {
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: var(--border-width) solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
@@ -246,7 +246,7 @@
 
 :global(body.light-theme) .formInput {
   background: #f7fafc;
-  border: 1px solid #e2e8f0;
+  border: var(--border-width) solid #e2e8f0;
   color: #2d3748;
 }
 
@@ -291,13 +291,13 @@
 /* Responsive design */
 @media (max-width: 640px) {
   .modalContent {
-    margin: 10px;
-    padding: 24px;
+    margin: var(--space-10);
+    padding: var(--space-24);
     max-width: 100%;
   }
   
   .modalContent h3 {
-    font-size: 1.3rem;
+    font-size: var(--text-modal-title);
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
@@ -305,7 +305,7 @@
   
   .formInput {
     padding: 14px;
-    font-size: 16px; /* Prevents zoom on iOS */
+    font-size: var(--text-body); /* Prevents zoom on iOS */
   }
   
   .formSubmit {
@@ -313,12 +313,12 @@
   }
   
   .form > span {
-    padding: 10px;
+    padding: var(--space-10);
     font-size: 13px;
   }
   
   .unstakeWarning {
-    padding: 12px;
-    font-size: 12px;
+    padding: var(--space-12);
+    font-size: var(--icon-sm);
   }
 }

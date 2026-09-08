@@ -7,8 +7,8 @@
   position: relative;
   overflow: hidden;
   padding-top: calc(var(--header-h) + var(--page-top-gap));
-  padding-bottom: 40px;
-  transition: background-color 0.5s ease;
+  padding-bottom: var(--space-40);
+  transition: background-color var(--duration-theme) var(--ease-default);
 }
 
 .historic-hero-content {
@@ -16,29 +16,29 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  padding-top: 60px;
+  padding-top: var(--space-60);
 }
 
 .historic-hero-content h1 {
-  font-size: 3.5rem;
-  margin-bottom: 20px;
-  line-height: 1.1;
+  font-size: var(--text-hero-lg);
+  margin-bottom: var(--space-20);
+  line-height: var(--leading-hero);
   color: var(--text);
-  transition: color 0.5s ease;
+  transition: color var(--duration-theme) var(--ease-default);
 }
 
 .historic-hero-content p {
-  font-size: 1.2rem;
+  font-size: var(--text-card-header);
   max-width: 600px;
   color: var(--text-secondary);
-  transition: color 0.5s ease;
+  transition: color var(--duration-theme) var(--ease-default);
 }
 
 /* Search and Filter Controls */
 .historic-controls {
   background: var(--darker-bg);
-  padding: 30px 0;
-  transition: background-color 0.5s ease;
+  padding: var(--space-30) var(--space-0);
+  transition: background-color var(--duration-theme) var(--ease-default);
 }
 
 .search-filter-container {
@@ -51,7 +51,7 @@
 
 .search-filter-group {
   display: flex;
-  gap: 15px;
+  gap: var(--space-15);
   align-items: center;
 }
 
@@ -61,13 +61,13 @@
 
 .search-container input {
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 12px 40px 12px 15px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-control);
+  padding: var(--space-12) var(--space-40) var(--space-12) var(--space-15);
   color: var(--text);
   width: 300px;
-  font-size: 0.95rem;
-  transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+  font-size: var(--text-control);
+  transition: background-color var(--duration-theme) var(--ease-default), border-color var(--duration-theme) var(--ease-default), color var(--duration-theme) var(--ease-default);
 }
 
 .search-container input:focus {
@@ -86,7 +86,7 @@
   color: var(--text);
   opacity: 0.7;
   cursor: pointer;
-  transition: color 0.5s ease;
+  transition: color var(--duration-theme) var(--ease-default);
 }
 
 .search-btn:hover {
@@ -96,18 +96,18 @@
 /* Filter (select) styling */
 .filter-container select {
   background-color: var(--darker-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 12px 15px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-control);
+  padding: var(--space-12) var(--space-15);
   color: var(--text);
   width: 180px;
-  font-size: 0.95rem;
+  font-size: var(--text-control);
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 16px;
-  transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+  transition: background-color var(--duration-theme) var(--ease-default), border-color var(--duration-theme) var(--ease-default), color var(--duration-theme) var(--ease-default);
 }
 
 .filter-container select:focus {
@@ -123,27 +123,27 @@
 
 .historic-stats {
   display: flex;
-  gap: 20px;
+  gap: var(--space-20);
   align-items: center;
 }
 
 .stat-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .stat-label {
   color: var(--text-secondary);
-  font-size: 0.95rem;
-  transition: color 0.5s ease;
+  font-size: var(--text-control);
+  transition: color var(--duration-theme) var(--ease-default);
 }
 
 .stat-value {
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   color: var(--text);
-  font-size: 1rem;
-  transition: color 0.5s ease;
+  font-size: var(--text-body);
+  transition: color var(--duration-theme) var(--ease-default);
 }
 
 .stat-value.accepted {
@@ -156,24 +156,24 @@
 
 .controls-status {
   flex: 0 0 100%;
-  margin-top: 8px;
+  margin-top: var(--space-8);
 }
 
 /* Historic Proposals Section */
 .historic-proposals {
   background: var(--bg);
-  padding: 40px 0 60px;
-  transition: background-color 0.5s ease;
+  padding: var(--space-40) var(--space-0) var(--space-60);
+  transition: background-color var(--duration-theme) var(--ease-default);
 }
 
 /* Proposals Table */
 .proposals-table-container {
   background: var(--card-bg);
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  border: var(--border-width) solid var(--border-color);
   overflow: hidden;
-  margin-bottom: 30px;
-  transition: background-color 0.5s ease, border-color 0.5s ease;
+  margin-bottom: var(--space-30);
+  transition: background-color var(--duration-theme) var(--ease-default), border-color var(--duration-theme) var(--ease-default);
 }
 
 .proposals-table {
@@ -185,8 +185,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  margin-top: 20px;
+  gap: var(--space-10);
+  margin-top: var(--space-20);
 }
 
 .pagination-btn {
@@ -196,10 +196,10 @@
   align-items: center;
   justify-content: center;
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-control);
   color: var(--text);
-  font-size: 0.9rem;
+  font-size: var(--text-ui);
   cursor: pointer;
   transition: var(--transition);
 }
@@ -220,20 +220,20 @@
 
 .proposals-table th {
   background: rgba(0, 0, 0, 0.2);
-  padding: 15px;
+  padding: var(--space-15);
   text-align: left;
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-control);
   color: var(--text);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: var(--border-width) solid var(--border-color);
   position: relative;
   white-space: nowrap;
   vertical-align: middle;
-  transition: color 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
+  transition: color var(--duration-theme) var(--ease-default), background-color var(--duration-theme) var(--ease-default), border-color var(--duration-theme) var(--ease-default);
 }
 
 .proposals-table th i {
-  margin-left: 5px;
+  margin-left: var(--space-5);
   cursor: pointer;
   opacity: 0.7;
   vertical-align: middle;
@@ -241,11 +241,11 @@
 }
 
 .proposals-table td {
-  padding: 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  font-size: 0.95rem;
+  padding: var(--space-15);
+  border-bottom: var(--border-width) solid rgba(255, 255, 255, 0.05);
+  font-size: var(--text-control);
   color: var(--text);
-  transition: color 0.5s ease, border-color 0.5s ease;
+  transition: color var(--duration-theme) var(--ease-default), border-color var(--duration-theme) var(--ease-default);
 }
 
 .proposals-table tbody tr {
@@ -272,17 +272,17 @@
 .creator-address {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .address-icon {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
 }
 
 .proposal-title {
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   max-width: 200px;
   display: inline-block;
   overflow: hidden;
@@ -292,10 +292,10 @@
 
 .proposal-type {
   display: inline-block;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
+  padding: var(--space-4) var(--space-10);
+  border-radius: var(--radius-badge);
+  font-size: var(--text-badge);
+  font-weight: var(--weight-medium);
 }
 
 .proposal-type.ecosystem-parameter-change {
@@ -331,7 +331,7 @@
 .participation-bar {
   height: 10px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  border-radius: var(--radius-control);
   width: 100%;
   max-width: 120px;
   position: relative;
@@ -340,22 +340,22 @@
 .participation-progress {
   height: 100%;
   background: linear-gradient(90deg, #00d2ff, #3a7bd5);
-  border-radius: 4px;
+  border-radius: var(--radius-control);
   transition: width 1s ease-in-out;
 }
 
 .participation-value {
   top: 50%;
   transform: translateY(-50%);
-  font-size: 0.85rem;
+  font-size: var(--text-caption);
   color: var(--text);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   white-space: nowrap;
-  transition: color 0.5s ease;
+  transition: color var(--duration-theme) var(--ease-default);
 }
 
 .exceeding-value {
-  font-weight: 500;
+  font-weight: var(--weight-medium);
 }
 
 .exceeding-value.positive {
@@ -374,13 +374,13 @@
   }
 
   .historic-stats {
-    margin-top: 10px;
+    margin-top: var(--space-10);
   }
 }
 
 @media (max-width: 992px) {
   .historic-hero-content h1 {
-    font-size: 3rem;
+    font-size: var(--text-hero);
   }
 
   .search-filter-group {
@@ -391,11 +391,11 @@
 @media (max-width: 768px) {
   .historic-hero {
     height: auto;
-    padding: calc(var(--header-h) + var(--page-top-gap)) 0 40px;
+    padding: calc(var(--header-h) + var(--page-top-gap)) var(--space-0) var(--space-40);
   }
 
   .historic-hero-content h1 {
-    font-size: 2.5rem;
+    font-size: var(--text-title-xl);
   }
 
   .search-filter-group {
@@ -423,7 +423,7 @@
   .historic-stats {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: var(--space-10);
     align-self: flex-end;
   }
 
@@ -438,11 +438,11 @@
 
 @media (max-width: 576px) {
   .historic-hero {
-    padding: 90px 0 30px;
+    padding: 90px var(--space-0) var(--space-30);
   }
 
   .historic-hero-content h1 {
-    font-size: 2rem;
+    font-size: var(--text-title);
   }
 }
 
@@ -450,7 +450,7 @@
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transition: opacity var(--duration-slow) ease-out, transform var(--duration-slow) ease-out;
 }
 
 .fade-in.visible {

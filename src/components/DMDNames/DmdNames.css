@@ -28,7 +28,7 @@
 }
 
 .hero.hero--with-search .hero-content {
-  margin-bottom: 0;
+  margin-bottom: var(--space-0);
 }
 
 .hero.hero--with-search .hero-visual {
@@ -38,7 +38,7 @@
 
 .hero-search-section {
   width: 100%;
-  margin-top: 40px;
+  margin-top: var(--space-40);
   margin-bottom: 72px;
   position: relative;
   z-index: 2;
@@ -46,30 +46,30 @@
 
 .dmd-search-widget {
   width: 100%;
-  padding: 24px;
+  padding: var(--space-24);
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-panel);
 }
 
 .dmd-search-widget h3 {
-  margin: 0 0 10px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  margin: var(--space-0) var(--space-0) var(--space-10);
+  font-size: var(--text-card-title);
+  font-weight: var(--weight-semibold);
 }
 
 .dmd-search-widget > p {
   margin: 0 0 22px;
-  font-size: 0.9rem;
+  font-size: var(--text-ui);
   color: var(--text-secondary);
 }
 
 .dmd-new-badge {
   display: inline-block;
   padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 700;
+  border-radius: var(--radius-control);
+  font-size: var(--icon-xs);
+  font-weight: var(--weight-bold);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   background: var(--accent);
@@ -81,9 +81,9 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 6px;
-  margin: 10px 0 0 !important;
-  font-size: 0.85rem;
+  gap: var(--space-6);
+  margin: var(--space-10) var(--space-0) var(--space-0) !important;
+  font-size: var(--text-caption);
   color: var(--text-secondary);
 }
 
@@ -94,9 +94,9 @@
 .dmd-search-widget-note-link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   color: var(--accent);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   transition: color var(--transition-speed);
 }
 
@@ -105,18 +105,18 @@
 }
 
 .dmd-search-widget-note-link i {
-  font-size: 0.75rem;
+  font-size: var(--icon-sm);
 }
 
 .dmd-name-search-header h2 {
-  margin: 0 0 4px;
-  font-size: 1rem;
-  font-weight: 600;
+  margin: var(--space-0) var(--space-0) var(--space-4);
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
 }
 
 .dmd-name-search-header p {
-  margin: 0 0 16px;
-  font-size: 0.9rem;
+  margin: var(--space-0) var(--space-0) var(--space-16);
+  font-size: var(--text-ui);
   color: var(--text-secondary);
 }
 
@@ -127,8 +127,8 @@
 .dmd-name-search-input-group {
   display: flex;
   align-items: stretch;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
   overflow: hidden;
   background: rgba(255, 255, 255, 0.03);
 }
@@ -158,8 +158,8 @@
   border: none;
   background: transparent;
   color: var(--text);
-  font-size: 0.95rem;
-  padding: 12px 10px;
+  font-size: var(--text-control);
+  padding: var(--space-12) var(--space-10);
   outline: none;
 }
 
@@ -171,10 +171,10 @@
 .dmd-name-search-suffix {
   display: flex;
   align-items: center;
-  padding: 0 12px;
-  font-size: 0.9rem;
+  padding: var(--space-0) var(--space-12);
+  font-size: var(--text-ui);
   color: var(--text-secondary);
-  border-left: 1px solid var(--border-color);
+  border-left: var(--border-width) solid var(--border-color);
   white-space: nowrap;
 }
 
@@ -186,10 +186,10 @@
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  border-radius: 0 !important;
-  margin: 0 !important;
+  border-radius: var(--radius-none) !important;
+  margin: var(--space-0) !important;
   white-space: nowrap;
-  padding: 12px 20px !important;
+  padding: var(--space-12) var(--space-20) !important;
   flex-shrink: 0;
 }
 
@@ -200,7 +200,7 @@
 .dmd-name-search-submit-loading {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .dmd-name-search--homepage .dmd-name-search-submit {
@@ -213,18 +213,18 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
-  font-size: 0.85rem;
+  gap: var(--space-8);
+  margin-top: var(--space-12);
+  font-size: var(--text-caption);
   color: var(--text-secondary);
 }
 
 .dmd-name-search-examples button {
   background: transparent;
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  padding: 4px 12px;
-  font-size: 0.85rem;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-badge);
+  padding: var(--space-4) var(--space-12);
+  font-size: var(--text-caption);
   color: var(--accent);
   cursor: pointer;
 }
@@ -238,16 +238,16 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px 16px;
-  margin-top: 16px;
+  gap: var(--space-12) var(--space-16);
+  margin-top: var(--space-16);
   padding: 14px 16px;
-  border-radius: 8px;
-  border: 1px solid transparent;
+  border-radius: var(--radius-card);
+  border: var(--border-width) solid transparent;
 }
 
 .dmd-search-result-badge {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
   white-space: nowrap;
 }
 
@@ -257,22 +257,22 @@
 }
 
 .dmd-search-result-body p {
-  margin: 0;
-  font-size: 0.9rem;
+  margin: var(--space-0);
+  font-size: var(--text-ui);
 }
 
 .dmd-search-result-body p + p {
-  margin-top: 4px;
-  font-size: 0.85rem;
+  margin-top: var(--space-4);
+  font-size: var(--text-caption);
   opacity: 0.85;
 }
 
 .dmd-btn-create {
   padding: 8px 18px;
   border: none;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  border-radius: var(--radius-button);
+  font-size: var(--text-ui);
+  font-weight: var(--weight-semibold);
   cursor: pointer;
   background: #07f49e;
   color: #030014;
@@ -319,38 +319,38 @@
   align-items: center;
   position: relative;
   overflow: hidden;
-  padding: calc(var(--header-h) + var(--page-top-gap)) 0 60px;
+  padding: calc(var(--header-h) + var(--page-top-gap)) var(--space-0) var(--space-60);
 }
 
 .dmd-names-hero-content {
   max-width: 800px;
-  margin-top: 20px;
+  margin-top: var(--space-20);
 }
 
 .dmd-names-hero-content h1 {
-  font-size: 3rem;
-  margin: 0 0 16px;
-  line-height: 1.2;
+  font-size: var(--text-hero);
+  margin: var(--space-0) var(--space-0) var(--space-16);
+  line-height: var(--leading-heading);
 }
 
 .dmd-names-hero-content p {
-  font-size: 1.1rem;
+  font-size: var(--text-card-title);
   color: var(--text-secondary);
-  line-height: 1.6;
-  margin: 0;
+  line-height: var(--leading-body);
+  margin: var(--space-0);
   max-width: 720px;
 }
 
 .dmd-names-content {
-  padding: 48px 0 80px;
+  padding: 48px var(--space-0) var(--space-80);
   background: var(--darker-bg);
 }
 
 .dmd-names-search-card {
-  padding: 24px;
+  padding: var(--space-24);
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-panel);
   margin-bottom: 28px;
 }
 
@@ -358,28 +358,28 @@
 .dmd-stat-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: var(--space-16);
   margin-bottom: 28px;
 }
 
 .dmd-stat-card {
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-panel);
+  padding: var(--space-20);
 }
 
 .dmd-stat-card h3 {
-  margin: 0 0 8px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  margin: var(--space-0) var(--space-0) var(--space-8);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
   color: var(--text-secondary);
 }
 
 .dmd-stat-value {
-  margin: 0 0 4px;
-  font-size: 1.5rem;
-  font-weight: 700;
+  margin: var(--space-0) var(--space-0) var(--space-4);
+  font-size: var(--text-section);
+  font-weight: var(--weight-bold);
 }
 
 .dmd-stat-value--link {
@@ -387,18 +387,18 @@
 }
 
 .dmd-stat-sub {
-  margin: 0;
-  font-size: 0.8rem;
+  margin: var(--space-0);
+  font-size: var(--text-badge);
   color: var(--text-secondary);
 }
 
 .dmd-owned-names {
-  margin-bottom: 24px;
+  margin-bottom: var(--space-24);
 }
 
 .dmd-owned-names h2 {
-  margin: 0 0 16px;
-  font-size: 1.1rem;
+  margin: var(--space-0) var(--space-0) var(--space-16);
+  font-size: var(--text-card-title);
 }
 
 .dmd-owned-table-wrapper {
@@ -408,22 +408,22 @@
 .dmd-owned-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: var(--text-ui);
 }
 
 .dmd-owned-table th {
   text-align: left;
-  padding: 10px 12px;
+  padding: var(--space-10) var(--space-12);
   color: var(--text-secondary);
-  font-weight: 500;
-  font-size: 0.8rem;
-  border-bottom: 1px solid var(--border-color);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-badge);
+  border-bottom: var(--border-width) solid var(--border-color);
   white-space: nowrap;
 }
 
 .dmd-owned-table td {
-  padding: 12px;
-  border-bottom: 1px solid var(--border-color);
+  padding: var(--space-12);
+  border-bottom: var(--border-width) solid var(--border-color);
   white-space: nowrap;
 }
 
@@ -433,7 +433,7 @@
 
 .dmd-owned-name-cell a {
   color: var(--accent);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 
 .dmd-owned-actions-cell {
@@ -443,24 +443,24 @@
 .dmd-owned-actions-inner {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .dmd-owned-empty,
 .dmd-owned-loading,
 .dmd-owned-error {
-  margin: 0;
+  margin: var(--space-0);
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: var(--text-ui);
 }
 
 /* Status pill: Active / Inactive / Expiring soon / Expired */
 .dmd-status-pill {
   display: inline-block;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: var(--space-4) var(--space-10);
+  border-radius: var(--radius-badge);
+  font-size: var(--icon-sm);
+  font-weight: var(--weight-semibold);
   white-space: nowrap;
 }
 
@@ -485,11 +485,11 @@
 }
 
 .dmd-table-btn {
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  border: 1px solid var(--border-color);
+  padding: var(--space-6) var(--space-12);
+  border-radius: var(--radius-button);
+  font-size: var(--text-badge);
+  font-weight: var(--weight-semibold);
+  border: var(--border-width) solid var(--border-color);
   background: transparent;
   color: var(--text);
   cursor: pointer;
@@ -515,25 +515,25 @@
   position: fixed;
   min-width: 150px;
   background: linear-gradient(rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.07)), var(--darker-bg);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 8px;
+  border: var(--border-width) solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-card);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   z-index: 1000;
-  padding: 6px;
+  padding: var(--space-6);
 }
 
 .dmd-manage-menu button {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   width: 100%;
-  padding: 8px 10px;
+  padding: var(--space-8) var(--space-10);
   border: none;
   background: transparent;
   color: var(--text);
-  font-size: 0.85rem;
+  font-size: var(--text-caption);
   text-align: left;
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   cursor: pointer;
 }
 
@@ -542,46 +542,46 @@
 }
 
 .dmd-action-hints-title {
-  margin: 0 0 8px;
+  margin: var(--space-0) var(--space-0) var(--space-8);
 }
 
 .dmd-action-hints ul {
   list-style: disc; /* globals.css resets ul { list-style: none } app-wide */
-  margin: 0;
+  margin: var(--space-0);
   padding-left: 18px;
 }
 
 .dmd-action-hints li {
-  margin-bottom: 4px;
+  margin-bottom: var(--space-4);
 }
 
 .dmd-action-hints li:last-child {
-  margin-bottom: 0;
+  margin-bottom: var(--space-0);
 }
 
 .dmd-modal h2 {
-  margin: 0 0 16px;
-  font-size: 1.25rem;
+  margin: var(--space-0) var(--space-0) var(--space-16);
+  font-size: var(--text-subsection);
   line-height: 1.3;
-  padding-right: 24px;
+  padding-right: var(--space-24);
 }
 
 .dmd-form-label {
   display: block;
-  margin: 0 0 6px;
-  font-size: 0.85rem;
+  margin: var(--space-0) var(--space-0) var(--space-6);
+  font-size: var(--text-caption);
   color: var(--text-secondary);
 }
 
 .dmd-form-input {
   width: 100%;
   background: var(--darker-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-button);
   padding: 9px 12px;
   color: var(--text);
-  font-size: 0.95rem;
-  margin-bottom: 4px;
+  font-size: var(--text-control);
+  margin-bottom: var(--space-4);
 }
 
 .dmd-form-input:focus {
@@ -590,22 +590,22 @@
 }
 
 .dmd-form-error {
-  margin: 0 0 16px;
-  font-size: 0.8rem;
+  margin: var(--space-0) var(--space-0) var(--space-16);
+  font-size: var(--text-badge);
   color: #e05252;
 }
 
 .dmd-modal-fees {
-  margin: 0 0 20px;
+  margin: var(--space-0) var(--space-0) var(--space-20);
 }
 
 .dmd-modal-fees-row {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border-color);
-  font-size: 0.95rem;
+  gap: var(--space-16);
+  padding: var(--space-8) var(--space-0);
+  border-bottom: var(--border-width) solid var(--border-color);
+  font-size: var(--text-control);
 }
 
 .dmd-modal-fees-row:last-child {
@@ -613,70 +613,70 @@
 }
 
 .dmd-modal-fees-row dt {
-  margin: 0;
+  margin: var(--space-0);
   color: var(--text-secondary);
 }
 
 .dmd-modal-fees-row dd {
-  margin: 0;
-  font-weight: 500;
+  margin: var(--space-0);
+  font-weight: var(--weight-medium);
 }
 
 .dmd-modal-fees-row-total dd {
-  font-weight: 700;
+  font-weight: var(--weight-bold);
 }
 
 .dmd-fee-schedule {
-  margin: 0 0 20px;
+  margin: var(--space-0) var(--space-0) var(--space-20);
   padding: 14px 16px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
 }
 
 .dmd-fee-schedule h4 {
-  margin: 0 0 10px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  margin: var(--space-0) var(--space-0) var(--space-10);
+  font-size: var(--text-badge);
+  font-weight: var(--weight-semibold);
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 
 .dmd-fee-schedule dl {
-  margin: 0;
+  margin: var(--space-0);
 }
 
 .dmd-fee-schedule-row {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
-  padding: 6px 0;
-  font-size: 0.85rem;
+  gap: var(--space-16);
+  padding: var(--space-6) var(--space-0);
+  font-size: var(--text-caption);
   color: var(--text-secondary);
 }
 
 .dmd-fee-schedule-row dt,
 .dmd-fee-schedule-row dd {
-  margin: 0;
+  margin: var(--space-0);
 }
 
 .dmd-fee-schedule-row--current {
   color: var(--text);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 
 .dmd-modal-notice {
   display: flex;
-  gap: 10px;
+  gap: var(--space-10);
   padding: 12px 14px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 0.9rem;
+  border-radius: var(--radius-card);
+  margin-bottom: var(--space-20);
+  font-size: var(--text-ui);
   line-height: 1.5;
 }
 
 .dmd-modal-notice p {
-  margin: 0;
+  margin: var(--space-0);
 }
 
 .dmd-modal-notice i {
@@ -686,7 +686,7 @@
 
 .dmd-modal-notice-info {
   background: rgba(58, 123, 213, 0.1);
-  border: 1px solid rgba(58, 123, 213, 0.25);
+  border: var(--border-width) solid rgba(58, 123, 213, 0.25);
   color: var(--text);
 }
 
@@ -696,7 +696,7 @@
 
 .dmd-modal-notice-warn {
   background: rgba(255, 165, 0, 0.1);
-  border: 1px solid rgba(255, 165, 0, 0.3);
+  border: var(--border-width) solid rgba(255, 165, 0, 0.3);
 }
 
 .dmd-modal-notice-warn i {
@@ -705,7 +705,7 @@
 
 .dmd-modal-notice-success {
   background: rgba(7, 244, 158, 0.1);
-  border: 1px solid rgba(7, 244, 158, 0.3);
+  border: var(--border-width) solid rgba(7, 244, 158, 0.3);
 }
 
 .dmd-modal-notice-success i {
@@ -715,17 +715,17 @@
 .dmd-modal-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--space-12);
   justify-content: flex-end;
 }
 
 .dmd-modal-pending-card {
   display: flex;
   gap: 14px;
-  padding: 16px;
-  margin-bottom: 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  padding: var(--space-16);
+  margin-bottom: var(--space-12);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
   background: rgba(255, 255, 255, 0.03);
 }
 
@@ -735,9 +735,9 @@
   width: 22px;
   height: 22px;
   margin-top: 2px;
-  border: 2px solid var(--border-color);
+  border: var(--border-width-thick) solid var(--border-color);
   border-top-color: var(--accent);
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   transform-origin: center;
   animation: dmd-modal-spin 0.7s linear infinite;
 }
@@ -749,16 +749,16 @@
 }
 
 .dmd-modal-pending-card p {
-  margin: 4px 0 0;
-  font-size: 0.9rem;
+  margin: var(--space-4) var(--space-0) var(--space-0);
+  font-size: var(--text-ui);
   color: var(--text-secondary);
 }
 
 .dmd-modal-success-icon,
 .dmd-modal-error-icon {
   text-align: center;
-  font-size: 2.5rem;
-  margin-bottom: 12px;
+  font-size: var(--text-title-xl);
+  margin-bottom: var(--space-12);
 }
 
 .dmd-modal-success-icon {
@@ -779,7 +779,7 @@
 .dmd-modal-error p {
   text-align: center;
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: var(--text-control);
 }
 
 body.light-theme .dmd-search-widget,
@@ -836,10 +836,10 @@ body.light-theme .dmd-name-search-input-group input:focus {
 .dmd-history-back {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: var(--space-8);
+  margin-bottom: var(--space-20);
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: var(--text-ui);
 }
 
 .dmd-history-back:hover {
@@ -851,12 +851,12 @@ body.light-theme .dmd-name-search-input-group input:focus {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 16px;
-  padding: 20px 24px;
+  gap: var(--space-16);
+  padding: var(--space-20) var(--space-24);
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  margin-bottom: 20px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-panel);
+  margin-bottom: var(--space-20);
 }
 
 .dmd-history-title {
@@ -872,57 +872,57 @@ body.light-theme .dmd-name-search-input-group input:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
   background: rgba(58, 123, 213, 0.12);
   color: var(--accent);
-  font-size: 1.1rem;
+  font-size: var(--text-card-title);
 }
 
 .dmd-history-title h1 {
-  margin: 0;
-  font-size: 1.3rem;
+  margin: var(--space-0);
+  font-size: var(--text-modal-title);
 }
 
 .dmd-history-title span {
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
   color: var(--text-secondary);
 }
 
 .dmd-history-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: var(--space-16);
   margin-bottom: 28px;
 }
 
 .dmd-history-stat {
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-panel);
   padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-6);
 }
 
 .dmd-history-stat span {
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
   color: var(--text-secondary);
 }
 
 .dmd-history-stat strong {
-  font-size: 0.95rem;
+  font-size: var(--text-control);
 }
 
 .dmd-history-address {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
 }
 
 .dmd-history-address a {
   color: var(--accent);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 
 .dmd-history-copy-btn {
@@ -931,7 +931,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   color: var(--text-secondary);
   cursor: pointer;
   padding: 2px;
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
 }
 
 .dmd-history-copy-btn:hover {
@@ -945,14 +945,14 @@ body.light-theme .dmd-name-search-input-group input:focus {
 
 .dmd-history-timeline-section h2,
 .dmd-history-transfers-section h2 {
-  margin: 0 0 16px;
-  font-size: 1.1rem;
+  margin: var(--space-0) var(--space-0) var(--space-16);
+  font-size: var(--text-card-title);
 }
 
 .dmd-history-timeline {
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-panel);
   overflow: hidden;
 }
 
@@ -960,10 +960,10 @@ body.light-theme .dmd-name-search-input-group input:focus {
   display: grid;
   grid-template-columns: auto 180px 1fr auto;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-16);
   padding: 14px 18px;
-  border-bottom: 1px solid var(--border-color);
-  font-size: 0.9rem;
+  border-bottom: var(--border-width) solid var(--border-color);
+  font-size: var(--text-ui);
 }
 
 .dmd-history-event:last-child {
@@ -976,8 +976,8 @@ body.light-theme .dmd-name-search-input-group input:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  font-size: 0.85rem;
+  border-radius: var(--radius-circle);
+  font-size: var(--text-caption);
   flex-shrink: 0;
 }
 
@@ -989,7 +989,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
 .dmd-history-event-icon--other { background: rgba(255, 255, 255, 0.08); color: var(--text-secondary); }
 
 .dmd-history-event-label {
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   white-space: nowrap;
 }
 
@@ -1005,25 +1005,25 @@ body.light-theme .dmd-name-search-input-group input:focus {
 
 .dmd-history-event-time {
   color: var(--text-secondary);
-  font-size: 0.85rem;
+  font-size: var(--text-caption);
   white-space: nowrap;
 }
 
 .dmd-directory-toolbar {
   display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: var(--space-12);
+  margin-bottom: var(--space-16);
 }
 
 .dmd-directory-search {
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
   padding: 10px 14px;
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
 }
 
 .dmd-directory-search i {
@@ -1036,21 +1036,21 @@ body.light-theme .dmd-name-search-input-group input:focus {
   border: none;
   outline: none;
   color: var(--text);
-  font-size: 0.9rem;
+  font-size: var(--text-ui);
 }
 
 .dmd-directory-filter-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   white-space: nowrap;
 }
 
 .dmd-directory-table-wrapper {
-  margin-bottom: 16px;
+  margin-bottom: var(--space-16);
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-panel);
 }
 
 .dmd-directory-table-wrapper .dmd-owned-table th:first-child,
@@ -1061,40 +1061,40 @@ body.light-theme .dmd-name-search-input-group input:focus {
 .dmd-directory-filter-modal h2 {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .dmd-directory-filter-group {
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--space-20);
+  padding-bottom: var(--space-20);
+  border-bottom: var(--border-width) solid var(--border-color);
 }
 
 .dmd-directory-filter-group--last {
-  margin-bottom: 24px;
-  padding-bottom: 0;
+  margin-bottom: var(--space-24);
+  padding-bottom: var(--space-0);
   border-bottom: none;
 }
 
 .dmd-directory-filter-group h4 {
-  margin: 0 0 12px;
-  font-size: 0.8rem;
+  margin: var(--space-0) var(--space-0) var(--space-12);
+  font-size: var(--text-badge);
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 
 .dmd-directory-filter-group label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  margin-bottom: 10px;
+  gap: var(--space-8);
+  font-size: var(--text-ui);
+  margin-bottom: var(--space-10);
 }
 
 .dmd-directory-filter-group label:last-child {
-  margin-bottom: 0;
+  margin-bottom: var(--space-0);
 }
 
 .dmd-directory-filter-group input[type="checkbox"] {
@@ -1105,14 +1105,14 @@ body.light-theme .dmd-name-search-input-group input:focus {
 
 .dmd-directory-filter-daterow {
   display: flex;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .dmd-directory-filter-daterow label {
   flex: 1;
   flex-direction: column;
   align-items: stretch;
-  gap: 6px;
+  gap: var(--space-6);
 }
 
 .dmd-datefield {
@@ -1124,19 +1124,19 @@ body.light-theme .dmd-name-search-input-group input:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-8);
   background: var(--darker-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-button);
   padding: 7px 10px;
   color: var(--text);
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
   cursor: pointer;
 }
 
 .dmd-datefield-input i {
   color: var(--text-secondary);
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
 }
 
 .dmd-datefield-placeholder {
@@ -1150,7 +1150,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   z-index: 20;
   width: 240px;
   background: var(--darker-bg);
-  border: 1px solid var(--border-color);
+  border: var(--border-width) solid var(--border-color);
   border-radius: 10px;
   padding: 14px;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
@@ -1160,9 +1160,9 @@ body.light-theme .dmd-name-search-input-group input:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  margin-bottom: var(--space-10);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
 }
 
 .dmd-datefield-header button {
@@ -1170,7 +1170,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   border: none;
   color: var(--text-secondary);
   cursor: pointer;
-  padding: 4px;
+  padding: var(--space-4);
 }
 
 .dmd-datefield-header button:hover {
@@ -1180,12 +1180,12 @@ body.light-theme .dmd-name-search-input-group input:focus {
 .dmd-datefield-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  margin-bottom: 4px;
+  margin-bottom: var(--space-4);
 }
 
 .dmd-datefield-weekdays span {
   text-align: center;
-  font-size: 0.7rem;
+  font-size: var(--icon-xs);
   color: var(--text-secondary);
 }
 
@@ -1202,7 +1202,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   justify-content: center;
   background: none;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   color: var(--text);
   font-size: 0.78rem;
   cursor: pointer;
@@ -1218,7 +1218,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
 }
 
 .dmd-datefield-day--today {
-  border: 1px solid var(--accent);
+  border: var(--border-width) solid var(--accent);
 }
 
 .dmd-datefield-day--selected {
@@ -1228,13 +1228,13 @@ body.light-theme .dmd-name-search-input-group input:focus {
 
 .dmd-datefield-clear {
   width: 100%;
-  margin-top: 10px;
-  padding-top: 10px;
+  margin-top: var(--space-10);
+  padding-top: var(--space-10);
   border: none;
-  border-top: 1px solid var(--border-color);
+  border-top: var(--border-width) solid var(--border-color);
   background: none;
   color: var(--text-secondary);
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
   cursor: pointer;
 }
 
@@ -1247,15 +1247,15 @@ body.light-theme .dmd-name-search-input-group input:focus {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 16px;
-  font-size: 0.85rem;
+  gap: var(--space-16);
+  font-size: var(--text-caption);
   color: var(--text-secondary);
 }
 
 .dmd-directory-sort {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .dmd-selectfield {
@@ -1266,18 +1266,18 @@ body.light-theme .dmd-name-search-input-group input:focus {
 .dmd-selectfield-input {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 6px 10px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-button);
+  padding: var(--space-6) var(--space-10);
   color: var(--text);
-  font-size: 0.85rem;
+  font-size: var(--text-caption);
   cursor: pointer;
 }
 
 .dmd-selectfield-input i {
-  font-size: 0.7rem;
+  font-size: var(--icon-xs);
   color: var(--text-secondary);
 }
 
@@ -1288,9 +1288,9 @@ body.light-theme .dmd-name-search-input-group input:focus {
   z-index: 20;
   min-width: 100%;
   background: var(--darker-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 6px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
+  padding: var(--space-6);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
@@ -1301,10 +1301,10 @@ body.light-theme .dmd-name-search-input-group input:focus {
 .dmd-selectfield-option {
   background: none;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   padding: 7px 10px;
   color: var(--text);
-  font-size: 0.85rem;
+  font-size: var(--text-caption);
   text-align: left;
   cursor: pointer;
 }
@@ -1321,7 +1321,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
 .dmd-directory-pagination {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .dmd-directory-pagination button {
@@ -1330,7 +1330,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   color: var(--text);
   cursor: pointer;
 }
@@ -1352,7 +1352,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   }
 
   .hero.hero--with-search .hero-top {
-    padding-top: 0;
+    padding-top: var(--space-0);
   }
 
   .hero.hero--with-search .hero-visual {
@@ -1361,7 +1361,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   }
 
   .hero-search-section {
-    margin-top: 24px;
+    margin-top: var(--space-24);
     margin-bottom: 48px;
   }
 
@@ -1371,14 +1371,14 @@ body.light-theme .dmd-name-search-input-group input:focus {
 
   .dmd-name-search--page .dmd-name-search-suffix {
     border-left: none;
-    border-top: 1px solid var(--border-color);
+    border-top: var(--border-width) solid var(--border-color);
     width: 100%;
     justify-content: flex-end;
   }
 
   .dmd-name-search--page .dmd-name-search-submit {
     width: 100%;
-    border-radius: 0 0 8px 8px !important;
+    border-radius: var(--radius-none) var(--radius-none) var(--radius-card) var(--radius-card) !important;
   }
 
   .dmd-name-search--homepage .dmd-name-search-input-group {
@@ -1411,7 +1411,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   }
 
   .dmd-names-hero-content h1 {
-    font-size: 2rem;
+    font-size: var(--text-title);
   }
 
   .dmd-modal-actions {
@@ -1455,7 +1455,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .dmd-form-textarea {
@@ -1471,8 +1471,8 @@ body.light-theme .dmd-name-search-input-group input:focus {
 }
 
 .dmd-form-hint {
-  margin: 0 0 16px;
-  font-size: 0.75rem;
+  margin: var(--space-0) var(--space-0) var(--space-16);
+  font-size: var(--icon-sm);
   color: var(--text-secondary);
   opacity: 0.7;
   text-align: right;
@@ -1480,13 +1480,13 @@ body.light-theme .dmd-name-search-input-group input:focus {
 
 .dmd-form-required,
 .dmd-form-optional {
-  margin-left: 6px;
-  font-size: 0.7rem;
-  font-weight: 600;
+  margin-left: var(--space-6);
+  font-size: var(--icon-xs);
+  font-weight: var(--weight-semibold);
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  padding: 1px 6px;
-  border-radius: 999px;
+  padding: 1px var(--space-6);
+  border-radius: var(--radius-pill);
 }
 
 .dmd-form-required {
@@ -1500,15 +1500,15 @@ body.light-theme .dmd-name-search-input-group input:focus {
 }
 
 .dmd-report-preview {
-  margin: 0 0 20px;
+  margin: var(--space-0) var(--space-0) var(--space-20);
   padding: 12px 14px;
   max-height: 220px;
   overflow: auto;
-  border-radius: 8px;
+  border-radius: var(--radius-card);
   background: var(--darker-bg);
-  border: 1px solid var(--border-color);
+  border: var(--border-width) solid var(--border-color);
   color: var(--text-secondary);
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
   line-height: 1.5;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -1540,7 +1540,7 @@ body.light-theme .dmd-report-preview {
 
 .dmd-dns-tag {
   display: inline-block;
-  font-size: 0.8rem;
+  font-size: var(--text-badge);
   white-space: nowrap;
 }
 
@@ -1554,14 +1554,14 @@ body.light-theme .dmd-report-preview {
 
 .dmd-dns-tag--configured {
   color: var(--accent);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 
 .dmd-dns-modal {
   max-height: calc(100vh - 120px);
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 6px;
+  padding-right: var(--space-6);
   margin-right: -6px;
 }
 
@@ -1569,33 +1569,33 @@ body.light-theme .dmd-report-preview {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin: 0 0 16px;
+  gap: var(--space-12);
+  margin: var(--space-0) var(--space-0) var(--space-16);
   padding: 12px 14px;
-  border-radius: 8px;
+  border-radius: var(--radius-card);
   background: var(--darker-bg);
-  border: 1px solid var(--border-color);
+  border: var(--border-width) solid var(--border-color);
 }
 
 .dmd-dns-hostname-label {
   display: block;
-  font-size: 0.75rem;
+  font-size: var(--icon-sm);
   color: var(--text-secondary);
   margin-bottom: 2px;
 }
 
 .dmd-dns-hostname-value {
   display: block;
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: var(--text-control);
+  font-weight: var(--weight-semibold);
   overflow-wrap: anywhere;
 }
 
 .dmd-dns-link-toggle {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  margin: 0 0 20px;
+  gap: var(--space-10);
+  margin: var(--space-0) var(--space-0) var(--space-20);
   cursor: pointer;
 }
 
@@ -1606,7 +1606,7 @@ body.light-theme .dmd-report-preview {
 
 .dmd-dns-link-toggle strong {
   display: block;
-  font-size: 0.9rem;
+  font-size: var(--text-ui);
   margin-bottom: 2px;
 }
 
@@ -1614,46 +1614,46 @@ body.light-theme .dmd-report-preview {
   display: block;
   font-size: 0.78rem;
   color: var(--text-secondary);
-  line-height: 1.4;
+  line-height: var(--leading-normal);
 }
 
 .dmd-dns-section {
-  margin: 0 0 20px;
+  margin: var(--space-0) var(--space-0) var(--space-20);
   padding: 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  border: var(--border-width) solid var(--border-color);
 }
 
 .dmd-dns-section h4 {
-  margin: 0 0 4px;
-  font-size: 0.9rem;
+  margin: var(--space-0) var(--space-0) var(--space-4);
+  font-size: var(--text-ui);
 }
 
 .dmd-dns-section-hint {
-  margin: 0 0 12px;
+  margin: var(--space-0) var(--space-0) var(--space-12);
   font-size: 0.78rem;
   color: var(--text-secondary);
-  line-height: 1.4;
+  line-height: var(--leading-normal);
 }
 
 .dmd-dns-section-note {
-  margin: 4px 0 0;
-  font-size: 0.75rem;
+  margin: var(--space-4) var(--space-0) var(--space-0);
+  font-size: var(--icon-sm);
   color: var(--text-secondary);
   opacity: 0.7;
 }
 
 .dmd-dns-empty {
-  margin: 0 0 12px;
-  font-size: 0.8rem;
+  margin: var(--space-0) var(--space-0) var(--space-12);
+  font-size: var(--text-badge);
   color: var(--text-secondary);
 }
 
 .dmd-dns-mx-row {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: var(--space-10);
+  margin-bottom: var(--space-12);
 }
 
 .dmd-dns-mx-priority {
@@ -1670,8 +1670,8 @@ body.light-theme .dmd-report-preview {
   margin-top: 26px;
   width: 34px;
   height: 34px;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
+  border-radius: var(--radius-button);
+  border: var(--border-width) solid var(--border-color);
   background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
@@ -1685,12 +1685,12 @@ body.light-theme .dmd-report-preview {
 .dmd-dns-add-mx {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
 }
 
 .dmd-dns-disabled-note {
-  margin: 0 0 20px;
-  font-size: 0.85rem;
+  margin: var(--space-0) var(--space-0) var(--space-20);
+  font-size: var(--text-caption);
   color: var(--text-secondary);
 }
 
@@ -1738,6 +1738,6 @@ body.light-theme .dmd-dns-mx-remove {
   }
 
   .dmd-dns-mx-remove {
-    margin-top: 0;
+    margin-top: var(--space-0);
   }
 }

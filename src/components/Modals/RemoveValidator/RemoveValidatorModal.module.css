@@ -10,7 +10,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn var(--duration-base) ease-out;
 }
 
 @keyframes fadeIn {
@@ -26,22 +26,22 @@
 .modalContent {
   width: 100%;
   max-width: 520px;
-  padding: 32px;
+  padding: var(--space-32);
   background: var(--card-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-modal-module);
   position: relative;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.3s ease-out;
-  margin: 20px;
+  animation: slideUp var(--duration-base) ease-out;
+  margin: var(--space-20);
 }
 
 .modalContent h3 {
   color: var(--text);
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0 0 24px 0;
+  font-size: var(--text-section);
+  font-weight: var(--weight-semibold);
+  margin: var(--space-0) var(--space-0) var(--space-24) var(--space-0);
   text-align: center;
   overflow: hidden;
   white-space: nowrap;
@@ -49,37 +49,37 @@
 }
 
 .headerTitle {
-  margin-top: 4px;
+  margin-top: var(--space-4);
 }
 
 .addressLine {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: var(--text-control);
   text-align: center;
   margin-bottom: 18px;
 }
 
 .importantBlock {
-  border: 1px solid rgba(255, 167, 38, 0.25);
+  border: var(--border-width) solid rgba(255, 167, 38, 0.25);
   background: rgba(255, 167, 38, 0.08);
   border-radius: 10px;
   padding: 14px 16px;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-16);
 }
 
 .importantIcon {
-  margin-right: 8px;
+  margin-right: var(--space-8);
 }
 
 .importantLabel {
-  font-weight: 700;
-  margin-right: 6px;
+  font-weight: var(--weight-bold);
+  margin-right: var(--space-6);
 }
 
 .importantText {
   color: var(--text-secondary);
-  font-size: 0.95rem;
-  margin: 6px 0 0 0;
+  font-size: var(--text-control);
+  margin: var(--space-6) var(--space-0) var(--space-0) var(--space-0);
 }
 
 .modalClose {
@@ -89,16 +89,16 @@
   background: none;
   border: none;
   color: var(--text-secondary);
-  font-size: 1.5rem;
+  font-size: var(--text-section);
   cursor: pointer;
-  padding: 4px;
-  border-radius: 50%;
+  padding: var(--space-4);
+  border-radius: var(--radius-circle);
   width: 32px;
   height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all var(--duration-fast) var(--ease-default);
 }
 
 .modalClose:hover {
@@ -110,26 +110,26 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-20);
   text-align: center;
 }
 
 .confirmLabel {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: var(--text-control);
   word-wrap: break-word;
 }
 
 .formInput {
   width: 100%;
-  padding: 16px;
+  padding: var(--space-16);
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
   color: var(--text);
-  font-size: 16px;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  transition: all var(--duration-base) var(--ease-default);
   backdrop-filter: blur(10px);
 }
 
@@ -142,9 +142,9 @@
 
 .formSubmit {
   color: black;
-  font-weight: bold;
+  font-weight: var(--weight-bold);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--duration-base) var(--ease-default);
   max-width: 150px;
   align-self: center;
 }
@@ -152,13 +152,13 @@
 .unstakeWarning {
   color: #ffa726;
   font-size: 13px;
-  line-height: 1.4;
+  line-height: var(--leading-normal);
   text-align: center;
-  margin: 0;
-  padding: 16px;
+  margin: var(--space-0);
+  padding: var(--space-16);
   background: rgba(255, 167, 38, 0.1);
-  border: 1px solid rgba(255, 167, 38, 0.2);
-  border-radius: 8px;
+  border: var(--border-width) solid rgba(255, 167, 38, 0.2);
+  border-radius: var(--radius-card);
 }
 
 /* Light theme overrides */
@@ -168,7 +168,7 @@
 
 :global(body.light-theme) .modalContent {
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: var(--border-width) solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
@@ -188,7 +188,7 @@
 
 :global(body.light-theme) .formInput {
   background: #f7fafc;
-  border: 1px solid #e2e8f0;
+  border: var(--border-width) solid #e2e8f0;
   color: #2d3748;
 }
 
@@ -207,13 +207,13 @@
 /* Responsive */
 @media (max-width: 640px) {
   .modalContent {
-    margin: 10px;
-    padding: 24px;
+    margin: var(--space-10);
+    padding: var(--space-24);
     max-width: 100%;
   }
   .formInput {
     padding: 14px;
-    font-size: 16px;
+    font-size: var(--text-body);
   }
   .formSubmit {
     padding: 14px 24px;
