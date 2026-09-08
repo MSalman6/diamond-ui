@@ -51,7 +51,7 @@
 }
 
 .filter-button {
-  padding: 6px 14px;
+  padding: var(--space-6) 14px;
   border-radius: var(--radius-badge);
   border: var(--border-width) solid var(--border-color);
   background: transparent;

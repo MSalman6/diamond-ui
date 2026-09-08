@@ -339,7 +339,7 @@ body.light-theme .vl-table-scroll-btn:hover {
 
 .cr-value {
   display: inline-block;
-  padding: 3px 8px;
+  padding: 3px var(--space-8);
   border-radius: var(--radius-control);
   font-weight: var(--weight-medium);
   text-align: center;
@@ -1556,7 +1556,7 @@ body.light-theme .vl-pagination-info { color: #6b7280; }
   white-space: nowrap;
 }
 .vl-per-page select {
-  padding: 3px 8px;
+  padding: 3px var(--space-8);
   border-radius: var(--radius-button);
   border: var(--border-width) solid var(--border-color);
   background: var(--card-bg);

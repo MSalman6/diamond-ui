@@ -101,7 +101,7 @@ body.light-theme .rewards-history-list-section {
 
 .rewards-history-table th {
   text-align: left;
-  padding: 10px 14px;
+  padding: var(--space-10) 14px;
   color: var(--text-secondary);
   font-weight: var(--weight-semibold);
   border-bottom: var(--border-width) solid var(--border-color);
@@ -116,7 +116,7 @@ body.light-theme .rewards-history-table th {
 }
 
 .rewards-history-table td {
-  padding: 10px 14px;
+  padding: var(--space-10) 14px;
   color: var(--text);
   border-bottom: var(--border-width) solid var(--border-color);
 }

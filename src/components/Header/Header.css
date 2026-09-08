@@ -210,7 +210,7 @@ header .cta-button {
   justify-content: space-between;
   align-items: baseline;
   gap: var(--space-16);
-  padding: 3px 0;
+  padding: 3px var(--space-0);
   font-size: 0.82rem;
 }
 
@@ -390,7 +390,7 @@ body.light-theme .hdr-balance-row dd {
   }
 
   header {
-    padding: 11px 0;
+    padding: 11px var(--space-0);
   }
 
   .logo-img {

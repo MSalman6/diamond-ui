@@ -32,7 +32,7 @@
   display: inline-flex;
   align-items: center;
   height: 35px;
-  padding: 5px 14px;
+  padding: var(--space-5) 14px;
   border-radius: var(--radius-badge);
   font-size: var(--text-control);
   font-weight: var(--weight-medium);
@@ -69,7 +69,7 @@
 
 .share-menu.is-positioned {
   visibility: visible;
-  animation: share-menu-in 0.18s ease;
+  animation: share-menu-in 0.18s var(--ease-default);
 }
 
 .share-menu--top.is-positioned {

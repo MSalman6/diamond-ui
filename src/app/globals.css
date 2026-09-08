@@ -511,7 +511,7 @@ input[type="range"]::-webkit-slider-runnable-track {
 form button {
   cursor: pointer;
   align-self: center;
-  padding: 8px 14px;
+  padding: var(--space-8) 14px;
   border: var(--border-width) solid var(--diamond-1-color);
   color: var(--text);
   text-decoration: none;
@@ -2642,7 +2642,7 @@ footer {
 
   .mobile-wallet-container .cta-button {
     width: 100%;
-    padding: 14px 16px;
+    padding: 14px var(--space-16);
     font-size: 1.05rem;
     border: var(--border-width) solid var(--border-color);
     border-radius: var(--radius-card);
@@ -2651,7 +2651,7 @@ footer {
   .mobile-wallet-container .user-wallet-info .dropdown-toggle {
     justify-content: center;
     gap: var(--space-10);
-    padding: 14px 16px;
+    padding: 14px var(--space-16);
     border: var(--border-width) solid var(--border-color);
     border-radius: var(--radius-card);
   }

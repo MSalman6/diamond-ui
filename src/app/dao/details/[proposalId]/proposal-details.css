@@ -68,7 +68,7 @@
   gap: var(--space-6);
   display: flex;
   align-items: center;
-  padding: 5px 14px;
+  padding: var(--space-5) 14px;
   border-radius: var(--radius-badge);
   font-size: var(--text-control);
   font-weight: var(--weight-medium);
@@ -629,7 +629,7 @@ body.light-theme .parameter-description {
 
 .special-indicator {
   font-size: var(--text-ui);
-  padding: 2px 8px;
+  padding: 2px var(--space-8);
   border-radius: var(--radius-control);
   font-weight: var(--weight-medium);
 }
@@ -1070,7 +1070,7 @@ body.light-theme .parameter-description {
   top: 0;
   height: 100%;
   background: linear-gradient(90deg, #16a085, #2ecc71);
-  border-radius: 15px 0 0 15px;
+  border-radius: 15px var(--radius-none) var(--radius-none) 15px;
 }
 
 .progress-no {

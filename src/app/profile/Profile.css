@@ -831,7 +831,7 @@ body.light-theme .vp2-rewards-performance {
 }
 
 .dp2-tfoot-row td {
-  padding: 0.8rem 1rem;
+  padding: 0.8rem var(--space-16);
   font-size: 0.82rem;
   border-top: var(--border-width-thick) solid var(--border-color);
   color: var(--text-secondary, rgba(255, 255, 255, 0.6));
@@ -965,7 +965,7 @@ body.light-theme .dp2-tfoot-rewards-value {
 
 .validator-identity .profile-dmd-name {
   font-size: var(--text-modal-title);
-  margin: 0 0 2px;
+  margin: var(--space-0) var(--space-0) 2px;
 }
 
 .profile-wallet-row {

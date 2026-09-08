@@ -183,7 +183,7 @@
   max-width: 150px;
   align-self: center;
   border: var(--border-width) solid var(--text);
-  padding: 12px 13px;
+  padding: var(--space-12) 13px;
 }
 
 .unstakeWarning {
@@ -309,7 +309,7 @@
   }
   
   .formSubmit {
-    padding: 14px 24px;
+    padding: 14px var(--space-24);
   }
   
   .form > span {

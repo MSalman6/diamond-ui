@@ -417,7 +417,7 @@
   }
   
   .stat-card {
-    padding: 18px 15px;
+    padding: 18px var(--space-15);
   }
   
   .stat-value {
@@ -469,7 +469,7 @@
   .wiki-stats {
     grid-template-columns: 1fr;
     gap: var(--space-12);
-    margin: 18px 0;
+    margin: 18px var(--space-0);
   }
   
   .stat-card {
@@ -481,7 +481,7 @@
   }
   
   .market-info {
-    padding: 20px 18px;
+    padding: var(--space-20) 18px;
   }
   
   .features-list li,

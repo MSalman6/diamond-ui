@@ -93,7 +93,7 @@
   background: rgba(255, 255, 255, 0.06);
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-card);
-  padding: 6px 26px 6px 10px;
+  padding: var(--space-6) 26px var(--space-6) var(--space-10);
   cursor: pointer;
   background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
   background-position: calc(100% - 14px) 52%, calc(100% - 9px) 52%;
@@ -153,7 +153,7 @@
   justify-content: center;
   gap: var(--space-10);
   min-height: 110px;
-  padding: 18px 12px;
+  padding: 18px var(--space-12);
   text-align: center;
   font-size: var(--text-caption);
   color: var(--text-secondary);
@@ -211,7 +211,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
-  padding: 11px 8px;
+  padding: 11px var(--space-8);
   border-bottom: var(--border-width) solid var(--border-color);
   transition: background var(--transition-speed) var(--ease-default);
 }

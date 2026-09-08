@@ -59,14 +59,14 @@
 }
 
 .dmd-search-widget > p {
-  margin: 0 0 22px;
+  margin: var(--space-0) var(--space-0) 22px;
   font-size: var(--text-ui);
   color: var(--text-secondary);
 }
 
 .dmd-new-badge {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 2px var(--space-8);
   border-radius: var(--radius-control);
   font-size: var(--icon-xs);
   font-weight: var(--weight-bold);
@@ -148,7 +148,7 @@
   align-items: center;
   justify-content: center;
   align-self: center;
-  padding: 0 14px;
+  padding: var(--space-0) 14px;
   color: var(--text-secondary);
 }
 
@@ -165,7 +165,7 @@
 
 .dmd-name-search--homepage .dmd-name-search-input-group input {
   grid-column: 2;
-  padding: 14px 10px;
+  padding: 14px var(--space-10);
 }
 
 .dmd-name-search-suffix {
@@ -205,8 +205,8 @@
 
 .dmd-name-search--homepage .dmd-name-search-submit {
   grid-column: 4;
-  padding: 14px 24px !important;
-  border-radius: 0 7px 7px 0 !important;
+  padding: 14px var(--space-24) !important;
+  border-radius: var(--radius-none) 7px 7px var(--radius-none) !important;
 }
 
 .dmd-name-search-examples {
@@ -240,7 +240,7 @@
   flex-wrap: wrap;
   gap: var(--space-12) var(--space-16);
   margin-top: var(--space-16);
-  padding: 14px 16px;
+  padding: 14px var(--space-16);
   border-radius: var(--radius-card);
   border: var(--border-width) solid transparent;
 }
@@ -268,7 +268,7 @@
 }
 
 .dmd-btn-create {
-  padding: 8px 18px;
+  padding: var(--space-8) 18px;
   border: none;
   border-radius: var(--radius-button);
   font-size: var(--text-ui);
@@ -578,7 +578,7 @@
   background: var(--darker-bg);
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-button);
-  padding: 9px 12px;
+  padding: 9px var(--space-12);
   color: var(--text);
   font-size: var(--text-control);
   margin-bottom: var(--space-4);
@@ -628,7 +628,7 @@
 
 .dmd-fee-schedule {
   margin: var(--space-0) var(--space-0) var(--space-20);
-  padding: 14px 16px;
+  padding: 14px var(--space-16);
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-card);
 }
@@ -668,7 +668,7 @@
 .dmd-modal-notice {
   display: flex;
   gap: var(--space-10);
-  padding: 12px 14px;
+  padding: var(--space-12) 14px;
   border-radius: var(--radius-card);
   margin-bottom: var(--space-20);
   font-size: var(--text-ui);
@@ -899,7 +899,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   background: var(--card-bg);
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-panel);
-  padding: 16px 18px;
+  padding: var(--space-16) 18px;
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
@@ -1020,7 +1020,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   display: flex;
   align-items: center;
   gap: var(--space-10);
-  padding: 10px 14px;
+  padding: var(--space-10) 14px;
   background: var(--card-bg);
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-card);
@@ -1128,7 +1128,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   background: var(--darker-bg);
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-button);
-  padding: 7px 10px;
+  padding: 7px var(--space-10);
   color: var(--text);
   font-size: var(--text-badge);
   cursor: pointer;
@@ -1302,7 +1302,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   background: none;
   border: none;
   border-radius: var(--radius-button);
-  padding: 7px 10px;
+  padding: 7px var(--space-10);
   color: var(--text);
   font-size: var(--text-caption);
   text-align: left;
@@ -1389,7 +1389,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
   .dmd-name-search--homepage .dmd-name-search-icon {
     grid-row: 1;
     grid-column: 1;
-    padding: 12px 14px;
+    padding: var(--space-12) 14px;
   }
 
   .dmd-name-search--homepage .dmd-name-search-input-group input {
@@ -1400,14 +1400,14 @@ body.light-theme .dmd-name-search-input-group input:focus {
   .dmd-name-search--homepage .dmd-name-search-suffix {
     grid-row: 1;
     grid-column: 3;
-    padding: 12px 14px;
+    padding: var(--space-12) 14px;
   }
 
   .dmd-name-search--homepage .dmd-name-search-submit {
     grid-row: 2;
     grid-column: 1 / -1;
     width: 100%;
-    border-radius: 0 0 7px 7px !important;
+    border-radius: var(--radius-none) var(--radius-none) 7px 7px !important;
   }
 
   .dmd-names-hero-content h1 {
@@ -1501,7 +1501,7 @@ body.light-theme .dmd-name-search-input-group input:focus {
 
 .dmd-report-preview {
   margin: var(--space-0) var(--space-0) var(--space-20);
-  padding: 12px 14px;
+  padding: var(--space-12) 14px;
   max-height: 220px;
   overflow: auto;
   border-radius: var(--radius-card);
@@ -1571,7 +1571,7 @@ body.light-theme .dmd-report-preview {
   justify-content: space-between;
   gap: var(--space-12);
   margin: var(--space-0) var(--space-0) var(--space-16);
-  padding: 12px 14px;
+  padding: var(--space-12) 14px;
   border-radius: var(--radius-card);
   background: var(--darker-bg);
   border: var(--border-width) solid var(--border-color);
