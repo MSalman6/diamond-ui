@@ -23,6 +23,9 @@ type Props = {
 /** One follow-up fetch, to pick up the indexed row if it landed in the meantime. */
 const INDEX_RETRY_MS = 8000;
 
+// UI Functionality in place - waiting for configuration apis from team
+const DNS_CONFIG_ENABLED: boolean = false;
+
 const STATUS_LABELS: Record<OwnedDmdNameStatus, string> = {
   active: 'Active',
   inactive: 'Inactive',
@@ -193,7 +196,7 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
                 <th>Name</th>
                 <th>Status</th>
                 <th>Expiration</th>
-                <th>DNS</th>
+                {DNS_CONFIG_ENABLED && <th>DNS</th>}
                 <th>Last action</th>
                 <th></th>
               </tr>
@@ -201,17 +204,17 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
             <tbody>
               {rows === null && !error && (
                 <tr>
-                  <td colSpan={6} className="dmd-owned-loading">Loading owned names…</td>
+                  <td colSpan={DNS_CONFIG_ENABLED ? 6 : 5} className="dmd-owned-loading">Loading owned names…</td>
                 </tr>
               )}
               {error && (
                 <tr>
-                  <td colSpan={6} className="dmd-owned-error">{error}</td>
+                  <td colSpan={DNS_CONFIG_ENABLED ? 6 : 5} className="dmd-owned-error">{error}</td>
                 </tr>
               )}
               {rows !== null && !error && rows.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="dmd-owned-empty">No names owned by this address yet.</td>
+                  <td colSpan={DNS_CONFIG_ENABLED ? 6 : 5} className="dmd-owned-empty">No names owned by this address yet.</td>
                 </tr>
               )}
               {rows?.map((entry) => (
@@ -221,9 +224,11 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
                   </td>
                   <td><StatusPill status={entry.status} /></td>
                   <td>{formatDmdDate(entry.expiresAt)}</td>
-                  <td>
-                    <DnsCell {...summarizeDnsConfig(getDnsConfig(entry.name))} />
-                  </td>
+                  {DNS_CONFIG_ENABLED && (
+                    <td>
+                      <DnsCell {...summarizeDnsConfig(getDnsConfig(entry.name))} />
+                    </td>
+                  )}
                   <td>
                     {entry.lastAction
                       ? `${entry.lastAction.type} · ${formatDmdDate(entry.lastAction.timestamp)}`
@@ -282,15 +287,17 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
                             >
                               <i className="fas fa-right-left"></i> Transfer
                             </button>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setDnsTarget(entry);
-                                setOpenMenuFor(null);
-                              }}
-                            >
-                              <i className="fas fa-globe"></i> Configure DNS
-                            </button>
+                            {DNS_CONFIG_ENABLED && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setDnsTarget(entry);
+                                  setOpenMenuFor(null);
+                                }}
+                              >
+                                <i className="fas fa-globe"></i> Configure DNS
+                              </button>
+                            )}
                           </div>
                         )}
                       </div>
@@ -321,10 +328,12 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
               <strong>Transfer:</strong> Moves ownership of the name NFT to another address; Diamond UI
               shows transfer fee + gas before confirmation.
             </li>
-            <li>
-              <strong>Configure DNS:</strong> Links the name to its username.dmd.domains subdomain and
-              sets the free A and MX records served for it.
-            </li>
+            {DNS_CONFIG_ENABLED && (
+              <li>
+                <strong>Configure DNS:</strong> Links the name to its username.dmd.domains subdomain and
+                sets the free A and MX records served for it.
+              </li>
+            )}
           </ul>
         </div>
       </div>
@@ -351,13 +360,15 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
         }}
       />
 
-      <DnsRecordsModal
-        isOpen={!!dnsTarget}
-        onClose={() => setDnsTarget(null)}
-        name={dnsTarget?.name ?? ''}
-        config={getDnsConfig(dnsTarget?.name ?? '')}
-        onSave={saveDnsConfig}
-      />
+      {DNS_CONFIG_ENABLED && (
+        <DnsRecordsModal
+          isOpen={!!dnsTarget}
+          onClose={() => setDnsTarget(null)}
+          name={dnsTarget?.name ?? ''}
+          config={getDnsConfig(dnsTarget?.name ?? '')}
+          onSave={saveDnsConfig}
+        />
+      )}
 
       <TransferNameModal
         isOpen={!!transferTarget}

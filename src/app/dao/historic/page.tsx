@@ -10,11 +10,16 @@ import { useWeb3Context } from '@/contexts/Web3';
 import { timestampToDate, truncateAddress } from '@/utils/common';
 import { formatPercent } from '@/utils/format';
 import { markdownToPlainText } from '@/components/MarkdownText';
+import ValidatorCell from '@/components/ValidatorCell';
+import { useDmdNamesForAddresses } from '@/hooks/useDmdNamesForAddresses';
+import copy from 'copy-to-clipboard';
+import { toast } from 'react-toastify';
 
 type Proposal = {
   id: string;
   date: string;
   creator: string;
+  fullCreatorAddress?: string;
   creatorColor?: string;
   title: string;
   type: string;
@@ -57,6 +62,7 @@ export default function HistoricProposalsPage() {
       id: p.id,
       date: p.timestamp ? timestampToDate(p.timestamp) : (p.date || new Date().toISOString().slice(0,10)),
       creator: truncateAddress(p.proposer || p.proposerAddress || ""),
+      fullCreatorAddress: p.proposer || p.proposerAddress || "",
       creatorColor: undefined,
       title: markdownToPlainText(p.title || (p.description ? String(p.description).split('\n')[0] : "")),
       type: (p.proposalType || p.rawProposalType || 'open').toLowerCase(),
@@ -65,6 +71,10 @@ export default function HistoricProposalsPage() {
       status: daoContext.getStateString ? daoContext.getStateString(p.state) : (p.state || 'Unknown')
     }));
   }, [daoContext?.allDaoProposals]);
+
+  const creatorNames = useDmdNamesForAddresses(
+    daoList.map((p) => p.fullCreatorAddress || "").filter(Boolean)
+  );
 
   const displayed = useMemo(() => {
     let list: Proposal[] = daoList.slice();
@@ -234,10 +244,19 @@ export default function HistoricProposalsPage() {
                       {(() => {
                         const hash = (p.creator || "").split("").reduce((h, ch) => ch.charCodeAt(0) + ((h << 5) - h), 0);
                         const color = `#${(hash & 0x00ffffff).toString(16).padStart(6, "0")}`;
+                        const creatorAddress = p.fullCreatorAddress || "";
                         return (
                           <div className="creator-address">
                             <div className="address-icon" style={{ backgroundColor: color }} />
-                            <span>{p.creator}</span>
+                            {creatorAddress ? (
+                              <ValidatorCell
+                                address={creatorAddress}
+                                name={creatorNames[creatorAddress.toLowerCase()]}
+                                onCopy={(addr) => { copy(addr); toast.success('Copied creator address'); }}
+                              />
+                            ) : (
+                              <span>{p.creator}</span>
+                            )}
                           </div>
                         );
                       })()}

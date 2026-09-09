@@ -42,7 +42,7 @@ export default function MyDmdNamesPage() {
             <h1>My DMD Names</h1>
             <p>
               Manage names owned by the connected wallet: activate a public name, renew ownership,
-              view history, configure DNS and transfer ownership.
+              view history and transfer ownership.
             </p>
           </div>
         </div>

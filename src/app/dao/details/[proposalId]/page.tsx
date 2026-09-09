@@ -14,9 +14,13 @@ import { useDaoContext } from '@/contexts/DAO'
 import logger from '@/utils/logger';
 import { useWeb3Context } from '@/contexts/Web3'
 import { useStakingContext } from '@/contexts/Staking'
-import { capitalizeFirstLetter, decodeCallData, extractValueFromCalldata, formatCryptoUnitValue, getFunctionInfoWithAbi, timestampToDate } from '@/utils/common'
+import { capitalizeFirstLetter, decodeCallData, extractValueFromCalldata, formatCryptoUnitValue, getFunctionInfoWithAbi, timestampToDate, truncateAddress } from '@/utils/common'
 import { formatCount, formatDmd, formatDmdFromWei, formatPercent } from '@/utils/format'
 import { getProposalImpact } from '@/constants/proposalImpacts'
+import { useDmdNamesForAddresses } from '@/hooks/useDmdNamesForAddresses'
+import { formatDmdName } from '@/utils/dmdNaming'
+import { toast } from 'react-toastify'
+import copy from 'copy-to-clipboard'
 
 interface UsernameModerationDetails {
   summary: string;
@@ -157,6 +161,9 @@ export default function ProposalDetailsPage() {
     totalStakeSnapshot: '0',
     rawProposalType: undefined
   })
+
+  const proposerNames = useDmdNamesForAddresses(proposal?.proposer ? [proposal.proposer] : [])
+  const proposerName = proposal?.proposer ? proposerNames[String(proposal.proposer).toLowerCase()] : null
 
   const [proposalState, setProposalState] = useState<string>("")
   const [myVote, setMyVote] = useState<any>(null)
@@ -537,12 +544,13 @@ export default function ProposalDetailsPage() {
   // copy handler
   const handleCopy = async (text: string, e?: React.MouseEvent) => {
     try {
-      await navigator.clipboard.writeText(text)
+      copy(text)
       const trigger = (e?.currentTarget || null) as HTMLElement | null
       if (trigger) {
         trigger.classList.add("copied")
         setTimeout(() => trigger.classList.remove("copied"), 2000)
       }
+      toast.success("Copied creator address")
     } catch (err) {
       logger.error("copy failed", err)
     }
@@ -611,11 +619,26 @@ export default function ProposalDetailsPage() {
                 <div className="card-content">
                   <div className="creator-address">
                     <div className="address-icon" style={{ backgroundColor: "#3a7bd5" }} />
-                    <span className="address-text">{proposal?.proposer || '0x8F3c7D138e6F5b9D6F9D4c4e4c8D2D8D2D9D2b'}</span>
-                    <button className="copy-btn" onClick={(e) => handleCopy(String(proposal?.proposer || ''), e)}>
-                      <i className="fas fa-copy" />
-                    </button>
-                    <div className="copy-tooltip">Copied!</div>
+                    {proposerName ? (
+                      <div className="creator-identity">
+                        <span className="creator-name">{formatDmdName(proposerName)}</span>
+                        <span className="creator-address-row">
+                          <span className="address-text">{truncateAddress(String(proposal?.proposer || ''))}</span>
+                          <button className="copy-btn" onClick={(e) => handleCopy(String(proposal?.proposer || ''), e)}>
+                            <i className="fas fa-copy" />
+                          </button>
+                          <div className="copy-tooltip">Copied!</div>
+                        </span>
+                      </div>
+                    ) : (
+                      <>
+                        <span className="address-text">{proposal?.proposer || '0x8F3c7D138e6F5b9D6F9D4c4e4c8D2D8D2D9D2b'}</span>
+                        <button className="copy-btn" onClick={(e) => handleCopy(String(proposal?.proposer || ''), e)}>
+                          <i className="fas fa-copy" />
+                        </button>
+                        <div className="copy-tooltip">Copied!</div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

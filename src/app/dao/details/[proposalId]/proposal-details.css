@@ -396,6 +396,33 @@
   white-space: nowrap;
 }
 
+.creator-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.creator-name {
+  font-weight: var(--weight-medium);
+  font-size: var(--text-ui);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.creator-address-row {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-5);
+  position: relative;
+}
+
+.creator-address-row .address-text {
+  font-size: var(--icon-sm);
+  color: var(--text-secondary);
+}
+
 .copy-btn {
   background: transparent;
   border: none;

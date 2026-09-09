@@ -15,6 +15,9 @@ import { timestampToDate, truncateAddress } from '@/utils/common';
 import { formatDmd, formatDmdFromWei, formatPercent } from '@/utils/format';
 import InfoTooltip from '@/components/InfoTooltip';
 import { markdownToPlainText } from '@/components/MarkdownText';
+import ValidatorCell from '@/components/ValidatorCell';
+import { useDmdNamesForAddresses } from '@/hooks/useDmdNamesForAddresses';
+import copy from 'copy-to-clipboard';
 
 type ProposalType = "parameter" | "open" | "contract upgrade";
 
@@ -123,6 +126,10 @@ export default function DaoPage() {
       return mapped;
     });
   }, [daoContext.activeProposals, daoContext.allDaoProposals, activeTab, daoContext.daoPhase, daoContext.daoPhaseCount]);
+
+  const creatorNames = useDmdNamesForAddresses(
+    daoMappedProposals.map((p) => p.fullCreatorAddress || "").filter(Boolean)
+  );
 
   // Reset voted map when wallet changes
   useEffect(() => {
@@ -730,10 +737,19 @@ export default function DaoPage() {
                         {(() => {
                           const hash = (p.creator || "").split("").reduce((h, ch) => ch.charCodeAt(0) + ((h << 5) - h), 0);
                           const color = `#${(hash & 0x00ffffff).toString(16).padStart(6, "0")}`;
+                          const creatorAddress = p.fullCreatorAddress || "";
                           return (
                             <div className="creator-address">
                               <div className="address-icon" style={{ backgroundColor: color }} />
-                              <span>{p.creator}</span>
+                              {creatorAddress ? (
+                                <ValidatorCell
+                                  address={creatorAddress}
+                                  name={creatorNames[creatorAddress.toLowerCase()]}
+                                  onCopy={(addr) => { copy(addr); toast.success('Copied creator address'); }}
+                                />
+                              ) : (
+                                <span>{p.creator}</span>
+                              )}
                             </div>
                           );
                         })()}
@@ -801,10 +817,19 @@ export default function DaoPage() {
                         {(() => {
                           const hash = (p.creator || "").split("").reduce((h, ch) => ch.charCodeAt(0) + ((h << 5) - h), 0);
                           const color = `#${(hash & 0x00ffffff).toString(16).padStart(6, "0")}`;
+                          const creatorAddress = p.fullCreatorAddress || "";
                           return (
                             <div className="creator-address">
                               <div className="address-icon" style={{ backgroundColor: color }} />
-                              <span>{p.creator}</span>
+                              {creatorAddress ? (
+                                <ValidatorCell
+                                  address={creatorAddress}
+                                  name={creatorNames[creatorAddress.toLowerCase()]}
+                                  onCopy={(addr) => { copy(addr); toast.success('Copied creator address'); }}
+                                />
+                              ) : (
+                                <span>{p.creator}</span>
+                              )}
                             </div>
                           );
                         })()}
