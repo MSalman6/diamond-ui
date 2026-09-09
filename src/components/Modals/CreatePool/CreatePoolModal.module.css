@@ -10,7 +10,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn var(--duration-base) ease-out;
 }
 
 @keyframes fadeIn {
@@ -36,22 +36,22 @@
 .modalContent {
   width: 100%;
   max-width: 480px;
-  padding: 32px;
+  padding: var(--space-32);
   background: var(--card-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-modal-module);
   position: relative;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.3s ease-out;
-  margin: 20px;
+  animation: slideUp var(--duration-base) ease-out;
+  margin: var(--space-20);
 }
 
 .modalContent h2 {
   color: var(--text);
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0 0 24px 0;
+  font-size: var(--text-section);
+  font-weight: var(--weight-semibold);
+  margin: var(--space-0) var(--space-0) var(--space-24) var(--space-0);
   text-align: center;
 }
 
@@ -62,16 +62,16 @@
   background: none;
   border: none;
   color: var(--text-secondary);
-  font-size: 1.5rem;
+  font-size: var(--text-section);
   cursor: pointer;
-  padding: 4px;
-  border-radius: 50%;
+  padding: var(--space-4);
+  border-radius: var(--radius-circle);
   width: 32px;
   height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all var(--duration-fast) var(--ease-default);
 }
 
 .modalClose:hover {
@@ -83,7 +83,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-20);
 }
 
 .form > span {
@@ -97,27 +97,27 @@
 .fieldLabel {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .fieldLabel > span {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   font-size: 14px;
   color: var(--text-secondary);
 }
 
 .formInput {
   width: 100%;
-  padding: 16px;
+  padding: var(--space-16);
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
   color: var(--text);
-  font-size: 16px;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  transition: all var(--duration-base) var(--ease-default);
   backdrop-filter: blur(10px);
 }
 
@@ -147,15 +147,15 @@
   justify-content: center;
   width: 16px;
   height: 16px;
-  border-radius: 999px;
-  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
+  border: var(--border-width) solid var(--border-color);
   font-size: 10px;
   cursor: pointer;
   color: var(--text-secondary);
 }
 
 .checkboxWrapper {
-  gap: 0.5rem;
+  gap: var(--space-8);
   width: 100%;
   display: flex;
   align-items: center;
@@ -164,9 +164,9 @@
 
 .formSubmit {
   color: black;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--duration-base) var(--ease-default);
   max-width: 150px;
   align-self: center;
   background: #f7fafc;
@@ -175,13 +175,13 @@
 
 :global(body.light-theme) .modalContent {
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: var(--border-width) solid rgba(0, 0, 0, 0.08);
 }
 
 @media (max-width: 640px) {
   .modalContent {
-    margin: 10px;
-    padding: 24px;
+    margin: var(--space-10);
+    padding: var(--space-24);
     max-width: 100%;
   }
 }

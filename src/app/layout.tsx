@@ -1,3 +1,4 @@
+import "./styles/tokens.css";
 import "./globals.css";
 import "@/components/Header/Header.css";
 import "@/components/InfoTooltip/InfoTooltip.css";
@@ -6,7 +7,7 @@ import "@/components/MarkdownText/MarkdownText.css";
 import "@/components/PrivacyModeGuard.css";
 import type { Metadata } from "next";
 import { DaoContextProvider } from "@/contexts/DAO";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Archivo, Spline_Sans_Mono } from "next/font/google";
 import { WalletConnectProvider } from "@/contexts/WalletConnect";
 import { StakingContextProvider } from "@/contexts/Staking";
 import { PrivacyModeProvider } from "@/contexts/PrivacyMode";
@@ -21,14 +22,16 @@ import { Web3ContextProvider } from "@/contexts/Web3";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const splineSansMono = Spline_Sans_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -49,7 +52,7 @@ export default async function RootLayout({
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning={true}>
+      <body className={`${archivo.variable} ${splineSansMono.variable}`} suppressHydrationWarning={true}>
         <ThemeProvider>
           <RuntimeConfigProvider>
             <PrivacyModeProvider>

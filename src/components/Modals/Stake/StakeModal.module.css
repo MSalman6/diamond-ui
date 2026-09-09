@@ -11,7 +11,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn var(--duration-base) ease-out;
 }
 
 @keyframes fadeIn {
@@ -37,22 +37,22 @@
 .modalContent {
   width: 100%;
   max-width: 480px;
-  padding: 32px;
+  padding: var(--space-32);
   background: var(--card-bg);
   backdrop-filter: blur(20px);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-modal-module);
   position: relative;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.3s ease-out;
-  margin: 20px;
+  animation: slideUp var(--duration-base) ease-out;
+  margin: var(--space-20);
 }
 
 .modalContent h2 {
   color: var(--text);
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0 0 24px 0;
+  font-size: var(--text-section);
+  font-weight: var(--weight-semibold);
+  margin: var(--space-0) var(--space-0) var(--space-24) var(--space-0);
   text-align: center;
   background: linear-gradient(135deg, #00d2ff, #3a7bd5);
   -webkit-background-clip: text;
@@ -67,16 +67,16 @@
   background: none;
   border: none;
   color: var(--text-secondary);
-  font-size: 1.5rem;
+  font-size: var(--text-section);
   cursor: pointer;
-  padding: 4px;
-  border-radius: 50%;
+  padding: var(--space-4);
+  border-radius: var(--radius-circle);
   width: 32px;
   height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all var(--duration-fast) var(--ease-default);
 }
 
 .modalClose:hover {
@@ -88,7 +88,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-20);
 }
 
 .form > span {
@@ -101,14 +101,14 @@
 
 .formInput {
   width: 100%;
-  padding: 16px;
+  padding: var(--space-16);
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
   color: var(--text);
-  font-size: 16px;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  transition: all var(--duration-base) var(--ease-default);
   backdrop-filter: blur(10px);
 }
 
@@ -127,7 +127,7 @@
 .inputWrapper input[type=number]::-webkit-outer-spin-button,
 .inputWrapper input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
-  margin: 0;
+  margin: var(--space-0);
 }
 
 .inputWrapper input[type=number] {
@@ -144,11 +144,11 @@
   border: none;
   background: transparent;
   color: var(--text-secondary);
-  font-weight: 700;
-  padding: 6px 8px;
+  font-weight: var(--weight-bold);
+  padding: var(--space-6) var(--space-8);
   cursor: pointer;
-  border-radius: 6px;
-  transition: color 0.15s ease, background 0.15s ease;
+  border-radius: var(--radius-button);
+  transition: color 0.15s var(--ease-default), background 0.15s var(--ease-default);
 }
 
 .maxButton:hover {
@@ -163,9 +163,9 @@
 
 .formSubmit {
   color: black;
-  font-weight: bold;
+  font-weight: var(--weight-bold);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--duration-base) var(--ease-default);
   max-width: 150px;
   align-self: center;
 }
@@ -182,18 +182,18 @@
 .disabledNotice {
   color: #e53e3e;
   font-size: 13px;
-  line-height: 1.4;
+  line-height: var(--leading-normal);
   text-align: center;
-  padding: 10px 12px;
+  padding: var(--space-10) var(--space-12);
   background: rgba(229, 62, 62, 0.06);
-  border: 1px solid rgba(229, 62, 62, 0.12);
-  border-radius: 8px;
-  margin-top: 8px;
+  border: var(--border-width) solid rgba(229, 62, 62, 0.12);
+  border-radius: var(--radius-card);
+  margin-top: var(--space-8);
 }
 
 .formActions {
   display: flex;
-  gap: 12px;
+  gap: var(--space-12);
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
@@ -202,13 +202,13 @@
 .stakeWarning {
   color: #ff6b6b;
   font-size: 13px;
-  line-height: 1.4;
+  line-height: var(--leading-normal);
   text-align: center;
-  padding: 12px;
+  padding: var(--space-12);
   background: rgba(255, 107, 107, 0.1);
-  border: 1px solid rgba(255, 107, 107, 0.2);
-  border-radius: 8px;
-  margin-top: 8px;
+  border: var(--border-width) solid rgba(255, 107, 107, 0.2);
+  border-radius: var(--radius-card);
+  margin-top: var(--space-8);
 }
 
 .spanLeft {
@@ -221,7 +221,7 @@
 
 :global(body.light-theme) .modalContent {
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: var(--border-width) solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
@@ -244,7 +244,7 @@
 
 :global(body.light-theme) .formInput {
   background: #f7fafc;
-  border: 1px solid #e2e8f0;
+  border: var(--border-width) solid #e2e8f0;
   color: #2d3748;
 }
 
@@ -288,25 +288,25 @@
 
 @media (max-width: 640px) {
   .modalContent {
-    margin: 10px;
-    padding: 24px;
+    margin: var(--space-10);
+    padding: var(--space-24);
     max-width: 100%;
   }
   
   .modalContent h2 {
-    font-size: 1.3rem;
+    font-size: var(--text-modal-title);
   }
   
   .formInput {
     padding: 14px;
-    font-size: 16px;
+    font-size: var(--text-body);
   }
   
   .formSubmit {
-    padding: 14px 24px;
+    padding: 14px var(--space-24);
   }
 
   .formActions {
-    gap: 10px;
+    gap: var(--space-10);
   }
 }

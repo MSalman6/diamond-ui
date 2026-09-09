@@ -11,23 +11,23 @@
   background: var(--bg);
   position: relative;
   overflow: hidden;
-  padding: calc(var(--header-h) + var(--page-top-gap)) 0 80px;
+  padding: calc(var(--header-h) + var(--page-top-gap)) var(--space-0) var(--space-80);
 }
 
 .wiki-hero-content {
   text-align: center;
   max-width: 900px;
-  margin: 0 auto;
+  margin: var(--space-0) auto;
   position: relative;
   z-index: 2;
 }
 
 .wiki-hero-content h1 {
-  font-size: 4rem;
+  font-size: var(--text-hero-xl);
   font-weight: 800;
-  margin-bottom: 30px;
+  margin-bottom: var(--space-30);
   color: var(--text);
-  line-height: 1.1;
+  line-height: var(--leading-hero);
   background: linear-gradient(135deg, #ffffff, #e0e7ff, #c7d2fe);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -35,23 +35,23 @@
 }
 
 .wiki-hero-content p {
-  font-size: 1.3rem;
+  font-size: var(--text-modal-title);
   color: var(--text-secondary);
   line-height: 1.7;
-  margin: 0 auto;
+  margin: var(--space-0) auto;
 }
 
 /* Wiki Content Section */
 .wiki-content {
-  padding: 40px 0 80px;
+  padding: var(--space-40) var(--space-0) var(--space-80);
   background: var(--bg);
   position: relative;
 }
 
 .wiki-container {
   max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 20px;
+  margin: var(--space-0) auto;
+  padding: var(--space-0) var(--space-20);
 }
 
 .wiki-section {
@@ -60,24 +60,24 @@
 }
 
 .wiki-section:last-child {
-  margin-bottom: 0;
+  margin-bottom: var(--space-0);
 }
 
 /* Key Statistics Cards - Prominent Display */
 .wiki-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin: 25px 0;
-  padding: 0;
+  gap: var(--space-20);
+  margin: var(--space-25) var(--space-0);
+  padding: var(--space-0);
 }
 
 .stat-card {
   background: rgba(99, 102, 241, 0.08);
-  border-radius: 12px;
-  padding: 25px 20px;
+  border-radius: var(--radius-panel);
+  padding: var(--space-25) var(--space-20);
   text-align: center;
-  border: 1px solid rgba(99, 102, 241, 0.15);
+  border: var(--border-width) solid rgba(99, 102, 241, 0.15);
   position: relative;
 }
 
@@ -89,14 +89,14 @@
   right: 0;
   height: 2px;
   background: linear-gradient(90deg, #6366f1, #06b6d4);
-  border-radius: 12px 12px 0 0;
+  border-radius: var(--radius-panel) var(--radius-panel) var(--radius-none) var(--radius-none);
 }
 
 .stat-value {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: var(--text-title);
+  font-weight: var(--weight-bold);
   color: var(--text);
-  margin-bottom: 8px;
+  margin-bottom: var(--space-8);
   background: linear-gradient(135deg, #6366f1, #06b6d4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -104,9 +104,9 @@
 }
 
 .stat-label {
-  font-size: 0.9rem;
+  font-size: var(--text-ui);
   color: var(--text-secondary);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -114,12 +114,12 @@
 /* Remove card styling and create clean section headers */
 .wiki-section h2 {
   font-size: 2.8rem;
-  font-weight: 700;
-  margin-bottom: 25px;
+  font-weight: var(--weight-bold);
+  margin-bottom: var(--space-25);
   color: var(--text);
-  line-height: 1.2;
+  line-height: var(--leading-heading);
   position: relative;
-  padding-bottom: 12px;
+  padding-bottom: var(--space-12);
 }
 
 .wiki-section h2::after {
@@ -134,24 +134,24 @@
 }
 
 .wiki-section h3 {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 15px;
-  margin-top: 25px;
+  font-size: var(--text-title);
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-15);
+  margin-top: var(--space-25);
   color: var(--text);
   line-height: 1.3;
 }
 
 .wiki-section h4 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 12px;
+  font-size: var(--text-section-sm);
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-12);
   color: var(--text);
-  line-height: 1.4;
+  line-height: var(--leading-normal);
 }
 
 .wiki-section p {
-  font-size: 1.1rem;
+  font-size: var(--text-card-title);
   line-height: 1.8;
   margin-bottom: 18px;
   color: var(--text-secondary);
@@ -160,42 +160,42 @@
 
 .wiki-section strong {
   color: var(--text);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 
 /* Clean technology subsections */
 .tech-subsection {
-  margin-bottom: 30px;
-  padding: 0;
+  margin-bottom: var(--space-30);
+  padding: var(--space-0);
   background: none;
   border: none;
-  border-radius: 0;
+  border-radius: var(--radius-none);
 }
 
 .tech-subsection:last-child {
-  margin-bottom: 0;
+  margin-bottom: var(--space-0);
 }
 
 .tech-subsection h3 {
   color: #06b6d4;
-  font-size: 1.6rem;
-  margin-bottom: 12px;
-  margin-top: 20px;
+  font-size: var(--text-section-lg);
+  margin-bottom: var(--space-12);
+  margin-top: var(--space-20);
 }
 
 /* Enhanced Features Grid - Convert to Diamond Bullet Points */
 .features-list {
-  margin-top: 25px;
-  padding: 0;
+  margin-top: var(--space-25);
+  padding: var(--space-0);
   list-style: none;
 }
 
 .features-list li {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 20px;
+  margin-bottom: var(--space-20);
   position: relative;
-  padding-left: 40px;
+  padding-left: var(--space-40);
 }
 
 .features-list li::before {
@@ -204,22 +204,22 @@
   left: 0;
   top: 2px;
   color: #06b6d4;
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: var(--text-card-header);
+  font-weight: var(--weight-bold);
 }
 
 .feature-content h4 {
-  margin: 0 0 6px 0;
-  font-size: 1.2rem;
+  margin: var(--space-0) var(--space-0) var(--space-6) var(--space-0);
+  font-size: var(--text-card-header);
   color: var(--text);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   line-height: 1.3;
 }
 
 .feature-content p {
-  margin: 0;
-  font-size: 1rem;
-  line-height: 1.6;
+  margin: var(--space-0);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
   color: var(--text-secondary);
 }
 
@@ -238,13 +238,13 @@
 
 /* Clean DMD Uses List with Diamond Bullets */
 .dmd-uses {
-  margin: 25px 0;
-  padding: 0;
+  margin: var(--space-25) var(--space-0);
+  padding: var(--space-0);
   list-style: none;
 }
 
 .dmd-uses > li > span {
-  margin-left: 5px
+  margin-left: var(--space-5)
 }
 
 .dmd-uses li {
@@ -252,7 +252,7 @@
   align-items: flex-start;
   margin-bottom: 18px;
   position: relative;
-  padding-left: 40px;
+  padding-left: var(--space-40);
   line-height: 1.7;
 }
 
@@ -262,21 +262,21 @@
   left: 0;
   top: 2px;
   color: #06b6d4;
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: var(--text-card-header);
+  font-weight: var(--weight-bold);
 }
 
 .dmd-uses li strong {
   color: var(--text);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
 }
 
 .dmd-uses li {
   background: none;
   border: none;
-  border-radius: 0;
-  padding-left: 40px;
-  font-size: 1.1rem;
+  border-radius: var(--radius-none);
+  padding-left: var(--space-40);
+  font-size: var(--text-card-title);
   color: var(--text-secondary);
   transition: none;
   transform: none;
@@ -288,8 +288,8 @@
 }
 
 .market-info {
-  padding: 25px 0px;
-  margin-top: 25px;
+  padding: var(--space-25) var(--space-0);
+  margin-top: var(--space-25);
   position: relative;
 }
 
@@ -301,32 +301,32 @@
   right: 0;
   height: 2px;
   background: linear-gradient(90deg, #6366f1, #06b6d4);
-  border-radius: 12px 12px 0 0;
+  border-radius: var(--radius-panel) var(--radius-panel) var(--radius-none) var(--radius-none);
 }
 
 .market-info p {
-  margin: 0;
-  font-size: 1.1rem;
+  margin: var(--space-0);
+  font-size: var(--text-card-title);
   color: var(--text);
   line-height: 1.7;
 }
 
 /* Clean References Section with Diamond Bullets */
 .references-list ul {
-  margin: 20px 0 0;
-  padding: 0;
+  margin: var(--space-20) var(--space-0) var(--space-0);
+  padding: var(--space-0);
   list-style: none;
 }
 
 .references-list li {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 15px;
+  margin-bottom: var(--space-15);
   position: relative;
-  padding-left: 40px;
+  padding-left: var(--space-40);
   background: none;
   border: none;
-  border-radius: 0;
+  border-radius: var(--radius-none);
   transition: none;
 }
 
@@ -336,8 +336,8 @@
   left: 0;
   top: 2px;
   color: #06b6d4;
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: var(--text-card-header);
+  font-weight: var(--weight-bold);
 }
 
 .references-list li:hover {
@@ -348,12 +348,12 @@
 .references-list a {
   color: #06b6d4;
   text-decoration: none;
-  font-size: 1rem;
+  font-size: var(--text-body);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   transition: color var(--transition-speed);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   line-height: 1.5;
 }
 
@@ -363,7 +363,7 @@
 }
 
 .references-list i {
-  font-size: 0.9rem;
+  font-size: var(--text-ui);
   opacity: 0.7;
   transition: all var(--transition-speed);
 }
@@ -375,7 +375,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .wiki-hero {
-    padding: calc(var(--header-h) + var(--page-top-gap)) 0 50px;
+    padding: calc(var(--header-h) + var(--page-top-gap)) var(--space-0) 50px;
     min-height: 400px;
   }
   
@@ -384,12 +384,12 @@
   }
   
   .wiki-hero-content p {
-    font-size: 1.1rem;
-    padding: 0 20px;
+    font-size: var(--text-card-title);
+    padding: var(--space-0) var(--space-20);
   }
   
   .wiki-container {
-    padding: 0 15px;
+    padding: var(--space-0) var(--space-15);
   }
   
   .wiki-section {
@@ -397,108 +397,108 @@
   }
   
   .wiki-section h2 {
-    font-size: 2.2rem;
-    margin-bottom: 20px;
+    font-size: var(--text-title-lg);
+    margin-bottom: var(--space-20);
   }
   
   .wiki-section h3 {
-    font-size: 1.6rem;
-    margin-bottom: 12px;
+    font-size: var(--text-section-lg);
+    margin-bottom: var(--space-12);
   }
   
   .wiki-section h4 {
-    font-size: 1.2rem;
+    font-size: var(--text-card-header);
   }
   
   .wiki-stats {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
-    margin: 20px 0;
+    gap: var(--space-15);
+    margin: var(--space-20) var(--space-0);
   }
   
   .stat-card {
-    padding: 18px 15px;
+    padding: 18px var(--space-15);
   }
   
   .stat-value {
-    font-size: 1.6rem;
+    font-size: var(--text-section-lg);
   }
   
   .features-list li,
   .dmd-uses li,
   .references-list li {
-    padding-left: 30px;
-    margin-bottom: 15px;
+    padding-left: var(--space-30);
+    margin-bottom: var(--space-15);
   }
   
   .features-list li::before,
   .dmd-uses li::before,
   .references-list li::before {
-    font-size: 1rem;
+    font-size: var(--text-body);
   }
 }
 
 @media (max-width: 480px) {
   .wiki-hero-content h1 {
-    font-size: 2.2rem;
+    font-size: var(--text-title-lg);
   }
   
   .wiki-hero-content p {
-    font-size: 1rem;
-    padding: 0 15px;
+    font-size: var(--text-body);
+    padding: var(--space-0) var(--space-15);
   }
   
   .wiki-container {
-    padding: 0 10px;
+    padding: var(--space-0) var(--space-10);
   }
   
   .wiki-section {
-    margin-bottom: 30px;
+    margin-bottom: var(--space-30);
   }
   
   .wiki-section h2 {
-    font-size: 1.8rem;
+    font-size: var(--text-stat);
     margin-bottom: 18px;
   }
   
   .wiki-section h3 {
-    font-size: 1.4rem;
-    margin-bottom: 10px;
+    font-size: var(--text-section-sm);
+    margin-bottom: var(--space-10);
   }
   
   .wiki-stats {
     grid-template-columns: 1fr;
-    gap: 12px;
-    margin: 18px 0;
+    gap: var(--space-12);
+    margin: 18px var(--space-0);
   }
   
   .stat-card {
-    padding: 16px 12px;
+    padding: var(--space-16) var(--space-12);
   }
   
   .stat-value {
-    font-size: 1.4rem;
+    font-size: var(--text-section-sm);
   }
   
   .market-info {
-    padding: 20px 18px;
+    padding: var(--space-20) 18px;
   }
   
   .features-list li,
   .dmd-uses li,
   .references-list li {
-    padding-left: 25px;
-    margin-bottom: 12px;
+    padding-left: var(--space-25);
+    margin-bottom: var(--space-12);
   }
   
   .feature-content h4 {
-    font-size: 1.1rem;
+    font-size: var(--text-card-title);
   }
   
   .feature-content p,
   .dmd-uses li,
   .references-list a {
-    font-size: 0.95rem;
+    font-size: var(--text-control);
   }
 }
 

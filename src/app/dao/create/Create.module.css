@@ -1,7 +1,7 @@
 .sectionContainer {
   max-width: 800px;
-  margin: 0 auto;
-  padding: 40px 20px;
+  margin: var(--space-0) auto;
+  padding: var(--space-40) var(--space-20);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -15,24 +15,24 @@
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-12);
 }
 
 .createDaoHeading {
   font-size: 38px;
   font-weight: 800;
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-24);
   color: var(--text);
 }
 
 .proposalType {
   height: 40px;
-  padding: 5px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
+  padding: var(--space-5);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-control);
   background-color: var(--darker-bg);
-  font-size: 16px;
+  font-size: var(--text-body);
   color: var(--text);
   padding-right: 36px;
   -webkit-appearance: none;
@@ -46,15 +46,15 @@
 }
 
 .proposalTypeContainer > label {
-  font-size: 16px;
+  font-size: var(--text-body);
 }
 
 .propsalForm {
-  gap: 0.5rem;
+  gap: var(--space-8);
   display: flex;
   max-width: 600px;
   width: 100%;
-  margin-top: 24px;
+  margin-top: var(--space-24);
   flex-direction: column;
   align-items: stretch;
 }
@@ -62,41 +62,41 @@
 .formInput {
   width: 100%;
   height: 42px;
-  padding: 8px 10px;
-  margin-bottom: 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  padding: var(--space-8) var(--space-10);
+  margin-bottom: var(--space-12);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
   background: var(--card-bg);
   color: var(--text);
 }
 
 .propsalForm > div {
-  gap: 0.5rem;
+  gap: var(--space-8);
   display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-12);
 }
 
 .addRemoveTransaction {
-  gap: 0.5rem;
+  gap: var(--space-8);
   display: flex;
   cursor: pointer;
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-weight: var(--weight-bold);
+  margin-bottom: var(--space-10);
   align-items: center;
 }
 
 .epcSelect {
   width: 100%;
   height: 42px;
-  padding: 8px 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  padding: var(--space-8) var(--space-10);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
   background-color: var(--card-bg);
-  font-size: 16px;
+  font-size: var(--text-body);
   color: var(--text);
   padding-right: 36px;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-12);
   -webkit-appearance: none;
   appearance: none;
 }
@@ -128,31 +128,31 @@
 .warningText {
   color: #d63031;
   font-size: 15px;
-  font-weight: 500;
-  margin-top: 8px;
-  margin-bottom: 16px;
-  padding: 12px 16px;
+  font-weight: var(--weight-medium);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-16);
+  padding: var(--space-12) var(--space-16);
   background-color: rgba(255,107,107,0.08);
-  border: 1px solid #ff6b6b;
-  border-radius: 6px;
+  border: var(--border-width) solid #ff6b6b;
+  border-radius: var(--radius-button);
   line-height: 1.5;
 }
 
 .warningBox {
   background-color: rgba(255,107,107,0.06);
-  border: 1px solid #ff6b6b;
-  border-radius: 6px;
-  padding: 12px;
-  margin-top: 12px;
+  border: var(--border-width) solid #ff6b6b;
+  border-radius: var(--radius-button);
+  padding: var(--space-12);
+  margin-top: var(--space-12);
   text-align: center;
 }
 
 .warningBox p {
-  margin: 8px 0;
+  margin: var(--space-8) var(--space-0);
   font-size: 14px;
-  line-height: 1.4;
+  line-height: var(--leading-normal);
   color: #d63031;
-  font-weight: 500;
+  font-weight: var(--weight-medium);
 }
 
 .infoBox.moderationOutcomeBox {
@@ -162,8 +162,8 @@
 .moderationOutcomeHeader {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
   font-size: 15px;
   color: var(--text);
 }
@@ -174,12 +174,12 @@
 
 .usernameModerationInfo {
   list-style-type: disc;
-  padding-left: 20px;
-  margin: 0;
+  padding-left: var(--space-20);
+  margin: var(--space-0);
 }
 
 .usernameModerationInfo li {
-  margin: 4px 0;
+  margin: var(--space-4) var(--space-0);
   font-size: 14px;
   color: var(--text-secondary);
 }
@@ -196,12 +196,12 @@
   background-color: #ff6b6b;
   color: white;
   border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
+  border-radius: var(--radius-control);
+  padding: var(--space-8) var(--space-16);
   font-size: 14px;
   cursor: pointer;
-  margin-top: 8px;
-  transition: background-color 0.2s;
+  margin-top: var(--space-8);
+  transition: background-color var(--duration-fast);
 }
 
 .fillContractButton:hover {
@@ -209,41 +209,41 @@
 }
 
 .balanceInfoContainer {
-  gap: 0rem !important;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 16px;
+  gap: var(--space-0) !important;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
+  padding: var(--space-16);
   background-color: var(--card-bg);
-  margin-bottom: 16px;
+  margin-bottom: var(--space-16);
 }
 
 .balanceInfo h4 {
-  margin-top: 0;
-  margin-bottom: 8px;
+  margin-top: var(--space-0);
+  margin-bottom: var(--space-8);
   font-size: 18px;
   color: var(--text);
 }
 
 .balanceInfo p {
-  margin: 4px 0;
+  margin: var(--space-4) var(--space-0);
   font-size: 14px;
   color: var(--text-secondary);
 }
 
 .infoBox {
   background-color: rgba(0,210,255,0.06);
-  border: 1px solid rgba(0,210,255,0.14);
-  border-radius: 6px;
-  padding: 12px;
-  margin-top: 12px;
-  margin-bottom: 12px;
+  border: var(--border-width) solid rgba(0,210,255,0.14);
+  border-radius: var(--radius-button);
+  padding: var(--space-12);
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-12);
   text-align: center;
 }
 
 .infoBox p {
-  margin: 8px 0;
+  margin: var(--space-8) var(--space-0);
   font-size: 14px;
-  line-height: 1.4;
+  line-height: var(--leading-normal);
   color: var(--text-secondary);
 }
 
@@ -251,12 +251,12 @@
   background-color: var(--diamond-1-color);
   color: var(--text);
   border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
+  border-radius: var(--radius-button);
+  padding: var(--space-8) var(--space-16);
   font-size: 14px;
   cursor: pointer;
-  margin-top: 8px;
-  transition: background-color 0.2s;
+  margin-top: var(--space-8);
+  transition: background-color var(--duration-fast);
 }
 
 .switchButton:hover {

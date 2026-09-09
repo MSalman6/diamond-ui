@@ -2,20 +2,20 @@
 .share-trigger {
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.3s ease;
+  transition: all var(--duration-base) var(--ease-default);
 }
 
 .share-trigger--icon {
   width: 40px;
   height: 40px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  border: var(--border-width) solid var(--border-color);
   background: var(--card-bg);
   color: var(--text);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
+  font-size: var(--text-ui);
 }
 
 .share-trigger--icon:hover,
@@ -28,23 +28,23 @@
 
 /* Trigger — pill variant matches the status chips of the proposal header */
 .share-trigger--pill {
-  gap: 6px;
+  gap: var(--space-6);
   display: inline-flex;
   align-items: center;
   height: 35px;
-  padding: 5px 14px;
-  border-radius: 20px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  line-height: 1.4;
+  padding: var(--space-5) 14px;
+  border-radius: var(--radius-badge);
+  font-size: var(--text-control);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-normal);
   white-space: nowrap;
   background: rgba(58, 123, 213, 0.15);
   color: var(--accent);
-  border: 1px solid rgba(58, 123, 213, 0.3);
+  border: var(--border-width) solid rgba(58, 123, 213, 0.3);
 }
 
 .share-trigger--pill i {
-  font-size: 0.85rem;
+  font-size: var(--text-caption);
 }
 
 .share-trigger--pill:hover,
@@ -58,10 +58,10 @@
 .share-menu {
   position: fixed;
   z-index: 10050;
-  padding: 6px;
-  border-radius: 12px;
+  padding: var(--space-6);
+  border-radius: var(--radius-panel);
   background: var(--tooltip-bg, rgba(22, 22, 26, 0.95));
-  border: 1px solid var(--border-color);
+  border: var(--border-width) solid var(--border-color);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(12px);
   visibility: hidden;
@@ -69,7 +69,7 @@
 
 .share-menu.is-positioned {
   visibility: visible;
-  animation: share-menu-in 0.18s ease;
+  animation: share-menu-in 0.18s var(--ease-default);
 }
 
 .share-menu--top.is-positioned {
@@ -90,19 +90,19 @@
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
+  gap: var(--space-12);
+  padding: var(--space-10) var(--space-12);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-card);
   background: transparent;
   color: var(--tooltip-color, #ffffff);
   font-family: inherit;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: var(--text-ui);
+  font-weight: var(--weight-medium);
   text-align: left;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color var(--duration-fast) var(--ease-default), color var(--duration-fast) var(--ease-default);
 }
 
 .share-menu-item:hover,
@@ -114,7 +114,7 @@
 .share-menu-item i {
   width: 18px;
   flex-shrink: 0;
-  font-size: 0.95rem;
+  font-size: var(--text-control);
   text-align: center;
   opacity: 0.75;
 }
@@ -130,14 +130,14 @@
 
 .share-menu-divider {
   height: 1px;
-  margin: 6px 8px;
+  margin: var(--space-6) var(--space-8);
   background: var(--border-color);
 }
 
 /* Light theme */
 body.light-theme .share-trigger--icon {
   background: #f8fafc;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: var(--border-width) solid rgba(0, 0, 0, 0.12);
   color: #374151;
 }
 
@@ -162,7 +162,7 @@ body.light-theme .share-trigger--pill.is-open {
 
 body.light-theme .share-menu {
   background: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: var(--border-width) solid #e5e7eb;
   box-shadow: 0 12px 32px rgba(18, 24, 38, 0.14);
 }
 
@@ -183,11 +183,11 @@ body.light-theme .share-menu-divider {
   .share-trigger--icon {
     width: 36px;
     height: 36px;
-    font-size: 0.8rem;
+    font-size: var(--text-badge);
   }
 
   .share-trigger--pill {
-    font-size: 0.9rem;
-    padding: 5px 12px;
+    font-size: var(--text-ui);
+    padding: var(--space-5) var(--space-12);
   }
 }

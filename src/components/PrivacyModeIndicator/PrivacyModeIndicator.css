@@ -6,24 +6,24 @@
 .privacy-mode-wrapper {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   position: relative;
-  margin-right: 15px;
+  margin-right: var(--space-15);
 }
 
 .privacy-mode-toggle {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-16);
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-card);
   color: var(--text);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   cursor: pointer;
-  transition: all var(--transition-speed) ease;
+  transition: all var(--transition-speed) var(--ease-default);
   white-space: nowrap;
 }
 
@@ -58,8 +58,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
-  transition: transform var(--transition-speed) ease;
+  font-size: var(--text-body);
+  transition: transform var(--transition-speed) var(--ease-default);
 }
 
 .privacy-mode-toggle:hover .privacy-icon {
@@ -72,7 +72,7 @@
 }
 
 .privacy-label {
-  font-family: var(--font-geist-sans);
+  font-family: var(--font-sans);
   letter-spacing: 0.2px;
 }
 
@@ -87,8 +87,8 @@
   width: 20px;
   height: 20px;
   background: var(--accent);
-  border-radius: 50%;
-  font-size: 0.7rem;
+  border-radius: var(--radius-circle);
+  font-size: var(--icon-xs);
   color: white;
   box-shadow: 0 2px 8px rgba(58, 123, 213, 0.5);
   animation: badge-pulse 2s ease-in-out infinite;
@@ -117,12 +117,12 @@
 /* Mobile styles */
 @media (max-width: 768px) {
   .privacy-mode-wrapper {
-    margin-right: 10px;
+    margin-right: var(--space-10);
   }
   
   .privacy-mode-toggle {
-    padding: 6px 12px;
-    font-size: 0.8rem;
+    padding: var(--space-6) var(--space-12);
+    font-size: var(--text-badge);
   }
   
   .privacy-label {
@@ -130,7 +130,7 @@
   }
   
   .privacy-icon {
-    font-size: 1.1rem;
+    font-size: var(--text-card-title);
   }
   
   .privacy-mode-badge {
@@ -145,13 +145,13 @@
 /* Extra small mobile - icon only */
 @media (max-width: 480px) {
   .privacy-mode-toggle {
-    padding: 8px;
+    padding: var(--space-8);
     min-width: 40px;
     justify-content: center;
   }
   
   .privacy-icon {
-    font-size: 1rem;
+    font-size: var(--text-body);
   }
 }
 
@@ -162,16 +162,16 @@
   bottom: -35px;
   left: 50%;
   transform: translateX(-50%) scale(0.9);
-  padding: 6px 12px;
+  padding: var(--space-6) var(--space-12);
   background: var(--darker-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-button);
   color: var(--text);
-  font-size: 0.75rem;
+  font-size: var(--icon-sm);
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  transition: all var(--transition-speed) ease;
+  transition: all var(--transition-speed) var(--ease-default);
   z-index: 1000;
 }
 

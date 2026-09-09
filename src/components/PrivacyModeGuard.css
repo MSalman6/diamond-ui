@@ -8,8 +8,8 @@
 /* Skeleton Loading Animation */
 .privacy-guard-placeholder.skeleton {
   background: var(--card-bg);
-  border-radius: 8px;
-  padding: 16px;
+  border-radius: var(--radius-card);
+  padding: var(--space-16);
   animation: pulse 1.5s ease-in-out infinite;
 }
 
@@ -20,7 +20,7 @@
 .skeleton-content {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .skeleton-line {
@@ -31,7 +31,7 @@
     rgba(255, 255, 255, 0.15) 50%,
     rgba(255, 255, 255, 0.05) 100%
   );
-  border-radius: 4px;
+  border-radius: var(--radius-control);
   animation: shimmer 2s ease-in-out infinite;
 }
 
@@ -70,7 +70,7 @@
 .privacy-guard-placeholder.blur {
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: var(--radius-card);
 }
 
 .blur-content {
@@ -97,16 +97,16 @@
 }
 
 .blur-badge {
-  padding: 8px 16px;
+  padding: var(--space-8) var(--space-16);
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-button);
   color: var(--text);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -120,10 +120,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 20px;
+  padding: var(--space-12) var(--space-20);
   background: var(--card-bg);
-  border: 1px dashed var(--border-color);
-  border-radius: 6px;
+  border: var(--border-width) dashed var(--border-color);
+  border-radius: var(--radius-button);
   min-width: 150px;
 }
 
@@ -134,16 +134,16 @@
 .redacted-badge {
   color: var(--text-secondary);
   font-size: 0.875rem;
-  font-weight: 600;
-  font-family: monospace;
+  font-weight: var(--weight-semibold);
+  font-family: var(--font-data);
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .redacted-badge i {
-  font-size: 1rem;
+  font-size: var(--text-body);
   opacity: 0.8;
 }
 
