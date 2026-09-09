@@ -9,6 +9,7 @@ import { formatDmdFromWei } from '@/utils/format';
 import { useState, useEffect, useRef } from 'react';
 import { useWalletConnect } from '@/contexts/WalletConnect';
 import { useWalletTotals } from '@/hooks/useWalletTotals';
+import { useProfileOnConnect } from '@/hooks/useProfileOnConnect';
 import InfoTooltip from '@/components/InfoTooltip';
 import { config } from '@/lib/config';
 
@@ -24,6 +25,8 @@ export default function Header() {
   const { open: openWalletModal, address, isConnected, disconnect } = useWalletConnect();
   const { userWallet, retryWalletConnection } = useWeb3Context();
   const totals = useWalletTotals();
+
+  useProfileOnConnect();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -145,9 +148,7 @@ export default function Header() {
       } else {
         // Close wallet dropdown when clicking outside on desktop
         if (!target.closest('.user-wallet-info')) {
-          if (activeDropdown === 'wallet') {
-            setActiveDropdown(null);
-          }
+          setActiveDropdown(prev => (prev === 'wallet' ? null : prev));
         }
       }
     };

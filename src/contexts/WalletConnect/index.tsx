@@ -153,7 +153,7 @@ export const useWalletConnect = () => {
   const { open, close } = useAppKit()
   const { disconnect } = useDisconnect()
   const { connect, connectors } = useConnect()
-  const { address, isConnected, isConnecting, isDisconnected } = useAccount()
+  const { address, isConnected, isConnecting, isDisconnected, status } = useAccount()
   
 
   return {
@@ -166,6 +166,7 @@ export const useWalletConnect = () => {
     isConnected,
     isConnecting,
     isDisconnected,
+    status,
     
     // Connection methods
     connect,
