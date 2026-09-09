@@ -16,7 +16,7 @@ export default function WebMCP() {
           properties: {
             page: {
               type: 'string',
-              enum: ['home', 'validators', 'dao', 'wiki', 'faqs', 'profile'],
+              enum: ['home', 'validators', 'dao', 'faqs', 'profile'],
             },
           },
           required: ['page'],
@@ -27,7 +27,6 @@ export default function WebMCP() {
             home: '/',
             validators: '/validators',
             dao: '/dao',
-            wiki: '/wiki',
             faqs: '/faqs',
             profile: '/profile',
           };

@@ -21,8 +21,8 @@ View and interact with on-chain governance proposals. Lists active, historic, an
 - **Create Proposal** — \`/dao/create\` — Submit a new governance proposal
 - **Historic Proposals** — \`/dao/historic\` — Browse closed and executed proposals
 
-### Wiki — \`/wiki\`
-Documentation and reference material for the DMD network and staking mechanics.
+### Documentation — https://overview.bit.diamonds
+Documentation and reference material for the DMD network and staking mechanics, hosted outside the Diamond UI.
 
 ### FAQs — \`/faqs\`
 Frequently asked questions covering staking, rewards, governance, and wallet setup.

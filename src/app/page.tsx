@@ -313,7 +313,7 @@ export default function Home() {
             <div className="section-header">
               <h2 className="fade-in">Blockchain that scales</h2>
               <p>DMD Diamond is a fair-launched, truly decentralized Layer 1 blockchain, built by a dedicated community — without a company, premine, or ICO. Established in 2013, it has continuously evolved to prioritize security, efficiency, and decentralization.</p>
-              <Link href="/wiki" className="btn-primary">Learn more about DMD <i className="fas fa-arrow-right"></i></Link>
+              <a href="https://overview.bit.diamonds" target="_blank" rel="noopener noreferrer" className="btn-primary">Learn more about DMD <i className="fas fa-external-link-alt"></i></a>
             </div>
 
             <div className="features-grid">
@@ -352,7 +352,7 @@ export default function Home() {
               <div className="design-content">
                 <h2>The Next Evolution of DMD Diamond</h2>
                 <p>DMD Diamond is relaunching as a fully EVM-compatible Layer 1, designed to empower developers and projects with cutting-edge blockchain technology.</p>
-                <Link href="/wiki" className="btn-primary">Explore the ecosystem <i className="fas fa-arrow-right"></i></Link>
+                <a href="https://overview.bit.diamonds" target="_blank" rel="noopener noreferrer" className="btn-primary">Explore the ecosystem <i className="fas fa-external-link-alt"></i></a>
               </div>
               <div className="design-features">
                 <div className="design-feature">

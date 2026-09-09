@@ -44,6 +44,15 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/wiki",
+        destination: "https://overview.bit.diamonds",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

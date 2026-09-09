@@ -16,7 +16,7 @@ import { config } from '@/lib/config';
 const NAV_BREAKPOINT = 1024;
 
 const ECOSYSTEM_ROUTES = ['/names'];
-const KNOWLEDGEBASE_ROUTES = ['/wiki', '/faqs'];
+const KNOWLEDGEBASE_ROUTES = ['/faqs'];
 
 export default function Header() {
   const router = useRouter();
@@ -493,9 +493,9 @@ export default function Header() {
                   <div className="dropdown-section">
                     <ul>
                       <li>
-                        <Link href="/wiki" onClick={handleRegularLinkClick}>
-                          <i className="fas fa-info-circle"></i> About DMD
-                        </Link>
+                        <a href="https://overview.bit.diamonds" target="_blank" rel="noopener noreferrer">
+                          <i className="fas fa-info-circle"></i> About DMD<i className="fas fa-external-link-alt"></i>
+                        </a>
                       </li>
                       <li>
                         <a href="https://github.com/DMDcoin/whitepaper/wiki/A.-Home" target="_blank" rel="noopener noreferrer">
