@@ -1,4 +1,4 @@
 export const CURR_VERSION_INFO = {
-    version: "0.2.0-staging",
+    version: "release2.2-coinbase-extension",
     reset: true
 }

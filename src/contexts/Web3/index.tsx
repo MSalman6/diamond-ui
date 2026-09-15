@@ -368,15 +368,17 @@ const Web3ContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
 
   const InitializeWagmiWallet = async (connector: any) => {
     try {
-      let provider = await connector.getProvider();
-      provider = new Web3(provider);
+      const walletProvider: any = await connector.getProvider();
+      const provider = new Web3(walletProvider);
 
-      const isCoinbaseWallet = connector.name === 'Coinbase Wallet' || 
-      (provider.isCoinbaseWallet) || 
-      (provider.providerInfo && provider.providerInfo.type === 'coinbasewallet');
+      const isCoinbaseSdk = connector.id === 'coinbaseWalletSDK' || connector.type === 'coinbaseWallet';
+      const isCoinbaseExtension =
+        walletProvider?.connectionType === 'extension_connection_type' ||
+        Boolean(walletProvider?.isCoinbaseBrowser) ||
+        walletProvider?.providerInfo?.type === 'coinbasewallet';
 
       // Check if it's specifically a Coinbase Smart Wallet (keys.coinbase.com)
-      const isCoinbaseSmartWallet = isCoinbaseWallet && provider.currentProvider.connectionType !== "extension_connection_type";
+      const isCoinbaseSmartWallet = isCoinbaseSdk && !isCoinbaseExtension;
 
       if (isCoinbaseSmartWallet) {
         showLoader(false, "");

@@ -55,6 +55,9 @@ const initializeAppKit = () => {
         emailShowWallets: false
       },
       allowUnsupportedChain: true,
+      enableCoinbase: false,
+      enableEIP6963: true,
+      enableInjected: true,
       featuredWalletIds: supportedWalletIds,
       includeWalletIds: supportedWalletIds,
       excludeWalletIds: excludeWalletIds,
