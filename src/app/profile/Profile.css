@@ -820,6 +820,53 @@ body.light-theme .vp2-rewards-performance {
   white-space: nowrap;
 }
 
+.dp2-stake-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  white-space: nowrap;
+}
+
+.dp2-pending-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+  font-size: 0.72rem;
+  font-weight: var(--weight-medium);
+  color: #ff9f43;
+}
+
+.dp2-pending-tag--ready {
+  color: #07f49e;
+}
+
+.dp2-action-group {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-6);
+}
+
+.dp2-action-group .btn-stake,
+.dp2-action-group .btn-unstake {
+  margin-right: var(--space-0);
+}
+
+.dp2-claim-wrap {
+  display: inline-flex;
+}
+
+.dp2-tfoot-pending {
+  margin-top: 0.15rem;
+  font-size: 0.74rem;
+  color: #ff9f43;
+}
+
+.dp2-tfoot-pending strong {
+  color: #ff9f43;
+  font-weight: var(--weight-bold);
+}
+
 .validators-table th.dp2-action-cell,
 .validators-table td.dp2-action-cell {
   width: 1%;
@@ -892,6 +939,16 @@ body.light-theme .dp2-stat-sub {
 
 body.light-theme .dp2-rewards-cell {
   color: #0284c7;
+}
+
+body.light-theme .dp2-pending-tag,
+body.light-theme .dp2-tfoot-pending,
+body.light-theme .dp2-tfoot-pending strong {
+  color: #b45309;
+}
+
+body.light-theme .dp2-pending-tag--ready {
+  color: #047857;
 }
 
 body.light-theme .dp2-tfoot-row td {

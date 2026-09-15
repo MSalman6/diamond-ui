@@ -2776,6 +2776,14 @@ footer {
   cursor: not-allowed;
 }
 
+.claim-btn:disabled:hover {
+  background: rgba(255, 159, 67, 0.15);
+}
+
+.claim-btn:disabled:active {
+  transform: none;
+}
+
 body.light-theme .claim-btn {
   background: rgba(255, 159, 67, 0.15);
   color: #e65100;

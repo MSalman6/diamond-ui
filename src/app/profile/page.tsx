@@ -81,11 +81,11 @@ export default function ProfilePage() {
   const [chartShowPoolReward, setChartShowPoolReward] = useState(true);
   const [chartShowOwnerShare, setChartShowOwnerShare] = useState(true);
 
-  // Get validators that user has staked with (has myStake > 0)
+  // Get validators that user has staked with or has ordered coins waiting to be claimed
   const stakedValidators = useMemo(() => {
-    return pools.filter(pool => 
-      pool.myStake && 
-      BigNumber(pool.myStake).isGreaterThan(0) &&
+    return pools.filter(pool =>
+      (BigNumber(pool.myStake ?? 0).isGreaterThan(0) ||
+        BigNumber(pool.orderedWithdrawAmount ?? 0).isGreaterThan(0)) &&
       pool.stakingAddress !== userWallet.myAddr
     );
   }, [pools, userWallet.myAddr]);
@@ -138,6 +138,13 @@ export default function ProfilePage() {
   const myOutgoingDelegationsWei = useMemo(() => {
     return myCandidateStake || new BigNumber(0);
   }, [myCandidateStake]);
+
+  const myPendingWithdrawWei = useMemo(() => {
+    return stakedValidators.reduce(
+      (sum, v) => sum.plus(new BigNumber(v.orderedWithdrawAmount ?? 0)),
+      new BigNumber(0)
+    );
+  }, [stakedValidators]);
 
   // Number of proposals created by the user
   const myProposalsCreated = useMemo(() => {
@@ -341,7 +348,11 @@ export default function ProfilePage() {
                       <div className="dp2-stat-value dp2-stat-value--teal">
                         {isPrivacyMode ? '—' : formatDmdFromWei(myDelegatedStakeWei)}
                       </div>
-                      <div className="dp2-stat-sub">across {stakedValidators.length} validator{stakedValidators.length !== 1 ? 's' : ''}</div>
+                      <div className="dp2-stat-sub">
+                        across {stakedValidators.length} validator{stakedValidators.length !== 1 ? 's' : ''}
+                        {!isPrivacyMode && myPendingWithdrawWei.isGreaterThan(0)
+                          && ` · ${formatDmdFromWei(myPendingWithdrawWei)} unstaking`}
+                      </div>
                     </div>
 
                     <div className="dp2-stat-item dp2-stat-item--sep">
@@ -444,8 +455,11 @@ export default function ProfilePage() {
                       stakedValidators.map((validator) => {
                         const stats = stakerNodeStatsMap[validator.stakingAddress.toLowerCase()];
                         const rewards30d = perPoolRewards30d[validator.stakingAddress.toLowerCase()];
-                        const isClaimable = BigNumber(validator.orderedWithdrawAmount).isGreaterThan(0)
-                          && BigNumber(validator.orderedWithdrawUnlockEpoch).isLessThanOrEqualTo(stakingEpoch);
+                        const pendingWei = BigNumber(validator.orderedWithdrawAmount ?? 0);
+                        const hasPending = pendingWei.isGreaterThan(0);
+                        const hasStake = BigNumber(validator.myStake ?? 0).isGreaterThan(0);
+                        const unlockEpoch = BigNumber(validator.orderedWithdrawUnlockEpoch ?? 0);
+                        const isClaimable = hasPending && unlockEpoch.isLessThanOrEqualTo(stakingEpoch);
                         return (
                           <tr
                             key={validator.stakingAddress}
@@ -457,14 +471,40 @@ export default function ProfilePage() {
                             {!isPrivacyMode && <td>{formatApy(stats?.estimated_apy)}</td>}
                             {!isPrivacyMode && <td>{stats ? <Aep30Badge aep30={stats.aep30} /> : '—'}</td>}
                             <td><SaturationBar totalStakeWei={validator.totalStake || '0'} /></td>
-                            <td>{formatDmdFromWei(validator.myStake ?? 0)}</td>
+                            <td>
+                              <div className="dp2-stake-cell">
+                                <span>{hasStake ? formatDmdFromWei(validator.myStake ?? 0) : '—'}</span>
+                                {hasPending && (
+                                  <span className={isClaimable ? 'dp2-pending-tag dp2-pending-tag--ready' : 'dp2-pending-tag'}>
+                                    <i className={isClaimable ? 'fas fa-circle-check' : 'fas fa-hourglass-half'} aria-hidden="true"></i>
+                                    {isClaimable
+                                      ? `${formatDmdFromWei(pendingWei)} ready to claim`
+                                      : `${formatDmdFromWei(pendingWei)} unstaking`}
+                                  </span>
+                                )}
+                              </div>
+                            </td>
                             {!isPrivacyMode && <td className="dp2-rewards-cell">{formatDmd(rewards30d)}</td>}
                             <td className="dp2-action-cell" onClick={(e) => e.stopPropagation()}>
-                              {isClaimable ? (
-                                <button className="btn-stake claim-btn" onClick={() => claimOrderedUnstake(validator)}>Claim</button>
-                              ) : (
-                                <UnstakeModal buttonText="Unstake" pool={validator} />
-                              )}
+                              <div className="dp2-action-group">
+                                {hasPending && (
+                                  <span
+                                    className="dp2-claim-wrap"
+                                    title={isClaimable
+                                      ? `Claim ${formatDmdFromWei(pendingWei)}`
+                                      : `Unlocks in epoch ${unlockEpoch.toFixed(0)} — current epoch is ${stakingEpoch}`}
+                                  >
+                                    <button
+                                      className="btn-stake claim-btn"
+                                      disabled={!isClaimable}
+                                      onClick={() => claimOrderedUnstake(validator)}
+                                    >
+                                      Claim
+                                    </button>
+                                  </span>
+                                )}
+                                {hasStake && <UnstakeModal buttonText="Unstake" pool={validator} />}
+                              </div>
                             </td>
                           </tr>
                         );
@@ -493,6 +533,12 @@ export default function ProfilePage() {
                         <td className="dp2-tfoot-total">
                           <span>Total Delegated:</span>{' '}
                           <strong>{isPrivacyMode ? '—' : formatDmdFromWei(myDelegatedStakeWei)}</strong>
+                          {!isPrivacyMode && myPendingWithdrawWei.isGreaterThan(0) && (
+                            <div className="dp2-tfoot-pending">
+                              <span>Unstaking:</span>{' '}
+                              <strong>{formatDmdFromWei(myPendingWithdrawWei)}</strong>
+                            </div>
+                          )}
                         </td>
                         {!isPrivacyMode && (
                           <td className="dp2-tfoot-rewards">
@@ -893,8 +939,11 @@ export default function ProfilePage() {
                       stakedValidators.map((validator) => {
                         const stats = stakerNodeStatsMap[validator.stakingAddress.toLowerCase()];
                         const rewards30d = perPoolRewards30d[validator.stakingAddress.toLowerCase()];
-                        const isClaimable = BigNumber(validator.orderedWithdrawAmount).isGreaterThan(0)
-                          && BigNumber(validator.orderedWithdrawUnlockEpoch).isLessThanOrEqualTo(stakingEpoch);
+                        const pendingWei = BigNumber(validator.orderedWithdrawAmount ?? 0);
+                        const hasPending = pendingWei.isGreaterThan(0);
+                        const hasStake = BigNumber(validator.myStake ?? 0).isGreaterThan(0);
+                        const unlockEpoch = BigNumber(validator.orderedWithdrawUnlockEpoch ?? 0);
+                        const isClaimable = hasPending && unlockEpoch.isLessThanOrEqualTo(stakingEpoch);
                         return (
                           <tr
                             key={validator.stakingAddress}
@@ -906,14 +955,40 @@ export default function ProfilePage() {
                             {!isPrivacyMode && <td>{formatApy(stats?.estimated_apy)}</td>}
                             {!isPrivacyMode && <td>{stats ? <Aep30Badge aep30={stats.aep30} /> : '—'}</td>}
                             <td><SaturationBar totalStakeWei={validator.totalStake || '0'} /></td>
-                            <td>{formatDmdFromWei(validator.myStake ?? 0)}</td>
+                            <td>
+                              <div className="dp2-stake-cell">
+                                <span>{hasStake ? formatDmdFromWei(validator.myStake ?? 0) : '—'}</span>
+                                {hasPending && (
+                                  <span className={isClaimable ? 'dp2-pending-tag dp2-pending-tag--ready' : 'dp2-pending-tag'}>
+                                    <i className={isClaimable ? 'fas fa-circle-check' : 'fas fa-hourglass-half'} aria-hidden="true"></i>
+                                    {isClaimable
+                                      ? `${formatDmdFromWei(pendingWei)} ready to claim`
+                                      : `${formatDmdFromWei(pendingWei)} unstaking`}
+                                  </span>
+                                )}
+                              </div>
+                            </td>
                             {!isPrivacyMode && <td className="dp2-rewards-cell">{formatDmd(rewards30d)}</td>}
                             <td className="dp2-action-cell" onClick={(e) => e.stopPropagation()}>
-                              {isClaimable ? (
-                                <button className="btn-stake claim-btn" onClick={() => claimOrderedUnstake(validator)}>Claim</button>
-                              ) : (
-                                <UnstakeModal buttonText="Unstake" pool={validator} />
-                              )}
+                              <div className="dp2-action-group">
+                                {hasPending && (
+                                  <span
+                                    className="dp2-claim-wrap"
+                                    title={isClaimable
+                                      ? `Claim ${formatDmdFromWei(pendingWei)}`
+                                      : `Unlocks in epoch ${unlockEpoch.toFixed(0)} — current epoch is ${stakingEpoch}`}
+                                  >
+                                    <button
+                                      className="btn-stake claim-btn"
+                                      disabled={!isClaimable}
+                                      onClick={() => claimOrderedUnstake(validator)}
+                                    >
+                                      Claim
+                                    </button>
+                                  </span>
+                                )}
+                                {hasStake && <UnstakeModal buttonText="Unstake" pool={validator} />}
+                              </div>
                             </td>
                           </tr>
                         );
@@ -942,6 +1017,12 @@ export default function ProfilePage() {
                         <td className="dp2-tfoot-total">
                           <span>Total Delegated:</span>{' '}
                           <strong>{isPrivacyMode ? '—' : formatDmdFromWei(myOutgoingDelegationsWei)}</strong>
+                          {!isPrivacyMode && myPendingWithdrawWei.isGreaterThan(0) && (
+                            <div className="dp2-tfoot-pending">
+                              <span>Unstaking:</span>{' '}
+                              <strong>{formatDmdFromWei(myPendingWithdrawWei)}</strong>
+                            </div>
+                          )}
                         </td>
                         {!isPrivacyMode && (
                           <td className="dp2-tfoot-rewards">
