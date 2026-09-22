@@ -338,3 +338,32 @@ export const truncateAddress = (address: string) => {
   if (!address) return "";
   return `${address.slice(0, 7)}...${address.slice(-5)}`;
 };
+
+const DURATION_UNITS: Array<{ label: string; seconds: number }> = [
+  { label: 'year', seconds: 365 * 24 * 60 * 60 },
+  { label: 'month', seconds: 30 * 24 * 60 * 60 },
+  { label: 'day', seconds: 24 * 60 * 60 },
+  { label: 'hour', seconds: 60 * 60 },
+  { label: 'minute', seconds: 60 },
+];
+
+export const formatDuration = (seconds: number, maxUnits: number = 2): string => {
+  let remaining = Math.max(0, Math.floor(seconds));
+  if (remaining < 60) return 'less than a minute';
+
+  const parts: string[] = [];
+  for (const unit of DURATION_UNITS) {
+    if (parts.length === maxUnits) break;
+    const count = Math.floor(remaining / unit.seconds);
+    if (count === 0) continue;
+    parts.push(`${count} ${unit.label}${count === 1 ? '' : 's'}`);
+    remaining -= count * unit.seconds;
+  }
+
+  return parts.join(' ');
+};
+
+export const formatElapsedSince = (timestamp: number): string => {
+  if (!timestamp) return '—';
+  return `${formatDuration(Math.floor(Date.now() / 1000) - timestamp)} ago`;
+};

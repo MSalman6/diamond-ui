@@ -14,6 +14,7 @@ import { useDaoContext } from '@/contexts/DAO';
 import { useIsPrivacyMode } from '@/contexts/PrivacyMode';
 import StakeModal from '@/components/Modals/Stake/StakeModal';
 import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
+import RecoverAbandonedStakesModal from '@/components/Modals/RecoverAbandonedStakes/RecoverAbandonedStakesModal';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import InfoTooltip from '@/components/InfoTooltip';
@@ -45,10 +46,11 @@ export default function ValidatorDetails() {
   // Context hooks
   const { userWallet, web3Initialized, showLoader } = useWeb3Context();
   const { activeProposals, getMyVote, getActiveProposals } = useDaoContext();
-  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake } = useStakingContext();
+  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake, abandonedPools } = useStakingContext();
   const isPrivacyMode = useIsPrivacyMode();
   const dmdNames = useDmdNamesForAddresses(address ? [address] : []);
   const dmdName = address ? dmdNames[address.toLowerCase()] : null;
+  const isAbandoned = !!address && !!abandonedPools[address.toLowerCase()];
 
   // State
   const [pool, setPool] = useState<any | null>(null);
@@ -293,8 +295,8 @@ export default function ValidatorDetails() {
                     <h1 id="validator-address" className="vd-detail-address">
                       {validatorDisplayName || 'Loading...'}
                     </h1>
-                    <span id="validator-status-badge" className={`status-badge ${pool?.isActive ? 'status-active' : (pool?.isToBeElected || pool?.isPendingValidator) ? 'status-valid' : 'status-invalid'}`}>
-                      {pool?.isActive ? "Active" : (pool?.isToBeElected || pool?.isPendingValidator) ? "Valid" : "Invalid"}
+                    <span id="validator-status-badge" className={`status-badge ${isAbandoned ? 'status-abandoned' : pool?.isActive ? 'status-active' : (pool?.isToBeElected || pool?.isPendingValidator) ? 'status-valid' : 'status-invalid'}`}>
+                      {isAbandoned ? "Abandoned" : pool?.isActive ? "Active" : (pool?.isToBeElected || pool?.isPendingValidator) ? "Valid" : "Invalid"}
                     </span>
                     <div className="address-actions">
                       <button className="btn-icon" id="copy-address" title="Copy Address" onClick={() => copyData(address || "")}>
@@ -338,6 +340,11 @@ export default function ValidatorDetails() {
               <div className="vd-detail-totalpool">
                 <div className="vd-detail-totalpool-value">{formatDmdFromWei(pool?.totalStake ?? 0)}</div>
                 <div className="vd-detail-totalpool-label">Total pool stake</div>
+                {isAbandoned && pool && (
+                  <div className="vd-detail-recover">
+                    <RecoverAbandonedStakesModal buttonText="Transfer to pots" pool={pool} name={dmdName} />
+                  </div>
+                )}
               </div>
             </div>
           </div>

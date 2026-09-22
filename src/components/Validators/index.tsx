@@ -5,6 +5,7 @@ import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import StakeModal from '../Modals/Stake/StakeModal';
 import UnstakeModal from '../Modals/Unstake/UnstakeModal';
+import RecoverAbandonedStakesModal from '../Modals/RecoverAbandonedStakes/RecoverAbandonedStakesModal';
 import ColumnsFilterModal from '../ColumnsFilter';
 import { useWeb3Context } from '../../contexts/Web3';
 import { useStakingContext } from '../../contexts/Staking';
@@ -59,12 +60,20 @@ const tableFieldsDefault: TableField[] = [
   { key: "miningPublicKey", label: "Public Key", sortAble: false, updateAble: true, hide: true },
 ];
 
+const abandonedActionField: TableField = { key: "recoverBtn", label: "", sortAble: false, updateAble: false, hide: false };
+
+
 export default function Validators() {
   const { userWallet } = useWeb3Context();
-  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake, candidateMinStake } = useStakingContext();
+  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake, candidateMinStake, abandonedPools } = useStakingContext();
   const router = useRouter();
   const theme = useTheme();
   const isPrivacyMode = useIsPrivacyMode();
+
+  const isAbandoned = useCallback(
+    (pool: { stakingAddress?: string }) => !!pool.stakingAddress && !!abandonedPools[pool.stakingAddress.toLowerCase()],
+    [abandonedPools]
+  );
 
   /**
    * Pools holding less than the minimum candidate stake are hidden from the
@@ -75,9 +84,15 @@ export default function Validators() {
     return pools.filter(pool =>
       BigNumber(pool.totalStake ?? 0).isGreaterThanOrEqualTo(candidateMinStake) ||
       BigNumber(pool.myStake ?? 0).isGreaterThan(0) ||
-      (!!myAddr && pool.stakingAddress?.toLowerCase() === myAddr)
+      (!!myAddr && pool.stakingAddress?.toLowerCase() === myAddr) ||
+      isAbandoned(pool)
     );
-  }, [pools, candidateMinStake, userWallet.myAddr]);
+  }, [pools, candidateMinStake, userWallet.myAddr, isAbandoned]);
+
+  const abandonedCount = useMemo(
+    () => visiblePools.filter(pool => isAbandoned(pool)).length,
+    [visiblePools, isAbandoned]
+  );
 
   const getImagePath = (filename: string) => {
     return getThemeImagePath(filename, theme);
@@ -85,7 +100,7 @@ export default function Validators() {
 
   // State management
   const [currentPage, setCurrentPage] = useState(0);
-  const [filter, setFilter] = useState<'default' | 'valid' | 'active' | 'invalid' | 'stakedOn'>('default');
+  const [filter, setFilter] = useState<'default' | 'valid' | 'active' | 'invalid' | 'stakedOn' | 'abandoned'>('default');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: string } | null>(null);
   const [tableFields, setTableFields] = useState<TableField[]>(tableFieldsDefault);
@@ -143,6 +158,11 @@ export default function Validators() {
     if ([5, 10, 25, 50, 100].includes(n)) setItemsPerPage(n);
   }, []);
 
+  const visibleFields = useMemo(() => {
+    const fields = tableFields.filter(field => !field.hide);
+    return abandonedCount > 0 ? [...fields, abandonedActionField] : fields;
+  }, [tableFields, abandonedCount]);
+
   // Load table fields from localStorage.
   useEffect(() => {
     const STORAGE_KEY = 'validatorFieldsData_v2';
@@ -186,8 +206,8 @@ export default function Validators() {
   useEffect(() => {
     try {
       const param = searchParams?.get('filter');
-      if (param && ['default', 'valid', 'active', 'invalid', 'stakedOn'].includes(param)) {
-        setFilter(param as 'default' | 'valid' | 'active' | 'invalid' | 'stakedOn');
+      if (param && ['default', 'valid', 'active', 'invalid', 'stakedOn', 'abandoned'].includes(param)) {
+        setFilter(param as typeof filter);
         setCurrentPage(0);
       }
 
@@ -273,6 +293,8 @@ export default function Validators() {
     poolsCopy = poolsCopy.filter(pool => !pool.isActive && !pool.isToBeElected);
   } else if (filter === 'stakedOn') {
     poolsCopy = poolsCopy.filter(pool => BigNumber(pool.myStake).isGreaterThan(0));
+  } else if (filter === 'abandoned') {
+    poolsCopy = poolsCopy.filter(pool => isAbandoned(pool));
   }
 
   if (searchTerm.trim() !== '') {
@@ -328,6 +350,11 @@ export default function Validators() {
         return 0;
       });
     }
+  }
+
+  const abandonedRows = poolsCopy.filter(pool => isAbandoned(pool));
+  if (abandonedRows.length && abandonedRows.length !== poolsCopy.length) {
+    poolsCopy = [...abandonedRows, ...poolsCopy.filter(pool => !isAbandoned(pool))];
   }
 
   // Pagination
@@ -430,12 +457,12 @@ export default function Validators() {
     return (
       <thead>
         <tr>
-          {tableFields.filter(field => !field.hide).map((column, index) => {
+          {visibleFields.map((column, index) => {
             // Hide wallet-specific columns when wallet is not connected
             if ((column.key === 'myStake' || column.key === 'stakeBtn' || column.key === 'unstakeClaimBtn') && !userWallet.myAddr) {
               return null;
             }
-            const isActionCol = column.key === 'stakeBtn' || column.key === 'unstakeClaimBtn';
+            const isActionCol = column.key === 'stakeBtn' || column.key === 'unstakeClaimBtn' || column.key === 'recoverBtn';
             return (
               <th
                 key={index}
@@ -464,14 +491,17 @@ export default function Validators() {
 
   // Render table rows
   const renderRows = (currentItems: any[]) => {
-    return currentItems.map((pool, index) => (
+    return currentItems.map((pool, index) => {
+      const abandoned = isAbandoned(pool);
+
+      return (
       <tr 
         key={index} 
-        className="validators-table-row" 
+        className={`validators-table-row${abandoned ? ' vl-row--abandoned' : ''}`}
         onClick={() => handleRowClick(pool.stakingAddress)}
         style={{ cursor: 'pointer' }}
       >
-        {tableFields.filter(field => !field.hide).map((column, colIndex) => {
+        {visibleFields.map((column, colIndex) => {
           // Hide wallet-specific columns when wallet is not connected
           if ((column.key === 'myStake' || column.key === 'stakeBtn' || column.key === 'unstakeClaimBtn') && !userWallet.myAddr) {
             return null;
@@ -480,10 +510,12 @@ export default function Validators() {
           if (column.key === 'isActive') {
             return (
               <td key={colIndex}>
-                <span className={`status-badge ${pool.isActive ? 'status-active' : (pool.isToBeElected || pool.isPendingValidator) ? 'status-valid' : 'status-invalid'}`}>
-                  {typeof pool.isActive === 'boolean'
-                    ? pool.isActive ? 'Active' : (pool.isToBeElected || pool.isPendingValidator) ? "Valid" : "Invalid"
-                    : 'Loading...'}
+                <span className={`status-badge ${abandoned ? 'status-abandoned' : pool.isActive ? 'status-active' : (pool.isToBeElected || pool.isPendingValidator) ? 'status-valid' : 'status-invalid'}`}>
+                  {abandoned
+                    ? 'Abandoned'
+                    : typeof pool.isActive === 'boolean'
+                      ? pool.isActive ? 'Active' : (pool.isToBeElected || pool.isPendingValidator) ? "Valid" : "Invalid"
+                      : 'Loading...'}
                 </span>
               </td>
             );
@@ -628,12 +660,25 @@ export default function Validators() {
                 )}
               </td>
             );
+          } else if (column.key === 'recoverBtn') {
+            return (
+              <td key={colIndex} className="vl-action-cell" onClick={(e) => e.stopPropagation()}>
+                {abandoned && (
+                  <RecoverAbandonedStakesModal
+                    buttonText="Transfer to pots"
+                    pool={pool}
+                    name={dmdNames[pool.stakingAddress.toLowerCase()]}
+                  />
+                )}
+              </td>
+            );
           } else {
             return <td key={colIndex}></td>;
           }
         })}
       </tr>
-    ));
+      );
+    });
   };
   return (
     <>
@@ -707,6 +752,9 @@ export default function Validators() {
                   <option value="valid">Valid Candidates</option>
                   <option value="active">Active Candidates</option>
                   <option value="invalid">Invalid Candidates</option>
+                  {abandonedCount > 0 && (
+                    <option value="abandoned">Abandoned Candidates</option>
+                  )}
                   {userWallet.myAddr && (
                     <option value="stakedOn">Candidates I've staked on</option>
                   )}

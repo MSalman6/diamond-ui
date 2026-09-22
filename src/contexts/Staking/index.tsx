@@ -9,7 +9,7 @@ import { UserWallet } from "@/contexts/types/wallet";
 import { NonPayableTx } from "@/contexts/types/contracts";
 import { getAddressFromPublicKey } from "@/utils/common";
 import { formatDmd, formatDmdFromWei } from "@/utils/format";
-import { PoolCache, Delegator, Pool } from "@/contexts/types/models";
+import { PoolCache, Delegator, Pool, AbandonedPool } from "@/contexts/types/models";
 import { buildTxOptions, EstimatableMethod } from "@/utils/txOptions";
 import logger from '@/utils/logger';
 
@@ -33,10 +33,13 @@ interface StakingContextProps {
   stakingInitialized: boolean;
   candidateMinStake: BigNumber;
   delegatorMinStake: BigNumber;
+  abandonedPools: Record<string, AbandonedPool>;
+  inactivityThreshold: number;
   
   initializeStakingDataAdapter: () => {};
   fetchPoolScoreHistory: (pool: Pool) => {};
   retrieveGlobalValues: () => Promise<number>;
+  recoverAbandonedStakes: () => Promise<boolean>;
   claimOrderedUnstake: (pool: Pool) => Promise<boolean>;
   setPools: React.Dispatch<React.SetStateAction<Pool[]>>;
   canUpdatePoolOperatorRewards: (pool: Pool) => Promise<boolean>;
@@ -102,6 +105,8 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
   const [currentValidatorsWithoutPools, setCurrentValidatorsWithoutPools] = useState<string[]>([]);
   const [numbersOfValidators, setNumbersOfValidators] = useState<number>(0);
   const [newBlockPolling, setNewBlockPolling] = useState<NodeJS.Timeout | undefined>(undefined);
+  const [abandonedPools, setAbandonedPools] = useState<Record<string, AbandonedPool>>({});
+  const [inactivityThreshold, setInactivityThreshold] = useState<number>(0);
 
   useEffect(() => {
     if (pools.filter(pool => pool.miningAddress).length == pools.length) {
@@ -491,6 +496,49 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
     return latestBlockNumber;
   }
   
+  const syncAbandonedPools = async (inactivePoolAddrs: Array<string>): Promise<void> => {
+    const { vsContract, stContract } = contractsManager;
+    if (!vsContract || !stContract) return;
+
+    try {
+      if (!inactivityThreshold) {
+        const threshold = await vsContract.methods.validatorInactivityThreshold().call();
+        setInactivityThreshold(Number(threshold));
+      }
+
+      if (!inactivePoolAddrs.length) {
+        setAbandonedPools({});
+        return;
+      }
+
+      const resolved = await Promise.all(inactivePoolAddrs.map(async (stakingAddress): Promise<AbandonedPool | null> => {
+        const isAbandoned = await vsContract.methods.isValidatorAbandoned(stakingAddress).call();
+        if (!isAbandoned) return null;
+
+        const miningAddress = await vsContract.methods.miningByStakingAddress(stakingAddress).call();
+        const [lastActive, recoverableStake] = await Promise.all([
+          vsContract.methods.validatorAvailableSinceLastWrite(miningAddress).call(),
+          stContract.methods.stakeAmountTotal(stakingAddress).call(),
+        ]);
+
+        return {
+          stakingAddress,
+          lastActive: Number(lastActive),
+          recoverableStake: new BigNumber(recoverableStake),
+        };
+      }));
+
+      const abandoned: Record<string, AbandonedPool> = {};
+      resolved.forEach(entry => {
+        if (entry) abandoned[entry.stakingAddress.toLowerCase()] = entry;
+      });
+
+      setAbandonedPools(abandoned);
+    } catch (err) {
+      logger.error("Couldn't resolve abandoned pools:", err);
+    }
+  }
+
   const syncPoolsState = async (blockNumber: number, isNewEpoch: boolean) => {    
     let activePoolAddrs: Array<string> = [];
     let inactivePoolAddrs: Array<string> = [];
@@ -526,6 +574,8 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
       updatePools(newPools, activePoolAddrs, toBeElectedPoolAddrs, pendingValidatorAddrs, blockNumber);
       return newPools;
     });
+
+    syncAbandonedPools(inactivePoolAddrs);
   }
 
   const updatePools = async (
@@ -975,6 +1025,39 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
     }
   }
 
+  const recoverAbandonedStakes = async (): Promise<boolean> => {
+    const total = Object.values(abandonedPools).reduce(
+      (sum, abandoned) => sum.plus(abandoned.recoverableStake),
+      new BigNumber(0)
+    );
+
+    if (total.isZero()) {
+      toast.warn("No abandoned stakes to recover");
+      return false;
+    }
+
+    if (!contractsManager.stContract || !userWallet.myAddr) return false;
+
+    const ready = await ensureProviderReady();
+    if (!ready) return false;
+
+    try {
+      showLoader(true, `Transferring ${formatDmdFromWei(total)} 💎 to the pots`);
+      const recover = contractsManager.stContract.methods.recoverAbandonedStakes();
+      const receipt = await recover.send(await buildTxOpts(recover, { from: userWallet.myAddr }));
+      if (!showHistoricBlock) setCurrentBlockNumber(receipt.blockNumber);
+      showLoader(false, "");
+      toast.success(`Transferred ${formatDmdFromWei(total)} 💎 to the reinsert and governance pots`);
+
+      await syncPoolsState(receipt.blockNumber, false);
+      return true;
+    } catch (err: any) {
+      showLoader(false, "");
+      handleErrorMsg(err, "Error in recovering abandoned stakes");
+      return false;
+    }
+  }
+
   const fetchPoolScoreHistory = async (pool: Pool): Promise<void> => {
     try {
       await contractsManager.bsContract?.getPastEvents('allEvents', {
@@ -1015,6 +1098,8 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
     candidateMinStake,
     delegatorMinStake,
     stakingInitialized,
+    abandonedPools,
+    inactivityThreshold,
     validCandidates: pools.filter(pool => pool.isAvailable).length,
     activeValidators: pools.filter(pool => pool.isActive).length,
 
@@ -1027,6 +1112,7 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
     addOrUpdatePool,
     claimOrderedUnstake,
     retrieveGlobalValues,
+    recoverAbandonedStakes,
     fetchPoolScoreHistory,
     getWithdrawableAmounts,
     canUpdatePoolOperatorRewards,

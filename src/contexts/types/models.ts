@@ -84,3 +84,9 @@ export class Delegator {
   public address: string;
   public amount: BigNumber;
 }
+
+export interface AbandonedPool {
+  stakingAddress: string;
+  lastActive: number;
+  recoverableStake: BigNumber;
+}

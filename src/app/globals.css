@@ -52,6 +52,11 @@ body {
   --btn-info-bg: rgba(0, 210, 255, 0.15);
   --btn-info-bg-hover: rgba(0, 210, 255, 0.25);
   --btn-info-fg: #00d2ff;
+
+  --btn-warning-bg: rgba(255, 167, 38, 0.15);
+  --btn-warning-bg-hover: rgba(255, 167, 38, 0.25);
+  --btn-warning-fg: #ffa726;
+  --btn-warning-border: rgba(255, 167, 38, 0.3);
 }
 
 body.light-theme {
@@ -93,6 +98,11 @@ body.light-theme {
   --btn-info-bg: rgba(59, 130, 246, 0.12);
   --btn-info-bg-hover: rgba(59, 130, 246, 0.2);
   --btn-info-fg: #1d4ed8;
+
+  --btn-warning-bg: rgba(214, 158, 46, 0.12);
+  --btn-warning-bg-hover: rgba(214, 158, 46, 0.2);
+  --btn-warning-fg: #b45309;
+  --btn-warning-border: rgba(214, 158, 46, 0.35);
 }
 
 html:has(body.light-theme) {
@@ -2738,6 +2748,28 @@ footer {
   background: var(--btn-danger-bg-hover);
 }
 
+.btn-recover {
+  padding: var(--space-6) var(--space-12);
+  border-radius: var(--btn-radius);
+  font-size: var(--text-caption);
+  font-weight: var(--btn-weight);
+  cursor: pointer;
+  transition: var(--transition);
+  background: var(--btn-warning-bg);
+  color: var(--btn-warning-fg);
+  border: var(--border-width) solid var(--btn-warning-border);
+  white-space: nowrap;
+}
+
+.btn-recover:hover {
+  background: var(--btn-warning-bg-hover);
+}
+
+.btn-recover:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .btn-stake:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -3388,6 +3420,12 @@ body.light-theme .status-badge.status-invalid {
   background: rgba(255, 107, 107, 0.15);
   color: #ff6b6b;
   border-color: rgba(255, 107, 107, 0.3);
+}
+
+body.light-theme .status-badge.status-abandoned {
+  background: var(--btn-warning-bg);
+  color: var(--btn-warning-fg);
+  border-color: var(--btn-warning-border);
 }
 
 body.light-theme .wallet-icon {

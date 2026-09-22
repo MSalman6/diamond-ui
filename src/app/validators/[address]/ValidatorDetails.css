@@ -232,6 +232,12 @@ body.light-theme .btn-icon:hover {
   border: var(--border-width) solid rgba(255, 107, 107, 0.3);
 }
 
+.status-badge.status-abandoned {
+  background: var(--btn-warning-bg);
+  color: var(--btn-warning-fg);
+  border: var(--border-width) solid var(--btn-warning-border);
+}
+
 .utility-buttons {
   display: flex;
   gap: var(--space-10);
@@ -2649,6 +2655,12 @@ body.light-theme .vd-rewards-performance-title h2 {
 
 body.light-theme .vd-detail-since {
   color: #64748b;
+}
+
+.vd-detail-recover {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-12);
 }
 
 .vd-detail-address-sub i {
