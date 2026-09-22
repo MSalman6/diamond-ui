@@ -19,7 +19,7 @@ import type { BatchNodeRewardStats } from '@/types/rewards';
 import { getCachedBatchNodeStats } from '@/lib/rewardStatsCache';
 import ValidatorCell from '../ValidatorCell';
 import { Aep30Bar } from '../Aep30Badge';
-import SaturationBar from '../SaturationBar';
+import StakeCell from '../StakeCell';
 import Rpt30Cell from '../Rpt30Cell';
 import { useDmdNamesForAddresses } from '@/hooks/useDmdNamesForAddresses';
 import { stripDmdSuffix } from '@/utils/dmdNaming';
@@ -28,7 +28,7 @@ import { formatApy, formatCount, formatDmd, formatDmdFromWei, formatPercent } fr
 const SORT_PILLS = [
   { key: 'rpt30',      label: 'Highest RpT30',       icon: 'fa-trophy',        direction: 'descending' },
   { key: 'apy',        label: 'Highest APY',          icon: 'fa-percent',       direction: 'descending' },
-  { key: 'saturation', label: 'Lowest Saturation',    icon: 'fa-gauge',         direction: 'ascending'  },
+  { key: 'totalStake', label: 'Lowest Saturation',    icon: 'fa-gauge',         direction: 'ascending'  },
   { key: 'aep30',      label: 'Most Active',          icon: 'fa-shield',        direction: 'descending' },
 ] as const;
 
@@ -47,7 +47,6 @@ const tableFieldsDefault: TableField[] = [
   { key: "apy", label: "APY", sortAble: true, updateAble: true, hide: false },
   { key: "aep30", label: "AEP30", sortAble: true, updateAble: true, hide: false },
   { key: "totalStake", label: "Stake", sortAble: true, updateAble: true, hide: false },
-  { key: "saturation", label: "Saturation", sortAble: true, updateAble: true, hide: false },
   { key: "myStake", label: "My Stake", sortAble: true, updateAble: false, hide: false },
   { key: "stakeBtn", label: "", sortAble: false, updateAble: false, hide: false },
   { key: "unstakeClaimBtn", label: "", sortAble: false, updateAble: false, hide: false },
@@ -214,7 +213,8 @@ export default function Validators() {
       }
 
       // Sorting with URL params, e.g. ?sort=myStake&direction=descending
-      const sortKey = searchParams?.get('sort');
+      const rawSortKey = searchParams?.get('sort');
+      const sortKey = rawSortKey === 'saturation' ? 'totalStake' : rawSortKey;
       const dirParam = searchParams?.get('direction') || searchParams?.get('dir');
       const direction = dirParam === 'descending' || dirParam === 'asc' || dirParam === 'desc' || dirParam === 'ascending'
         ? (dirParam === 'asc' ? 'ascending' : dirParam === 'desc' ? 'descending' : dirParam)
@@ -315,11 +315,11 @@ export default function Validators() {
 
   // Apply sorting
   if (sortConfig !== null) {
-    if (['rpt30', 'apy', 'aep30', 'vos30', 'saturation'].includes(sortConfig.key)) {
+    if (['rpt30', 'apy', 'aep30', 'vos30', 'totalStake'].includes(sortConfig.key)) {
       const getVal = (pool: any): number => {
         const stats = rewardStatsMap[pool.stakingAddress.toLowerCase()];
-        if (sortConfig.key === 'saturation') {
-          return BigNumber(pool.totalStake || 0).dividedBy(BigNumber(50000).multipliedBy(10 ** 18)).multipliedBy(100).toNumber();
+        if (sortConfig.key === 'totalStake') {
+          return BigNumber(pool.totalStake || 0).dividedBy(10 ** 18).toNumber();
         }
         if (!stats) return -Infinity;
         if (sortConfig.key === 'rpt30') return stats.rpt30;
@@ -402,7 +402,7 @@ export default function Validators() {
       case 'isActive':
           return "Active candidate is part of the active set; Valid - is not part of the active set, but can be elected; Invalid - a candidate who is flagged unavailable on the blockchain or has not enough stake.";
       case 'totalStake':
-          return "Total delegated DMD (self-staked DMD + delegates' stake).";
+          return "Total delegated DMD (self-staked DMD + delegates' stake), with the bar showing how full the pool is against the 50,000 DMD maximum.";
       case 'votingPower':
           return "Value that approximates a node’s influence in the DAO participation.";
       case 'score':
@@ -417,8 +417,6 @@ export default function Validators() {
           return "Percentage of epochs during the last 30 days where this validator was part of the active validator set.";
       case 'vos30':
           return "Total validator owner rewards earned during the last 30 days from the 20% validator owner share.";
-      case 'saturation':
-          return "Current pool stake as a percentage of the 50,000 DMD maximum.";
       default:
           return "";
     }
@@ -597,16 +595,12 @@ export default function Validators() {
                 {isPrivacyMode ? '—' : isLoadingRewardStats ? '...' : stats ? formatDmd(stats.vos30) : '—'}
               </td>
             );
-          } else if (column.key === 'saturation') {
-            return (
-              <td key={colIndex}>
-                <SaturationBar totalStakeWei={pool.totalStake || '0'} />
-              </td>
-            );
           } else if (column.key === 'totalStake') {
             return (
               <td key={colIndex}>
-                {pool.totalStake !== undefined && pool.totalStake !== null ? formatDmdFromWei(pool.totalStake) : 'Loading...'}
+                {pool.totalStake !== undefined && pool.totalStake !== null
+                  ? <StakeCell totalStakeWei={pool.totalStake} />
+                  : 'Loading...'}
               </td>
             );
           } else if (column.key === 'votingPower') {
