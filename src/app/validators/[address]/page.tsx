@@ -46,11 +46,12 @@ export default function ValidatorDetails() {
   // Context hooks
   const { userWallet, web3Initialized, showLoader } = useWeb3Context();
   const { activeProposals, getMyVote, getActiveProposals } = useDaoContext();
-  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake, abandonedPools } = useStakingContext();
+  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake, abandonedPools, stakesSyncedFor } = useStakingContext();
   const isPrivacyMode = useIsPrivacyMode();
   const dmdNames = useDmdNamesForAddresses(address ? [address] : []);
   const dmdName = address ? dmdNames[address.toLowerCase()] : null;
   const isAbandoned = !!address && !!abandonedPools[address.toLowerCase()];
+  const isSyncingMyStakes = !!userWallet.myAddr && stakesSyncedFor !== userWallet.myAddr;
 
   // State
   const [pool, setPool] = useState<any | null>(null);
@@ -429,10 +430,11 @@ export default function ValidatorDetails() {
                 </InfoTooltip>
               </h3>
             </div>
-            <p className="stat-value-large">{formatStakeDmd(myStakeWei)} DMD</p>
-            <div className="vd-pool-sub">{formatPercent(myStakePct)} of pool</div>
+            <p className="stat-value-large">{isSyncingMyStakes ? '…' : `${formatStakeDmd(myStakeWei)} DMD`}</p>
+            <div className="vd-pool-sub">{isSyncingMyStakes ? '\u00a0' : `${formatPercent(myStakePct)} of pool`}</div>
             <div className="stat-actions vd-mystake-action">
-              {(pool?.isActive || pool?.isToBeElected || pool?.isPendingValidator) &&
+              {!isSyncingMyStakes &&
+              (pool?.isActive || pool?.isToBeElected || pool?.isPendingValidator) &&
               BigNumber(pool?.totalStake || 0).isLessThan(BigNumber(50000).multipliedBy(10**18)) &&
               BigNumber(50000).multipliedBy(10**18).minus(BigNumber(pool?.totalStake || 0)).isGreaterThanOrEqualTo(delegatorMinStake) &&
               userWallet.myAddr && pool && (
@@ -441,14 +443,16 @@ export default function ValidatorDetails() {
                   buttonText="Delegate"
                 />
               )}
-              {pool &&
+              {!isSyncingMyStakes &&
+              pool &&
               BigNumber(pool.orderedWithdrawAmount || 0).isGreaterThan(0) &&
               BigNumber(pool.orderedWithdrawUnlockEpoch || 0).isLessThanOrEqualTo(stakingEpoch) &&
               userWallet.myAddr ? (
                 <button className="btn-primary btn-claim-hero" id="claim-button" onClick={handleClaimClick}>
                   <i className="fas fa-coins"></i> Claim
                 </button>
-              ) : pool &&
+              ) : !isSyncingMyStakes &&
+                  pool &&
                   BigNumber(pool.myStake || 0).isGreaterThan(0) &&
                   userWallet.myAddr && (
                 <UnstakeModal

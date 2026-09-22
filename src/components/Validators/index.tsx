@@ -65,7 +65,7 @@ const abandonedActionField: TableField = { key: "recoverBtn", label: "", sortAbl
 
 export default function Validators() {
   const { userWallet } = useWeb3Context();
-  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake, candidateMinStake, abandonedPools } = useStakingContext();
+  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake, candidateMinStake, abandonedPools, stakesSyncedFor } = useStakingContext();
   const router = useRouter();
   const theme = useTheme();
   const isPrivacyMode = useIsPrivacyMode();
@@ -93,6 +93,8 @@ export default function Validators() {
     () => visiblePools.filter(pool => isAbandoned(pool)).length,
     [visiblePools, isAbandoned]
   );
+
+  const isSyncingMyStakes = !!userWallet.myAddr && stakesSyncedFor !== userWallet.myAddr;
 
   const getImagePath = (filename: string) => {
     return getThemeImagePath(filename, theme);
@@ -633,9 +635,11 @@ export default function Validators() {
             return (
               <td key={colIndex}>
                 <div>
-                  {pool.myStake !== undefined && pool.myStake !== null ? formatDmdFromWei(pool.myStake) : 'Loading...'}
+                  {isSyncingMyStakes
+                    ? '...'
+                    : pool.myStake !== undefined && pool.myStake !== null ? formatDmdFromWei(pool.myStake) : 'Loading...'}
                 </div>
-                {BigNumber(pool.orderedWithdrawAmount).isGreaterThan(0) && (
+                {!isSyncingMyStakes && BigNumber(pool.orderedWithdrawAmount).isGreaterThan(0) && (
                   <div className="ordered-amount">Ordered: {formatDmdFromWei(pool.orderedWithdrawAmount)}</div>
                 )}
               </td>
@@ -651,7 +655,7 @@ export default function Validators() {
           } else if (column.key === 'unstakeClaimBtn') {
             return (
               <td key={colIndex} className="vl-action-cell" onClick={(e) => e.stopPropagation()}>
-                {BigNumber(pool.orderedWithdrawAmount).isGreaterThan(0) && BigNumber(pool.orderedWithdrawUnlockEpoch).isLessThanOrEqualTo(stakingEpoch) ? (
+                {isSyncingMyStakes ? null : BigNumber(pool.orderedWithdrawAmount).isGreaterThan(0) && BigNumber(pool.orderedWithdrawUnlockEpoch).isLessThanOrEqualTo(stakingEpoch) ? (
                   <button className="btn-stake claim-btn" onClick={(e) => {e.stopPropagation(); claimOrderedUnstake(pool)}}>Claim</button>
                 ) : (
                   BigNumber(pool.myStake).isGreaterThan(0) && (

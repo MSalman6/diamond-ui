@@ -34,7 +34,7 @@ export function useProfileOnConnect() {
 
     pendingRedirectRef.current = false;
 
-    if (pathname !== '/profile') {
+    if (pathname === '/') {
       router.push('/profile');
     }
   }, [status, userWallet.myAddr, pathname, router]);
