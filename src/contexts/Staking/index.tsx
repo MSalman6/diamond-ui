@@ -1006,15 +1006,12 @@ const StakingContextProvider: React.FC<{ children: ReactNode }> = ({children}) =
         toast.success(`Claimed ${formatDmdFromWei(claimAmount)} 💎`);
         showLoader(false, "");
 
-        setPools(prevPools => {
-          prevPools.forEach(p => {
-            if (p.stakingAddress === pool.stakingAddress) {
-              p.orderedWithdrawAmount = new BigNumber(0);
-              p.orderedWithdrawUnlockEpoch = new BigNumber(0);
-            }
-          });
-          return prevPools;
-        })
+        setPools(prevPools => prevPools.map(p =>
+          p.stakingAddress === pool.stakingAddress
+            ? { ...p, orderedWithdrawAmount: new BigNumber(0), orderedWithdrawUnlockEpoch: new BigNumber(0) } as Pool
+            : p
+        ));
+        addOrUpdatePool(pool.stakingAddress, receipt.blockNumber);
 
         return true;
       } catch (err: any) {

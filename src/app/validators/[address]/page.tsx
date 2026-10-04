@@ -14,6 +14,7 @@ import { useDaoContext } from '@/contexts/DAO';
 import { useIsPrivacyMode } from '@/contexts/PrivacyMode';
 import StakeModal from '@/components/Modals/Stake/StakeModal';
 import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
+import OrderedStakeTag, { isOrderClaimable } from '@/components/OrderedStakeTag';
 import RecoverAbandonedStakesModal from '@/components/Modals/RecoverAbandonedStakes/RecoverAbandonedStakesModal';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
@@ -46,7 +47,7 @@ export default function ValidatorDetails() {
   // Context hooks
   const { userWallet, web3Initialized, showLoader } = useWeb3Context();
   const { activeProposals, getMyVote, getActiveProposals } = useDaoContext();
-  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake, abandonedPools, stakesSyncedFor } = useStakingContext();
+  const { pools, stakingEpoch, delegatorMinStake, abandonedPools, stakesSyncedFor } = useStakingContext();
   const isPrivacyMode = useIsPrivacyMode();
   const dmdNames = useDmdNamesForAddresses(address ? [address] : []);
   const dmdName = address ? dmdNames[address.toLowerCase()] : null;
@@ -164,6 +165,7 @@ export default function ValidatorDetails() {
   const selfStakeWei = BigNumber(pool?.ownStake || 0);
   const delegatedStakeWei = BigNumber.max(totalStakeWei.minus(selfStakeWei), 0);
   const myStakeWei = BigNumber(pool?.myStake || 0);
+  const isClaimable = isOrderClaimable(pool, stakingEpoch);
 
   const maxPoolStakeWei = BigNumber(50000).multipliedBy(10 ** 18);
   const saturationPctNum = Math.min(Math.max(totalStakeWei.dividedBy(maxPoolStakeWei).multipliedBy(100).toNumber(), 0), 100);
@@ -251,12 +253,6 @@ export default function ValidatorDetails() {
 
   const handleUnstakeClick = () => {
     setIsUnstakeModalOpen(true);
-  };
-
-  const handleClaimClick = async () => {
-    if (pool) {
-      await claimOrderedUnstake(pool);
-    }
   };
 
   const navigateToProposal = (proposalId: string) => {
@@ -432,6 +428,7 @@ export default function ValidatorDetails() {
             </div>
             <p className="stat-value-large">{isSyncingMyStakes ? '…' : `${formatStakeDmd(myStakeWei)} DMD`}</p>
             <div className="vd-pool-sub">{isSyncingMyStakes ? '\u00a0' : `${formatPercent(myStakePct)} of pool`}</div>
+            {!isSyncingMyStakes && userWallet.myAddr && <OrderedStakeTag pool={pool} className="vd-ordered" />}
             <div className="stat-actions vd-mystake-action">
               {!isSyncingMyStakes &&
               (pool?.isActive || pool?.isToBeElected || pool?.isPendingValidator) &&
@@ -445,16 +442,8 @@ export default function ValidatorDetails() {
               )}
               {!isSyncingMyStakes &&
               pool &&
-              BigNumber(pool.orderedWithdrawAmount || 0).isGreaterThan(0) &&
-              BigNumber(pool.orderedWithdrawUnlockEpoch || 0).isLessThanOrEqualTo(stakingEpoch) &&
-              userWallet.myAddr ? (
-                <button className="btn-primary btn-claim-hero" id="claim-button" onClick={handleClaimClick}>
-                  <i className="fas fa-coins"></i> Claim
-                </button>
-              ) : !isSyncingMyStakes &&
-                  pool &&
-                  BigNumber(pool.myStake || 0).isGreaterThan(0) &&
-                  userWallet.myAddr && (
+              (myStakeWei.isGreaterThan(0) || isClaimable) &&
+              userWallet.myAddr && (
                 <UnstakeModal
                   pool={pool}
                   buttonText="Unstake"

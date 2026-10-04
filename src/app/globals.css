@@ -2780,49 +2780,27 @@ footer {
   transform: scale(0.95);
 }
 
-.claim-btn {
-  padding: var(--space-6) var(--space-12);
-  border-radius: var(--radius-control);
-  font-size: var(--text-caption);
-  font-weight: var(--weight-medium);
-  cursor: pointer;
-  transition: var(--transition);
-  border: none;
-  background: rgba(255, 159, 67, 0.15);
-  color: #ff9f43;
+.ordered-stake-tag {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: var(--space-6);
+  margin-top: 0.15rem;
+  font-size: 0.72rem;
+  font-weight: var(--weight-medium);
+  color: #ff9f43;
+  white-space: nowrap;
 }
 
-.claim-btn:hover {
-  background: rgba(255, 159, 67, 0.3);
+.ordered-stake-tag--ready {
+  color: #07f49e;
 }
 
-.claim-btn:active {
-  transform: scale(0.95);
+body.light-theme .ordered-stake-tag {
+  color: #b45309;
 }
 
-.claim-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.claim-btn:disabled:hover {
-  background: rgba(255, 159, 67, 0.15);
-}
-
-.claim-btn:disabled:active {
-  transform: none;
-}
-
-body.light-theme .claim-btn {
-  background: rgba(255, 159, 67, 0.15);
-  color: #e65100;
-}
-
-body.light-theme .claim-btn:hover {
-  background: rgba(255, 159, 67, 0.25);
+body.light-theme .ordered-stake-tag--ready {
+  color: #047857;
 }
 
 @media (max-width: 1024px) {

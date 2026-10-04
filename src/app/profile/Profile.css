@@ -827,19 +827,6 @@ body.light-theme .vp2-rewards-performance {
   white-space: nowrap;
 }
 
-.dp2-pending-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-6);
-  font-size: 0.72rem;
-  font-weight: var(--weight-medium);
-  color: #ff9f43;
-}
-
-.dp2-pending-tag--ready {
-  color: #07f49e;
-}
-
 .dp2-action-group {
   display: inline-flex;
   align-items: center;
@@ -850,10 +837,6 @@ body.light-theme .vp2-rewards-performance {
 .dp2-action-group .btn-stake,
 .dp2-action-group .btn-unstake {
   margin-right: var(--space-0);
-}
-
-.dp2-claim-wrap {
-  display: inline-flex;
 }
 
 .dp2-tfoot-pending {
@@ -941,14 +924,9 @@ body.light-theme .dp2-rewards-cell {
   color: #0284c7;
 }
 
-body.light-theme .dp2-pending-tag,
 body.light-theme .dp2-tfoot-pending,
 body.light-theme .dp2-tfoot-pending strong {
   color: #b45309;
-}
-
-body.light-theme .dp2-pending-tag--ready {
-  color: #047857;
 }
 
 body.light-theme .dp2-tfoot-row td {

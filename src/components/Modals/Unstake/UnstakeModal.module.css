@@ -172,8 +172,33 @@
   font-weight: var(--weight-bold);
   cursor: pointer;
   transition: all var(--duration-base) var(--ease-default);
-  max-width: 150px;
+  max-width: 200px;
   align-self: center;
+}
+
+.claimReady {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--space-16);
+  background: rgba(7, 244, 158, 0.08);
+  border: var(--border-width) solid rgba(7, 244, 158, 0.25);
+  border-radius: var(--radius-card);
+  color: #07f49e;
+  font-size: 14px;
+  font-weight: var(--weight-medium);
+}
+
+.claimReady strong {
+  font-weight: var(--weight-bold);
+}
+
+.claimNote {
+  margin: var(--space-0);
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: var(--leading-normal);
 }
 
 .allButton {
@@ -286,6 +311,16 @@
   color: #d69e2e;
   background: rgba(214, 158, 46, 0.1);
   border-color: rgba(214, 158, 46, 0.2);
+}
+
+:global(body.light-theme) .claimReady {
+  color: #047857;
+  background: rgba(4, 120, 87, 0.08);
+  border-color: rgba(4, 120, 87, 0.25);
+}
+
+:global(body.light-theme) .claimNote {
+  color: #4a5568;
 }
 
 /* Responsive design */

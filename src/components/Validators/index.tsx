@@ -5,6 +5,7 @@ import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import StakeModal from '../Modals/Stake/StakeModal';
 import UnstakeModal from '../Modals/Unstake/UnstakeModal';
+import OrderedStakeTag, { isOrderClaimable } from '../OrderedStakeTag';
 import RecoverAbandonedStakesModal from '../Modals/RecoverAbandonedStakes/RecoverAbandonedStakesModal';
 import ColumnsFilterModal from '../ColumnsFilter';
 import { useWeb3Context } from '../../contexts/Web3';
@@ -64,7 +65,7 @@ const abandonedActionField: TableField = { key: "recoverBtn", label: "", sortAbl
 
 export default function Validators() {
   const { userWallet } = useWeb3Context();
-  const { pools, stakingEpoch, claimOrderedUnstake, delegatorMinStake, candidateMinStake, abandonedPools, stakesSyncedFor } = useStakingContext();
+  const { pools, stakingEpoch, delegatorMinStake, candidateMinStake, abandonedPools, stakesSyncedFor } = useStakingContext();
   const router = useRouter();
   const theme = useTheme();
   const isPrivacyMode = useIsPrivacyMode();
@@ -493,6 +494,7 @@ export default function Validators() {
   const renderRows = (currentItems: any[]) => {
     return currentItems.map((pool, index) => {
       const abandoned = isAbandoned(pool);
+      const isClaimable = isOrderClaimable(pool, stakingEpoch);
 
       return (
       <tr 
@@ -633,9 +635,7 @@ export default function Validators() {
                     ? '...'
                     : pool.myStake !== undefined && pool.myStake !== null ? formatDmdFromWei(pool.myStake) : 'Loading...'}
                 </div>
-                {!isSyncingMyStakes && BigNumber(pool.orderedWithdrawAmount).isGreaterThan(0) && (
-                  <div className="ordered-amount">Ordered: {formatDmdFromWei(pool.orderedWithdrawAmount)}</div>
-                )}
+                {!isSyncingMyStakes && <OrderedStakeTag pool={pool} />}
               </td>
             );
           } else if (column.key === 'stakeBtn') {
@@ -649,12 +649,8 @@ export default function Validators() {
           } else if (column.key === 'unstakeClaimBtn') {
             return (
               <td key={colIndex} className="vl-action-cell" onClick={(e) => e.stopPropagation()}>
-                {isSyncingMyStakes ? null : BigNumber(pool.orderedWithdrawAmount).isGreaterThan(0) && BigNumber(pool.orderedWithdrawUnlockEpoch).isLessThanOrEqualTo(stakingEpoch) ? (
-                  <button className="btn-stake claim-btn" onClick={(e) => {e.stopPropagation(); claimOrderedUnstake(pool)}}>Claim</button>
-                ) : (
-                  BigNumber(pool.myStake).isGreaterThan(0) && (
-                    <UnstakeModal buttonText="Unstake" pool={pool} />
-                  )
+                {!isSyncingMyStakes && (BigNumber(pool.myStake ?? 0).isGreaterThan(0) || isClaimable) && (
+                  <UnstakeModal buttonText="Unstake" pool={pool} />
                 )}
               </td>
             );
