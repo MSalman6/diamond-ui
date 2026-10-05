@@ -60,8 +60,6 @@ const tableFieldsDefault: TableField[] = [
   { key: "miningPublicKey", label: "Public Key", sortAble: false, updateAble: true, hide: true },
 ];
 
-const abandonedActionField: TableField = { key: "recoverBtn", label: "", sortAble: false, updateAble: false, hide: false };
-
 
 export default function Validators() {
   const { userWallet } = useWeb3Context();
@@ -160,10 +158,7 @@ export default function Validators() {
     if ([5, 10, 25, 50, 100].includes(n)) setItemsPerPage(n);
   }, []);
 
-  const visibleFields = useMemo(() => {
-    const fields = tableFields.filter(field => !field.hide);
-    return abandonedCount > 0 ? [...fields, abandonedActionField] : fields;
-  }, [tableFields, abandonedCount]);
+  const visibleFields = useMemo(() => tableFields.filter(field => !field.hide), [tableFields]);
 
   // Load table fields from localStorage.
   useEffect(() => {
@@ -463,7 +458,7 @@ export default function Validators() {
             if ((column.key === 'myStake' || column.key === 'stakeBtn' || column.key === 'unstakeClaimBtn') && !userWallet.myAddr) {
               return null;
             }
-            const isActionCol = column.key === 'stakeBtn' || column.key === 'unstakeClaimBtn' || column.key === 'recoverBtn';
+            const isActionCol = column.key === 'stakeBtn' || column.key === 'unstakeClaimBtn';
             return (
               <th
                 key={index}
@@ -654,18 +649,6 @@ export default function Validators() {
                 )}
               </td>
             );
-          } else if (column.key === 'recoverBtn') {
-            return (
-              <td key={colIndex} className="vl-action-cell" onClick={(e) => e.stopPropagation()}>
-                {abandoned && (
-                  <RecoverAbandonedStakesModal
-                    buttonText="Transfer to pots"
-                    pool={pool}
-                    name={dmdNames[pool.stakingAddress.toLowerCase()]}
-                  />
-                )}
-              </td>
-            );
           } else {
             return <td key={colIndex}></td>;
           }
@@ -755,6 +738,11 @@ export default function Validators() {
                 </select>
               </div>
             </div>
+            {abandonedCount > 0 && (
+              <div className="vl-recover-container">
+                <RecoverAbandonedStakesModal buttonText="Recover abandoned" />
+              </div>
+            )}
             <div className="customize-container">
               <ColumnsFilterModal
                 buttonText="Customize"

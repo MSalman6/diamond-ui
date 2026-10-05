@@ -2619,12 +2619,6 @@ body.light-theme .vd-detail-since {
   color: #64748b;
 }
 
-.vd-detail-recover {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: var(--space-12);
-}
-
 .vd-detail-address-sub i {
   opacity: 0.6;
   font-size: var(--icon-sm);

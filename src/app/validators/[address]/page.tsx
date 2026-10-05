@@ -15,7 +15,6 @@ import { useIsPrivacyMode } from '@/contexts/PrivacyMode';
 import StakeModal from '@/components/Modals/Stake/StakeModal';
 import UnstakeModal from '@/components/Modals/Unstake/UnstakeModal';
 import OrderedStakeTag, { isOrderClaimable } from '@/components/OrderedStakeTag';
-import RecoverAbandonedStakesModal from '@/components/Modals/RecoverAbandonedStakes/RecoverAbandonedStakesModal';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import InfoTooltip from '@/components/InfoTooltip';
@@ -337,11 +336,6 @@ export default function ValidatorDetails() {
               <div className="vd-detail-totalpool">
                 <div className="vd-detail-totalpool-value">{formatDmdFromWei(pool?.totalStake ?? 0)}</div>
                 <div className="vd-detail-totalpool-label">Total pool stake</div>
-                {isAbandoned && pool && (
-                  <div className="vd-detail-recover">
-                    <RecoverAbandonedStakesModal buttonText="Transfer to pots" pool={pool} name={dmdName} />
-                  </div>
-                )}
               </div>
             </div>
           </div>

@@ -131,6 +131,21 @@
   margin-left: auto;
 }
 
+.vl-recover-container {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.vl-recover-container + .customize-container {
+  margin-left: var(--space-0);
+}
+
+.vl-recover-container .btn-recover {
+  height: 43px;
+  padding: var(--space-8) var(--space-16);
+  font-size: var(--text-control);
+}
+
 .search-container input {
   background: var(--card-bg);
   border: var(--border-width) solid var(--border-color);
@@ -827,7 +842,8 @@ body.light-theme .vl-table-scroll-btn:hover {
     flex: 0 0 auto;
   }
 
-  .customize-container {
+  .customize-container,
+  .vl-recover-container {
     margin-left: var(--space-0);
   }
 
@@ -1569,10 +1585,6 @@ body.light-theme .vl-per-page select option {
 
 .validators-table tbody tr.vl-row--abandoned:hover td {
   background: rgba(255, 167, 38, 0.12);
-}
-
-.validators-table tbody tr.vl-row--abandoned td:first-child {
-  box-shadow: inset 3px 0 0 var(--btn-warning-fg);
 }
 
 body.light-theme .validators-table tbody tr.vl-row--abandoned td {

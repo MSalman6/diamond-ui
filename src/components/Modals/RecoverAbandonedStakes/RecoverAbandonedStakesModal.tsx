@@ -2,9 +2,9 @@ import ReactDOM from "react-dom";
 import BigNumber from "bignumber.js";
 import copy from "copy-to-clipboard";
 import { toast } from "react-toastify";
-import { Pool } from "@/contexts/types/models";
 import { useWeb3Context } from "@/contexts/Web3";
 import { useStakingContext } from "@/contexts/Staking";
+import { useDmdNamesForAddresses } from "@/hooks/useDmdNamesForAddresses";
 import { formatDmdFromWei } from "@/utils/format";
 import { formatDmdName } from "@/utils/dmdNaming";
 import { formatDuration, formatElapsedSince, truncateAddress } from "@/utils/common";
@@ -15,11 +15,9 @@ const DEFAULT_INACTIVITY_THRESHOLD = 10 * 365 * 24 * 60 * 60;
 
 interface ModalProps {
   buttonText: string;
-  pool: Pool;
-  name?: string | null;
 }
 
-const RecoverAbandonedStakesModal: React.FC<ModalProps> = ({ buttonText, pool, name }) => {
+const RecoverAbandonedStakesModal: React.FC<ModalProps> = ({ buttonText }) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const { abandonedPools, inactivityThreshold, recoverAbandonedStakes } = useStakingContext();
@@ -52,25 +50,21 @@ const RecoverAbandonedStakesModal: React.FC<ModalProps> = ({ buttonText, pool, n
     };
   }, [isOpen]);
 
-  const abandoned = abandonedPools[pool.stakingAddress?.toLowerCase()];
-
-  const others = useMemo(
-    () => Object.values(abandonedPools).filter(
-      entry => entry.stakingAddress.toLowerCase() !== pool.stakingAddress?.toLowerCase()
-    ),
-    [abandonedPools, pool.stakingAddress]
+  const entries = useMemo(
+    () => Object.values(abandonedPools).sort((a, b) => b.recoverableStake.comparedTo(a.recoverableStake) ?? 0),
+    [abandonedPools]
   );
 
+  const names = useDmdNamesForAddresses(entries.map(entry => entry.stakingAddress));
+
   const combined = useMemo(
-    () => Object.values(abandonedPools).reduce(
-      (sum, entry) => sum.plus(entry.recoverableStake),
-      new BigNumber(0)
-    ),
-    [abandonedPools]
+    () => entries.reduce((sum, entry) => sum.plus(entry.recoverableStake), new BigNumber(0)),
+    [entries]
   );
 
   const governanceShare = combined.dividedToIntegerBy(2);
   const reinsertShare = combined.minus(governanceShare);
+  const isSingle = entries.length === 1;
 
   const handleRecover = async (e: FormEvent) => {
     e.preventDefault();
@@ -95,35 +89,37 @@ const RecoverAbandonedStakesModal: React.FC<ModalProps> = ({ buttonText, pool, n
 
             <h3 className={styles.headerTitle}>Transfer abandoned coins to the pots</h3>
 
-            <div className={styles.identity}>
-              {name && <span className={styles.identityName}>{formatDmdName(name)}</span>}
-              <button
-                type="button"
-                className={styles.identityAddress}
-                title="Copy staking address"
-                onClick={() => { copy(pool.stakingAddress); toast.success('Copied staking address'); }}
-              >
-                {truncateAddress(pool.stakingAddress)}
-                <i className="fas fa-copy" aria-hidden="true"></i>
-              </button>
-            </div>
-
             <p className={styles.lede}>
-              This validator has not been part of the active validator set for more than{' '}
-              {formatDuration(inactivityThreshold || DEFAULT_INACTIVITY_THRESHOLD, 1)}, so its coins
+              {isSingle ? 'This validator has' : 'These validators have'} not been part of the active validator set for more than{' '}
+              {formatDuration(inactivityThreshold || DEFAULT_INACTIVITY_THRESHOLD, 1)}, so {isSingle ? 'its' : 'their'} coins
               can be transferred to the pots.
             </p>
 
-            <dl className={styles.facts}>
-              <div className={styles.fact}>
-                <dt>Last active</dt>
-                <dd>{formatElapsedSince(abandoned?.lastActive ?? 0)}</dd>
-              </div>
-              <div className={styles.fact}>
-                <dt>Total stake</dt>
-                <dd>{formatDmdFromWei(abandoned?.recoverableStake ?? pool.totalStake)}</dd>
-              </div>
-            </dl>
+            <ul className={styles.breakdown}>
+              {entries.map(entry => {
+                const name = names[entry.stakingAddress.toLowerCase()];
+                return (
+                  <li key={entry.stakingAddress} className={styles.breakdownRow}>
+                    <div className={styles.breakdownIdentity}>
+                      {name && <span className={styles.identityName}>{formatDmdName(name)}</span>}
+                      <button
+                        type="button"
+                        className={styles.identityAddress}
+                        title="Copy staking address"
+                        onClick={() => { copy(entry.stakingAddress); toast.success('Copied staking address'); }}
+                      >
+                        {truncateAddress(entry.stakingAddress)}
+                        <i className="fas fa-copy" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div className={styles.breakdownFigures}>
+                      <span className={styles.breakdownStake}>{formatDmdFromWei(entry.recoverableStake)}</span>
+                      <span className={styles.breakdownLastActive}>Last active {formatElapsedSince(entry.lastActive)}</span>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
 
             <div className={styles.split}>
               <div className={styles.splitHeader}>
@@ -139,23 +135,6 @@ const RecoverAbandonedStakesModal: React.FC<ModalProps> = ({ buttonText, pool, n
                 <span className={styles.amount}>{formatDmdFromWei(governanceShare)}</span>
               </div>
             </div>
-
-            {others.length > 0 && (
-              <div className={styles.sweepBlock}>
-                <p className={styles.sweepText}>
-                  The network recovers all abandoned validators in one transaction, so this
-                  also transfers the coins of {others.length === 1 ? 'one other pool' : `${others.length} other pools`}:
-                </p>
-                <ul className={styles.sweepList}>
-                  {others.map(entry => (
-                    <li key={entry.stakingAddress}>
-                      <span>{truncateAddress(entry.stakingAddress)}</span>
-                      <span className={styles.amount}>{formatDmdFromWei(entry.recoverableStake)}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
 
             <div className={styles.importantBlock} role="alert">
               <span className={styles.importantIcon} aria-hidden>⚠️</span>
