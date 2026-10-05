@@ -162,6 +162,18 @@
   justify-content: flex-start;
 }
 
+.checkboxWrapper > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.checkboxWrapper > input {
+  flex-shrink: 0;
+}
+
 .formSubmit {
   color: black;
   font-weight: var(--weight-bold);
