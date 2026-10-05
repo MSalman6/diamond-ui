@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useWeb3Context } from "@/contexts/Web3";
 import { useStakingContext } from "@/contexts/Staking";
 import { useDmdNamesForAddresses } from "@/hooks/useDmdNamesForAddresses";
+import InfoTooltip from "@/components/InfoTooltip";
 import { formatDmdFromWei } from "@/utils/format";
 import { formatDmdName } from "@/utils/dmdNaming";
 import { formatDuration, formatElapsedSince, truncateAddress } from "@/utils/common";
@@ -15,9 +16,10 @@ const DEFAULT_INACTIVITY_THRESHOLD = 10 * 365 * 24 * 60 * 60;
 
 interface ModalProps {
   buttonText: string;
+  tooltip?: React.ReactNode;
 }
 
-const RecoverAbandonedStakesModal: React.FC<ModalProps> = ({ buttonText }) => {
+const RecoverAbandonedStakesModal: React.FC<ModalProps> = ({ buttonText, tooltip }) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const { abandonedPools, inactivityThreshold, recoverAbandonedStakes } = useStakingContext();
@@ -74,11 +76,19 @@ const RecoverAbandonedStakesModal: React.FC<ModalProps> = ({ buttonText }) => {
     if (recovered) closeModal();
   };
 
+  const trigger = (
+    <button className="btn-recover" onClick={(e) => { e.stopPropagation(); openModal(); }}>
+      {buttonText}
+    </button>
+  );
+
   return (
     <>
-      <button className="btn-recover" onClick={(e) => { e.stopPropagation(); openModal(); }}>
-        {buttonText}
-      </button>
+      {tooltip ? (
+        <InfoTooltip content={tooltip} focusable={false} disabled={isOpen}>
+          {trigger}
+        </InfoTooltip>
+      ) : trigger}
 
       {isOpen && ReactDOM.createPortal(
         <div onClick={(e) => e.stopPropagation()} className={styles.modalOverlay}>
@@ -147,18 +157,11 @@ const RecoverAbandonedStakesModal: React.FC<ModalProps> = ({ buttonText }) => {
 
             <form className={styles.form} onSubmit={handleRecover}>
               <button
-                className={"btn-recover " + styles.formSubmit}
+                className={"btn-primary " + styles.formSubmit}
                 type="submit"
                 disabled={combined.isZero()}
               >
                 Transfer to pots
-              </button>
-              <button
-                className={"btn-secondary btn-sm " + styles.formCancel}
-                type="button"
-                onClick={closeModal}
-              >
-                Cancel
               </button>
             </form>
           </div>

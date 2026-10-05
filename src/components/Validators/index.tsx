@@ -740,7 +740,10 @@ export default function Validators() {
             </div>
             {abandonedCount > 0 && (
               <div className="vl-recover-container">
-                <RecoverAbandonedStakesModal buttonText="Recover abandoned" />
+                <RecoverAbandonedStakesModal
+                  buttonText="Transfer Abandoned Funds"
+                  tooltip="Transfer eligible abandoned validator funds to the DMD treasury after the 10-year abandonment period."
+                />
               </div>
             )}
             <div className="customize-container">

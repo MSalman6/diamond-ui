@@ -140,6 +140,10 @@
   margin-left: var(--space-0);
 }
 
+.vl-recover-container .info-tooltip-trigger {
+  margin-left: var(--space-0);
+}
+
 .vl-recover-container .btn-recover {
   height: 43px;
   padding: var(--space-8) var(--space-16);
