@@ -1,7 +1,6 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import BigNumber from 'bignumber.js';
 import { useRouter, usePathname } from 'next/navigation';
 import { useWeb3Context } from '@/contexts/Web3';
 import { truncateAddress } from '@/utils/common';
@@ -18,6 +17,7 @@ const NAV_BREAKPOINT = 1024;
 
 const ECOSYSTEM_ROUTES = ['/names'];
 const KNOWLEDGEBASE_ROUTES = ['/faqs'];
+const ZERO = BigInt(0);
 
 export default function Header() {
   const router = useRouter();
@@ -226,8 +226,8 @@ export default function Header() {
 
   const isActiveRoute = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
-  const exactDmd = (wei: BigNumber) => formatDmdFromWei(wei);
-  const plainDmd = (wei: BigNumber) => formatDmdFromWei(wei, { unit: false });
+  const exactDmd = (wei: bigint) => formatDmdFromWei(wei);
+  const plainDmd = (wei: bigint) => formatDmdFromWei(wei, { unit: false });
   const shielded = (value: string) => (totals.isHidden ? '—' : value);
 
   const isWalletOpen = activeDropdown === 'wallet';
@@ -260,7 +260,7 @@ export default function Header() {
                 Everything this wallet controls: coins you can spend now, plus everything you have
                 staked.
               </p>
-              {totals.pendingWithdrawWei.isGreaterThan(0) && (
+              {totals.pendingWithdrawWei > ZERO && (
                 <p>
                   Coins in an ordered unstake are listed separately because they have already left
                   your stake and only reach your wallet once you claim them.
@@ -278,13 +278,13 @@ export default function Header() {
           <dt>Wallet</dt>
           <dd>{shielded(plainDmd(totals.liquidWei))}</dd>
         </div>
-        {totals.ownStakeWei.isGreaterThan(0) && (
+        {totals.ownStakeWei > ZERO && (
           <div className="hdr-balance-row">
             <dt>Own stake</dt>
             <dd>{shielded(plainDmd(totals.ownStakeWei))}</dd>
           </div>
         )}
-        {totals.delegatedWei.isGreaterThan(0) && (
+        {totals.delegatedWei > ZERO && (
           <div className="hdr-balance-row">
             <dt>Delegated out</dt>
             <dd>{shielded(plainDmd(totals.delegatedWei))}</dd>
@@ -296,7 +296,7 @@ export default function Header() {
             {shielded(plainDmd(totals.totalWei))} <span className="hdr-balance-unit">DMD</span>
           </dd>
         </div>
-        {totals.pendingWithdrawWei.isGreaterThan(0) && (
+        {totals.pendingWithdrawWei > ZERO && (
           <div className="hdr-balance-row hdr-balance-row--pending">
             <dt>Pending unstake</dt>
             <dd>{shielded(plainDmd(totals.pendingWithdrawWei))}</dd>
@@ -478,6 +478,16 @@ export default function Header() {
                 onClick={handleRegularLinkClick}
               >
                 DAO
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                href="/rich-list"
+                aria-current={isActiveRoute('/rich-list') ? 'page' : undefined}
+                onClick={handleRegularLinkClick}
+              >
+                Rich List
               </Link>
             </li>
 

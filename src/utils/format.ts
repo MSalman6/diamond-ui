@@ -7,7 +7,7 @@ const SMALL_DMD_DECIMALS = 4;
 const TINY_DMD_DECIMALS = 8;
 const TINY_DMD_THRESHOLD = new BigNumber(10).pow(-TINY_DMD_DECIMALS);
 
-export type NumericInput = BigNumber | string | number | null | undefined;
+export type NumericInput = BigNumber | string | number | bigint | null | undefined;
 
 interface DmdOptions {
   unit?: boolean;
@@ -30,6 +30,7 @@ interface DecimalOptions {
 
 const toBigNumber = (value: NumericInput): BigNumber | null => {
   if (value === null || value === undefined || value === '') return null;
+  if (typeof value === 'bigint') return new BigNumber(value.toString());
   const amount = BigNumber.isBigNumber(value) ? value : new BigNumber(value);
   return amount.isFinite() ? amount : null;
 };

@@ -6,16 +6,22 @@ import { useWeb3Context } from '@/contexts/Web3';
 import { useStakingContext } from '@/contexts/Staking';
 import { useIsPrivacyMode } from '@/contexts/PrivacyMode';
 import type { Pool } from '@/contexts/types/models';
+import { computeHoldings, type PoolStake } from '@/utils/holdings';
 
-const ZERO = new BigNumber(0);
+const ZERO = BigInt(0);
+
+const toWei = (value: BigNumber.Value | null | undefined): bigint => {
+  const amount = new BigNumber(value ?? 0);
+  return amount.isFinite() ? BigInt(amount.integerValue(BigNumber.ROUND_DOWN).toFixed(0)) : ZERO;
+};
 
 export interface WalletTotals {
-  liquidWei: BigNumber;          // spendable native balance held on the address
-  ownStakeWei: BigNumber;        // stake in the pool whose stakingAddress is the connected address
-  delegatedWei: BigNumber;       // stake in every other pool
-  stakedWei: BigNumber;          // ownStakeWei + delegatedWei
-  totalWei: BigNumber;           // liquidWei + stakedWei
-  pendingWithdrawWei: BigNumber; // ordered withdrawals, which sit in neither bucket above
+  liquidWei: bigint;          // spendable native balance held on the address
+  ownStakeWei: bigint;        // stake in the pool whose stakingAddress is the connected address
+  delegatedWei: bigint;       // stake in every other pool
+  stakedWei: bigint;          // ownStakeWei + delegatedWei
+  totalWei: bigint;           // liquidWei + stakedWei
+  pendingWithdrawWei: bigint; // ordered withdrawals, which sit in neither of the above
   isLoading: boolean;
   isHidden: boolean;
   isConnected: boolean;
@@ -54,35 +60,22 @@ export function useWalletTotals(): WalletTotals {
   return useMemo<WalletTotals>(() => {
     if (!myAddr) return { ...EMPTY, isHidden };
 
-    const lowerAddr = myAddr.toLowerCase();
-    const liquidWei = new BigNumber(myBalance ?? 0);
-
-    let ownStakeWei = ZERO;
-    let delegatedWei = ZERO;
+    const stakes: PoolStake[] = [];
     let pendingWithdrawWei = ZERO;
 
     for (const pool of pools as Pool[]) {
-      const myStake = new BigNumber(pool.myStake ?? 0);
-
-      if (myStake.isGreaterThan(0)) {
-        if (pool.stakingAddress?.toLowerCase() === lowerAddr) {
-          ownStakeWei = ownStakeWei.plus(myStake);
-        } else {
-          delegatedWei = delegatedWei.plus(myStake);
-        }
-      }
-
-      pendingWithdrawWei = pendingWithdrawWei.plus(new BigNumber(pool.orderedWithdrawAmount ?? 0));
+      stakes.push({ pool: pool.stakingAddress ?? '', amount: toWei(pool.myStake) });
+      pendingWithdrawWei += toWei(pool.orderedWithdrawAmount);
     }
 
-    const stakedWei = ownStakeWei.plus(delegatedWei);
+    const holdings = computeHoldings(myAddr, toWei(myBalance), stakes);
 
     return {
-      liquidWei,
-      ownStakeWei,
-      delegatedWei,
-      stakedWei,
-      totalWei: liquidWei.plus(stakedWei),
+      liquidWei: holdings.wallet,
+      ownStakeWei: holdings.ownStake,
+      delegatedWei: holdings.delegatedOut,
+      stakedWei: holdings.ownStake + holdings.delegatedOut,
+      totalWei: holdings.total,
       pendingWithdrawWei,
       isLoading: isSyncingPools || stakesSyncedFor !== myAddr,
       isHidden,
