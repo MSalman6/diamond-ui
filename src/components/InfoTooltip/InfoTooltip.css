@@ -1,9 +1,9 @@
 .info-tooltip-portal {
   background: var(--tooltip-bg, rgba(22, 22, 26, 0.95));
   color: var(--tooltip-color, #ffffff);
-  border-radius: 10px;
+  border-radius: 0.625rem;
   padding: var(--space-16) 1.1rem;
-  max-width: 420px;
+  max-width: 26.25rem;
   box-shadow: 0 12px 36px rgba(0,0,0,0.45);
   z-index: 10050;
   font-size: var(--text-control);
@@ -53,7 +53,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: -7px; /* will flip when placement is top */
+  top: -0.4375rem; /* will flip when placement is top */
 }
 
 .info-tooltip-portal.top .info-tooltip-arrow {

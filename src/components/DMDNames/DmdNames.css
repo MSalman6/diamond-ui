@@ -3,11 +3,11 @@
   min-height: 100vh;
   align-items: flex-start;
   justify-content: flex-start;
-  --partners-bar-height: 60px;
+  --partners-bar-height: 3.75rem;
   padding-bottom: var(--partners-bar-height);
   --hero-anchor-offset: max(
     0px,
-    (100vh - 160px - var(--hero-content-height, 400px) - 100px) / 2
+    (100vh - 10rem - var(--hero-content-height, 25rem) - 6.25rem) / 2
   );
 }
 
@@ -33,13 +33,13 @@
 
 .hero.hero--with-search .hero-visual {
   top: var(--hero-anchor-offset);
-  height: calc(var(--hero-content-height, 400px) + 100px);
+  height: calc(var(--hero-content-height, 25rem) + 6.25rem);
 }
 
 .hero-search-section {
   width: 100%;
   margin-top: var(--space-40);
-  margin-bottom: 72px;
+  margin-bottom: 4.5rem;
   position: relative;
   z-index: 2;
 }
@@ -59,14 +59,14 @@
 }
 
 .dmd-search-widget > p {
-  margin: var(--space-0) var(--space-0) 22px;
+  margin: var(--space-0) var(--space-0) 1.375rem;
   font-size: var(--text-ui);
   color: var(--text-secondary);
 }
 
 .dmd-new-badge {
   display: inline-block;
-  padding: 2px var(--space-8);
+  padding: 0.125rem var(--space-8);
   border-radius: var(--radius-control);
   font-size: var(--icon-xs);
   font-weight: var(--weight-bold);
@@ -148,7 +148,7 @@
   align-items: center;
   justify-content: center;
   align-self: center;
-  padding: var(--space-0) 14px;
+  padding: var(--space-0) 0.875rem;
   color: var(--text-secondary);
 }
 
@@ -165,7 +165,27 @@
 
 .dmd-name-search--homepage .dmd-name-search-input-group input {
   grid-column: 2;
-  padding: 14px var(--space-10);
+  padding: 0.875rem var(--space-10);
+}
+
+@media (pointer: coarse) {
+  .dmd-name-search--homepage .dmd-name-search-input-group input {
+    font-size: var(--text-body);
+  }
+
+  .dmd-search-widget-note-link {
+    position: relative;
+  }
+
+  .dmd-search-widget-note-link::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: max(100%, var(--tap-target));
+    transform: translateY(-50%);
+  }
 }
 
 .dmd-name-search-suffix {
@@ -205,8 +225,8 @@
 
 .dmd-name-search--homepage .dmd-name-search-submit {
   grid-column: 4;
-  padding: 14px var(--space-24) !important;
-  border-radius: var(--radius-none) 7px 7px var(--radius-none) !important;
+  padding: 0.875rem var(--space-24) !important;
+  border-radius: var(--radius-none) 0.4375rem 0.4375rem var(--radius-none) !important;
 }
 
 .dmd-name-search-examples {

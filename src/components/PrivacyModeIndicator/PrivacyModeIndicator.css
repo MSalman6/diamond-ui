@@ -35,7 +35,7 @@
 .privacy-mode-toggle:hover {
   background: var(--card-hover);
   border-color: var(--accent);
-  transform: translateY(-1px);
+  transform: translateY(-0.0625rem);
 }
 
 .light-theme .privacy-mode-toggle:hover {
@@ -73,7 +73,7 @@
 
 .privacy-label {
   font-family: var(--font-sans);
-  letter-spacing: 0.2px;
+  letter-spacing: 0.0125rem;
 }
 
 /* Active badge indicator */
@@ -159,7 +159,7 @@
 .privacy-mode-toggle::after {
   content: attr(title);
   position: absolute;
-  bottom: -35px;
+  bottom: -2.1875rem;
   right: 0;
   transform: scale(0.9);
   transform-origin: right center;

@@ -71,7 +71,7 @@ export default function Home() {
   }, [showHeroSearch]);
 
   return (
-    <div>
+    <div className="home-page">
         {/* Unauthenticated View */}
         <div id="unauthenticated-view">
           {/* Hero Section */}

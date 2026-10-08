@@ -37,14 +37,14 @@
 }
 
 /* FAQ Section */
-.faq {
+.faqs-page .faq {
   padding: var(--space-80) var(--space-0);
   background: var(--darker-bg);
   position: relative;
 }
 
 /* FAQ Container */
-.faq-container {
+.faqs-page .faq-container {
   max-width: 900px;
   margin: var(--space-0) auto;
 }
@@ -133,7 +133,7 @@
     font-size: var(--text-card-title);
   }
 
-  .faq {
+  .faqs-page .faq {
     padding: var(--space-60) var(--space-0);
   }
 
@@ -145,15 +145,15 @@
     font-size: var(--text-body);
   }
 
-  .faq-question {
+  .faqs-page .faq-question {
     padding: var(--space-20);
   }
 
-  .faq-question h3 {
+  .faqs-page .faq-question h3 {
     font-size: var(--text-card-title);
   }
 
-  .faq-item.active .faq-answer {
+  .faqs-page .faq-item.active .faq-answer {
     padding: var(--space-0) var(--space-20) var(--space-20);
   }
 
@@ -192,15 +192,15 @@
     font-size: var(--text-stat);
   }
 
-  .faq-question {
+  .faqs-page .faq-question {
     padding: var(--space-16);
   }
 
-  .faq-question h3 {
+  .faqs-page .faq-question h3 {
     font-size: var(--text-body);
   }
 
-  .faq-item.active .faq-answer {
+  .faqs-page .faq-item.active .faq-answer {
     padding: var(--space-0) var(--space-16) var(--space-16);
   }
 
