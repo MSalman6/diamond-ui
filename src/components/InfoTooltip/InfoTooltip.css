@@ -78,3 +78,19 @@ body.light-theme .info-tooltip-portal {
   box-shadow: 0 8px 24px rgba(18,24,38,0.06);
   border: var(--border-width) solid rgba(18,24,38,0.04);
 }
+
+@media (pointer: coarse) {
+  .info-tooltip-trigger:has(> i) {
+    position: relative;
+  }
+
+  .info-tooltip-trigger:has(> i)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--tap-target);
+    height: var(--tap-target);
+    transform: translate(-50%, -50%);
+  }
+}

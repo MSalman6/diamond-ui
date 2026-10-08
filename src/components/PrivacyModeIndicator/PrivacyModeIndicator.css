@@ -160,8 +160,9 @@
   content: attr(title);
   position: absolute;
   bottom: -35px;
-  left: 50%;
-  transform: translateX(-50%) scale(0.9);
+  right: 0;
+  transform: scale(0.9);
+  transform-origin: right center;
   padding: var(--space-6) var(--space-12);
   background: var(--darker-bg);
   border: var(--border-width) solid var(--border-color);
@@ -183,11 +184,23 @@
 
 .privacy-mode-toggle:hover::after {
   opacity: 1;
-  transform: translateX(-50%) scale(1);
+  transform: scale(1);
 }
 
 @media (max-width: 768px) {
   .privacy-mode-toggle::after {
     display: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .privacy-mode-toggle::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--tap-target));
+    height: max(100%, var(--tap-target));
+    transform: translate(-50%, -50%);
   }
 }

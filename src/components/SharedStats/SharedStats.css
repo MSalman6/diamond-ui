@@ -39,6 +39,22 @@ body.light-theme .dmd-validator-cell__sub--red { color: #c0392b; }
 }
 .dmd-validator-cell__copy:hover { opacity: 1; }
 
+@media (pointer: coarse) {
+  .dmd-validator-cell__copy {
+    position: relative;
+  }
+
+  .dmd-validator-cell__copy::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--tap-target);
+    height: var(--tap-target);
+    transform: translate(-50%, -50%);
+  }
+}
+
 /* Aep30Badge */
 .dmd-aep30-badge {
   display: inline-block;

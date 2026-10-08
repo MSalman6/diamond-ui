@@ -549,6 +549,7 @@ body.light-theme .stake-action-badge.stake-neutral {
     width: 100vw;
     max-width: calc(100vw - 16px);
     max-height: calc(100vh - 16px);
+    max-height: calc(100dvh - 16px);
     padding: var(--space-20) var(--space-16);
   }
 

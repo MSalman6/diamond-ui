@@ -48,7 +48,7 @@ const ColumnsFilterModal: React.FC<ColumnsFilterModalProps> = ({
 
   const closeModal = () => {
     setIsOpen(false);
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = '';
     document.body.style.paddingRight = '0px';
   };
 
@@ -152,7 +152,7 @@ const ColumnsFilterModal: React.FC<ColumnsFilterModalProps> = ({
   // Cleanup effect to reset body overflow when component unmounts
   useEffect(() => {
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
       document.body.style.paddingRight = '0px';
     };
   }, []);

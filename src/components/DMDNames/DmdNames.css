@@ -1559,6 +1559,7 @@ body.light-theme .dmd-report-preview {
 
 .dmd-dns-modal {
   max-height: calc(100vh - 120px);
+  max-height: calc(100dvh - 120px);
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: var(--space-6);
@@ -1721,6 +1722,7 @@ body.light-theme .dmd-dns-mx-remove {
 @media (max-width: 640px) {
   .dmd-dns-modal {
     max-height: calc(100vh - 88px);
+    max-height: calc(100dvh - 88px);
   }
 }
 

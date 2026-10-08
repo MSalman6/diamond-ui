@@ -36,7 +36,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, className = ''
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.removeEventListener('mousedown', handleClickOutside);
-      document.body.style.overflow = 'unset';
+      if (isOpen) {
+        document.body.style.overflow = '';
+      }
     };
   }, [isOpen, onClose, closable]);
 

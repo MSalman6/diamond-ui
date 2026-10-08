@@ -370,3 +370,15 @@
     padding: 14px var(--space-24);
   }
 }
+
+@media (pointer: coarse) {
+  .modalClose::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--tap-target));
+    height: max(100%, var(--tap-target));
+    transform: translate(-50%, -50%);
+  }
+}

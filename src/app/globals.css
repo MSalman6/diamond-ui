@@ -353,6 +353,16 @@ html {
   z-index: 2;
 }
 
+@media (min-width: 1921px) {
+  html {
+    font-size: clamp(100%, 0.625rem + 0.3125vw, 137.5%);
+  }
+
+  .container {
+    max-width: 75rem;
+  }
+}
+
 h1,
 h2,
 h3,
@@ -878,7 +888,6 @@ header .logo {
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1050;
     background: var(--header-bg);
   }
 
@@ -2369,6 +2378,19 @@ footer {
   opacity: 1;
 }
 
+@media (pointer: coarse) {
+  .footer-col ul li {
+    margin-bottom: var(--space-0);
+  }
+
+  .footer-col ul li a {
+    display: inline-flex;
+    align-items: center;
+    min-width: var(--tap-target);
+    min-height: var(--tap-target);
+  }
+}
+
 @media (max-width: 1200px) {
   section h2 {
     font-size: var(--text-hero);
@@ -2547,6 +2569,16 @@ footer {
 
   .smart-contracts-content h2 {
     font-size: var(--text-stat);
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-15);
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
   }
 }
 
@@ -2778,6 +2810,50 @@ footer {
 .btn-stake:active,
 .btn-unstake:active {
   transform: scale(0.95);
+}
+
+@media (pointer: coarse) {
+  .btn-primary:not(.btn-sm),
+  .btn-secondary:not(.btn-sm),
+  .btn-outline,
+  .cta-button,
+  .primaryBtn,
+  .btn-cancel,
+  .btn-recover {
+    min-height: var(--tap-target);
+  }
+
+  .btn-sm,
+  .btn-stake,
+  .btn-unstake {
+    position: relative;
+  }
+
+  .btn-primary.btn-sm {
+    overflow: visible;
+  }
+
+  .btn-primary.btn-sm::after {
+    display: none;
+  }
+
+  .btn-sm::before,
+  .btn-stake::before,
+  .btn-unstake::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: max(100%, var(--tap-target));
+    transform: translateY(-50%);
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: var(--text-body);
+  }
 }
 
 .ordered-stake-tag {
