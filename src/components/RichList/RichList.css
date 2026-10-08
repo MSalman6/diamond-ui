@@ -108,8 +108,8 @@
 }
 
 .rl-actions-btn {
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -135,10 +135,30 @@
   outline-offset: var(--border-width);
 }
 
+@media (pointer: coarse) {
+  .rl-actions-btn {
+    position: relative;
+  }
+
+  .rl-actions-btn::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--tap-target));
+    height: max(100%, var(--tap-target));
+    transform: translate(-50%, -50%);
+  }
+
+  .rl-actions-item {
+    min-height: var(--tap-target);
+  }
+}
+
 .rl-actions-menu {
   position: fixed;
   z-index: 999;
-  min-width: 180px;
+  min-width: 11.25rem;
   padding: var(--space-6);
   display: flex;
   flex-direction: column;
@@ -166,7 +186,7 @@
 }
 
 .rl-actions-item i {
-  width: 16px;
+  width: 1rem;
   text-align: center;
   opacity: 0.75;
 }

@@ -399,8 +399,8 @@ body.light-theme .vl-table-scroll-btn:hover {
 }
 
 .pagination-btn {
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -824,7 +824,7 @@ body.light-theme .vl-table-scroll-btn:hover {
   }
 
   .validators-table tbody tr:hover td:nth-child(2) {
-    background: rgba(255, 255, 255, 0.05);
+    background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)), var(--darker-bg);
   }
 }
 
@@ -950,34 +950,34 @@ body.light-theme .vl-table-scroll-btn:hover {
     font-size: var(--text-stat);
   }
 
-  .validators-page:not(.rich-list-page) .metric-card {
+  .validators-page .metric-card {
     flex-direction: row-reverse;
     justify-content: space-between;
     align-items: center;
-    gap: var(--space-15);
+    gap: var(--space-12);
     padding: var(--space-20);
   }
 
-  .validators-page:not(.rich-list-page) .metric-card .metric-content {
+  .validators-page .metric-card .metric-content {
     align-self: center;
   }
 
-  .validators-page:not(.rich-list-page) .metric-card .metric-value {
+  .validators-page .metric-card .metric-value {
     margin-bottom: var(--space-0);
   }
 
-  .validators-page:not(.rich-list-page) .metric-card h3 {
+  .validators-page .metric-card h3 {
     margin-bottom: var(--space-0);
   }
 
-  .validators-page:not(.rich-list-page) .metric-icon {
+  .validators-page .metric-icon {
     align-self: center;
     margin-bottom: var(--space-0);
   }
 
-  .validators-page:not(.rich-list-page) .metric-icon img {
-    width: 3.5rem;
-    height: 3.5rem;
+  .validators-page .metric-icon img {
+    width: 3rem;
+    height: 3rem;
   }
 
   .pagination {
@@ -1637,24 +1637,24 @@ body.light-theme .validators-table tbody tr.vl-row--abandoned:hover td {
 }
 
 @media (pointer: coarse) {
-  .validators-page:not(.rich-list-page) .search-container input,
-  .validators-page:not(.rich-list-page) .filter-container select,
-  .validators-page:not(.rich-list-page) .vl-per-page select {
+  .validators-page .search-container input,
+  .validators-page .filter-container select,
+  .validators-page .vl-per-page select {
     font-size: var(--text-body);
   }
 
-  .validators-page:not(.rich-list-page) .vl-per-page select,
+  .validators-page .vl-per-page select,
   .btn-apply {
     min-height: var(--tap-target);
   }
 
-  .validators-page:not(.rich-list-page) .pagination-btn {
+  .validators-page .pagination-btn {
     position: relative;
   }
 
   .validators-page:not(.rich-list-page) .search-btn::after,
   .validators-page:not(.rich-list-page) .vl-table-scroll-btn::after,
-  .validators-page:not(.rich-list-page) .pagination-btn::after {
+  .validators-page .pagination-btn::after {
     content: "";
     position: absolute;
     top: 50%;
