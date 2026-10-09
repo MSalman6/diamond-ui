@@ -6,8 +6,8 @@
 }
 
 .share-trigger--icon {
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: var(--radius-card);
   border: var(--border-width) solid var(--border-color);
   background: var(--card-bg);
@@ -22,7 +22,7 @@
 .share-trigger--icon.is-open {
   background: var(--card-hover);
   border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
+  transform: translateY(-0.125rem);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -112,7 +112,7 @@
 }
 
 .share-menu-item i {
-  width: 18px;
+  width: 1.125rem;
   flex-shrink: 0;
   font-size: var(--text-control);
   text-align: center;
@@ -129,7 +129,7 @@
 }
 
 .share-menu-divider {
-  height: 1px;
+  height: 0.0625rem;
   margin: var(--space-6) var(--space-8);
   background: var(--border-color);
 }
@@ -189,5 +189,11 @@ body.light-theme .share-menu-divider {
   .share-trigger--pill {
     font-size: var(--text-ui);
     padding: var(--space-5) var(--space-12);
+  }
+}
+
+@media (pointer: coarse) {
+  .share-menu-item {
+    min-height: var(--tap-target);
   }
 }

@@ -13,6 +13,7 @@ import {
 } from 'recharts';
 import { BarChartProps } from './types';
 import { useChartTheme, getAccentColor } from './useChartTheme';
+import { useCompactChart } from './useCompactChart';
 import ChartContainer from './ChartContainer';
 import CustomTooltip from './CustomTooltip';
 
@@ -36,6 +37,7 @@ const BarChart: React.FC<BarChartProps> = ({
   tooltipLabelFormatter,
 }) => {
   const theme = useChartTheme();
+  const { compact, onResize } = useCompactChart();
   const hasData = data && data.length > 0;
 
   const {
@@ -49,6 +51,7 @@ const BarChart: React.FC<BarChartProps> = ({
       bottom: xAxisLabel ? 12 : 0,
     },
   } = config;
+  const chartMargin = compact ? { ...margin, left: 0, right: 12 } : margin;
 
   const isHorizontalNumeric = layout === 'horizontal' && xAxisType === 'number';
 
@@ -59,8 +62,13 @@ const BarChart: React.FC<BarChartProps> = ({
       hasData={hasData}
       className={className}
     >
-      <ResponsiveContainer width={width} height={height}>
-        <RechartsBarChart data={data} margin={margin} layout={layout}>
+      {compact && yAxisLabel && (
+        <div className="chart-axis-titles">
+          <span>{yAxisLabel}</span>
+        </div>
+      )}
+      <ResponsiveContainer width={width} height={height} onResize={onResize}>
+        <RechartsBarChart data={data} margin={chartMargin} layout={layout}>
           {showGrid && (
             <CartesianGrid
               strokeDasharray="3 3"
@@ -90,8 +98,9 @@ const BarChart: React.FC<BarChartProps> = ({
             type={layout === 'vertical' ? 'category' : 'number'}
             stroke={theme.textColor}
             tick={{ fill: theme.textColor }}
+            width={compact ? 'auto' : undefined}
             label={
-              yAxisLabel
+              yAxisLabel && !compact
                 ? {
                     value: yAxisLabel,
                     angle: -90,

@@ -15,6 +15,7 @@ import {
 } from 'recharts';
 import { ComposedChartProps } from './types';
 import { useChartTheme, getAccentColor } from './useChartTheme';
+import { useCompactChart } from './useCompactChart';
 import ChartContainer from './ChartContainer';
 import CustomTooltip from './CustomTooltip';
 
@@ -36,6 +37,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
   secondaryYAxisLabel,
 }) => {
   const theme = useChartTheme();
+  const { compact, onResize } = useCompactChart();
   const hasData = data && data.length > 0;
 
   const {
@@ -43,6 +45,7 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
     height = 400,
     margin = { top: 10, right: 30, left: 0, bottom: 0 },
   } = config;
+  const chartMargin = compact ? { ...margin, left: 0, right: showSecondaryYAxis ? 0 : 12 } : margin;
 
   const renderElement = (element: any, index: number) => {
     const color = element.color || getAccentColor(index, theme);
@@ -101,8 +104,14 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
       hasData={hasData}
       className={className}
     >
-      <ResponsiveContainer width={width} height={height}>
-        <RechartsComposedChart data={data} margin={margin}>
+      {compact && (yAxisLabel || secondaryYAxisLabel) && (
+        <div className="chart-axis-titles">
+          <span>{yAxisLabel}</span>
+          {showSecondaryYAxis && secondaryYAxisLabel && <span>{secondaryYAxisLabel}</span>}
+        </div>
+      )}
+      <ResponsiveContainer width={width} height={height} onResize={onResize}>
+        <RechartsComposedChart data={data} margin={chartMargin}>
           {showGrid && (
             <CartesianGrid
               strokeDasharray="3 3"
@@ -129,9 +138,9 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
             yAxisId="left"
             stroke={theme.textColor}
             tick={{ fill: theme.textColor }}
-            width={yAxisLabel ? 72 : 60}
+            width={compact ? 'auto' : yAxisLabel ? 72 : 60}
             label={
-              yAxisLabel
+              yAxisLabel && !compact
                 ? {
                     value: yAxisLabel,
                     angle: -90,
@@ -149,9 +158,9 @@ const ComposedChart: React.FC<ComposedChartProps> = ({
               orientation="right"
               stroke={theme.textColor}
               tick={{ fill: theme.textColor }}
-              width={secondaryYAxisLabel ? 72 : 60}
+              width={compact ? 'auto' : secondaryYAxisLabel ? 72 : 60}
               label={
-                secondaryYAxisLabel
+                secondaryYAxisLabel && !compact
                   ? {
                       value: secondaryYAxisLabel,
                       angle: 90,

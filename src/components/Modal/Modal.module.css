@@ -52,8 +52,8 @@
 
 .modalClose {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 1rem;
+  right: 1rem;
   background: none;
   border: none;
   color: var(--text-secondary);
@@ -61,8 +61,8 @@
   cursor: pointer;
   padding: var(--space-4);
   border-radius: var(--radius-circle);
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;

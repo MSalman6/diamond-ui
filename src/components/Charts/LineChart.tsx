@@ -13,6 +13,7 @@ import {
 } from 'recharts';
 import { LineChartProps } from './types';
 import { useChartTheme, getAccentColor } from './useChartTheme';
+import { useCompactChart } from './useCompactChart';
 import ChartContainer from './ChartContainer';
 import CustomTooltip from './CustomTooltip';
 
@@ -33,6 +34,7 @@ const LineChart: React.FC<LineChartProps> = ({
   tooltipLabelFormatter,
 }) => {
   const theme = useChartTheme();
+  const { compact, onResize } = useCompactChart();
   const hasData = data && data.length > 0;
 
   const {
@@ -40,6 +42,7 @@ const LineChart: React.FC<LineChartProps> = ({
     height = 400,
     margin = { top: 10, right: 30, left: 0, bottom: 0 },
   } = config;
+  const chartMargin = compact ? { ...margin, left: 0, right: 12 } : margin;
 
   return (
     <ChartContainer
@@ -48,8 +51,13 @@ const LineChart: React.FC<LineChartProps> = ({
       hasData={hasData}
       className={className}
     >
-      <ResponsiveContainer width={width} height={height}>
-        <RechartsLineChart data={data} margin={margin}>
+      {compact && yAxisLabel && (
+        <div className="chart-axis-titles">
+          <span>{yAxisLabel}</span>
+        </div>
+      )}
+      <ResponsiveContainer width={width} height={height} onResize={onResize}>
+        <RechartsLineChart data={data} margin={chartMargin}>
           {showGrid && (
             <CartesianGrid
               strokeDasharray="3 3"
@@ -75,8 +83,9 @@ const LineChart: React.FC<LineChartProps> = ({
           <YAxis
             stroke={theme.textColor}
             tick={{ fill: theme.textColor }}
+            width={compact ? 'auto' : undefined}
             label={
-              yAxisLabel
+              yAxisLabel && !compact
                 ? {
                     value: yAxisLabel,
                     angle: -90,

@@ -52,7 +52,7 @@ export function Aep30Ring({ aep30, isLoading }: Aep30RingProps) {
   else if (aep30 != null) center = formatAep30(pct / 100);
 
   return (
-    <div className="dmd-aep30-ring" style={{ width: size, height: size }}>
+    <div className="dmd-aep30-ring">
       {aep30 != null && !isLoading && (
         <svg className="dmd-aep30-ring__svg" width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
           <circle

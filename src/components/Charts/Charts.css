@@ -57,6 +57,20 @@ body.light-theme .chart-container:hover {
   justify-content: center;
 }
 
+.chart-content:has(> .chart-axis-titles) {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.chart-axis-titles {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-12);
+  margin-bottom: var(--space-8);
+  font-size: var(--text-badge);
+  color: var(--text-secondary);
+}
+
 /* Loading State */
 .chart-loading {
   display: flex;
@@ -68,8 +82,8 @@ body.light-theme .chart-container:hover {
 }
 
 .chart-spinner {
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   border: 3px solid var(--border-color);
   border-top-color: var(--accent);
   border-radius: var(--radius-circle);
@@ -141,9 +155,9 @@ body.light-theme .chart-container:hover {
 }
 
 .chart-custom-tooltip .tooltip-color {
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 0.125rem;
 }
 
 /* Chart Type Selector */
@@ -247,6 +261,10 @@ body.light-theme .chart-container:hover {
 
   .recharts-cartesian-axis-tick-value {
     font-size: var(--icon-xs) !important;
+  }
+
+  .chart-axis-titles {
+    font-size: var(--icon-xs);
   }
 
   .recharts-legend-item-text {
