@@ -417,7 +417,7 @@ export default function CreateProposalPage() {
                   <div key={index}>
                     <span className={styles.addRemoveTransaction} onClick={() => {index !== 0 && handleRemoveOpenProposalField(index)}}>
                       Transaction {index + 1}
-                      {index !== 0 && (<i className="fas fa-minus-circle" style={{ color: 'red', marginLeft: 8 }} />)}
+                      {index !== 0 && (<i className="fas fa-minus-circle" style={{ color: 'red', marginLeft: '0.5rem' }} />)}
                     </span>
 
                   <input
@@ -443,7 +443,7 @@ export default function CreateProposalPage() {
           {proposalType === "open" && (
             <span className={styles.addRemoveTransaction} onClick={handleAddOpenProposalField}>
               Add Transaction
-              <i className="fas fa-plus-circle" style={{ color: 'green', marginLeft: 8 }} />
+              <i className="fas fa-plus-circle" style={{ color: 'green', marginLeft: '0.5rem' }} />
             </span>
           )}
 
@@ -452,7 +452,7 @@ export default function CreateProposalPage() {
                   <div key={index}>
                     <span className={styles.addRemoveTransaction} onClick={() => { index !== 0 && handleRemoveContractCallProposalField(index); }}>
                       Transaction {index + 1}
-                      {index !== 0 && (<i className="fas fa-minus-circle" style={{ color: 'red', marginLeft: 8 }} />)}
+                      {index !== 0 && (<i className="fas fa-minus-circle" style={{ color: 'red', marginLeft: '0.5rem' }} />)}
                     </span>
 
                     <input
@@ -478,7 +478,7 @@ export default function CreateProposalPage() {
           {proposalType === "contract-upgrade" && (
             <span className={styles.addRemoveTransaction} onClick={handleAddContractCallProposalField}>
               Add Transaction
-              <i className="fas fa-plus-circle" style={{ color: 'green', marginLeft: 8 }} />
+              <i className="fas fa-plus-circle" style={{ color: 'green', marginLeft: '0.5rem' }} />
             </span>
           )}
 
@@ -518,7 +518,7 @@ export default function CreateProposalPage() {
                   </select>
 
                   <InfoTooltip content={epcMethodDescription}>
-                    <span style={{ marginLeft: 8 }}><i className="fas fa-info-circle" /></span>
+                    <span style={{ marginLeft: "0.5rem" }}><i className="fas fa-info-circle" /></span>
                   </InfoTooltip>
                 </div>
 
@@ -561,7 +561,7 @@ export default function CreateProposalPage() {
                 onChange={(e) => setUmEvidence(e.target.value)}
                 placeholder={umReasonCategory === "other" ? "Evidence/Notes (required for \"Other\")" : "Evidence/Notes (optional)"}
                 className={styles.formInput}
-                style={{ height: "auto", minHeight: 80, resize: "vertical" }}
+                style={{ height: "auto", minHeight: "5rem", resize: "vertical" }}
                 required={umReasonCategory === "other"}
               />
 

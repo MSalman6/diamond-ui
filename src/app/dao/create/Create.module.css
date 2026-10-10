@@ -1,5 +1,5 @@
 .sectionContainer {
-  max-width: 800px;
+  max-width: 50rem;
   margin: var(--space-0) auto;
   padding: var(--space-40) var(--space-20);
   box-sizing: border-box;
@@ -19,7 +19,7 @@
 }
 
 .createDaoHeading {
-  font-size: 38px;
+  font-size: 2.375rem;
   font-weight: 800;
   text-align: center;
   margin-bottom: var(--space-24);
@@ -27,14 +27,14 @@
 }
 
 .proposalType {
-  height: 40px;
+  height: 2.5rem;
   padding: var(--space-5);
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-control);
   background-color: var(--darker-bg);
   font-size: var(--text-body);
   color: var(--text);
-  padding-right: 36px;
+  padding-right: 2.25rem;
   -webkit-appearance: none;
   appearance: none;
 }
@@ -52,7 +52,7 @@
 .propsalForm {
   gap: var(--space-8);
   display: flex;
-  max-width: 600px;
+  max-width: 37.5rem;
   width: 100%;
   margin-top: var(--space-24);
   flex-direction: column;
@@ -61,13 +61,14 @@
 
 .formInput {
   width: 100%;
-  height: 42px;
+  height: 2.625rem;
   padding: var(--space-8) var(--space-10);
   margin-bottom: var(--space-12);
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-card);
   background: var(--card-bg);
   color: var(--text);
+  font-size: 0.8333rem;
 }
 
 .propsalForm > div {
@@ -75,6 +76,10 @@
   display: flex;
   flex-direction: column;
   margin-bottom: var(--space-12);
+}
+
+.propsalForm > button {
+  font-size: 0.8333rem;
 }
 
 .addRemoveTransaction {
@@ -88,14 +93,14 @@
 
 .epcSelect {
   width: 100%;
-  height: 42px;
+  height: 2.625rem;
   padding: var(--space-8) var(--space-10);
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-card);
   background-color: var(--card-bg);
   font-size: var(--text-body);
   color: var(--text);
-  padding-right: 36px;
+  padding-right: 2.25rem;
   margin-bottom: var(--space-12);
   -webkit-appearance: none;
   appearance: none;
@@ -127,7 +132,7 @@
 
 .warningText {
   color: #d63031;
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: var(--weight-medium);
   margin-top: var(--space-8);
   margin-bottom: var(--space-16);
@@ -149,7 +154,7 @@
 
 .warningBox p {
   margin: var(--space-8) var(--space-0);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: var(--leading-normal);
   color: #d63031;
   font-weight: var(--weight-medium);
@@ -164,7 +169,7 @@
   align-items: center;
   gap: var(--space-8);
   margin-bottom: var(--space-8);
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--text);
 }
 
@@ -180,7 +185,7 @@
 
 .usernameModerationInfo li {
   margin: var(--space-4) var(--space-0);
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--text-secondary);
 }
 
@@ -198,7 +203,7 @@
   border: none;
   border-radius: var(--radius-control);
   padding: var(--space-8) var(--space-16);
-  font-size: 14px;
+  font-size: 0.875rem;
   cursor: pointer;
   margin-top: var(--space-8);
   transition: background-color var(--duration-fast);
@@ -220,13 +225,13 @@
 .balanceInfo h4 {
   margin-top: var(--space-0);
   margin-bottom: var(--space-8);
-  font-size: 18px;
+  font-size: 1.125rem;
   color: var(--text);
 }
 
 .balanceInfo p {
   margin: var(--space-4) var(--space-0);
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--text-secondary);
 }
 
@@ -242,7 +247,7 @@
 
 .infoBox p {
   margin: var(--space-8) var(--space-0);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: var(--leading-normal);
   color: var(--text-secondary);
 }
@@ -270,4 +275,64 @@
 
 .feeInfoText {
   text-align: center;
+}
+
+@media (max-width: 576px) {
+  .createDaoHeading {
+    font-size: var(--text-title);
+  }
+
+  .proposalTypeContainer {
+    align-self: stretch;
+    align-items: stretch;
+  }
+
+  .propsalForm > button {
+    align-self: stretch;
+  }
+}
+
+@media (pointer: coarse) {
+  .formInput {
+    font-size: var(--text-body);
+  }
+
+  .proposalType,
+  .formInput,
+  .epcSelect {
+    height: var(--tap-target);
+  }
+
+  .propsalForm > button,
+  .fillContractButton {
+    min-height: var(--tap-target);
+  }
+
+  .propsalForm > .addRemoveTransaction {
+    position: relative;
+  }
+
+  .propsalForm > .addRemoveTransaction::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: max(100%, var(--tap-target));
+    transform: translateY(-50%);
+  }
+
+  .epcSelectContainer :global(.info-tooltip-trigger) {
+    position: relative;
+  }
+
+  .epcSelectContainer :global(.info-tooltip-trigger)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--tap-target);
+    height: var(--tap-target);
+    transform: translate(-50%, -50%);
+  }
 }

@@ -550,17 +550,17 @@ input[type="range"] {
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 10px;
-  height: 10px;
+  width: 0.625rem;
+  height: 0.625rem;
   border-radius: var(--radius-circle);
   background: #f24726;
   cursor: pointer;
-  margin-top: -3.5px;
+  margin-top: -0.21875rem;
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
-  height: 3px;
+  height: 0.1875rem;
   cursor: pointer;
   background: var(--border-color);
 }
