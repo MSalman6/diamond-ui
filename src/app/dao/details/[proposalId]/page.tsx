@@ -711,8 +711,8 @@ export default function ProposalDetailsPage() {
                     {proposal?.targets?.map((target: string, index: number) => {
                       if (target === '0x0000000000000000000000000000000000000000') return null
                       return (
-                        <div key={index} className="funding-details" style={{ marginBottom: index < (proposal.targets?.length || 0) - 1 ? '20px' : '0', paddingBottom: '20px', borderBottom: index < (proposal.targets?.length || 0) - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none' }}>
-                          {proposal.targets.length > 1 && <div style={{ marginBottom: '10px', fontWeight: 'bold', color: 'var(--accent)' }}>Transaction {index + 1}</div>}
+                        <div key={index} className="funding-details" style={{ marginBottom: index < (proposal.targets?.length || 0) - 1 ? '1.25rem' : '0', paddingBottom: '1.25rem', borderBottom: index < (proposal.targets?.length || 0) - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none' }}>
+                          {proposal.targets.length > 1 && <div style={{ marginBottom: '0.625rem', fontWeight: 'bold', color: 'var(--accent)' }}>Transaction {index + 1}</div>}
                           <div className="payout-address">
                             <span className="label">Payout Address</span>
                             <div className="address-container">{target}</div>
@@ -724,7 +724,7 @@ export default function ProposalDetailsPage() {
                         </div>
                       )
                     })}
-                    <div className="parameter-fee" style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                    <div className="parameter-fee" style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
                       <span className="label">Proposal fee:</span>
                       <span className="value">{proposalFeeLabel}</span>
                       <InfoTooltip placement="bottom" content={<span>Fee to create a proposal. Refunded if approved.</span>}>
@@ -739,8 +739,8 @@ export default function ProposalDetailsPage() {
                 <div className="card-header"><h3>Contract Upgrade</h3></div>
                 <div className="card-content">
                   {proposal?.targets?.map((target: string, index: number) => (
-                    <div key={index} className="technical-details" style={{ marginBottom: index < (proposal.targets?.length || 0) - 1 ? '30px' : '0', paddingBottom: '20px', borderBottom: index < (proposal.targets?.length || 0) - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none' }}>
-                      {proposal.targets.length > 1 && <div style={{ marginBottom: '10px', fontWeight: 'bold', color: 'var(--accent)' }}>Transaction {index + 1}</div>}
+                    <div key={index} className="technical-details" style={{ marginBottom: index < (proposal.targets?.length || 0) - 1 ? '1.875rem' : '0', paddingBottom: '1.25rem', borderBottom: index < (proposal.targets?.length || 0) - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none' }}>
+                      {proposal.targets.length > 1 && <div style={{ marginBottom: '0.625rem', fontWeight: 'bold', color: 'var(--accent)' }}>Transaction {index + 1}</div>}
                       <div className="target-address">
                         <div className="label">Target</div>
                         <div className="value">{target || '0xdef...456'}</div>
@@ -777,7 +777,7 @@ export default function ProposalDetailsPage() {
                     if (!impactData) return null;
                     
                     return (
-                      <div className="parameter-impact" style={{ marginTop: '30px' }}>
+                      <div className="parameter-impact" style={{ marginTop: '1.875rem' }}>
                         <h4>Impact Assessment</h4>
                         <div className="impact-title">{impactData.title}</div>
                         {impactData.effects.map((effect, index) => (
@@ -793,7 +793,7 @@ export default function ProposalDetailsPage() {
                       </div>
                     );
                   })()}
-                  <div className="parameter-fee" style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                  <div className="parameter-fee" style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
                     <span className="label">Proposal fee:</span>
                     <span className="value">{proposalFeeLabel}</span>
                     <InfoTooltip placement="bottom" content={<span>Fee to create a proposal. Refunded if approved.</span>}>
@@ -959,26 +959,26 @@ export default function ProposalDetailsPage() {
                   {/* Voting Actions */}
                   {stakingContext.myPool &&
                     (proposal?.state === '2' || (daoContext.daoPhase?.phase === '1' && proposal?.state === '0')) && (
-                      <div className="voting-actions" style={{ marginTop: '16px' }}>
+                      <div className="voting-actions" style={{ marginTop: '1rem' }}>
                         {/* Already voted notice */}
                         {(myVote?.vote === '0' || myVote?.vote === '1') && Number(myVote?.timestamp || 0) > 0 && (
-                          <div className="voted-notice" style={{ marginBottom: '10px' }}>
+                          <div className="voted-notice" style={{ marginBottom: '0.625rem' }}>
                             {myVote?.vote === '0' ? (
                               <p>You have already voted against the proposal. Do you want to change your decision?</p>
                             ) : (
                               <p>You have already voted for the proposal. Do you want to change your decision?</p>
                             )}
                             {myVote?.reason && (
-                              <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid var(--border-color)' }}>
+                              <div style={{ marginTop: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid var(--border-color)' }}>
                                 <strong style={{ fontSize: '0.85rem', opacity: 0.7 }}>Your vote reason:</strong>
-                                <p style={{ marginTop: '4px', fontSize: '0.9rem' }}>{myVote.reason}</p>
+                                <p style={{ marginTop: '0.25rem', fontSize: '0.9rem' }}>{myVote.reason}</p>
                               </div>
                             )}
                           </div>
                         )}
                         {/* Vote reason */}
                         {web3Context.userWallet?.myAddr && (
-                          <div className="form-group" style={{ marginBottom: '10px' }}>
+                          <div className="form-group" style={{ marginBottom: '0.625rem' }}>
                             <input
                               type="text"
                               placeholder="Vote Reason (optional)"
@@ -987,7 +987,7 @@ export default function ProposalDetailsPage() {
                             />
                           </div>
                         )}
-                        <div className="vote-buttons" style={{ display: 'flex', gap: '10px' }}>
+                        <div className="vote-buttons" style={{ display: 'flex', gap: '0.625rem' }}>
                           {Number(myVote?.timestamp || 0) === 0 ? (
                             <>
                               <button className="primaryBtn vote-yes" onClick={() => handleCastVote(1)}>
@@ -1012,14 +1012,14 @@ export default function ProposalDetailsPage() {
 
                   {/* Finalize & Execute Actions */}
                   {proposal?.state === '3' && (
-                    <div className="finalize-actions" style={{ marginTop: '16px' }}>
+                    <div className="finalize-actions" style={{ marginTop: '1rem' }}>
                       <button className="primaryBtn" onClick={() => handleProposalFinalization(proposal?.id)}>
                         Finalize Proposal
                       </button>
                     </div>
                   )}
                   {proposal?.state === '4' && (
-                    <div className="execute-actions" style={{ marginTop: '12px' }}>
+                    <div className="execute-actions" style={{ marginTop: '0.75rem' }}>
                       <button className="primaryBtn" onClick={() => handleProposalExecution(proposal?.id)}>
                         Execute Proposal
                       </button>
@@ -1111,7 +1111,7 @@ export default function ProposalDetailsPage() {
               onChange={(e) => setDismissReason(e.target.value)}
             />
           </div>
-          <div className="modal-actions" style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+          <div className="modal-actions" style={{ display: 'flex', gap: '0.625rem', justifyContent: 'flex-end' }}>
             <button className="primaryBtn" onClick={handleDismissProposal}>
               Yes, dismiss
             </button>

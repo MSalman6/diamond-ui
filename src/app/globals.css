@@ -817,6 +817,7 @@ header .logo {
 
 .primaryBtn {
   padding: var(--space-10) var(--space-20);
+  font-size: 0.8333rem;
   border: none;
   background: var(--accent);
   color: white;
