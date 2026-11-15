@@ -53,6 +53,10 @@ export type Renew = ContractEventLog<{
   0: string;
   1: string;
 }>;
+export type SetBaseURI = ContractEventLog<{
+  _uri: string;
+  0: string;
+}>;
 export type SetRegistrar = ContractEventLog<{
   registrar: string;
   0: string;
@@ -154,6 +158,8 @@ export interface DMDNames extends BaseContract {
       approved: boolean
     ): NonPayableTransactionObject<void>;
 
+    setBaseURI(_baseUri: string): NonPayableTransactionObject<void>;
+
     setRegistrar(_registrar: string): NonPayableTransactionObject<void>;
 
     setTransferFee(
@@ -205,6 +211,9 @@ export interface DMDNames extends BaseContract {
     Renew(cb?: Callback<Renew>): EventEmitter;
     Renew(options?: EventOptions, cb?: Callback<Renew>): EventEmitter;
 
+    SetBaseURI(cb?: Callback<SetBaseURI>): EventEmitter;
+    SetBaseURI(options?: EventOptions, cb?: Callback<SetBaseURI>): EventEmitter;
+
     SetRegistrar(cb?: Callback<SetRegistrar>): EventEmitter;
     SetRegistrar(
       options?: EventOptions,
@@ -249,6 +258,13 @@ export interface DMDNames extends BaseContract {
 
   once(event: "Renew", cb: Callback<Renew>): void;
   once(event: "Renew", options: EventOptions, cb: Callback<Renew>): void;
+
+  once(event: "SetBaseURI", cb: Callback<SetBaseURI>): void;
+  once(
+    event: "SetBaseURI",
+    options: EventOptions,
+    cb: Callback<SetBaseURI>
+  ): void;
 
   once(event: "SetRegistrar", cb: Callback<SetRegistrar>): void;
   once(

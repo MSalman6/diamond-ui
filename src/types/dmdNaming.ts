@@ -95,18 +95,19 @@ export interface ActivationFeeTier {
   isCurrent: boolean;
 }
 
-export interface DmdMxRecord {
-  priority: number;
-  host: string;
+export type DmdWebsiteTargetType = 'none' | 'ipv4' | 'ipv6' | 'cname';
+
+export interface DmdWebsiteTarget {
+  type: DmdWebsiteTargetType;
+  value: string;
 }
 
 export interface DmdDnsConfig {
-  linked: boolean;
-  aRecord: string;
-  mxRecords: DmdMxRecord[];
+  website: DmdWebsiteTarget;
+  emailForwarding: string;
 }
 
-export type DmdDnsState = 'not-set' | 'connected' | 'configured';
+export type DmdDnsState = 'not-set' | 'configured';
 
 export interface DmdDnsSummary {
   state: DmdDnsState;

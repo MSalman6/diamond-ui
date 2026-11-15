@@ -114,6 +114,14 @@ export const config = {
     return process.env.NEXT_PUBLIC_REPORT_EMAIL || '';
   },
 
+  get domainServicesUrl(): string {
+    if (runtimeConfigCache?.domainServicesUrl) return runtimeConfigCache.domainServicesUrl;
+    if (typeof window !== 'undefined' && (window as any).__RUNTIME_CONFIG__?.domainServicesUrl) {
+      return (window as any).__RUNTIME_CONFIG__.domainServicesUrl;
+    }
+    return process.env.NEXT_PUBLIC_DOMAIN_SERVICES_URL || '';
+  },
+
   get siteUrl(): string {
     if (runtimeConfigCache?.siteUrl) return runtimeConfigCache.siteUrl;
     if (typeof window !== 'undefined' && (window as any).__RUNTIME_CONFIG__?.siteUrl) {

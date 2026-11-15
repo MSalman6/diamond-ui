@@ -27,6 +27,7 @@ export interface RuntimeConfig {
 
   // Application Settings
   siteUrl: string;
+  domainServicesUrl: string;
   port: string;
   
   // Debug Settings
@@ -90,6 +91,7 @@ function getDefaultConfig(): RuntimeConfig {
     wcProjectId: '2cceb4f25f1cb889b967ea3c40bfd7cd',
     reportEmail: '',
     siteUrl: '',
+    domainServicesUrl: '',
     port: '3000',
     debugTx: '0',
     debugTxLevel: '0',

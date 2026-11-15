@@ -136,6 +136,10 @@ export interface DMDRegistrarController extends BaseContract {
 
     available(_name: string): NonPayableTransactionObject<boolean>;
 
+    clearDNSRecord(_label: string): NonPayableTransactionObject<void>;
+
+    clearEmailForwarding(_label: string): NonPayableTransactionObject<void>;
+
     diamondNames(): NonPayableTransactionObject<string>;
 
     getActivationFee(_who: string): NonPayableTransactionObject<string>;
@@ -201,10 +205,30 @@ export interface DMDRegistrarController extends BaseContract {
 
     resolver(): NonPayableTransactionObject<string>;
 
+    setAAAARecord(
+      _label: string,
+      _ipv6: string | number[]
+    ): NonPayableTransactionObject<void>;
+
+    setARecord(
+      _label: string,
+      _ipv4: string | number[]
+    ): NonPayableTransactionObject<void>;
+
     setAllowedChangeableParameter(
       setter: string | number[],
       getter: string | number[],
       params: (number | string | BN)[]
+    ): NonPayableTransactionObject<void>;
+
+    setCnameRecord(
+      _label: string,
+      _cname: string | number[]
+    ): NonPayableTransactionObject<void>;
+
+    setEmailForwarding(
+      _label: string,
+      _target: string | number[]
     ): NonPayableTransactionObject<void>;
 
     setMintingFee(

@@ -19,6 +19,7 @@ import {
   DMDAggregator as JsonHbbtAggregator,
   DMDRegistrarController as JsonDMDRegistrarController,
   DMDNames as JsonDMDNames,
+  DMDResolver as JsonDMDResolver,
 } from '@/contracts/abis';
 
 // Contract Types
@@ -37,6 +38,7 @@ import {
   RandomHbbft,
   DMDRegistrarController,
   DMDNames,
+  DMDResolver,
 } from '@/contracts/types';
 
 export enum KeyGenMode {
@@ -66,6 +68,7 @@ export class ContractManager {
   private cachedPermission?: TxPermissionHbbft;
   private cachedDiamondRegistry?: DMDRegistrarController;
   private cachedDiamondNames?: DMDNames;
+  private cachedDiamondResolver?: DMDResolver;
 
   public constructor(public web3: Web3) {}
 
@@ -176,6 +179,20 @@ export class ContractManager {
     const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as DMDNames;
     const wrapped = this.wrapContract<DMDNames>('DMDNames', abi, raw);
     this.cachedDiamondNames = wrapped;
+    return wrapped;
+  }
+
+  public async getDiamondResolver(): Promise<DMDResolver> {
+    if (this.cachedDiamondResolver) {
+      return this.cachedDiamondResolver;
+    }
+
+    const contractAddress = await this.getDiamondRegistry().methods.resolver().call();
+
+    const abi = JsonDMDResolver as any;
+    const raw = new this.web3.eth.Contract(abi, contractAddress) as unknown as DMDResolver;
+    const wrapped = this.wrapContract<DMDResolver>('DMDResolver', abi, raw);
+    this.cachedDiamondResolver = wrapped;
     return wrapped;
   }
 

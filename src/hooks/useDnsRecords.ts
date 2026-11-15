@@ -1,54 +1,64 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { useWeb3Context } from '@/contexts/Web3';
+import { getDnsConfig, getWalletDmdName, supportsDnsRecords } from '@/services/dmdNaming';
 import type { DmdDnsConfig } from '@/types/dmdNaming';
 
-/**
- * Per-browser draft store for the DNS configuration UI. Nothing here reaches a
- * contract or the backend — the `.dmd.domains` zone is not wired up yet, so the
- * screens are driven from local state until it is.
- */
-const STORAGE_KEY = 'dmd-dns-records-preview';
-
-export const EMPTY_DNS_CONFIG: DmdDnsConfig = { linked: false, aRecord: '', mxRecords: [] };
-
-type DnsConfigStore = Record<string, DmdDnsConfig>;
-
-function readStoredConfigs(): DnsConfigStore {
-  if (typeof window === 'undefined') {
-    return {};
-  }
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as DnsConfigStore) : {};
-  } catch {
-    return {};
-  }
-}
-
-export function useDnsRecords() {
-  const [configs, setConfigs] = useState<DnsConfigStore>({});
+export function useDnsRecords(walletAddress: string) {
+  const { contractsManager } = useWeb3Context();
+  const registrar = contractsManager.diamondRegistryContract;
+  const resolver = contractsManager.diamondResolverContract;
+  const [supported, setSupported] = useState(false);
+  const [activeName, setActiveName] = useState<string | null>(null);
+  const [config, setConfig] = useState<DmdDnsConfig | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
-    setConfigs(readStoredConfigs());
-  }, []);
+    setSupported(false);
+    if (!resolver) {
+      return;
+    }
 
-  const getDnsConfig = useCallback(
-    (name: string): DmdDnsConfig => configs[name] ?? EMPTY_DNS_CONFIG,
-    [configs],
-  );
+    let cancelled = false;
+    supportsDnsRecords(resolver)
+      .then((result) => {
+        if (!cancelled) setSupported(result);
+      })
+      .catch(() => undefined);
 
-  const saveDnsConfig = useCallback((name: string, config: DmdDnsConfig) => {
-    setConfigs((current) => {
-      const next = { ...current, [name]: config };
-      try {
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        // A full or unavailable store only costs the draft, so keep the UI responsive.
-      }
-      return next;
-    });
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [resolver]);
 
-  return { configs, getDnsConfig, saveDnsConfig };
+  useEffect(() => {
+    if (!supported || !registrar || !resolver || !walletAddress) {
+      setActiveName(null);
+      setConfig(null);
+      return;
+    }
+
+    let cancelled = false;
+    getWalletDmdName(registrar, walletAddress)
+      .then(async (name) => {
+        const nextConfig = name ? await getDnsConfig(resolver, name) : null;
+        if (cancelled) return;
+        setActiveName(name);
+        setConfig(nextConfig);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setActiveName(null);
+        setConfig(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [supported, registrar, resolver, walletAddress, reloadKey]);
+
+  const reload = useCallback(() => setReloadKey((key) => key + 1), []);
+
+  return { supported, activeName, config, reload };
 }

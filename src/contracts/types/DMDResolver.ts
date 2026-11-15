@@ -27,6 +27,20 @@ export type AddrChanged = ContractEventLog<{
   0: string;
   1: string;
 }>;
+export type DNSRecordChanged = ContractEventLog<{
+  node: string;
+  kind: string;
+  value: string;
+  0: string;
+  1: string;
+  2: string;
+}>;
+export type EmailForwardingTargetChanged = ContractEventLog<{
+  node: string;
+  target: string;
+  0: string;
+  1: string;
+}>;
 export type Initialized = ContractEventLog<{
   version: string;
   0: string;
@@ -50,6 +64,25 @@ export interface DMDResolver extends BaseContract {
 
     addresses(arg0: string | number[]): NonPayableTransactionObject<string>;
 
+    dnsRecord(
+      node: string | number[]
+    ): NonPayableTransactionObject<[string, string]>;
+
+    dnsRecords(arg0: string | number[]): NonPayableTransactionObject<{
+      kind: string;
+      value: string;
+      0: string;
+      1: string;
+    }>;
+
+    emailForwardingTarget(
+      node: string | number[]
+    ): NonPayableTransactionObject<string>;
+
+    emailForwardingTargets(
+      arg0: string | number[]
+    ): NonPayableTransactionObject<string>;
+
     initialize(_registry: string): NonPayableTransactionObject<void>;
 
     name(node: string | number[]): NonPayableTransactionObject<string>;
@@ -68,6 +101,17 @@ export interface DMDResolver extends BaseContract {
       a: string
     ): NonPayableTransactionObject<void>;
 
+    setDNSRecord(
+      node: string | number[],
+      kind: number | string | BN,
+      value: string | number[]
+    ): NonPayableTransactionObject<void>;
+
+    setEmailForwardingTarget(
+      node: string | number[],
+      target: string | number[]
+    ): NonPayableTransactionObject<void>;
+
     setName(
       node: string | number[],
       newName: string
@@ -82,6 +126,20 @@ export interface DMDResolver extends BaseContract {
     AddrChanged(
       options?: EventOptions,
       cb?: Callback<AddrChanged>
+    ): EventEmitter;
+
+    DNSRecordChanged(cb?: Callback<DNSRecordChanged>): EventEmitter;
+    DNSRecordChanged(
+      options?: EventOptions,
+      cb?: Callback<DNSRecordChanged>
+    ): EventEmitter;
+
+    EmailForwardingTargetChanged(
+      cb?: Callback<EmailForwardingTargetChanged>
+    ): EventEmitter;
+    EmailForwardingTargetChanged(
+      options?: EventOptions,
+      cb?: Callback<EmailForwardingTargetChanged>
     ): EventEmitter;
 
     Initialized(cb?: Callback<Initialized>): EventEmitter;
@@ -104,6 +162,23 @@ export interface DMDResolver extends BaseContract {
     event: "AddrChanged",
     options: EventOptions,
     cb: Callback<AddrChanged>
+  ): void;
+
+  once(event: "DNSRecordChanged", cb: Callback<DNSRecordChanged>): void;
+  once(
+    event: "DNSRecordChanged",
+    options: EventOptions,
+    cb: Callback<DNSRecordChanged>
+  ): void;
+
+  once(
+    event: "EmailForwardingTargetChanged",
+    cb: Callback<EmailForwardingTargetChanged>
+  ): void;
+  once(
+    event: "EmailForwardingTargetChanged",
+    options: EventOptions,
+    cb: Callback<EmailForwardingTargetChanged>
   ): void;
 
   once(event: "Initialized", cb: Callback<Initialized>): void;

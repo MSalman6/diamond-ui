@@ -21,6 +21,7 @@ export async function GET() {
     wcProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || '2cceb4f25f1cb889b967ea3c40bfd7cd',
     siteUrl: process.env.NEXT_PUBLIC_SITE_URL || '',
     reportEmail: process.env.NEXT_PUBLIC_REPORT_EMAIL || '',
+    domainServicesUrl: process.env.NEXT_PUBLIC_DOMAIN_SERVICES_URL || '',
   };
 
   return NextResponse.json(config, {

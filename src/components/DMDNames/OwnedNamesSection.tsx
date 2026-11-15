@@ -6,7 +6,7 @@ import { usePrivacyMode } from '@/contexts/PrivacyMode';
 import { useWeb3Context } from '@/contexts/Web3';
 import { useDnsRecords } from '@/hooks/useDnsRecords';
 import { checkNameAvailability, getOwnedNames } from '@/services/dmdNaming';
-import { formatDmdDate, formatDmdName, summarizeDnsConfig } from '@/utils/dmdNaming';
+import { EMPTY_DNS_CONFIG, formatDmdDate, formatDmdName, summarizeDnsConfig } from '@/utils/dmdNaming';
 import type { DmdDnsState, OwnedDmdName, OwnedDmdNameStatus } from '@/types/dmdNaming';
 import ActivateNameModal from './ActivateNameModal';
 import DnsRecordsModal from './DnsRecordsModal';
@@ -22,9 +22,6 @@ type Props = {
 
 /** One follow-up fetch, to pick up the indexed row if it landed in the meantime. */
 const INDEX_RETRY_MS = 8000;
-
-// UI Functionality in place - waiting for configuration apis from team
-const DNS_CONFIG_ENABLED: boolean = false;
 
 const STATUS_LABELS: Record<OwnedDmdNameStatus, string> = {
   active: 'Active',
@@ -44,7 +41,7 @@ function DnsCell({ state, label }: { state: DmdDnsState; label: string }) {
 export default function OwnedNamesSection({ walletAddress, activeName, refreshKey = 0, pendingName }: Props) {
   const { isPrivacyMode } = usePrivacyMode();
   const { contractsManager, readonlyWeb3 } = useWeb3Context();
-  const { getDnsConfig, saveDnsConfig } = useDnsRecords();
+  const { supported: dnsEnabled, activeName: dnsName, config: dnsConfig, reload: reloadDns } = useDnsRecords(walletAddress);
   const [names, setNames] = useState<OwnedDmdName[] | null>(null);
   const [pendingRow, setPendingRow] = useState<OwnedDmdName | null>(null);
   const indexRetryDone = useRef<string | null>(null);
@@ -196,7 +193,7 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
                 <th>Name</th>
                 <th>Status</th>
                 <th>Expiration</th>
-                {DNS_CONFIG_ENABLED && <th>DNS</th>}
+                {dnsEnabled && <th>DNS</th>}
                 <th>Last action</th>
                 <th></th>
               </tr>
@@ -204,17 +201,17 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
             <tbody>
               {rows === null && !error && (
                 <tr>
-                  <td colSpan={DNS_CONFIG_ENABLED ? 6 : 5} className="dmd-owned-loading">Loading owned names…</td>
+                  <td colSpan={dnsEnabled ? 6 : 5} className="dmd-owned-loading">Loading owned names…</td>
                 </tr>
               )}
               {error && (
                 <tr>
-                  <td colSpan={DNS_CONFIG_ENABLED ? 6 : 5} className="dmd-owned-error">{error}</td>
+                  <td colSpan={dnsEnabled ? 6 : 5} className="dmd-owned-error">{error}</td>
                 </tr>
               )}
               {rows !== null && !error && rows.length === 0 && (
                 <tr>
-                  <td colSpan={DNS_CONFIG_ENABLED ? 6 : 5} className="dmd-owned-empty">No names owned by this address yet.</td>
+                  <td colSpan={dnsEnabled ? 6 : 5} className="dmd-owned-empty">No names owned by this address yet.</td>
                 </tr>
               )}
               {rows?.map((entry) => (
@@ -224,9 +221,9 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
                   </td>
                   <td><StatusPill status={entry.status} /></td>
                   <td>{formatDmdDate(entry.expiresAt)}</td>
-                  {DNS_CONFIG_ENABLED && (
+                  {dnsEnabled && (
                     <td>
-                      <DnsCell {...summarizeDnsConfig(getDnsConfig(entry.name))} />
+                      <DnsCell {...summarizeDnsConfig(entry.name === dnsName ? dnsConfig : null)} />
                     </td>
                   )}
                   <td>
@@ -288,7 +285,7 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
                             >
                               <i className="fas fa-right-left"></i> Transfer
                             </button>
-                            {DNS_CONFIG_ENABLED && (
+                            {dnsEnabled && entry.name === dnsName && (
                               <button
                                 type="button"
                                 onClick={() => {
@@ -329,10 +326,10 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
               <strong>Transfer:</strong> Moves ownership of the name NFT to another address; Diamond UI
               shows transfer fee + gas before confirmation.
             </li>
-            {DNS_CONFIG_ENABLED && (
+            {dnsEnabled && (
               <li>
-                <strong>Configure DNS:</strong> Links the name to its username.dmd.domains subdomain and
-                sets the free A and MX records served for it.
+                <strong>Configure DNS:</strong> Links the active name to its username.dmd.domains subdomain and
+                sets the free website and email forwarding records served for it.
               </li>
             )}
           </ul>
@@ -347,6 +344,7 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
         onComplete={() => {
           setActivateTarget(null);
           reload();
+          reloadDns();
         }}
       />
 
@@ -361,13 +359,15 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
         }}
       />
 
-      {DNS_CONFIG_ENABLED && (
+      {dnsEnabled && (
         <DnsRecordsModal
           isOpen={!!dnsTarget}
-          onClose={() => setDnsTarget(null)}
+          onClose={() => {
+            setDnsTarget(null);
+            reloadDns();
+          }}
           name={dnsTarget?.name ?? ''}
-          config={getDnsConfig(dnsTarget?.name ?? '')}
-          onSave={saveDnsConfig}
+          config={dnsConfig ?? EMPTY_DNS_CONFIG}
         />
       )}
 
@@ -379,6 +379,7 @@ export default function OwnedNamesSection({ walletAddress, activeName, refreshKe
         onComplete={() => {
           setTransferTarget(null);
           reload();
+          reloadDns();
         }}
       />
     </>

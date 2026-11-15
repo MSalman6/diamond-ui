@@ -187,6 +187,32 @@
   },
   {
     "type": "function",
+    "name": "clearDNSRecord",
+    "inputs": [
+      {
+        "name": "_label",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "clearEmailForwarding",
+    "inputs": [
+      {
+        "name": "_label",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "diamondNames",
     "inputs": [],
     "outputs": [
@@ -571,6 +597,42 @@
   },
   {
     "type": "function",
+    "name": "setAAAARecord",
+    "inputs": [
+      {
+        "name": "_label",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "_ipv6",
+        "type": "bytes16",
+        "internalType": "bytes16"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setARecord",
+    "inputs": [
+      {
+        "name": "_label",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "_ipv4",
+        "type": "bytes4",
+        "internalType": "bytes4"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "setAllowedChangeableParameter",
     "inputs": [
       {
@@ -587,6 +649,42 @@
         "name": "params",
         "type": "uint256[]",
         "internalType": "uint256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setCnameRecord",
+    "inputs": [
+      {
+        "name": "_label",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "_cname",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setEmailForwarding",
+    "inputs": [
+      {
+        "name": "_label",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "_target",
+        "type": "bytes",
+        "internalType": "bytes"
       }
     ],
     "outputs": [],
@@ -952,6 +1050,26 @@
   },
   {
     "type": "error",
+    "name": "InvalidCname",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidEmailForwardingTarget",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidIPv4",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidIPv6",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "InvalidInitialization",
     "inputs": []
   },
@@ -1038,6 +1156,11 @@
         "internalType": "uint256"
       }
     ]
+  },
+  {
+    "type": "error",
+    "name": "NotActiveName",
+    "inputs": []
   },
   {
     "type": "error",

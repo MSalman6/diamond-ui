@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
-import type { DMDRegistrarController, DMDNames } from '@/contracts/types';
+import type { DMDRegistrarController, DMDNames, DMDResolver } from '@/contracts/types';
+import type { NonPayableTransactionObject } from '@/contracts/types/types';
 import type {
   DmdNameAvailabilityResult,
   OwnedDmdName,
@@ -11,8 +12,20 @@ import type {
   DmdNameHistory,
   DmdNameHistoryEvent,
   ActivationFeeTier,
+  DmdDnsConfig,
+  DmdWebsiteTarget,
+  DmdWebsiteTargetType,
 } from '@/types/dmdNaming';
-import { formatDmdAmount, formatDmdDate, normalizeDmdNameInput, shortenAddress } from '@/utils/dmdNaming';
+import {
+  EMPTY_DNS_CONFIG,
+  formatDmdAmount,
+  formatDmdDate,
+  hexToIpAddress,
+  ipAddressToHex,
+  isSameWebsiteTarget,
+  normalizeDmdNameInput,
+  shortenAddress,
+} from '@/utils/dmdNaming';
 import { clientApiGet } from '@/lib/apiClient';
 import { buildTxOptions } from '@/utils/txOptions';
 
@@ -282,6 +295,166 @@ export async function transferName(
   const gasPrice = await getGasPrice();
   const method = namesContract.methods.transferFrom(from, to, labelHash);
   const tx = method.send(await buildTxOptions(method, { from, gasPrice, value: transferFeeWei }));
+  if (onTransactionHash) {
+    tx.once('transactionHash', onTransactionHash);
+  }
+  await tx;
+}
+
+const DMD_NODE = '0x9904bf4b5751e3b6a8b75d14c49424160de1a8fa8a90fd5c9fccdeac0503e612';
+
+const DNS_RECORD_KINDS: DmdWebsiteTargetType[] = ['none', 'ipv4', 'ipv6', 'cname'];
+
+const DNS_RESOLVER_INTERFACES = ['dnsRecord(bytes32)', 'emailForwardingTarget(bytes32)']
+  .map((signature) => Web3.utils.keccak256(signature).slice(0, 10));
+
+const DNS_UPDATE_REVERTS: Record<string, string> = {
+  NotActiveName: 'DNS settings can only be changed for the active name of your address.',
+  NotNameOwner: 'This name is not owned by your address.',
+  NameExpired: 'This name has expired.',
+  NameBlocked: 'This name is blocked.',
+};
+
+export type DnsUpdate = {
+  method: NonPayableTransactionObject<void>;
+  apply: (config: DmdDnsConfig) => DmdDnsConfig;
+};
+
+export function getDmdNameNode(name: string): string {
+  const labelHash = Web3.utils.soliditySha3({ t: 'string', v: normalizeDmdNameInput(name) }) as string;
+  return Web3.utils.soliditySha3({ t: 'bytes32', v: DMD_NODE }, { t: 'bytes32', v: labelHash }) as string;
+}
+
+export async function supportsDnsRecords(resolver: DMDResolver): Promise<boolean> {
+  const results = await Promise.all(
+    DNS_RESOLVER_INTERFACES.map((interfaceId) => resolver.methods.supportsInterface(interfaceId).call()),
+  );
+  return results.every(Boolean);
+}
+
+function decodeWebsiteTarget(kind: string, value: string | null): DmdWebsiteTarget {
+  const type = DNS_RECORD_KINDS[Number(kind)] ?? 'none';
+  if (type === 'none' || !value || value === '0x') {
+    return EMPTY_DNS_CONFIG.website;
+  }
+  if (type === 'cname') {
+    return { type, value: Web3.utils.hexToUtf8(value) };
+  }
+  return { type, value: hexToIpAddress(type, value) };
+}
+
+export async function getDnsConfig(resolver: DMDResolver, name: string): Promise<DmdDnsConfig> {
+  const node = getDmdNameNode(name);
+  const [[kind, value], emailTarget] = await Promise.all([
+    resolver.methods.dnsRecord(node).call(),
+    resolver.methods.emailForwardingTarget(node).call(),
+  ]);
+
+  return {
+    website: decodeWebsiteTarget(kind, value),
+    emailForwarding: emailTarget && emailTarget !== '0x' ? Web3.utils.hexToUtf8(emailTarget) : '',
+  };
+}
+
+function getWebsiteTargetMethod(
+  contract: DMDRegistrarController,
+  name: string,
+  target: DmdWebsiteTarget,
+): NonPayableTransactionObject<void> {
+  switch (target.type) {
+    case 'ipv4':
+      return contract.methods.setARecord(name, ipAddressToHex(target));
+    case 'ipv6':
+      return contract.methods.setAAAARecord(name, ipAddressToHex(target));
+    case 'cname':
+      return contract.methods.setCnameRecord(name, Web3.utils.utf8ToHex(target.value));
+    default:
+      return contract.methods.clearDNSRecord(name);
+  }
+}
+
+export function getDnsUpdates(
+  contract: DMDRegistrarController,
+  name: string,
+  current: DmdDnsConfig,
+  next: DmdDnsConfig,
+): DnsUpdate[] {
+  const updates: DnsUpdate[] = [];
+
+  if (!isSameWebsiteTarget(current.website, next.website)) {
+    updates.push({
+      method: getWebsiteTargetMethod(contract, name, next.website),
+      apply: (config) => ({ ...config, website: next.website }),
+    });
+  }
+
+  if (current.emailForwarding !== next.emailForwarding) {
+    updates.push({
+      method: next.emailForwarding
+        ? contract.methods.setEmailForwarding(name, Web3.utils.utf8ToHex(next.emailForwarding))
+        : contract.methods.clearEmailForwarding(name),
+      apply: (config) => ({ ...config, emailForwarding: next.emailForwarding }),
+    });
+  }
+
+  return updates;
+}
+
+async function getDnsUpdateFailureReason(
+  contract: DMDRegistrarController,
+  web3: Web3,
+  updates: DnsUpdate[],
+  from: string,
+): Promise<string | undefined> {
+  const abi = (contract.options.jsonInterface as any[]) || [];
+  for (const update of updates) {
+    try {
+      await web3.eth.call({ from, to: contract.options.address, data: update.method.encodeABI() });
+    } catch (err: any) {
+      const selector = String(err?.data ?? '').match(/0x[0-9a-fA-F]{8}/)?.[0]?.toLowerCase();
+      const revert = abi.find((item) => item.type === 'error'
+        && Web3.utils.keccak256(`${item.name}(${(item.inputs || []).map((input: any) => input.type).join(',')})`)
+          .slice(0, 10) === selector);
+      if (revert && DNS_UPDATE_REVERTS[revert.name]) {
+        return DNS_UPDATE_REVERTS[revert.name];
+      }
+    }
+  }
+  return undefined;
+}
+
+export async function getDnsUpdateEstimate(
+  contract: DMDRegistrarController,
+  web3: Web3,
+  updates: DnsUpdate[],
+  walletAddress: string,
+): Promise<{ estimatedGas?: string; totalEstimatedCost?: string; failureReason?: string }> {
+  if (updates.length === 0) {
+    return {};
+  }
+
+  try {
+    const gasUnits = await Promise.all(updates.map((update) => update.method.estimateGas({ from: walletAddress })));
+    const gasPrice = await web3.eth.getGasPrice();
+    const gasWei = gasUnits
+      .reduce((total, gas) => total.plus(gas), new BigNumber(0))
+      .times(gasPrice)
+      .toFixed(0);
+    const cost = formatDmdAmount(web3, gasWei);
+    return { estimatedGas: cost, totalEstimatedCost: cost };
+  } catch {
+    return { failureReason: await getDnsUpdateFailureReason(contract, web3, updates, walletAddress) };
+  }
+}
+
+export async function sendDnsUpdate(
+  update: DnsUpdate,
+  from: string,
+  getGasPrice: () => Promise<string>,
+  onTransactionHash?: () => void,
+): Promise<void> {
+  const gasPrice = await getGasPrice();
+  const tx = update.method.send(await buildTxOptions(update.method, { from, gasPrice }));
   if (onTransactionHash) {
     tx.once('transactionHash', onTransactionHash);
   }
